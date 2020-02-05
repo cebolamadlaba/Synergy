@@ -84,7 +84,10 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     return db.Query<ChannelType>(
-                        "SELECT [pkChannelTypeId] [Id], [Description], [IsActive] FROM [dbo].[rtblChannelType]");
+                        @"SELECT [pkChannelTypeId] [Id], 
+                                 [Description], 
+                                 [IsActive] 
+                        FROM [dbo].[rtblChannelType]");
                 }
             };
 
@@ -99,9 +102,11 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[rtblChannelType]
-                            SET [Description] = @Description, [IsActive] = @IsActive
-                            WHERE [pkChannelTypeId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[rtblChannelType]
+                    SET [Description] = @Description, 
+                        [IsActive] = @IsActive
+                    WHERE [pkChannelTypeId] = @Id",
                     new
                     {
                         Id = model.Id,
@@ -122,7 +127,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[rtblChannelType] WHERE [pkChannelTypeId] = @Id",
+                db.Execute(@"DELETE [dbo].[rtblChannelType] 
+                            WHERE [pkChannelTypeId] = @Id",
                     new {model.Id});
             }
 

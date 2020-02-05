@@ -70,7 +70,19 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<LegalEntity>(
-                    @"SELECT [pkLegalEntityId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRiskGroupId] [RiskGroupId], [CustomerName], [CustomerNumber], le.[IsActive], [ContactPerson], [PostalAddress], [City], [PostalCode], [fkUserId] [UserId] ,se.[BCMRoleName],se.[RequestorRoleName]
+                    @"SELECT [pkLegalEntityId] [Id],
+                            [fkMarketSegmentId] [MarketSegmentId],
+                            [fkRiskGroupId] [RiskGroupId],
+                            [CustomerName],
+                            [CustomerNumber],
+                            le.[IsActive],
+                            [ContactPerson],
+                            [PostalAddress],
+                            [City],
+                            [PostalCode],
+                            [fkUserId] [UserId],
+                            se.[BCMRoleName],
+                            se.[RequestorRoleName]
 					from [dbo].[tblLegalEntity] le
 					left join rtblMarketSegment se on  le.fkMarketSegmentId = se.pkMarketSegmentId	 
                     WHERE [pkLegalEntityId] = @Id",
@@ -89,10 +101,20 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<LegalEntity>(
-                    @"SELECT [pkLegalEntityId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRiskGroupId] [RiskGroupId], [CustomerName], [CustomerNumber], [IsActive], [ContactPerson], [PostalAddress], [City], [PostalCode], [fkUserId] [UserId] 
+                    @"SELECT [pkLegalEntityId] [Id],
+                            [fkMarketSegmentId] [MarketSegmentId],
+                            [fkRiskGroupId] [RiskGroupId],
+                            [CustomerName],
+                            [CustomerNumber],
+                            [IsActive],
+                            [ContactPerson],
+                            [PostalAddress],
+                            [City],
+                            [PostalCode],
+                            [fkUserId] [UserId] 
                     FROM [dbo].[tblLegalEntity] 
                     WHERE [pkLegalEntityId] = @Id 
-                    AND [IsActive] = @isActive",
+                        AND [IsActive] = @isActive",
                     new { id, isActive }).SingleOrDefault();
             }
         }
@@ -102,14 +124,22 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<LegalEntity>(
-                            @"SELECT Distinct le.[pkLegalEntityId] [Id], le.[fkMarketSegmentId] [MarketSegmentId], le.[fkRiskGroupId] [RiskGroupId], 
-                                    le.[CustomerName], le.[CustomerNumber], le.[IsActive], le.[ContactPerson], le.[PostalAddress], le.[City], 
-                                    le.[PostalCode], le.[fkUserId] [UserId],
+                            @"SELECT Distinct le.[pkLegalEntityId] [Id],
+                                    le.[fkMarketSegmentId] [MarketSegmentId],
+                                    le.[fkRiskGroupId] [RiskGroupId],
+                                    le.[CustomerName],
+                                    le.[CustomerNumber],
+                                    le.[IsActive],
+                                    le.[ContactPerson],
+                                    le.[PostalAddress],
+                                    le.[City],
+                                    le.[PostalCode],
+                                    le.[fkUserId] [UserId],
                                     ms.[Description] [MarketSegment]
                             FROM [dbo].[tblLegalEntity] le
                             Inner Join	[dbo].[rtblMarketSegment] ms On ms.pkMarketSegmentId = le.fkMarketSegmentId
                             WHERE le.[CustomerNumber] = @sapbpid 
-                            AND le.[IsActive] = @isActive",
+                                AND le.[IsActive] = @isActive",
                     new { sapbpid, isActive }).SingleOrDefault();
             }
         }
@@ -125,7 +155,17 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<LegalEntity>(
-                    @"SELECT [pkLegalEntityId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRiskGroupId] [RiskGroupId], [CustomerName], [CustomerNumber], [IsActive], [ContactPerson], [PostalAddress], [City], [PostalCode], [fkUserId] [UserId] 
+                    @"SELECT [pkLegalEntityId] [Id],
+                            [fkMarketSegmentId] [MarketSegmentId],
+                            [fkRiskGroupId] [RiskGroupId],
+                            [CustomerName],
+                            [CustomerNumber],
+                            [IsActive],
+                            [ContactPerson],
+                            [PostalAddress],
+                            [City],
+                            [PostalCode],
+                            [fkUserId] [UserId] 
                     FROM [dbo].[tblLegalEntity] 
                     WHERE [fkRiskGroupId] = @riskGroupId
                     AND [IsActive] = @isActive",
@@ -142,7 +182,17 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<LegalEntity>(
-                    @"SELECT [pkLegalEntityId] [Id], [fkMarketSegmentId] [MarketSegmentId], [fkRiskGroupId] [RiskGroupId], [CustomerName], [CustomerNumber], [IsActive], [ContactPerson], [PostalAddress], [City], [PostalCode], [fkUserId] [UserId] 
+                    @"SELECT [pkLegalEntityId] [Id],
+                            [fkMarketSegmentId] [MarketSegmentId],
+                            [fkRiskGroupId] [RiskGroupId],
+                            [CustomerName],
+                            [CustomerNumber],
+                            [IsActive],
+                            [ContactPerson],
+                            [PostalAddress],
+                            [City],
+                            [PostalCode],
+                            [fkUserId] [UserId] 
                     FROM [dbo].[tblLegalEntity]");
             }
         }
@@ -155,9 +205,19 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblLegalEntity]
-                            SET [fkMarketSegmentId] = @MarketSegmentId, [fkRiskGroupId] = @RiskGroupId, [CustomerName] = @CustomerName, [CustomerNumber] = @CustomerNumber, [IsActive] = @IsActive, [ContactPerson] = @ContactPerson, [PostalAddress] = @PostalAddress, [City] = @City, [PostalCode] = @PostalCode, [fkUserId] = @UserId
-                            WHERE [pkLegalEntityId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblLegalEntity]
+                    SET [fkMarketSegmentId] = @MarketSegmentId,
+                        [fkRiskGroupId] = @RiskGroupId,
+                        [CustomerName] = @CustomerName,
+                        [CustomerNumber] = @CustomerNumber,
+                        [IsActive] = @IsActive,
+                        [ContactPerson] = @ContactPerson,
+                        [PostalAddress] = @PostalAddress,
+                        [City] = @City,
+                        [PostalCode] = @PostalCode,
+                        [fkUserId] = @UserId
+                    WHERE [pkLegalEntityId] = @Id",
                     new
                     {
                         Id = model.Id,
@@ -183,7 +243,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblLegalEntity] WHERE [pkLegalEntityId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblLegalEntity] 
+                            WHERE [pkLegalEntityId] = @Id",
                     new { model.Id });
             }
         }

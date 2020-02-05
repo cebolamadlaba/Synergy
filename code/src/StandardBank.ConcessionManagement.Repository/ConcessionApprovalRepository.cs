@@ -56,7 +56,15 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionApproval>(
-                    "SELECT [pkConcessionApprovalId] [Id], [fkConcessionId] [ConcessionId], [fkOldSubStatusId] [OldSubStatusId], [fkNewSubStatusId] [NewSubStatusId], [fkUserId] [UserId], [SystemDate], [IsActive] FROM [dbo].[tblConcessionApproval] WHERE [pkConcessionApprovalId] = @Id",
+                    @"SELECT [pkConcessionApprovalId] [Id], 
+                             [fkConcessionId] [ConcessionId], 
+                             [fkOldSubStatusId] [OldSubStatusId], 
+                             [fkNewSubStatusId] [NewSubStatusId], 
+                             [fkUserId] [UserId], 
+                             [SystemDate], 
+                             [IsActive] 
+                    FROM [dbo].[tblConcessionApproval] 
+                    WHERE [pkConcessionApprovalId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -69,7 +77,15 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<ConcessionApproval>("SELECT [pkConcessionApprovalId] [Id], [fkConcessionId] [ConcessionId], [fkOldSubStatusId] [OldSubStatusId], [fkNewSubStatusId] [NewSubStatusId], [fkUserId] [UserId], [SystemDate], [IsActive] FROM [dbo].[tblConcessionApproval]");
+                return db.Query<ConcessionApproval>(
+                    @"SELECT [pkConcessionApprovalId] [Id], 
+                             [fkConcessionId] [ConcessionId], 
+                             [fkOldSubStatusId] [OldSubStatusId], 
+                             [fkNewSubStatusId] [NewSubStatusId], 
+                             [fkUserId] [UserId], 
+                             [SystemDate], 
+                             [IsActive] 
+                    FROM [dbo].[tblConcessionApproval]");
             }
         }
 
@@ -81,9 +97,15 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblConcessionApproval]
-                            SET [fkConcessionId] = @ConcessionId, [fkOldSubStatusId] = @OldSubStatusId, [fkNewSubStatusId] = @NewSubStatusId, [fkUserId] = @UserId, [SystemDate] = @SystemDate, [IsActive] = @IsActive
-                            WHERE [pkConcessionApprovalId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblConcessionApproval]
+                    SET [fkConcessionId] = @ConcessionId, 
+                        [fkOldSubStatusId] = @OldSubStatusId, 
+                        [fkNewSubStatusId] = @NewSubStatusId, 
+                        [fkUserId] = @UserId, 
+                        [SystemDate] = @SystemDate, 
+                        [IsActive] = @IsActive
+                    WHERE [pkConcessionApprovalId] = @Id",
                     new {Id = model.Id, ConcessionId = model.ConcessionId, OldSubStatusId = model.OldSubStatusId, NewSubStatusId = model.NewSubStatusId, UserId = model.UserId, SystemDate = model.SystemDate, IsActive = model.IsActive});
             }
         }
@@ -96,7 +118,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblConcessionApproval] WHERE [pkConcessionApprovalId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblConcessionApproval] 
+                            WHERE [pkConcessionApprovalId] = @Id",
                     new {model.Id});
             }
         }

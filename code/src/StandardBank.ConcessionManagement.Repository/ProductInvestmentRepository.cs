@@ -36,8 +36,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             const string sql =
                 @"INSERT [dbo].[tblProductInvestment] ([fkRiskGroupId], [fkLegalEntityId], [fkLegalEntityAccountId], [fkProductId], [AverageBalance], [LoadedCustomerRate]) 
-                                VALUES (@RiskGroupId, @LegalEntityId, @LegalEntityAccountId, @ProductId, @AverageBalance, @LoadedCustomerRate) 
-                                SELECT CAST(SCOPE_IDENTITY() as int)";
+                VALUES (@RiskGroupId, @LegalEntityId, @LegalEntityAccountId, @ProductId, @AverageBalance, @LoadedCustomerRate) 
+                SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
@@ -66,7 +66,15 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ProductInvestment>(
-                    "SELECT [pkProductInvestmentId] [Id], [fkRiskGroupId] [RiskGroupId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [fkProductId] [ProductId], [AverageBalance], [LoadedCustomerRate] FROM [dbo].[tblProductInvestment] WHERE [pkProductInvestmentId] = @Id",
+                    @"SELECT [pkProductInvestmentId] [Id],
+	                    [fkRiskGroupId] [RiskGroupId],
+	                    [fkLegalEntityId] [LegalEntityId],
+	                    [fkLegalEntityAccountId] [LegalEntityAccountId],
+	                    [fkProductId] [ProductId],
+	                    [AverageBalance],
+	                    [LoadedCustomerRate] 
+                    FROM [dbo].[tblProductInvestment] 
+                    WHERE [pkProductInvestmentId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -80,7 +88,14 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ProductInvestment>(
-                    "SELECT [pkProductInvestmentId] [Id], [fkRiskGroupId] [RiskGroupId], [fkLegalEntityId] [LegalEntityId], [fkLegalEntityAccountId] [LegalEntityAccountId], [fkProductId] [ProductId], [AverageBalance], [LoadedCustomerRate] FROM [dbo].[tblProductInvestment]");
+                    @"SELECT [pkProductInvestmentId] [Id],
+	                    [fkRiskGroupId] [RiskGroupId],
+	                    [fkLegalEntityId] [LegalEntityId],
+	                    [fkLegalEntityAccountId] [LegalEntityAccountId],
+	                    [fkProductId] [ProductId],
+	                    [AverageBalance],
+	                    [LoadedCustomerRate] 
+                    FROM [dbo].[tblProductInvestment]");
             }
         }
 
@@ -92,9 +107,15 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblProductInvestment]
-                            SET [fkRiskGroupId] = @RiskGroupId, [fkLegalEntityId] = @LegalEntityId, [fkLegalEntityAccountId] = @LegalEntityAccountId, [fkProductId] = @ProductId, [AverageBalance] = @AverageBalance, [LoadedCustomerRate] = @LoadedCustomerRate
-                            WHERE [pkProductInvestmentId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblProductInvestment]
+                    SET [fkRiskGroupId] = @RiskGroupId,
+                        [fkLegalEntityId] = @LegalEntityId,
+                        [fkLegalEntityAccountId] = @LegalEntityAccountId,
+                        [fkProductId] = @ProductId,
+                        [AverageBalance] = @AverageBalance,
+                        [LoadedCustomerRate] = @LoadedCustomerRate
+                    WHERE [pkProductInvestmentId] = @Id",
                     new
                     {
                         Id = model.Id,
@@ -116,7 +137,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblProductInvestment] WHERE [pkProductInvestmentId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblProductInvestment] 
+                            WHERE [pkProductInvestmentId] = @Id",
                     new {model.Id});
             }
         }

@@ -56,7 +56,10 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     return db.Query<BaseRateCode>(
-                        "SELECT [pkBaseRateCodeId] [Id], [Description], [IsActive] FROM [dbo].[tblBaseRateCode]");
+                        @"SELECT [pkBaseRateCodeId] [Id], 
+                                 [Description], 
+                                 [IsActive] 
+                        FROM [dbo].[tblBaseRateCode]");
                 }
             };
 

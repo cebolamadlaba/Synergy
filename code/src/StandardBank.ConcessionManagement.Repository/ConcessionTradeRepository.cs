@@ -52,9 +52,9 @@ namespace StandardBank.ConcessionManagement.Repository
 
                 const string sql =
                     @"INSERT [dbo].[tblConcessionTrade] ([fkConcessionId], [fkConcessionDetailId],[fkTradeProductId], [fkLegalEntityAccountId],[fkLegalEntityId],[fkLegalEntityGBBNumber],
-                                                    [LoadedRate], [ApprovedRate], [GBBNumber], [Term],[Min],[Max],[Communication],[FlatFee],[EstablishmentFee],[AdValorem],[Currency], [Rate]) 
-                VALUES (@fkConcessionId, @fkConcessionDetailId, @fkTradeProductId, @fkLegalEntityAccountId,@fkLegalEntityId,@fkLegalEntityGBBNumber, @LoadedRate, @ApprovedRate, @GBBNumber, @Term, @Min,@Max,@Communication,@FlatFee,@EstablishmentFee,@AdValorem,@Currency,@Rate) 
-                SELECT CAST(SCOPE_IDENTITY() as int)";
+                            [LoadedRate], [ApprovedRate], [GBBNumber], [Term],[Min],[Max],[Communication],[FlatFee],[EstablishmentFee],[AdValorem],[Currency], [Rate]) 
+                    VALUES (@fkConcessionId, @fkConcessionDetailId, @fkTradeProductId, @fkLegalEntityAccountId,@fkLegalEntityId,@fkLegalEntityGBBNumber, @LoadedRate, @ApprovedRate, @GBBNumber, @Term, @Min,@Max,@Communication,@FlatFee,@EstablishmentFee,@AdValorem,@Currency,@Rate) 
+                    SELECT CAST(SCOPE_IDENTITY() as int)";
 
                 if (model.LegalEntityAccountId == 0)
                 {
@@ -136,8 +136,24 @@ namespace StandardBank.ConcessionManagement.Repository
             {
 
                 return db.Query<ConcessionTrade>(
-                    @"SELECT [pkConcessionTradeId] [Id], t.[fkConcessionId] [ConcessionId],d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate], [fkConcessionDetailId],[fkTradeProductId],
-                                                    [LoadedRate], [ApprovedRate], [GBBNumber], [Term],[Min],[Max],[Communication],[FlatFee],[EstablishmentFee],[AdValorem],[Currency], [Rate] 
+                    @"SELECT [pkConcessionTradeId] [Id],
+                            t.[fkConcessionId] [ConcessionId],
+                            d.[fkLegalEntityAccountId] [LegalEntityAccountId],
+                            d.[ExpiryDate],
+                            [fkConcessionDetailId],
+                            [fkTradeProductId],
+                            [LoadedRate],
+                            [ApprovedRate],
+                            [GBBNumber],
+                            [Term],
+                            [Min],
+                            [Max],
+                            [Communication],
+                            [FlatFee],
+                            [EstablishmentFee],
+                            [AdValorem],
+                            [Currency],
+                            [Rate] 
                     FROM [dbo].[tblConcessionTrade] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
                     WHERE [pkConcessionTradeId] = @Id AND fkTradeProductId IS NOT NULL",
@@ -154,8 +170,24 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionTrade>(
-                    @"SELECT[pkConcessionTradeId] [Id], t.[fkConcessionId] [ConcessionId],d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate], [fkConcessionDetailId],[fkTradeProductId],
-                                                    [LoadedRate], [ApprovedRate], [GBBNumber], [Term],[Min],[Max],[Communication],[FlatFee],[EstablishmentFee],[AdValorem],[Currency], [Rate]
+                    @"SELECT [pkConcessionTradeId] [Id],
+                            t.[fkConcessionId] [ConcessionId],
+                            d.[fkLegalEntityAccountId] [LegalEntityAccountId],
+                            d.[ExpiryDate],
+                            [fkConcessionDetailId],
+                            [fkTradeProductId],
+                            [LoadedRate],
+                            [ApprovedRate],
+                            [GBBNumber],
+                            [Term],
+                            [Min],
+                            [Max],
+                            [Communication],
+                            [FlatFee],
+                            [EstablishmentFee],
+                            [AdValorem],
+                            [Currency],
+                            [Rate]
                     FROM [dbo].[tblConcessionTrade] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
                     WHERE fkTradeProductId IS NOT NULL");
@@ -169,7 +201,10 @@ namespace StandardBank.ConcessionManagement.Repository
             {
 
                 return db.Query<TradeProduct>(
-                    @"SELECT description [tradeProductName],  pkTradeProductId [tradeProductId], fkTradeProductTypeId [tradeProductTypeId]  from rtblTradeProduct");
+                    @"SELECT description [tradeProductName],
+                            pkTradeProductId [tradeProductId],
+                            fkTradeProductTypeId [tradeProductTypeId]  
+                    from rtblTradeProduct");
             }
         }
 
@@ -179,7 +214,9 @@ namespace StandardBank.ConcessionManagement.Repository
             {
 
                 return db.Query<TradeProductType>(
-                    @"SELECT pkTradeProductTypeId [tradeProductTypeID], description [tradeProductType] from rtblTradeProductType");
+                    @"SELECT pkTradeProductTypeId [tradeProductTypeID], 
+                            description [tradeProductType] 
+                    from rtblTradeProductType");
             }
         }
 
@@ -188,7 +225,11 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<TradeProductType>(
-                    @"SELECT Distinct tpt.pkTradeProductTypeId [tradeProductTypeID], tpt.[description] [tradeProductType] From rtblTradeProductType tpt Inner Join rtblTradeProduct tp On tp.fkTradeProductTypeId = tpt.pkTradeProductTypeId Where tp.pkTradeProductId = @tradeProductId",
+                    @"SELECT Distinct tpt.pkTradeProductTypeId [tradeProductTypeID],
+		                    tpt.[description] [tradeProductType] 
+                    From rtblTradeProductType tpt 
+                    Inner Join rtblTradeProduct tp On tp.fkTradeProductTypeId = tpt.pkTradeProductTypeId 
+                    Where tp.pkTradeProductId = @tradeProductId",
                     new { tradeProductId }).FirstOrDefault();
             }
         }
@@ -197,11 +238,18 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<LegalEntityGBBNumber>(string.Format(@"SELECT pkLegalEntityGBBNumber,fkLegalEntityAccountId, GBBNumber,pkLegalEntityId [legalEntityId] ,pkLegalEntityAccountId [legalEntityAccountId]  from tblLegalEntityGBBNumber
-                                                join tblLegalEntityAccount on tblLegalEntityGBBNumber.fkLegalEntityAccountId = tblLegalEntityAccount.pkLegalEntityAccountId
-                                                join tblLegalEntity on tblLegalEntityAccount.fkLegalEntityId = tblLegalEntity.pkLegalEntityId
-                                                join tblRiskGroup on tblLegalEntity.fkRiskGroupId = tblRiskGroup.pkRiskGroupId
-												where RiskGroupNumber = {0}", riskGroupNumber));
+                return db.Query<LegalEntityGBBNumber>(string.Format(
+                    @"SELECT pkLegalEntityGBBNumber,
+                            fkLegalEntityAccountId, 
+                            GBBNumber,
+                            pkLegalEntityId [legalEntityId] ,
+                            pkLegalEntityAccountId [legalEntityAccountId]  
+                    from tblLegalEntityGBBNumber
+                        join tblLegalEntityAccount on tblLegalEntityGBBNumber.fkLegalEntityAccountId = tblLegalEntityAccount.pkLegalEntityAccountId
+                        join tblLegalEntity on tblLegalEntityAccount.fkLegalEntityId = tblLegalEntity.pkLegalEntityId
+                        join tblRiskGroup on tblLegalEntity.fkRiskGroupId = tblRiskGroup.pkRiskGroupId
+					where RiskGroupNumber = {0}", 
+                    riskGroupNumber));
             }
         }
 
@@ -210,10 +258,13 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<LegalEntityGBBNumber>(string.Format(
-                    @"SELECT pkLegalEntityGBBNumber,fkLegalEntityAccountId, GBBNumber,pkLegalEntityId [legalEntityId] ,pkLegalEntityAccountId [legalEntityAccountId]  
+                    @"SELECT pkLegalEntityGBBNumber,
+                            fkLegalEntityAccountId, 
+                            GBBNumber,pkLegalEntityId [legalEntityId] ,
+                            pkLegalEntityAccountId [legalEntityAccountId]  
                     from tblLegalEntityGBBNumber
-                    join tblLegalEntityAccount on tblLegalEntityGBBNumber.fkLegalEntityAccountId = tblLegalEntityAccount.pkLegalEntityAccountId
-                    join tblLegalEntity on tblLegalEntityAccount.fkLegalEntityId = tblLegalEntity.pkLegalEntityId
+                        join tblLegalEntityAccount on tblLegalEntityGBBNumber.fkLegalEntityAccountId = tblLegalEntityAccount.pkLegalEntityAccountId
+                        join tblLegalEntity on tblLegalEntityAccount.fkLegalEntityId = tblLegalEntity.pkLegalEntityId
                     where CustomerNumber = {0}", sapbpid));
             }
         }
@@ -229,11 +280,25 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     const string sql =
-           @"UPDATE [dbo].[tblConcessionTrade] set [fkConcessionId] = @fkConcessionId, [fkConcessionDetailId] = @fkConcessionDetailId,[fkTradeProductId] = @fkTradeProductId, [fkLegalEntityAccountId] = @fkLegalEntityAccountId,
-                                                    [LoadedRate] = @LoadedRate, [ApprovedRate] = @ApprovedRate, [GBBNumber] = @GBBNumber, [Term] = @Term,[Min] = @Min,[Max] = @Max,[Communication] = @Communication,[FlatFee] = @FlatFee,
-                                                    [EstablishmentFee] = @EstablishmentFee,[AdValorem] = @AdValorem,[Currency] = @Currency,  [Rate] = @Rate
-                where pkConcessionTradeId =  @Id
-               ";
+                        @"UPDATE [dbo].[tblConcessionTrade] 
+                        set [fkConcessionId] = @fkConcessionId,
+                            [fkConcessionDetailId] = @fkConcessionDetailId,
+                            [fkTradeProductId] = @fkTradeProductId,
+                            [fkLegalEntityAccountId] = @fkLegalEntityAccountId,
+                            [LoadedRate] = @LoadedRate,
+                            [ApprovedRate] = @ApprovedRate,
+                            [GBBNumber] = @GBBNumber,
+                            [Term] = @Term,
+                            [Min] = @Min,
+                            [Max] = @Max,
+                            [Communication] = @Communication,
+                            [FlatFee] = @FlatFee,
+                            [EstablishmentFee] = @EstablishmentFee,
+                            [AdValorem] = @AdValorem,
+                            [Currency] = @Currency,
+                            [Rate] = @Rate
+                        where pkConcessionTradeId =  @Id
+                        ";
 
                     db.Execute(sql, new
                     {
@@ -275,7 +340,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblConcessionTrade] WHERE [pkConcessionTradeId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblConcessionTrade] 
+                            WHERE [pkConcessionTradeId] = @Id",
                     new { model.Id });
             }
 

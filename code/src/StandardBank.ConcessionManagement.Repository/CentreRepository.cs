@@ -57,7 +57,12 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<Centre>(
-                    "SELECT [pkCentreId] [Id], [fkRegionId] [RegionId], [CentreName], [IsActive] FROM [dbo].[tblCentre] WHERE [pkCentreId] = @Id",
+                    @"SELECT [pkCentreId] [Id], 
+                             [fkRegionId] [RegionId], 
+                             [CentreName], 
+                             [IsActive] 
+                    FROM [dbo].[tblCentre] 
+                    WHERE [pkCentreId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -71,7 +76,11 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<Centre>(
-                    "SELECT [pkCentreId] [Id], [fkRegionId] [RegionId], [CentreName], [IsActive] FROM [dbo].[tblCentre]");
+                    @"SELECT [pkCentreId] [Id], 
+                             [fkRegionId] [RegionId], 
+                             [CentreName], 
+                             [IsActive] 
+                    FROM [dbo].[tblCentre]");
             }
         }
 
@@ -83,9 +92,12 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblCentre]
-                            SET [fkRegionId] = @RegionId, [CentreName] = @CentreName, [IsActive] = @IsActive
-                            WHERE [pkCentreId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblCentre]
+                    SET [fkRegionId] = @RegionId, 
+                        [CentreName] = @CentreName, 
+                        [IsActive] = @IsActive
+                    WHERE [pkCentreId] = @Id",
                     new
                     {
                         Id = model.Id,
@@ -104,7 +116,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblCentre] WHERE [pkCentreId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblCentre] 
+                            WHERE [pkCentreId] = @Id",
                     new {model.Id});
             }
         }

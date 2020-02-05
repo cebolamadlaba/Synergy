@@ -28,8 +28,8 @@ namespace StandardBank.ConcessionManagement.Repository
             const string sql =
                 @"delete from [tblConcessionLetter] where fkConcessionDetailId = @fkConcessionDetailId;
                 INSERT [tblConcessionLetter] ([fkConcessionDetailId], [Location]) 
-                                VALUES (@fkConcessionDetailId, @Location) 
-                                SELECT CAST(SCOPE_IDENTITY() as int)";
+                VALUES (@fkConcessionDetailId, @Location) 
+                SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
@@ -49,7 +49,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE from [dbo].[tblConcessionLetter] WHERE [pkConcessionLetter] = @pkConcessionLetter",
+                db.Execute(@"DELETE from [dbo].[tblConcessionLetter] 
+                            WHERE [pkConcessionLetter] = @pkConcessionLetter",
                     new { model.pkConcessionLetter });
             }
         }

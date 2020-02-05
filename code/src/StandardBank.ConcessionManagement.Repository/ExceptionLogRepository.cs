@@ -36,8 +36,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             const string sql =
                 @"INSERT [dbo].[tblExceptionLog] ([ExceptionMessage], [ExceptionType], [ExceptionSource], [ExceptionData], [Logdate]) 
-                                VALUES (@ExceptionMessage, @ExceptionType, @ExceptionSource, @ExceptionData, @Logdate) 
-                                SELECT CAST(SCOPE_IDENTITY() as int)";
+                VALUES (@ExceptionMessage, @ExceptionType, @ExceptionSource, @ExceptionData, @Logdate) 
+                SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
@@ -65,7 +65,14 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ExceptionLog>(
-                    "SELECT [ExceptionLogId], [ExceptionMessage], [ExceptionType], [ExceptionSource], [ExceptionData], [Logdate] FROM [dbo].[tblExceptionLog] WHERE [ExceptionLogId] = @Id",
+                    @"SELECT [ExceptionLogId],
+		                    [ExceptionMessage],
+		                    [ExceptionType],
+		                    [ExceptionSource],
+		                    [ExceptionData],
+		                    [Logdate] 
+                    FROM [dbo].[tblExceptionLog] 
+                    WHERE [ExceptionLogId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -79,7 +86,13 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ExceptionLog>(
-                    "SELECT [ExceptionLogId], [ExceptionMessage], [ExceptionType], [ExceptionSource], [ExceptionData], [Logdate] FROM [dbo].[tblExceptionLog]");
+                    @"SELECT [ExceptionLogId],
+		                    [ExceptionMessage],
+		                    [ExceptionType],
+		                    [ExceptionSource],
+		                    [ExceptionData],
+		                    [Logdate] 
+                    FROM [dbo].[tblExceptionLog]");
             }
         }
 
@@ -92,7 +105,11 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblExceptionLog]
-                            SET [ExceptionMessage] = @ExceptionMessage, [ExceptionType] = @ExceptionType, [ExceptionSource] = @ExceptionSource, [ExceptionData] = @ExceptionData, [Logdate] = @Logdate
+                            SET [ExceptionMessage] = @ExceptionMessage,
+	                            [ExceptionType] = @ExceptionType,
+	                            [ExceptionSource] = @ExceptionSource,
+	                            [ExceptionData] = @ExceptionData,
+	                            [Logdate] = @Logdate
                             WHERE [ExceptionLogId] = @Id",
                     new
                     {
@@ -114,7 +131,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblExceptionLog] WHERE [ExceptionLogId] = @ExceptionLogId",
+                db.Execute(@"DELETE [dbo].[tblExceptionLog] 
+                            WHERE [ExceptionLogId] = @ExceptionLogId",
                     new {model.ExceptionLogId});
             }
         }

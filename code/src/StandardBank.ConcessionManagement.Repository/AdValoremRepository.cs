@@ -78,7 +78,11 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 using (var db = _dbConnectionFactory.Connection())
             	{
-                	return db.Query<AdValorem>("SELECT [pkAdValoremId] [Id], [AdValorem] [Amount], [IsActive] FROM [dbo].[rtblAdValorem]");
+                	return db.Query<AdValorem>(
+                        @"SELECT [pkAdValoremId] [Id], 
+                                 [AdValorem] [Amount], 
+                                 [IsActive] 
+                        FROM [dbo].[rtblAdValorem]");
             	}
             };
 
@@ -94,7 +98,8 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[rtblAdValorem]
-                            SET [AdValorem] = @Amount, [IsActive] = @IsActive
+                            SET [AdValorem] = @Amount, 
+                                [IsActive] = @IsActive
                             WHERE [pkAdValoremId] = @Id",
                     new {Id = model.Id, Amount = model.Amount, IsActive = model.IsActive});
             }
@@ -111,7 +116,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[rtblAdValorem] WHERE [pkAdValoremId] = @Id",
+                db.Execute(@"DELETE [dbo].[rtblAdValorem] 
+                            WHERE [pkAdValoremId] = @Id",
                     new {model.Id});
             }
 

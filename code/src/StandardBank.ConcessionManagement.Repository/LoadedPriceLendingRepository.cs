@@ -36,8 +36,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             const string sql =
                 @"INSERT [dbo].[tblLoadedPriceLending] ([fkProductTypeId], [fkLegalEntityAccountId], [MarginToPrime]) 
-                                VALUES (@ProductTypeId, @LegalEntityAccountId, @MarginToPrime) 
-                                SELECT CAST(SCOPE_IDENTITY() as int)";
+                VALUES (@ProductTypeId, @LegalEntityAccountId, @MarginToPrime) 
+                SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
@@ -63,7 +63,12 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<LoadedPriceLending>(
-                    "SELECT [pkLoadedPriceLendingId] [Id], [fkProductTypeId] [ProductTypeId], [fkLegalEntityAccountId] [LegalEntityAccountId], [MarginToPrime] FROM [dbo].[tblLoadedPriceLending] WHERE [pkLoadedPriceLendingId] = @Id",
+                    @"SELECT [pkLoadedPriceLendingId] [Id],
+		                    [fkProductTypeId] [ProductTypeId],
+		                    [fkLegalEntityAccountId] [LegalEntityAccountId],
+		                    [MarginToPrime] 
+                    FROM [dbo].[tblLoadedPriceLending] 
+                    WHERE [pkLoadedPriceLendingId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -79,10 +84,13 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<LoadedPriceLending>(
-                    @"SELECT [pkLoadedPriceLendingId] [Id], [fkProductTypeId] [ProductTypeId], [fkLegalEntityAccountId] [LegalEntityAccountId], [MarginToPrime] 
+                    @"SELECT [pkLoadedPriceLendingId] [Id],
+                            [fkProductTypeId] [ProductTypeId],
+                            [fkLegalEntityAccountId] [LegalEntityAccountId],
+                            [MarginToPrime] 
                     FROM [dbo].[tblLoadedPriceLending] 
                     WHERE [fkProductTypeId] = @productTypeId
-                    AND [fkLegalEntityAccountId] = @legalEntityAccountId",
+                        AND [fkLegalEntityAccountId] = @legalEntityAccountId",
                     new { productTypeId, legalEntityAccountId }).FirstOrDefault();
             }
         }
@@ -96,7 +104,11 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<LoadedPriceLending>(
-                    "SELECT [pkLoadedPriceLendingId] [Id], [fkProductTypeId] [ProductTypeId], [fkLegalEntityAccountId] [LegalEntityAccountId], [MarginToPrime] FROM [dbo].[tblLoadedPriceLending]");
+                    @"SELECT [pkLoadedPriceLendingId] [Id],
+		                    [fkProductTypeId] [ProductTypeId],
+		                    [fkLegalEntityAccountId] [LegalEntityAccountId],
+		                    [MarginToPrime] 
+                    FROM [dbo].[tblLoadedPriceLending]");
             }
         }
 
@@ -108,9 +120,12 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblLoadedPriceLending]
-                            SET [fkProductTypeId] = @ProductTypeId, [fkLegalEntityAccountId] = @LegalEntityAccountId, [MarginToPrime] = @MarginToPrime
-                            WHERE [pkLoadedPriceLendingId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblLoadedPriceLending]
+                    SET [fkProductTypeId] = @ProductTypeId, 
+                        [fkLegalEntityAccountId] = @LegalEntityAccountId, 
+                        [MarginToPrime] = @MarginToPrime
+                    WHERE [pkLoadedPriceLendingId] = @Id",
                     new
                     {
                         Id = model.Id,
@@ -129,7 +144,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblLoadedPriceLending] WHERE [pkLoadedPriceLendingId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblLoadedPriceLending] 
+                            WHERE [pkLoadedPriceLendingId] = @Id",
                     new {model.Id});
             }
         }
