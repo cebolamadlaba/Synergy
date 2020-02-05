@@ -63,7 +63,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var user = _siteHelper.LoggedInUser(this);
 
             if (user.IsRequestor)
-                return Ok(new[] {user});
+            {
+                return Ok(new[] { user });
+            }
 
             return Ok(_userManager.GetUsersByRole(Constants.Roles.Requestor));
         }

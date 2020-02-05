@@ -78,7 +78,11 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 using (var db = _dbConnectionFactory.Connection())
             	{
-                	return db.Query<ProductImport>("SELECT [pkProductImportId] [Id], [fkProductId] [ProductId], [ImportFileChannel] FROM [dbo].[rtblProductImport]");
+                	return db.Query<ProductImport>(
+                        @"SELECT [pkProductImportId] [Id], 
+                            [fkProductId] [ProductId], 
+                            [ImportFileChannel] 
+                        FROM [dbo].[rtblProductImport]");
             	}
             };
 
@@ -94,7 +98,8 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[rtblProductImport]
-                            SET [fkProductId] = @ProductId, [ImportFileChannel] = @ImportFileChannel
+                            SET [fkProductId] = @ProductId, 
+                                [ImportFileChannel] = @ImportFileChannel
                             WHERE [pkProductImportId] = @Id",
                     new {Id = model.Id, ProductId = model.ProductId, ImportFileChannel = model.ImportFileChannel});
             }
@@ -111,7 +116,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[rtblProductImport] WHERE [pkProductImportId] = @Id",
+                db.Execute(@"DELETE [dbo].[rtblProductImport] 
+                            WHERE [pkProductImportId] = @Id",
                     new {model.Id});
             }
 

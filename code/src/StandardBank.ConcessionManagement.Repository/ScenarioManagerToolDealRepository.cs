@@ -56,7 +56,11 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ScenarioManagerToolDeal>(
-                    "SELECT [pkScenarioManagerToolDealId] [Id], [DealNumber], [IsActive] FROM [dbo].[tblScenarioManagerToolDeal] WHERE [pkScenarioManagerToolDealId] = @Id",
+                    @"SELECT [pkScenarioManagerToolDealId] [Id], 
+                        [DealNumber], 
+                        [IsActive] 
+                    FROM [dbo].[tblScenarioManagerToolDeal] 
+                    WHERE [pkScenarioManagerToolDealId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -70,7 +74,10 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ScenarioManagerToolDeal>(
-                    "SELECT [pkScenarioManagerToolDealId] [Id], [DealNumber], [IsActive] FROM [dbo].[tblScenarioManagerToolDeal]");
+                    @"SELECT [pkScenarioManagerToolDealId] [Id], 
+                        [DealNumber], 
+                        [IsActive] 
+                    FROM [dbo].[tblScenarioManagerToolDeal]");
             }
         }
 
@@ -82,9 +89,11 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblScenarioManagerToolDeal]
-                            SET [DealNumber] = @DealNumber, [IsActive] = @IsActive
-                            WHERE [pkScenarioManagerToolDealId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblScenarioManagerToolDeal]
+                    SET [DealNumber] = @DealNumber, 
+                        [IsActive] = @IsActive
+                    WHERE [pkScenarioManagerToolDealId] = @Id",
                     new {Id = model.Id, DealNumber = model.DealNumber, IsActive = model.IsActive});
             }
         }
@@ -97,7 +106,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblScenarioManagerToolDeal] WHERE [pkScenarioManagerToolDealId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblScenarioManagerToolDeal] 
+                            WHERE [pkScenarioManagerToolDealId] = @Id",
                     new {model.Id});
             }
         }

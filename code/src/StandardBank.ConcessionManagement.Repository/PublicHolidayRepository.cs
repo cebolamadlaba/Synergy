@@ -23,7 +23,8 @@ namespace StandardBank.ConcessionManagement.Repository
                 var query = @"
                     SELECT [D_Date]
                     FROM [dbo].[D_DATE]
-                    where [D_Public_Holiday_Ind] = 1 and [D_Date] between @startDate and @endDate
+                    where [D_Public_Holiday_Ind] = 1 
+                        and [D_Date] between @startDate and @endDate
                         ";
                 return connection.Query<DateTime>(query, new {startDate ,endDate });
             }

@@ -56,7 +56,11 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ChannelTypeBaseRate>(
-                    "SELECT [pkChannelTypeBaseRateId] [Id], [fkChannelTypeId] [ChannelTypeId], [fkBaseRateId] [BaseRateId] FROM [dbo].[tblChannelTypeBaseRate] WHERE [pkChannelTypeBaseRateId] = @Id",
+                    @"SELECT [pkChannelTypeBaseRateId] [Id], 
+                             [fkChannelTypeId] [ChannelTypeId], 
+                             [fkBaseRateId] [BaseRateId] 
+                    FROM [dbo].[tblChannelTypeBaseRate] 
+                    WHERE [pkChannelTypeBaseRateId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -69,7 +73,11 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<ChannelTypeBaseRate>("SELECT [pkChannelTypeBaseRateId] [Id], [fkChannelTypeId] [ChannelTypeId], [fkBaseRateId] [BaseRateId] FROM [dbo].[tblChannelTypeBaseRate]");
+                return db.Query<ChannelTypeBaseRate>(
+                    @"SELECT [pkChannelTypeBaseRateId] [Id], 
+                             [fkChannelTypeId] [ChannelTypeId], 
+                             [fkBaseRateId] [BaseRateId] 
+                    FROM [dbo].[tblChannelTypeBaseRate]");
             }
         }
 
@@ -81,9 +89,11 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblChannelTypeBaseRate]
-                            SET [fkChannelTypeId] = @ChannelTypeId, [fkBaseRateId] = @BaseRateId
-                            WHERE [pkChannelTypeBaseRateId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblChannelTypeBaseRate]
+                    SET [fkChannelTypeId] = @ChannelTypeId, 
+                        [fkBaseRateId] = @BaseRateId
+                    WHERE [pkChannelTypeBaseRateId] = @Id",
                     new {Id = model.Id, ChannelTypeId = model.ChannelTypeId, BaseRateId = model.BaseRateId});
             }
         }
@@ -96,7 +106,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblChannelTypeBaseRate] WHERE [pkChannelTypeBaseRateId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblChannelTypeBaseRate] 
+                            WHERE [pkChannelTypeBaseRateId] = @Id",
                     new {model.Id});
             }
         }

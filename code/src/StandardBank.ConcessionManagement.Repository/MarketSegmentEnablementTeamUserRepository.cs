@@ -43,8 +43,12 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     return db.Query<MarketSegmentEnablementTeamUser>(
-                        @"Select et.pkMarketSegmentEnablementTeamId [Id], et.fkMarketSegmentId [MarketSegmentId], et.fkUserId [UserId], et.IsActive,
-		                        u.FirstName + ' ' + u.Surname [Fullname], u.EmailAddress
+                        @"Select et.pkMarketSegmentEnablementTeamId [Id],
+                                et.fkMarketSegmentId [MarketSegmentId],
+                                et.fkUserId [UserId],
+                                et.IsActive,
+                                u.FirstName + ' ' + u.Surname [Fullname],
+                                u.EmailAddress
                         From [dbo].[tblMarketSegmentEnablementTeamUser] et
                         Inner Join [dbo].[tblUser] u On u.pkUserId = et.fkUserId");
                 }
@@ -60,8 +64,10 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     return db.Query<ConcessionTypeMismatchEscalation>(
-                        @"SELECT cme.[pkConcessionTypeMismatchEscalationId] [ConcessionTypeMismatchEscalationId], cme.[fkConcessionTypeId] [ConcessionTypeId], cme.[LastEscalationSentDateTime], 
-		                        ct.[Description] [ConcessionType]
+                        @"SELECT cme.[pkConcessionTypeMismatchEscalationId] [ConcessionTypeMismatchEscalationId],
+                                cme.[fkConcessionTypeId] [ConcessionTypeId],
+                                cme.[LastEscalationSentDateTime],
+                                ct.[Description] [ConcessionType]
                         FROM [dbo].[tblConcessionTypeMismatchEscalation] cme
                         Inner Join rtblConcessionType ct On ct.pkConcessionTypeId = cme.[fkConcessionTypeId]");
                 }
@@ -74,9 +80,10 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblConcessionTypeMismatchEscalation]
-                            SET [LastEscalationSentDateTime] = @LastEscalationSentDateTime
-                            WHERE fkConcessionTypeId = @ConcessionTypeId",
+                db.Execute(
+                    @"UPDATE [dbo].[tblConcessionTypeMismatchEscalation]
+                    SET [LastEscalationSentDateTime] = @LastEscalationSentDateTime
+                    WHERE fkConcessionTypeId = @ConcessionTypeId",
                     new { LastEscalationSentDateTime = model.LastEscalationSentDateTime, ConcessionTypeId = model.ConcessionTypeId });
             }
 

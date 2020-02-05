@@ -56,7 +56,12 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<LegalEntityAccount>(
-                    "SELECT [pkLegalEntityAccountId] [Id], [fkLegalEntityId] [LegalEntityId], [AccountNumber], [IsActive] FROM [dbo].[tblLegalEntityAccount] WHERE [pkLegalEntityAccountId] = @Id",
+                    @"SELECT [pkLegalEntityAccountId] [Id], 
+                        [fkLegalEntityId] [LegalEntityId], 
+                        [AccountNumber], 
+                        [IsActive] 
+                    FROM [dbo].[tblLegalEntityAccount] 
+                    WHERE [pkLegalEntityAccountId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -72,10 +77,13 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<LegalEntityAccount>(
-                    @"SELECT [pkLegalEntityAccountId] [Id], [fkLegalEntityId] [LegalEntityId], [AccountNumber], [IsActive] 
+                    @"SELECT [pkLegalEntityAccountId] [Id], 
+                            [fkLegalEntityId] [LegalEntityId], 
+                            [AccountNumber], 
+                            [IsActive] 
                     FROM [dbo].[tblLegalEntityAccount] 
                     WHERE [fkLegalEntityId] = @legalEntityId
-                    AND [IsActive] = @isActive",
+                        AND [IsActive] = @isActive",
                     new { legalEntityId, isActive });
             }
         }
@@ -88,7 +96,12 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<LegalEntityAccount>("SELECT [pkLegalEntityAccountId] [Id], [fkLegalEntityId] [LegalEntityId], [AccountNumber], [IsActive] FROM [dbo].[tblLegalEntityAccount]");
+                return db.Query<LegalEntityAccount>(
+                    @"SELECT [pkLegalEntityAccountId] [Id], 
+                            [fkLegalEntityId] [LegalEntityId], 
+                            [AccountNumber], 
+                            [IsActive] 
+                    FROM [dbo].[tblLegalEntityAccount]");
             }
         }
 
@@ -100,9 +113,12 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblLegalEntityAccount]
-                            SET [fkLegalEntityId] = @LegalEntityId, [AccountNumber] = @AccountNumber, [IsActive] = @IsActive
-                            WHERE [pkLegalEntityAccountId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblLegalEntityAccount]
+                    SET [fkLegalEntityId] = @LegalEntityId, 
+                        [AccountNumber] = @AccountNumber, 
+                        [IsActive] = @IsActive
+                    WHERE [pkLegalEntityAccountId] = @Id",
                     new {Id = model.Id, LegalEntityId = model.LegalEntityId, AccountNumber = model.AccountNumber, IsActive = model.IsActive});
             }
         }
@@ -115,7 +131,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblLegalEntityAccount] WHERE [pkLegalEntityAccountId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblLegalEntityAccount] 
+                            WHERE [pkLegalEntityAccountId] = @Id",
                     new {model.Id});
             }
         }

@@ -80,7 +80,10 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     return db.Query<ConditionProduct>(
-                        "SELECT [pkConditionProductId] [Id], [Description], [IsActive] FROM [dbo].[rtblConditionProduct]");
+                        @"SELECT [pkConditionProductId] [Id], 
+                                [Description], 
+                                [IsActive] 
+                        FROM [dbo].[rtblConditionProduct]");
                 }
             };
 
@@ -96,9 +99,11 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[rtblConditionProduct]
-                            SET [Description] = @Description, [IsActive] = @IsActive
-                            WHERE [pkConditionProductId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[rtblConditionProduct]
+                    SET [Description] = @Description, 
+                        [IsActive] = @IsActive
+                    WHERE [pkConditionProductId] = @Id",
                     new {Id = model.Id, Description = model.Description, IsActive = model.IsActive});
             }
 
@@ -114,7 +119,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[rtblConditionProduct] WHERE [pkConditionProductId] = @Id",
+                db.Execute(@"DELETE [dbo].[rtblConditionProduct] 
+                            WHERE [pkConditionProductId] = @Id",
                     new {model.Id});
             }
 

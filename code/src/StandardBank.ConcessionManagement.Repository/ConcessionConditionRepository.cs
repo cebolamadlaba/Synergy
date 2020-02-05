@@ -73,7 +73,22 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionCondition>(
-                    "SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [fkPeriodTypeId] [PeriodTypeId], [fkPeriodId] [PeriodId], [InterestRate], [Volume], [Value], [ConditionMet], [ExpiryDate], [DateApproved], [IsActive], [ConditionComment] FROM [dbo].[tblConcessionCondition] WHERE [pkConcessionConditionId] = @Id",
+                    @"SELECT [pkConcessionConditionId] [Id], 
+                             [fkConcessionId] [ConcessionId], 
+                             [fkConditionTypeId] [ConditionTypeId], 
+                             [fkConditionProductId] [ConditionProductId], 
+                             [fkPeriodTypeId] [PeriodTypeId], 
+                             [fkPeriodId] [PeriodId], 
+                             [InterestRate], 
+                             [Volume], 
+                             [Value], 
+                             [ConditionMet], 
+                             [ExpiryDate], 
+                             [DateApproved], 
+                             [IsActive], 
+                             [ConditionComment] 
+                    FROM [dbo].[tblConcessionCondition] 
+                    WHERE [pkConcessionConditionId] = @Id",
                     new { id }).SingleOrDefault();
             }
         }
@@ -88,7 +103,20 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionCondition>(
-                    @"SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [fkPeriodTypeId] [PeriodTypeId], [fkPeriodId] [PeriodId], [InterestRate], [Volume], [Value], [ConditionMet], [ExpiryDate], [DateApproved], [IsActive], [ConditionComment]
+                    @"SELECT [pkConcessionConditionId] [Id], 
+                             [fkConcessionId] [ConcessionId], 
+                             [fkConditionTypeId] [ConditionTypeId], 
+                             [fkConditionProductId] [ConditionProductId], 
+                             [fkPeriodTypeId] [PeriodTypeId], 
+                             [fkPeriodId] [PeriodId], 
+                             [InterestRate], 
+                             [Volume], 
+                             [Value], 
+                             [ConditionMet], 
+                             [ExpiryDate], 
+                             [DateApproved], 
+                             [IsActive], 
+                             [ConditionComment]
                     FROM [dbo].[tblConcessionCondition] 
                     WHERE [fkConcessionId] = @concessionId",
                     new { concessionId });
@@ -104,7 +132,21 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionCondition>(
-                    "SELECT [pkConcessionConditionId] [Id], [fkConcessionId] [ConcessionId], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [fkPeriodTypeId] [PeriodTypeId], [fkPeriodId] [PeriodId], [InterestRate], [Volume], [Value], [ConditionMet], [ExpiryDate], [DateApproved], [IsActive], [ConditionComment] FROM [dbo].[tblConcessionCondition]");
+                    @"SELECT [pkConcessionConditionId] [Id], 
+                             [fkConcessionId] [ConcessionId], 
+                             [fkConditionTypeId] [ConditionTypeId], 
+                             [fkConditionProductId] [ConditionProductId], 
+                             [fkPeriodTypeId] [PeriodTypeId], 
+                             [fkPeriodId] [PeriodId], 
+                             [InterestRate], 
+                             [Volume], 
+                             [Value], 
+                             [ConditionMet], 
+                             [ExpiryDate], 
+                             [DateApproved], 
+                             [IsActive], 
+                             [ConditionComment] 
+                    FROM [dbo].[tblConcessionCondition]");
             }
         }
 
@@ -116,9 +158,22 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblConcessionCondition]
-                            SET [fkConcessionId] = @ConcessionId, [fkConditionTypeId] = @ConditionTypeId, [fkConditionProductId] = @ConditionProductId, [fkPeriodTypeId] = @PeriodTypeId, [fkPeriodId] = @PeriodId, [InterestRate] = @InterestRate, [Volume] = @Volume, [Value] = @Value, [ConditionMet] = @ConditionMet, [ExpiryDate] = @ExpiryDate, [DateApproved] = @DateApproved, [IsActive] = @IsActive, [ConditionComment] = @ConditionComment
-                            WHERE [pkConcessionConditionId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblConcessionCondition]
+                    SET [fkConcessionId] = @ConcessionId, 
+                        [fkConditionTypeId] = @ConditionTypeId, 
+                        [fkConditionProductId] = @ConditionProductId, 
+                        [fkPeriodTypeId] = @PeriodTypeId, 
+                        [fkPeriodId] = @PeriodId, 
+                        [InterestRate] = @InterestRate, 
+                        [Volume] = @Volume, 
+                        [Value] = @Value, 
+                        [ConditionMet] = @ConditionMet, 
+                        [ExpiryDate] = @ExpiryDate, 
+                        [DateApproved] = @DateApproved, 
+                        [IsActive] = @IsActive, 
+                        [ConditionComment] = @ConditionComment
+                    WHERE [pkConcessionConditionId] = @Id",
                     new
                     {
                         Id = model.Id,
@@ -147,7 +202,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblConcessionCondition] WHERE [pkConcessionConditionId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblConcessionCondition] 
+                            WHERE [pkConcessionConditionId] = @Id",
                     new { model.Id });
             }
         }

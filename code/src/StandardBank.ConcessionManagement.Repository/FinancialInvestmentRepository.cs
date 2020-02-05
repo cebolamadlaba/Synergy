@@ -36,8 +36,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             const string sql =
                 @"INSERT [dbo].[tblFinancialInvestment] ([fkRiskGroupId], [TotalLiabilityBalances], [WeightedAverageMTP], [WeightedAverageNetMargin], [LatestCrsOrMrs]) 
-                                VALUES (@RiskGroupId, @TotalLiabilityBalances, @WeightedAverageMTP, @WeightedAverageNetMargin, @LatestCrsOrMrs) 
-                                SELECT CAST(SCOPE_IDENTITY() as int)";
+                VALUES (@RiskGroupId, @TotalLiabilityBalances, @WeightedAverageMTP, @WeightedAverageNetMargin, @LatestCrsOrMrs) 
+                SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
@@ -65,7 +65,14 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<FinancialInvestment>(
-                    "SELECT [pkFinancialInvestmentId] [Id], [fkRiskGroupId] [RiskGroupId], [TotalLiabilityBalances], [WeightedAverageMTP], [WeightedAverageNetMargin], [LatestCrsOrMrs] FROM [dbo].[tblFinancialInvestment] WHERE [pkFinancialInvestmentId] = @Id",
+                    @"SELECT [pkFinancialInvestmentId] [Id],
+		                    [fkRiskGroupId] [RiskGroupId],
+		                    [TotalLiabilityBalances],
+		                    [WeightedAverageMTP],
+		                    [WeightedAverageNetMargin],
+		                    [LatestCrsOrMrs] 
+		                    FROM [dbo].[tblFinancialInvestment] 
+                    WHERE [pkFinancialInvestmentId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -79,7 +86,13 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<FinancialInvestment>(
-                    "SELECT [pkFinancialInvestmentId] [Id], [fkRiskGroupId] [RiskGroupId], [TotalLiabilityBalances], [WeightedAverageMTP], [WeightedAverageNetMargin], [LatestCrsOrMrs] FROM [dbo].[tblFinancialInvestment]");
+                    @"SELECT [pkFinancialInvestmentId] [Id],
+		                    [fkRiskGroupId] [RiskGroupId],
+		                    [TotalLiabilityBalances],
+		                    [WeightedAverageMTP],
+		                    [WeightedAverageNetMargin],
+		                    [LatestCrsOrMrs] 
+                    FROM [dbo].[tblFinancialInvestment]");
             }
         }
 
@@ -91,9 +104,14 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblFinancialInvestment]
-                            SET [fkRiskGroupId] = @RiskGroupId, [TotalLiabilityBalances] = @TotalLiabilityBalances, [WeightedAverageMTP] = @WeightedAverageMTP, [WeightedAverageNetMargin] = @WeightedAverageNetMargin, [LatestCrsOrMrs] = @LatestCrsOrMrs
-                            WHERE [pkFinancialInvestmentId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblFinancialInvestment]
+                    SET [fkRiskGroupId] = @RiskGroupId,
+                        [TotalLiabilityBalances] = @TotalLiabilityBalances,
+                        [WeightedAverageMTP] = @WeightedAverageMTP,
+                        [WeightedAverageNetMargin] = @WeightedAverageNetMargin,
+                        [LatestCrsOrMrs] = @LatestCrsOrMrs
+                    WHERE [pkFinancialInvestmentId] = @Id",
                     new
                     {
                         Id = model.Id,
@@ -114,7 +132,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblFinancialInvestment] WHERE [pkFinancialInvestmentId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblFinancialInvestment] 
+                            WHERE [pkFinancialInvestmentId] = @Id",
                     new {model.Id});
             }
         }
@@ -124,7 +143,11 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<FinancialInvestment>(
-                    @"SELECT [pkFinancialInvestmentId] [Id], [fkRiskGroupId] [RiskGroupId], [TotalLiabilityBalances], [WeightedAverageMTP] ,[WeightedAverageNetMargin]
+                    @"SELECT [pkFinancialInvestmentId] [Id], 
+                            [fkRiskGroupId] [RiskGroupId], 
+                            [TotalLiabilityBalances], 
+                            [WeightedAverageMTP],
+                            [WeightedAverageNetMargin]
                     FROM [dbo].[tblFinancialInvestment] 
                     WHERE [fkRiskGroupId] = @riskGroupId",
                     new { riskGroupId });

@@ -1,10 +1,8 @@
 ﻿using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -35,12 +33,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public int? GetCurrentAccountExecutiveUserId(int? aeNumberUserId)
         {
             if (aeNumberUserId == null)
+            {
                 return null;
+            }
 
             AENumberUser aeNumberUser = this.GetAENumberUser(aeNumberUserId.Value);
 
             if (aeNumberUser == null)
+            {
                 return null;
+            }
 
             return aeNumberUser.UserId;
         }
@@ -50,12 +52,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             int? accountExecutiveUserId = this.GetCurrentAccountExecutiveUserId(aeNumberUserId);
 
             if (accountExecutiveUserId == null)
+            {
                 return null;
+            }
 
             IEnumerable<AccountExecutiveAssistant> accountAssistants = this._accountExecutiveAssistantRepository.ReadByAccountExecutiveUserId(accountExecutiveUserId.Value);
 
             if (accountAssistants != null && accountAssistants.Count() > 0)
+            {
                 return accountAssistants.Select(a => (int?)a.AccountAssistantUserId).ToArray();
+            }
 
             return null;
         }

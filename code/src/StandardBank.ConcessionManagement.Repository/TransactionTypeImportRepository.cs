@@ -78,7 +78,11 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 using (var db = _dbConnectionFactory.Connection())
             	{
-                	return db.Query<TransactionTypeImport>("SELECT [pkTransactionTypeImportId] [Id], [fkTransactionTypeId] [TransactionTypeId], [ImportFileChannel] FROM [dbo].[rtblTransactionTypeImport]");
+                	return db.Query<TransactionTypeImport>(
+                        @"SELECT [pkTransactionTypeImportId] [Id], 
+                            [fkTransactionTypeId] [TransactionTypeId], 
+                            [ImportFileChannel] 
+                        FROM [dbo].[rtblTransactionTypeImport]");
             	}
             };
 
@@ -93,9 +97,11 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[rtblTransactionTypeImport]
-                            SET [fkTransactionTypeId] = @TransactionTypeId, [ImportFileChannel] = @ImportFileChannel
-                            WHERE [pkTransactionTypeImportId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[rtblTransactionTypeImport]
+                    SET [fkTransactionTypeId] = @TransactionTypeId, 
+                        [ImportFileChannel] = @ImportFileChannel
+                    WHERE [pkTransactionTypeImportId] = @Id",
                     new {Id = model.Id, TransactionTypeId = model.TransactionTypeId, ImportFileChannel = model.ImportFileChannel});
             }
 
@@ -111,7 +117,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[rtblTransactionTypeImport] WHERE [pkTransactionTypeImportId] = @Id",
+                db.Execute(@"DELETE [dbo].[rtblTransactionTypeImport] 
+                            WHERE [pkTransactionTypeImportId] = @Id",
                     new {model.Id});
             }
 

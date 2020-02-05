@@ -56,7 +56,12 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<SapDataImportConfiguration>(
-                    "SELECT [pkSapDataImportConfigurationId] [Id], [FileImportLocation], [FileExportLocation], [SupportEmailAddress] FROM [dbo].[tblSapDataImportConfiguration] WHERE [pkSapDataImportConfigurationId] = @Id",
+                    @"SELECT [pkSapDataImportConfigurationId] [Id], 
+                        [FileImportLocation], 
+                        [FileExportLocation], 
+                        [SupportEmailAddress] 
+                    FROM [dbo].[tblSapDataImportConfiguration] 
+                    WHERE [pkSapDataImportConfigurationId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -69,7 +74,12 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<SapDataImportConfiguration>("SELECT [pkSapDataImportConfigurationId] [Id], [FileImportLocation], [FileExportLocation], [SupportEmailAddress] FROM [dbo].[tblSapDataImportConfiguration]");
+                return db.Query<SapDataImportConfiguration>(
+                    @"SELECT [pkSapDataImportConfigurationId] [Id], 
+                        [FileImportLocation], 
+                        [FileExportLocation], 
+                        [SupportEmailAddress] 
+                    FROM [dbo].[tblSapDataImportConfiguration]");
             }
         }
 
@@ -81,9 +91,12 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblSapDataImportConfiguration]
-                            SET [FileImportLocation] = @FileImportLocation, [FileExportLocation] = @FileExportLocation, [SupportEmailAddress] = @SupportEmailAddress
-                            WHERE [pkSapDataImportConfigurationId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblSapDataImportConfiguration]
+                    SET [FileImportLocation] = @FileImportLocation, 
+                        [FileExportLocation] = @FileExportLocation, 
+                        [SupportEmailAddress] = @SupportEmailAddress
+                    WHERE [pkSapDataImportConfigurationId] = @Id",
                     new {Id = model.Id, FileImportLocation = model.FileImportLocation, FileExportLocation = model.FileExportLocation, SupportEmailAddress = model.SupportEmailAddress});
             }
         }
@@ -96,7 +109,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblSapDataImportConfiguration] WHERE [pkSapDataImportConfigurationId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblSapDataImportConfiguration] 
+                            WHERE [pkSapDataImportConfigurationId] = @Id",
                     new {model.Id});
             }
         }

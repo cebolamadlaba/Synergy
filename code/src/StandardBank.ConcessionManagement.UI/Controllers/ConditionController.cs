@@ -71,7 +71,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("BOLChargeCodesAll")]
         public IActionResult GetAllBOLChargeCodes()
         {
-
             var codes = _lookupTableManager.GetBOLChargeCodesAll();
             return Ok(codes);
         }
@@ -177,8 +176,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public async Task<IActionResult> UpdateCondition([FromBody] ConcessionCondition concessionCondition)
         {
             var user = _siteHelper.LoggedInUser(this);
-            var concession =
-                _concessionManager.GetConcessionForConcessionReferenceId(concessionCondition.ConcessionReferenceNumber, user);
+            var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionCondition.ConcessionReferenceNumber, user);
 
             var result = await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
 

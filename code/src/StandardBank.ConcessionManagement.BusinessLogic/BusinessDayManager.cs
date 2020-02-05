@@ -1,7 +1,6 @@
 ﻿using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
@@ -14,6 +13,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             this.holidayRepository = holidayRepository;
         }
+
         /// <summary>
         /// Calculates working between the two dates by excluding weekends and public holidays
         /// </summary>
@@ -23,12 +23,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public int GetWorkingDays(DateTime startDate, DateTime endDate)
         {
             var totalDays = 0;
-            var holidays = holidayRepository.GetPublicHolidaysWithinRange(startDate,endDate);
+            var holidays = holidayRepository.GetPublicHolidaysWithinRange(startDate, endDate);
             for (var date = startDate.AddDays(1); date <= endDate; date = date.AddDays(1))
             {
                 if (date.DayOfWeek != DayOfWeek.Saturday
                     && date.DayOfWeek != DayOfWeek.Sunday && !holidays.Any(x => x == date))
+                {
                     totalDays++;
+                }
             }
 
             return totalDays;

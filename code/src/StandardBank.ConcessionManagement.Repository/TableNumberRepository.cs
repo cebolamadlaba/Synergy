@@ -45,8 +45,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             const string sql =
                 @"INSERT [dbo].[rtblTableNumber] ([fkConcessionTypeId], [TariffTable], [AdValorem], [BaseRate], [IsActive]) 
-                                VALUES (@ConcessionTypeId, @TariffTable, @AdValorem, @BaseRate, @IsActive) 
-                                SELECT CAST(SCOPE_IDENTITY() as int)";
+                VALUES (@ConcessionTypeId, @TariffTable, @AdValorem, @BaseRate, @IsActive) 
+                SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
@@ -88,7 +88,14 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     return db.Query<TableNumber>(
-                        "SELECT [pkTableNumberId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [TariffTable], [AdValorem], [BaseRate], [IsActive] FROM [dbo].[rtblTableNumber] where ActiveUntil is null");
+                        @"SELECT [pkTableNumberId] [Id], 
+                            [fkConcessionTypeId] [ConcessionTypeId], 
+                            [TariffTable], 
+                            [AdValorem], 
+                            [BaseRate], 
+                            [IsActive] 
+                        FROM [dbo].[rtblTableNumber] 
+                        where ActiveUntil is null");
                 }
             };
 
@@ -105,14 +112,37 @@ namespace StandardBank.ConcessionManagement.Repository
                     if (ConcessionType.ToLower() == "cash")
                     {
                         return db.Query<TableNumber>(
-                            "SELECT [pkTableNumberId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [TariffTable], [AdValorem], [BaseRate], [IsActive] FROM [dbo].[rtblTableNumber] where TariffTable not in (select StandardPricingTable from rtblChannelType where StandardPricingTable is not null)");
+                            @"SELECT [pkTableNumberId] [Id], 
+	                            [fkConcessionTypeId] [ConcessionTypeId], 
+	                            [TariffTable], 
+	                            [AdValorem], 
+	                            [BaseRate], 
+	                            [IsActive] 
+                            FROM [dbo].[rtblTableNumber] 
+                            where TariffTable not in (
+							                            select StandardPricingTable 
+							                            from rtblChannelType 
+							                            where StandardPricingTable is not null
+						                            )");
                    
                     }
                     //disregard standard pricing
                     else if (ConcessionType.ToLower() == "transactional")
                     {
                         return db.Query<TableNumber>(
-                                             string.Format("SELECT [pkTableNumberId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [TariffTable], [AdValorem], [BaseRate], [IsActive] FROM [dbo].[rtblTableNumber]  where TariffTable not in (select StandardPricingTable from rtblTransactionType where fkConcessionTypeId = {0} and StandardPricingTable is not null)", ConcessionTypeId));
+                            $@"SELECT [pkTableNumberId] [Id], 
+                                [fkConcessionTypeId] [ConcessionTypeId], 
+                                [TariffTable], 
+                                [AdValorem], 
+                                [BaseRate], 
+                                [IsActive] 
+                            FROM [dbo].[rtblTableNumber] 
+                            where TariffTable not in (
+                                                        select StandardPricingTable 
+                                                        from rtblTransactionType 
+                                                        where fkConcessionTypeId = {ConcessionTypeId} 
+                                                            and StandardPricingTable is not null
+                                                    )");
 
 
                     }
@@ -120,7 +150,13 @@ namespace StandardBank.ConcessionManagement.Repository
                     {
 
                         return db.Query<TableNumber>(
-                            "SELECT [pkTableNumberId] [Id], [fkConcessionTypeId] [ConcessionTypeId], [TariffTable], [AdValorem], [BaseRate], [IsActive] FROM [dbo].[rtblTableNumber]");
+                            @"SELECT [pkTableNumberId] [Id], 
+                                [fkConcessionTypeId] [ConcessionTypeId], 
+                                [TariffTable], 
+                                [AdValorem], 
+                                [BaseRate], 
+                                [IsActive] 
+                            FROM [dbo].[rtblTableNumber]");
                     }
 
                 }
@@ -141,13 +177,27 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 using (var db = _dbConnectionFactory.Connection())
                 {
-                    db.Execute(@"if not exists(Select [fkConcessionTypeId],TariffTable, AdValorem, BaseRate, isactive from rtblTableNumber where pkTableNumberId = @pkTableNumberId and TariffTable = @TariffTable and AdValorem =  @AdValorem and BaseRate = @BaseRate)
-                                    INSERT [dbo].[rtblTableNumber] ([fkConcessionTypeId], [TariffTable], [AdValorem], [BaseRate],[IsActive],[ActiveUntil]) 
-                                        Select [fkConcessionTypeId], [TariffTable], [AdValorem], [BaseRate], 0, @ActiveUntil from rtblTableNumber where pkTableNumberId = @pkTableNumberId;
+                    db.Execute(
+                        @"if not exists(Select [fkConcessionTypeId],TariffTable, AdValorem, BaseRate, isactive 
+			                        from rtblTableNumber 
+			                        where pkTableNumberId = @pkTableNumberId 
+				                        and TariffTable = @TariffTable 
+				                        and AdValorem =  @AdValorem 
+				                        and BaseRate = @BaseRate)
+                        begin
+	                        INSERT [dbo].[rtblTableNumber] ([fkConcessionTypeId], [TariffTable], [AdValorem], [BaseRate],[IsActive],[ActiveUntil]) 
+	                        Select [fkConcessionTypeId], [TariffTable], [AdValorem], [BaseRate], 0, @ActiveUntil 
+	                        from rtblTableNumber 
+	                        where pkTableNumberId = @pkTableNumberId;
+                        end
 
-                            UPDATE [dbo].[rtblTableNumber]
-                            SET [fkConcessionTypeId] = @ConcessionTypeId, [TariffTable] = @TariffTable, [AdValorem] = @AdValorem, [BaseRate] = @BaseRate, [IsActive] = @IsActive
-                            WHERE [pkTableNumberId] = @pkTableNumberId",
+                        UPDATE [dbo].[rtblTableNumber]
+                        SET [fkConcessionTypeId] = @ConcessionTypeId, 
+	                        [TariffTable] = @TariffTable, 
+	                        [AdValorem] = @AdValorem, 
+	                        [BaseRate] = @BaseRate, 
+	                        [IsActive] = @IsActive
+                        WHERE [pkTableNumberId] = @pkTableNumberId",
                         new
                         {
                             pkTableNumberId = model.Id,
@@ -178,7 +228,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[rtblTableNumber] WHERE [pkTableNumberId] = @Id",
+                db.Execute(@"DELETE [dbo].[rtblTableNumber] 
+                            WHERE [pkTableNumberId] = @Id",
                     new { model.Id });
             }
 
