@@ -63,7 +63,12 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<AccountExecutiveAssistant>(
-                    "SELECT [pkAccountExecutiveAssistantId] [Id], [fkAccountAssistantUserId] [AccountAssistantUserId], [fkAccountExecutiveUserId] [AccountExecutiveUserId], [IsActive] FROM [dbo].[tblAccountExecutiveAssistant] WHERE [pkAccountExecutiveAssistantId] = @Id",
+                    @"SELECT [pkAccountExecutiveAssistantId] [Id], 
+                             [fkAccountAssistantUserId] [AccountAssistantUserId], 
+                             [fkAccountExecutiveUserId] [AccountExecutiveUserId], 
+                             [IsActive] 
+                    FROM [dbo].[tblAccountExecutiveAssistant] 
+                    WHERE [pkAccountExecutiveAssistantId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -78,11 +83,15 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<AccountExecutiveAssistant>(
-                    @"SELECT [pkAccountExecutiveAssistantId] [Id], [fkAccountAssistantUserId] [AccountAssistantUserId], [fkAccountExecutiveUserId] [AccountExecutiveUserId], [tblAccountExecutiveAssistant].[IsActive], tblUser.FirstName + ' ' + tblUser.Surname as 'AccountExecutiveDisplayName'
+                    @"SELECT [pkAccountExecutiveAssistantId] [Id], 
+                             [fkAccountAssistantUserId] [AccountAssistantUserId], 
+                             [fkAccountExecutiveUserId] [AccountExecutiveUserId], 
+                             [tblAccountExecutiveAssistant].[IsActive], 
+                             tblUser.FirstName + ' ' + tblUser.Surname as 'AccountExecutiveDisplayName'
                     FROM [dbo].[tblAccountExecutiveAssistant] 
 					left join tblUser on [tblAccountExecutiveAssistant].fkAccountExecutiveUserId = tblUser.pkUserId
                     WHERE [fkAccountAssistantUserId] = @userId
-                    AND [tblAccountExecutiveAssistant].[IsActive] = 1",
+                        AND [tblAccountExecutiveAssistant].[IsActive] = 1",
                     new { userId });
             }
         }
@@ -97,10 +106,13 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<AccountExecutiveAssistant>(
-                    @"SELECT [pkAccountExecutiveAssistantId] [Id], [fkAccountAssistantUserId] [AccountAssistantUserId], [fkAccountExecutiveUserId] [AccountExecutiveUserId], [IsActive]
+                    @"SELECT [pkAccountExecutiveAssistantId] [Id], 
+                             [fkAccountAssistantUserId] [AccountAssistantUserId], 
+                             [fkAccountExecutiveUserId] [AccountExecutiveUserId], 
+                             [IsActive]
                     FROM [dbo].[tblAccountExecutiveAssistant] 
                     WHERE [fkAccountExecutiveUserId] = @userId
-                    AND [IsActive] = 1",
+                        AND [IsActive] = 1",
                     new { userId });
             }
         }
@@ -114,7 +126,11 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<AccountExecutiveAssistant>(
-                    "SELECT [pkAccountExecutiveAssistantId] [Id], [fkAccountAssistantUserId] [AccountAssistantUserId], [fkAccountExecutiveUserId] [AccountExecutiveUserId], [IsActive] FROM [dbo].[tblAccountExecutiveAssistant]");
+                    @"SELECT [pkAccountExecutiveAssistantId] [Id], 
+                             [fkAccountAssistantUserId] [AccountAssistantUserId], 
+                             [fkAccountExecutiveUserId] [AccountExecutiveUserId], 
+                             [IsActive] 
+                    FROM [dbo].[tblAccountExecutiveAssistant]");
             }
         }
 
@@ -127,8 +143,10 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[tblAccountExecutiveAssistant]
-                            SET [fkAccountAssistantUserId] = @AccountAssistantUserId, [fkAccountExecutiveUserId] = @AccountExecutiveUserId, [IsActive] = @IsActive
-                            WHERE [pkAccountExecutiveAssistantId] = @Id",
+                             SET [fkAccountAssistantUserId] = @AccountAssistantUserId, 
+                                 [fkAccountExecutiveUserId] = @AccountExecutiveUserId, 
+                                 [IsActive] = @IsActive
+                             WHERE [pkAccountExecutiveAssistantId] = @Id",
                     new
                     {
                         Id = model.Id,
@@ -147,7 +165,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblAccountExecutiveAssistant] WHERE [pkAccountExecutiveAssistantId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblAccountExecutiveAssistant] 
+                             WHERE [pkAccountExecutiveAssistantId] = @Id",
                     new {model.Id});
             }
         }

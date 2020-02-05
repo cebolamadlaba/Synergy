@@ -65,8 +65,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var businessCentres = _businessCentreManager.GetBusinessCentreManagementModels();
 
             if (user.IsBCM)
-                businessCentres = businessCentres.Where(_ =>
-                    _.BusinessCentreManagerId.HasValue && _.BusinessCentreManagerId.Value == user.Id);
+            {
+                businessCentres = businessCentres.Where(_ => _.BusinessCentreManagerId.HasValue && _.BusinessCentreManagerId.Value == user.Id);
+            }
 
             return Ok(businessCentres);
         }
@@ -93,9 +94,13 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var user = _siteHelper.LoggedInUser(this);
 
             if (businessCentreManagementModel.CentreId > 0)
+            {
                 await _mediator.Send(new UpdateBusinessCentreManagementModel(businessCentreManagementModel, user));
+            }
             else
+            {
                 await _mediator.Send(new CreateBusinessCentreManagementModel(businessCentreManagementModel, user));
+            }
 
             return Ok(true);
         }

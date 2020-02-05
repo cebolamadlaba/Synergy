@@ -56,7 +56,12 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<BusinesOnlineTransactionType>(
-                    "SELECT [pkBusinesOnlineTransactionTypeId] [Id], [fkTransactionGroupId] [TransactionGroupId], [Description], [IsActive] FROM [dbo].[tblBusinesOnlineTransactionType] WHERE [pkBusinesOnlineTransactionTypeId] = @Id",
+                    @"SELECT [pkBusinesOnlineTransactionTypeId] [Id], 
+                             [fkTransactionGroupId] [TransactionGroupId], 
+                             [Description], 
+                             [IsActive] 
+                    FROM [dbo].[tblBusinesOnlineTransactionType] 
+                    WHERE [pkBusinesOnlineTransactionTypeId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -69,7 +74,12 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<BusinesOnlineTransactionType>("SELECT [pkBusinesOnlineTransactionTypeId] [Id], [fkTransactionGroupId] [TransactionGroupId], [Description], [IsActive] FROM [dbo].[tblBusinesOnlineTransactionType]");
+                return db.Query<BusinesOnlineTransactionType>(
+                    @"SELECT [pkBusinesOnlineTransactionTypeId] [Id], 
+                             [fkTransactionGroupId] [TransactionGroupId], 
+                             [Description], 
+                             [IsActive] 
+                    FROM [dbo].[tblBusinesOnlineTransactionType]");
             }
         }
 
@@ -81,9 +91,12 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblBusinesOnlineTransactionType]
-                            SET [fkTransactionGroupId] = @TransactionGroupId, [Description] = @Description, [IsActive] = @IsActive
-                            WHERE [pkBusinesOnlineTransactionTypeId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblBusinesOnlineTransactionType]
+                    SET [fkTransactionGroupId] = @TransactionGroupId, 
+                        [Description] = @Description, 
+                        [IsActive] = @IsActive
+                    WHERE [pkBusinesOnlineTransactionTypeId] = @Id",
                     new {Id = model.Id, TransactionGroupId = model.TransactionGroupId, Description = model.Description, IsActive = model.IsActive});
             }
         }
@@ -96,7 +109,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblBusinesOnlineTransactionType] WHERE [pkBusinesOnlineTransactionTypeId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblBusinesOnlineTransactionType] 
+                            WHERE [pkBusinesOnlineTransactionTypeId] = @Id",
                     new {model.Id});
             }
         }

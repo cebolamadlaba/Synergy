@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using AutoMapper;
+﻿using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Administration;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -103,23 +103,30 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                             _.CentreName.ToLowerInvariant() == businessCentreManagementModel.CentreName.ToLowerInvariant()))
                         {
                             if (matchingDescriptionRegion.Id != businessCentreManagementModel.CentreId)
+                            {
                                 errors.Add("There is already a business centre with the same description, please use another description");
+                            }
                         }
                     }
                     else
                     {
                         //this means it's a create
                         if (centres.Any(_ => _.CentreName.ToLowerInvariant() == businessCentreManagementModel.CentreName.ToLowerInvariant()))
-                            errors.Add(
-                                "There is already a business centre with the same description, please use another description");
+                        {
+                            errors.Add("There is already a business centre with the same description, please use another description");
+                        }
                     }
                 }
 
                 if (!businessCentreManagementModel.RegionId.HasValue || businessCentreManagementModel.RegionId.Value == 0)
+                {
                     errors.Add("Please select a region");
+                }
 
                 if (string.IsNullOrWhiteSpace(businessCentreManagementModel.CentreName))
+                {
                     errors.Add("Please supply a centre name");
+                }
             }
 
             return errors;
@@ -143,7 +150,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         public BusinessCentreManagementModel GetBusinessCentreManager(int centreid)
         {
-
             var centreinfo = _miscPerformanceRepository.GetBusinessCentreManager(centreid);
 
             if (centreinfo == null)
@@ -153,12 +159,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             else
             {
                 return centreinfo;
-
             }
-
         }
-
-
 
         /// <summary>
         /// Creates the centre.
@@ -232,7 +234,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     }
                 }
             }
-
 
             var userCentres = _centreUserRepository.ReadByUserId(userId);
             foreach (var userCentre in userCentres)
@@ -318,7 +319,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 var centresToAdd = new List<Model.UserInterface.Centre>();
 
                 if (regionCentre.Centres != null && regionCentre.Centres.Any())
+                {
                     centresToAdd.AddRange(regionCentre.Centres);
+                }
 
                 var centreToAdd = _mapper.Map<Model.UserInterface.Centre>(centre);
                 centreToAdd.Region = regionCentre.RegionName;

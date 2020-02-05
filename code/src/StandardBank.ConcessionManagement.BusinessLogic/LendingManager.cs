@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.ConcessionCondition;
@@ -12,6 +8,10 @@ using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
 
@@ -20,7 +20,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
     /// <summary>
     /// Lending manager
     /// </summary>
-    /// <seealso cref="StandardBank.ConcessionManagement.Interface.BusinessLogic.ILendingManager" />
+    /// <seealso cref="ILendingManager" />
     public class LendingManager : ILendingManager
     {
         /// <summary>
@@ -59,7 +59,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IRuleManager _ruleManager;
 
         private readonly IMediator _mediator;
-
 
         /// <summary>
         /// The misc performance repository
@@ -192,13 +191,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     var productType = _lookupTableManager.GetProductTypeName(concessionLending.ProductTypeId);
 
                     if (productType == Constants.Lending.ProductType.Overdraft)
+                    {
                         concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
-
+                    }
                     else if (productType == Constants.Lending.ProductType.TempOverdraft)
+                    {
                         concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
-
+                    }
                     else if (productType != Constants.Lending.ProductType.Overdraft && concessionLending.Term.HasValue)
+                    {
                         concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
+                    }
                 }
             }
             else if (concession.Status == Constants.ConcessionStatus.Pending &&
@@ -290,10 +293,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var lendingProducts = GetLendingProducts(riskGroup.Id, riskGroup.Name);
 
             var lendingFinancial = _mapper.Map<LendingFinancial>(
-                _financialLendingRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
-                new FinancialLending());
-
-
+                _financialLendingRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialLending());
 
             //grouping of products
             var groupedinfo = new List<LendingProductGroup>();
@@ -304,10 +304,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     var productgrouping = groupedinfo.Where(g => g.CustomerName == product.CustomerName).FirstOrDefault();
                     if (productgrouping == null)
                     {
-                        LendingProductGroup newgroup = new LendingProductGroup();
-                        newgroup.CustomerName = product.CustomerName;
-                        newgroup.RiskGroupName = product.RiskGroupName;
-                        newgroup.LendingProducts = new List<LendingProduct>();
+                        LendingProductGroup newgroup = new LendingProductGroup
+                        {
+                            CustomerName = product.CustomerName,
+                            RiskGroupName = product.RiskGroupName,
+                            LendingProducts = new List<LendingProduct>()
+                        };
                         newgroup.LendingProducts.Add(product);
 
                         groupedinfo.Add(newgroup);
@@ -316,14 +318,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     {
                         productgrouping.LendingProducts.Add(product);
                     }
-
                 }
+
                 //sort
                 foreach (var productgrouping in groupedinfo)
                 {
                     if (productgrouping != null && productgrouping.LendingProducts != null)
+                    {
                         productgrouping.LendingProducts = productgrouping.LendingProducts.OrderBy(o => o.AccountNumber).ThenBy(o => o.Product).ToList();
-
+                    }
                 }
             }
 
@@ -367,9 +370,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 WeightedAverageMap = 0,
                 WeightedCrsOrMrs = 0
             };
-            //var lendingFinancial = _mapper.Map<LendingFinancial>(
-            //    _financialLendingRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
-            //    new FinancialLending());
 
             //grouping of products
             var groupedinfo = new List<LendingProductGroup>();
@@ -380,10 +380,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     var productgrouping = groupedinfo.Where(g => g.CustomerName == product.CustomerName).FirstOrDefault();
                     if (productgrouping == null)
                     {
-                        LendingProductGroup newgroup = new LendingProductGroup();
-                        newgroup.CustomerName = product.CustomerName;
-                        newgroup.RiskGroupName = product.RiskGroupName;
-                        newgroup.LendingProducts = new List<LendingProduct>();
+                        LendingProductGroup newgroup = new LendingProductGroup
+                        {
+                            CustomerName = product.CustomerName,
+                            RiskGroupName = product.RiskGroupName,
+                            LendingProducts = new List<LendingProduct>()
+                        };
                         newgroup.LendingProducts.Add(product);
 
                         groupedinfo.Add(newgroup);
@@ -392,14 +394,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     {
                         productgrouping.LendingProducts.Add(product);
                     }
-
                 }
                 //sort
                 foreach (var productgrouping in groupedinfo)
                 {
                     if (productgrouping != null && productgrouping.LendingProducts != null)
+                    {
                         productgrouping.LendingProducts = productgrouping.LendingProducts.OrderBy(o => o.AccountNumber).ThenBy(o => o.Product).ToList();
-
+                    }
                 }
             }
 
@@ -410,7 +412,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 LendingProductGroups = groupedinfo.OrderBy(m => m.CustomerName),
                 LegalEntity = legalEntity
             };
-
         }
 
         /// <summary>
@@ -420,13 +421,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public decimal GetLatestCrsOrMrs(int riskGroupNumber)
         {
-            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
-
-            var lendingFinancial = _mapper.Map<LendingFinancial>(
-                _financialLendingRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
-                new FinancialLending());
-
-            return lendingFinancial.LatestCrsOrMrs;
+            return GetLendingFinancial(riskGroupNumber).LatestCrsOrMrs;
         }
 
         /// <summary>
@@ -435,6 +430,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <returns></returns>
         public LendingFinancial GetLendingFinancialForRiskGroupNumber(int riskGroupNumber)
+        {
+            return GetLendingFinancial(riskGroupNumber);
+        }
+
+        private LendingFinancial GetLendingFinancial(int riskGroupNumber)
         {
             var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
 
@@ -465,34 +465,48 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             //if there are any conditions that have been removed, delete them
             foreach (var condition in databaseLendingConcession.ConcessionConditions)
+            {
                 if (lendingConcession.ConcessionConditions.All(_ => _.ConcessionConditionId != condition.ConcessionConditionId))
+                {
                     await _mediator.Send(new DeleteConcessionCondition(condition, user));
+                }
+            }
 
             //if there are any lending concession details that have been removed delete them
             foreach (var lendingConcessionDetail in databaseLendingConcession.LendingConcessionDetails)
+            {
                 if (lendingConcession.LendingConcessionDetails.All(_ => _.LendingConcessionDetailId !=
-                                                                        lendingConcessionDetail
-                                                                            .LendingConcessionDetailId))
+                                                                                        lendingConcessionDetail.LendingConcessionDetailId))
+                {
                     await _mediator.Send(new DeleteLendingConcessionDetail(lendingConcessionDetail, user));
+                }
+            }
 
             //update the concession
             var concession = await _mediator.Send(new UpdateConcession(lendingConcession.Concession, user));
 
             //add all the new conditions and lending details and comments
             foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
+            {
                 await _mediator.Send(new AddOrUpdateLendingConcessionDetail(lendingConcessionDetail, user, concession));
+            }
 
             if (lendingConcession.ConcessionConditions != null && lendingConcession.ConcessionConditions.Any())
+            {
                 foreach (var concessionCondition in lendingConcession.ConcessionConditions)
+                {
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+                }
+            }
 
             if (!string.IsNullOrWhiteSpace(lendingConcession.Concession.Comments))
+            {
                 await _mediator.Send(new AddConcessionComment(concession.Id, databaseLendingConcession.Concession.SubStatusId,
-                    lendingConcession.Concession.Comments, user));
+                                    lendingConcession.Concession.Comments, user));
+            }
 
             //send the notification email
             await _mediator.Send(new ForwardConcession(lendingConcession.Concession, user));
-
         }
     }
 }

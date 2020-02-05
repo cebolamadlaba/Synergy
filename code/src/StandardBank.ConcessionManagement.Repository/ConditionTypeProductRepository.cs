@@ -84,7 +84,11 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     return db.Query<ConditionTypeProduct>(
-                        "SELECT [pkConditionTypeProductId] [Id], [fkConditionTypeId] [ConditionTypeId], [fkConditionProductId] [ConditionProductId], [IsActive] FROM [dbo].[tblConditionTypeProduct]");
+                        @"SELECT [pkConditionTypeProductId] [Id],
+                                [fkConditionTypeId] [ConditionTypeId],
+                                [fkConditionProductId] [ConditionProductId],
+                                [IsActive] 
+                        FROM [dbo].[tblConditionTypeProduct]");
                 }
             }
 
@@ -100,9 +104,12 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblConditionTypeProduct]
-                            SET [fkConditionTypeId] = @ConditionTypeId, [fkConditionProductId] = @ConditionProductId, [IsActive] = @IsActive
-                            WHERE [pkConditionTypeProductId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblConditionTypeProduct]
+                    SET [fkConditionTypeId] = @ConditionTypeId, 
+                        [fkConditionProductId] = @ConditionProductId, 
+                        [IsActive] = @IsActive
+                    WHERE [pkConditionTypeProductId] = @Id",
                     new
                     {
                         Id = model.Id,
@@ -123,7 +130,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblConditionTypeProduct] WHERE [pkConditionTypeProductId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblConditionTypeProduct] 
+                            WHERE [pkConditionTypeProductId] = @Id",
                     new {model.Id});
             }
 

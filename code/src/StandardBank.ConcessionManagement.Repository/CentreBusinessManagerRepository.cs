@@ -56,7 +56,12 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<CentreBusinessManager>(
-                    "SELECT [pkCentreBusinessManagerId] [Id], [fkCentreId] [CentreId], [fkUserId] [UserId], [IsActive] FROM [dbo].[tblCentreBusinessManager] WHERE [pkCentreBusinessManagerId] = @Id",
+                    @"SELECT [pkCentreBusinessManagerId] [Id], 
+                             [fkCentreId] [CentreId], 
+                             [fkUserId] [UserId], 
+                             [IsActive] 
+                    FROM [dbo].[tblCentreBusinessManager] 
+                    WHERE [pkCentreBusinessManagerId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -69,7 +74,12 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<CentreBusinessManager>("SELECT [pkCentreBusinessManagerId] [Id], [fkCentreId] [CentreId], [fkUserId] [UserId], [IsActive] FROM [dbo].[tblCentreBusinessManager]");
+                return db.Query<CentreBusinessManager>(
+                    @"SELECT [pkCentreBusinessManagerId] [Id], 
+                             [fkCentreId] [CentreId], 
+                             [fkUserId] [UserId], 
+                             [IsActive] 
+                    FROM [dbo].[tblCentreBusinessManager]");
             }
         }
 
@@ -81,9 +91,12 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblCentreBusinessManager]
-                            SET [fkCentreId] = @CentreId, [fkUserId] = @UserId, [IsActive] = @IsActive
-                            WHERE [pkCentreBusinessManagerId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblCentreBusinessManager]
+                    SET [fkCentreId] = @CentreId, 
+                        [fkUserId] = @UserId, 
+                        [IsActive] = @IsActive
+                    WHERE [pkCentreBusinessManagerId] = @Id",
                     new {Id = model.Id, CentreId = model.CentreId, UserId = model.UserId, IsActive = model.IsActive});
             }
         }
@@ -96,7 +109,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblCentreBusinessManager] WHERE [pkCentreBusinessManagerId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblCentreBusinessManager] 
+                            WHERE [pkCentreBusinessManagerId] = @Id",
                     new {model.Id});
             }
         }

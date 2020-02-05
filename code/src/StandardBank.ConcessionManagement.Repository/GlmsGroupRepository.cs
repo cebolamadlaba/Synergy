@@ -56,7 +56,11 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     return db.Query<GlmsGroup>(
-                        "SELECT [pkGlmsGroupId] [Id], [GroupNumber],[GroupName], [IsActive] FROM [dbo].[tblGlmsGroup]");
+                        @"SELECT [pkGlmsGroupId] [Id], 
+                                [GroupNumber],
+                                [GroupName], 
+                                [IsActive] 
+                        FROM [dbo].[tblGlmsGroup]");
                 }
             };
 

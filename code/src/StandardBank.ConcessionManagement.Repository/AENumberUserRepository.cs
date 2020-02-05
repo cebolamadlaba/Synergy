@@ -23,7 +23,12 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<AENumberUser>(
-                    "SELECT [pkAENumberUserId] [AENumberUserId], [AENumber], [fkUserId] [UserId], [IsActive] FROM[dbo].[tblAENumberUser] WHERE [pkAENumberUserId] = @Id",
+                    @"SELECT [pkAENumberUserId] [AENumberUserId], 
+                             [AENumber], 
+                             [fkUserId] [UserId], 
+                             [IsActive] 
+                    FROM[dbo].[tblAENumberUser] 
+                    WHERE [pkAENumberUserId] = @Id",
                     new { id }).FirstOrDefault();
             }
         }
@@ -33,7 +38,12 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<AENumberUser>(
-                    "SELECT [pkAENumberUserId] [AENumberUserId], [AENumber], [fkUserId] [UserId], [IsActive] FROM[dbo].[tblAENumberUser] WHERE [fkUserId] = @accountExecutiveUserId",
+                    @"SELECT [pkAENumberUserId] [AENumberUserId], 
+                             [AENumber], 
+                             [fkUserId] [UserId], 
+                             [IsActive] 
+                    FROM[dbo].[tblAENumberUser] 
+                    WHERE [fkUserId] = @accountExecutiveUserId",
                     new { accountExecutiveUserId }).FirstOrDefault();
             }
         }

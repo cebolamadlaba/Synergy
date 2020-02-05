@@ -46,8 +46,6 @@
             public const string BusinessOnlineDesc = "Business Online";
             public const string Cash = "Cash";
             public const string Glms = "Glms";
-            
-
         }
 
         public static class SubRoleType
@@ -55,8 +53,6 @@
             public const string TradeBanker = "Trade Banker";
             public const string BOLConsultant = "BOL Consultant";
         }
-
-
 
         public static class ReferenceType
         {

@@ -1540,25 +1540,4 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
             currentrow.get('max').setValue(null);
         }
     }
-
-    formatDecimal(itemValue: number) {
-        if (itemValue) {
-            return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-        }
-
-        return null;
-    }
-
-    validatePeriod(itemrow) {
-        this.validationError = null;
-
-        let selectedPeriodType = itemrow.controls.periodType.value.description;
-
-        let selectedPeriod = itemrow.controls.period.value.description;
-
-        if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
-            this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
-        }
-    }
-
 }

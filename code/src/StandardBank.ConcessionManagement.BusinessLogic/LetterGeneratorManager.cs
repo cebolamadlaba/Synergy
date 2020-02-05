@@ -24,7 +24,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
     /// <summary>
     /// Letter generator manager
     /// </summary>
-    /// <seealso cref="StandardBank.ConcessionManagement.Interface.BusinessLogic.ILetterGeneratorManager" />
+    /// <seealso cref="ILetterGeneratorManager" />
     public class LetterGeneratorManager : ILetterGeneratorManager
     {
         /// <summary>
@@ -114,7 +114,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IConcessionManager concessionManager, IPdfUtility pdfUtility, IUserManager userManager,
             ILendingManager lendingManager, ILegalEntityRepository legalEntityRepository, ICashManager cashManager,
             IRazorRenderer razorRenderer, ITransactionalManager transactionalManager,
-            IConcessionInboxViewRepository concessionInboxViewRepository, ILookupTableManager lookupTableManager, IBolManager bolManager, IBusinessCentreManager businessCentreManager, ITradeManager tradeManager, IInvestmentManager investmentManager)
+            IConcessionInboxViewRepository concessionInboxViewRepository, ILookupTableManager lookupTableManager,
+            IBolManager bolManager, IBusinessCentreManager businessCentreManager, ITradeManager tradeManager,
+            IInvestmentManager investmentManager)
         {
             _templatePath = configurationData.LetterTemplatePath;
             _fileUtiltity = fileUtiltity;
@@ -396,7 +398,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     if (concessionInboxView.ConcessionDetailId ==
                         lendingConcessionDetail.ConcessionDetailId)
                     {
-                        if (lendingConcessionDetail.ProductType == Constants.Lending.ProductType.Overdraft || lendingConcessionDetail.ProductType == Constants.Lending.ProductType.TempOverdraft)
+                        if (lendingConcessionDetail.ProductType == Constants.Lending.ProductType.Overdraft ||
+                            lendingConcessionDetail.ProductType == Constants.Lending.ProductType.TempOverdraft)
                         {
                             var lendingOverdraftConcessionLetters = new List<LendingOverDraftConcessionLetter>();
 
@@ -464,7 +467,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             ConcessionInboxView concessionInboxView)
         {
             var riskGroupNumber = concessionInboxView.RiskGroupNumber;
-            var bcm = _userManager.GetUser(_businessCentreManager.GetBusinessCentreManager(requestor.CentreId).BusinessCentreManagerId); //_userManager.GetUser(concessionInboxView.BCMUserId);
+            var bcm = _userManager.GetUser(_businessCentreManager.GetBusinessCentreManager(requestor.CentreId).BusinessCentreManagerId);
             var legalEntityId = concessionInboxView.LegalEntityId;
 
             var legalEntity = _legalEntityRepository.ReadById(legalEntityId);
@@ -644,8 +647,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 ConcessionStartDate = bolConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
                 ConcessionEndDate = bolConcessionDetail.ExpiryDate.HasValue
                     ? bolConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
-                    : string.Empty,
-                //LegalEntityId = bolConcessionDetail.LegalEntityId
+                    : string.Empty
             };
         }
 
@@ -699,7 +701,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
         }
 
-        private Dictionary<int, string> Termdictionary = new Dictionary<int, string>() {
+        private readonly Dictionary<int, string> Termdictionary = new Dictionary<int, string>() {
               {1, "33 Days" },
               {2, "60 Days"},
               {3, "90 Days"},
@@ -723,7 +725,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 ConcessionEndDate = investmentConcessionDetail.ExpiryDate.HasValue
                     ? investmentConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy")
                     : string.Empty
-            }; 
+            };
         }
 
         /// <summary>

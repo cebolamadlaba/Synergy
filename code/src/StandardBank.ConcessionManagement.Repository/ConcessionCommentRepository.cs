@@ -36,8 +36,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             const string sql =
                 @"INSERT [dbo].[tblConcessionComment] ([fkConcessionId], [fkUserId], [fkConcessionSubStatusId], [Comment], [SystemDate], [IsActive]) 
-                                VALUES (@ConcessionId, @UserId, @ConcessionSubStatusId, @Comment, @SystemDate, @IsActive) 
-                                SELECT CAST(SCOPE_IDENTITY() as int)";
+                VALUES (@ConcessionId, @UserId, @ConcessionSubStatusId, @Comment, @SystemDate, @IsActive) 
+                SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
             {
@@ -66,7 +66,15 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionComment>(
-                    "SELECT [pkConcessionCommentId] [Id], [fkConcessionId] [ConcessionId], [fkUserId] [UserId], [fkConcessionSubStatusId] [ConcessionSubStatusId], [Comment], [SystemDate], [IsActive] FROM [dbo].[tblConcessionComment] WHERE [pkConcessionCommentId] = @Id",
+                    @"SELECT [pkConcessionCommentId] [Id], 
+                             [fkConcessionId] [ConcessionId], 
+                             [fkUserId] [UserId], 
+                             [fkConcessionSubStatusId] [ConcessionSubStatusId], 
+                             [Comment], 
+                             [SystemDate], 
+                             [IsActive] 
+                    FROM [dbo].[tblConcessionComment] 
+                    WHERE [pkConcessionCommentId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -81,7 +89,13 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionComment>(
-                    @"SELECT [pkConcessionCommentId] [Id], [fkConcessionId] [ConcessionId], [fkUserId] [UserId], [fkConcessionSubStatusId] [ConcessionSubStatusId], [Comment], [SystemDate], [IsActive] 
+                    @"SELECT [pkConcessionCommentId] [Id], 
+                             [fkConcessionId] [ConcessionId], 
+                             [fkUserId] [UserId], 
+                             [fkConcessionSubStatusId] [ConcessionSubStatusId], 
+                             [Comment], 
+                             [SystemDate], 
+                             [IsActive] 
                     FROM [dbo].[tblConcessionComment] 
                     WHERE [fkConcessionId] = @concessionId",
                     new { concessionId });
@@ -97,7 +111,14 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionComment>(
-                    "SELECT [pkConcessionCommentId] [Id], [fkConcessionId] [ConcessionId], [fkUserId] [UserId], [fkConcessionSubStatusId] [ConcessionSubStatusId], [Comment], [SystemDate], [IsActive] FROM [dbo].[tblConcessionComment]");
+                    @"SELECT [pkConcessionCommentId] [Id], 
+                             [fkConcessionId] [ConcessionId], 
+                             [fkUserId] [UserId], 
+                             [fkConcessionSubStatusId] [ConcessionSubStatusId], 
+                             [Comment], 
+                             [SystemDate], 
+                             c[IsActive] 
+                    FROM [dbo].[tblConcessionComment]");
             }
         }
 
@@ -109,9 +130,15 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblConcessionComment]
-                            SET [fkConcessionId] = @ConcessionId, [fkUserId] = @UserId, [fkConcessionSubStatusId] = @ConcessionSubStatusId, [Comment] = @Comment, [SystemDate] = @SystemDate, [IsActive] = @IsActive
-                            WHERE [pkConcessionCommentId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblConcessionComment]
+                    SET [fkConcessionId] = @ConcessionId, 
+                        [fkUserId] = @UserId, 
+                        [fkConcessionSubStatusId] = @ConcessionSubStatusId, 
+                        [Comment] = @Comment, 
+                        [SystemDate] = @SystemDate, 
+                        [IsActive] = @IsActive
+                    WHERE [pkConcessionCommentId] = @Id",
                     new
                     {
                         Id = model.Id,
@@ -133,7 +160,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblConcessionComment] WHERE [pkConcessionCommentId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblConcessionComment] 
+                            sWHERE [pkConcessionCommentId] = @Id",
                     new {model.Id});
             }
         }

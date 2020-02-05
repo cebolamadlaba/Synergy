@@ -97,9 +97,13 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             aaUser.RoleId = roles.First(_ => _.Name == Constants.Roles.AA).Id;
 
             if (aaUser.Id > 0)
+            {
                 await _mediator.Send(new UpdateUser(aaUser, user));
+            }
             else
+            {
                 aaUser.Id = await _mediator.Send(new CreateUser(aaUser, user));
+            }
 
             if (aaUser.AccountExecutiveUserId.HasValue && aaUser.AccountExecutiveUserId.Value > 0)
             {

@@ -57,7 +57,12 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<CentreUser>(
-                    "SELECT [pkCentreUserId] [Id], [fkCentreId] [CentreId], [fkUserId] [UserId], [IsActive] FROM [dbo].[tblCentreUser] WHERE [pkCentreUserId] = @Id",
+                    @"SELECT [pkCentreUserId] [Id], 
+                             [fkCentreId] [CentreId], 
+                             [fkUserId] [UserId], 
+                             [IsActive] 
+                    FROM [dbo].[tblCentreUser] 
+                    WHERE [pkCentreUserId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -72,7 +77,10 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<CentreUser>(
-                    @"SELECT [pkCentreUserId] [Id], [fkCentreId] [CentreId], [fkUserId] [UserId], [IsActive] 
+                    @"SELECT [pkCentreUserId] [Id], 
+                             [fkCentreId] [CentreId], 
+                             [fkUserId] [UserId], 
+                             [IsActive] 
                     FROM [dbo].[tblCentreUser] 
                     WHERE [fkUserId] = @userId",
                     new { userId });
@@ -88,7 +96,11 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<CentreUser>(
-                    "SELECT [pkCentreUserId] [Id], [fkCentreId] [CentreId], [fkUserId] [UserId], [IsActive] FROM [dbo].[tblCentreUser]");
+                    @"SELECT [pkCentreUserId] [Id], 
+                             [fkCentreId] [CentreId], 
+                             [fkUserId] [UserId], 
+                             [IsActive] 
+                    FROM [dbo].[tblCentreUser]");
             }
         }
 
@@ -100,9 +112,12 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblCentreUser]
-                            SET [fkCentreId] = @CentreId, [fkUserId] = @UserId, [IsActive] = @IsActive
-                            WHERE [pkCentreUserId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblCentreUser]
+                    SET [fkCentreId] = @CentreId, 
+                        [fkUserId] = @UserId, 
+                        [IsActive] = @IsActive
+                    WHERE [pkCentreUserId] = @Id",
                     new {Id = model.Id, CentreId = model.CentreId, UserId = model.UserId, IsActive = model.IsActive});
             }
         }
@@ -115,7 +130,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblCentreUser] WHERE [pkCentreUserId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblCentreUser] 
+                            WHERE [pkCentreUserId] = @Id",
                     new {model.Id});
             }
         }

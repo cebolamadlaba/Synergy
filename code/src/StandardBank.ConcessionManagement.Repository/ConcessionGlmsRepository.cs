@@ -47,8 +47,8 @@ namespace StandardBank.ConcessionManagement.Repository
 
                 const string sql =
                     @"INSERT [dbo].[tblConcessionGlms] ([fkConcessionId], [fkConcessionDetailId], [fkProductId],[fkLegalEntityAccountId], [fkGroupId], [fkInterestPricingCategoryId],[fkSlabTypeId],[fkInterestTypeId]) 
-                VALUES (@fkConcessionId, @fkConcessionDetailId, @fkProductId,@fkLegalEntityAccountId, @fkGroupId, @fkInterestPricingCategoryId,@fkSlabTypeId,@fkInterestTypeId) 
-                SELECT CAST(SCOPE_IDENTITY() as int)";
+                    VALUES (@fkConcessionId, @fkConcessionDetailId, @fkProductId,@fkLegalEntityAccountId, @fkGroupId, @fkInterestPricingCategoryId,@fkSlabTypeId,@fkInterestTypeId) 
+                    SELECT CAST(SCOPE_IDENTITY() as int)";
 
                 using (var db = _dbConnectionFactory.Connection())
                 {
@@ -80,10 +80,17 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionGlms>(
-                    @"SELECT [pkConcessionGlmsId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkProductId], d.[fkLegalEntityAccountId], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
+                    @"SELECT [pkConcessionGlmsId] [Id],
+                             t.[fkConcessionId] [ConcessionId],
+                             [fkConcessionDetailId] [ConcessionDetailId],
+                             [fkProductId],
+                             d.[fkLegalEntityAccountId],
+                             d.[fkLegalEntityId] [LegalEntityId],
+                             d.[fkLegalEntityAccountId] [LegalEntityAccountId],
+                             d.[ExpiryDate] 
                     FROM [dbo].[tblConcessionGlms] t
                       JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
-                      WHERE t.[pkConcessionGlmsId] = @Id",
+                    WHERE t.[pkConcessionGlmsId] = @Id",
                     new { id }).SingleOrDefault();
             }
         }
@@ -97,7 +104,14 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionGlms>(
-                    @"Select [pkConcessionGlmsId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkProductId], d.[fkLegalEntityAccountId], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
+                    @"Select [pkConcessionGlmsId] [Id],
+                             t.[fkConcessionId] [ConcessionId],
+                             [fkConcessionDetailId] [ConcessionDetailId],
+                             [fkProductId],
+                             d.[fkLegalEntityAccountId],
+                             d.[fkLegalEntityId] [LegalEntityId],
+                             d.[fkLegalEntityAccountId] [LegalEntityAccountId],
+                             d.[ExpiryDate] 
                     FROM [dbo].[tblConcessionGlms] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]");
             }
@@ -111,17 +125,17 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblConcessionGlms]
-                             SET    [fkConcessionId] = @ConcessionId,
-                                    [fkConcessionDetailId] = @ConcessionDetailId, 
-                                    [fkProductId] = @fkProductId,
-                                    [fkLegalEntityAccountId] = @fkLegalEntityAccountId, 
-                                    [fkGroupId] = @fkGroupId,
-                                    [fkInterestPricingCategoryId] = @fkSlabTypeId,
-                                    [fkSlabTypeId] = @fkInterestPricingCategoryId,
-                                    [fkInterestTypeId] = @fkInterestTypeId
-                           
-                            WHERE [pkConcessionGlmsId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblConcessionGlms]
+                    SET [fkConcessionId] = @ConcessionId,
+                        [fkConcessionDetailId] = @ConcessionDetailId, 
+                        [fkProductId] = @fkProductId,
+                        [fkLegalEntityAccountId] = @fkLegalEntityAccountId, 
+                        [fkGroupId] = @fkGroupId,
+                        [fkInterestPricingCategoryId] = @fkSlabTypeId,
+                        [fkSlabTypeId] = @fkInterestPricingCategoryId,
+                        [fkInterestTypeId] = @fkInterestTypeId
+                    WHERE [pkConcessionGlmsId] = @Id",
                     new
                     {
                         Id = model.Id,
@@ -147,7 +161,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblConcessionGlms] WHERE [pkConcessionGlmsId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblConcessionGlms] 
+                            WHERE [pkConcessionGlmsId] = @Id",
                     new { model.Id });
             }
 
@@ -159,7 +174,10 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<GlmsProduct>(
-                    @"SELECT description [tradeProductName], pkTradeProductId [tradeProductId], fkTradeProductTypeId [tradeProductTypeId]  from rtblTradeProduct");
+                    @"SELECT description [tradeProductName], 
+                             pkTradeProductId [tradeProductId], 
+                             fkTradeProductTypeId [tradeProductTypeId]  
+                    from rtblTradeProduct");
             }
         }
     }

@@ -80,7 +80,10 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     return db.Query<Relationship>(
-                        "SELECT [pkRelationshipId] [Id], [Description], [IsActive] FROM [dbo].[rtblRelationship]");
+                        @"SELECT [pkRelationshipId] [Id], 
+                            [Description], 
+                            [IsActive] 
+                        FROM [dbo].[rtblRelationship]");
                 }
             };
 
@@ -95,9 +98,11 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[rtblRelationship]
-                            SET [Description] = @Description, [IsActive] = @IsActive
-                            WHERE [pkRelationshipId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[rtblRelationship]
+                    SET [Description] = @Description, 
+                        [IsActive] = @IsActive
+                    WHERE [pkRelationshipId] = @Id",
                     new {Id = model.Id, Description = model.Description, IsActive = model.IsActive});
             }
 
@@ -113,7 +118,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[rtblRelationship] WHERE [pkRelationshipId] = @Id",
+                db.Execute(@"DELETE [dbo].[rtblRelationship] 
+                            WHERE [pkRelationshipId] = @Id",
                     new {model.Id});
             }
 
