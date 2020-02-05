@@ -634,8 +634,11 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
                 this.addValidationError("Interest Type not selected");
             }
 
-            if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "" && !this.isAppprovingOrDeclining) {
-                this.onExpiryDateChanged(concessionFormItem);
+            if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
+                if (!this.isAppprovingOrDeclining) {
+                    this.onExpiryDateChanged(concessionFormItem);
+                }
+
                 glmsConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
             else {
