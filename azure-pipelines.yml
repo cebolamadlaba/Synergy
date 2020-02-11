@@ -5,6 +5,8 @@
 
 trigger:
 - master
+- CMS_PROD
+- CMS_UAT
 
 pool:
   vmImage: 'windows-latest'
