@@ -161,6 +161,12 @@
             }
         }
 
+        public enum ArchiveType
+        {
+            StandardLinkedToPrime = 1,
+            StandardFixedRate
+        }
+
         public static class Trade
         {
             public static class TradeProductType

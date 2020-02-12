@@ -978,6 +978,28 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Get the ConcessionDetailed for Concession Detailed Id
+        /// </summary>
+        /// <param name="ConcessionDetailId"></param>
+        /// <returns></returns>
+        public ConcessionDetail GetConcessionDetailed(int ConcessionDetailId)
+        {
+            var concession = _concessionDetailRepository.ReadById(ConcessionDetailId);
+
+            return concession;
+        }
+
+        /// <summary>
+        /// Get the Concession for Concession Id
+        /// </summary>
+        /// <param name="concessionId"></param>
+        /// <returns></returns>
+        public Concession GetConcessionForConcessionId(int concessionId)
+        {
+            return _concessionRepository.ReadById(concessionId); 
+        }
+
+        /// <summary>
         /// Creates the concession condition.
         /// </summary>
         /// <param name="concessionCondition">The concession condition.</param>

@@ -22,7 +22,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 
         GlmsConcession GetGlmsConcession(string concessionReferenceId, User user);
 
-        ConcessionGlms UpdateConcessionGlms(GlmsConcessionDetail glmsConcessionDetail, Concession concession);
+        ConcessionGlms UpdateConcessionGlms(GlmsConcessionDetail glmsConcessionDetail, Concession concession, int? archiveType);
 
         void AddGlmsTierData(IEnumerable<GlmsTierData> tierData, int concessionDetailId);
 

@@ -203,7 +203,7 @@ namespace StandardBank.ConcessionManagement.Repository
                 sql += (datesentForApproval == null || datesentForApproval.Value.Year == 1) ? "" : " AND datediff(day, [DatesentForApproval],@datesentForApproval ) = 0";
 
                 sql += 
-                    @"group by [ConcessionId],
+                    @" Group by [ConcessionId],
                         [RiskGroupId],
                         [RiskGroupNumber],
                         [RiskGroupName],
@@ -298,7 +298,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionInboxView>(
-                    @"SELECT SELECT [ConcessionId],
+                    @"SELECT [ConcessionId],
 		                    [RiskGroupId],
 		                    [RiskGroupNumber],
 		                    [RiskGroupName],
