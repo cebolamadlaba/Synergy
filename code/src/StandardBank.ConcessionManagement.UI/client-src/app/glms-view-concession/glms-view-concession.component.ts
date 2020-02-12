@@ -307,8 +307,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
                     let selectedSlapType = this.slabType.filter(_ => _.id === glmsConcessionDetail.slabTypeId);
                     currentConcession.get('slabType').setValue(selectedSlapType[0]);
 
-                    this.slabType[rowIndex] = selectedSlapType[0];
-
                     let selectedInterestType = this.interestType.filter(_ => _.id === glmsConcessionDetail.interestTypeId);
                     currentConcession.get('interestType').setValue(selectedInterestType[0]);
 
