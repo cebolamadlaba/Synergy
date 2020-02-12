@@ -1294,14 +1294,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 return false;
             }
 
-            //you can only extend a concession three times
             var extensionRelationshipId = _lookupTableManager.GetRelationshipId(Constants.RelationshipType.Extension);
 
             var relationships =
                 _concessionRelationshipRepository.ReadByChildConcessionIdRelationshipIdRelationships(concession.Id,
                     extensionRelationshipId);
 
-            if (relationships != null && relationships.Count() >= 3)
+            //you can only extend a concession once
+            if (relationships != null && relationships.Count() >= 1)
             {
                 return false;
             }
