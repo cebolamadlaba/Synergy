@@ -41,7 +41,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.GlmsConcessio
             }
             else
             {
-                var result = _glmsManager.UpdateConcessionGlms(message.GlmsConcessionDetail, message.Concession);
+                var result = _glmsManager.UpdateConcessionGlms(message.GlmsConcessionDetail, message.Concession, null);
                 _glmsManager.DeleteGlmsTierData(message.GlmsConcessionDetail.GlmsConcessionDetailId);
                 _glmsManager.AddGlmsTierData(message.GlmsConcessionDetail.GlmsTierData,message.GlmsConcessionDetail.GlmsConcessionDetailId);
                 message.AuditRecord = new AuditRecord(result, message.User, AuditType.Update);

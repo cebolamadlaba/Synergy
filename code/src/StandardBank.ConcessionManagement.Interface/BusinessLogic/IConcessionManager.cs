@@ -222,6 +222,20 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         Model.UserInterface.Concession GetConcessionForConcessionReferenceId(string concessionReferenceId, User currentUser);
 
         /// <summary>
+        /// Get concession detailed
+        /// </summary>
+        /// <param name="ConcessionDetailId"></param>
+        /// <returns></returns>
+        ConcessionDetail GetConcessionDetailed(int ConcessionDetailId);
+
+        /// <summary>
+        /// Get concession for concession id
+        /// </summary>
+        /// <param name="concessionId"></param>
+        /// <returns></returns>
+        Concession GetConcessionForConcessionId(int concessionId);
+
+        /// <summary>
         /// Gets the rag status.
         /// </summary>
         /// <param name="period">The period.</param>

@@ -298,7 +298,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionInboxView>(
-                    @"SELECT SELECT [ConcessionId],
+                    @"SELECT [ConcessionId],
 		                    [RiskGroupId],
 		                    [RiskGroupNumber],
 		                    [RiskGroupName],
