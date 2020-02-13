@@ -29,6 +29,8 @@ namespace StandardBank.ConcessionManagement.Model.Repository
 
         public int? SlabTypeId { get; set; }
 
+        public int? ArchiveTypeId { get; set; }
+
         /// <summary>
         /// Gets or the name of the table.
         /// </summary>
