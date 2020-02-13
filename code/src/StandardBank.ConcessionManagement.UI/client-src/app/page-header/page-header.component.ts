@@ -17,20 +17,22 @@ export class PageHeaderComponent implements OnInit {
     observableLoggedInUser: Observable<User>;
     observableMyAccessnUser: Observable<User>;
     user: User;
-    usererrorMessage: String 
+    usererrorMessage: String;
+    showUatWarning = false;
     currentExecutiveUser = "";
 
-    constructor( @Inject(UserService) private userService, @Inject(UserConcessionsService) private userConcessionsService,) { }  
+    constructor(@Inject(UserService) private userService, @Inject(UserConcessionsService) private userConcessionsService, ) {       
+    }  
 
-    ngOnInit() {      
+    ngOnInit() {
 
-        //this.currentExecutiveUser = StaticClass.GetUser();
+        this.showUatWarning = window.location.hostname.indexOf('psdc-sw001inav') >= 0 ? true : false;
 
         this.observableLoggedInUser = this.userService.getData();
         this.observableLoggedInUser.subscribe(user => {
 
             //set AE to first value
-            this.user = user;
+            this.user = user;            
 
             if (user.isAdminAssistant) {
 
