@@ -946,15 +946,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private GlmsConcessionLetter PopulateGlmsConcessionLetter(GlmsConcessionDetail glmsConcessionDetail)
         {
             var dataTier = glmsConcessionDetail.GlmsTierData.FirstOrDefault();
+
             return new GlmsConcessionLetter
             {
                 GroupNumber = glmsConcessionDetail.GroupNumber.Value.ToString(),
                 InterestPricingCategory = glmsConcessionDetail.InterestPricingCategory,
-                InterestType = _glmsLookupTableManager.GetInterestTypes().FirstOrDefault(i => i.Id == glmsConcessionDetail.InterestTypeId).Description,
-                SlabType = _glmsLookupTableManager.GetSlabTypes().FirstOrDefault(s => s.Id == glmsConcessionDetail.SlabTypeId).Description,
+                InterestType = _glmsLookupTableManager.GetInterestTypes().FirstOrDefault(_ => _.Id == glmsConcessionDetail.InterestTypeId).Description,
+                SlabType = _glmsLookupTableManager.GetSlabTypes().FirstOrDefault(_ => _.Id == glmsConcessionDetail.SlabTypeId).Description,
                 TierFrom = dataTier.TierFrom.ToString("N2", CultureInfo.InvariantCulture),
-                RateType = _glmsLookupTableManager.GetRateTypes().FirstOrDefault(r => r.Id == dataTier.RateTypeId).Description,
-                BaseRate = _glmsLookupTableManager.GetBaseRateCodes().FirstOrDefault(b => b.Id == dataTier.BaseRateId).Description,
+                RateType = _glmsLookupTableManager.GetRateTypes().FirstOrDefault(_ => _.Id == dataTier.RateTypeId).Description,
+                BaseRate = _glmsLookupTableManager.GetBaseRateCodes().FirstOrDefault(_ => _.Id == dataTier.BaseRateId).Description,
                 Spread = dataTier.Spread.ToString("N2", CultureInfo.InvariantCulture),
                 Value = dataTier.Value.ToString("N2", CultureInfo.InvariantCulture),
                 ConcessionEndDate = glmsConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy"),

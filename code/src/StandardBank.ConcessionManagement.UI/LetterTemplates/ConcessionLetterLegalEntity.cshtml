@@ -10,7 +10,6 @@
     <p style="margin:0;">@Model.ClientPostalAddress</p>
     <p style="margin:0;">@Model.ClientCity</p>
     <p style="margin:0;">@Model.ClientPostalCode</p>
-
 </div>
 <!--client information -->
 <div style="padding-bottom:10px">
@@ -30,7 +29,6 @@
     </p>
     <p>Your preferential pricing will be effective from the concession start date and will be valid until the concession end date, subject to the stipulated conditions being fulfilled.</p>
     <p>Our standard Terms & Conditions and the standard fees are available at www.standardbank.co.za and should be read in conjunction with the conditions of this agreement.
-
 
     <p>I remain your first point of contact for any enquiry that you may have on the above. </p>
     <p style="padding-top:15px">Yours sincerely, </p>
@@ -88,7 +86,6 @@
                         <td rowspan="5">@lendingOverDraftConcessionLetter.Limit</td>
                         <td>Margin Above Prime</td>
                         <td>@lendingOverDraftConcessionLetter.MarginToPrime</td>
-
 
                         <td rowspan="5">@lendingOverDraftConcessionLetter.ConcessionStartDate</td>
                         <td rowspan="5">@lendingOverDraftConcessionLetter.ConcessionEndDate</td>
@@ -161,12 +158,9 @@
                     <td style="padding: 5px; width: 21%;">Channel / Fee Type</td>
                     <td style="padding: 5px; width: 21%;">Fee / Margin Above Prime %<br />(Incl. VAT)</td>
 
-
                     <td style="padding: 5px; width: 15%;">Freq</td>
                     <td style="padding: 5px; width: 15%;">Initiation Fee %</td>
                     <td style="padding: 5px; width: 15%;">Service Fee %</td>
-
-
 
                     <td style="padding: 5px; width: 14%;">Concession Start Date</td>
                     <td style="padding: 5px; width: 14%;">Concession End Date</td>
@@ -183,7 +177,6 @@
                         <td>@lendingConcessionLetter.Frequency</td>
                         <td>@lendingConcessionLetter.InitiationFee</td>
                         <td>@lendingConcessionLetter.ServiceFee</td>
-
 
                         <td>@lendingConcessionLetter.ConcessionStartDate</td>
                         <td>@lendingConcessionLetter.ConcessionEndDate</td>
@@ -281,9 +274,6 @@
     }
 }
 
-
-
-
 @if (Model.BusinessOnlineLegalEntityConcessions != null)
 {
     <p style="font-weight: bold;">BUSINESS ONLINE</p>
@@ -348,7 +338,6 @@
     }
 }
 
-
 @if (Model.TradeLegalEntityConcessions != null)
 {
     <p style="font-weight: bold;">TRADE</p>
@@ -367,14 +356,12 @@
 
                     <td style="padding: 5px; width: 21%;">Communication</td>
 
-
                     <td style="padding: 5px; width: 21%;">Est. Fee<br /></td>
 
                     <td style="padding: 5px; width: 21%;">Advalorem</td>
                     <td style="padding: 5px; width: 21%;">Min</td>
                     <td style="padding: 5px; width: 21%;">Max</td>
                     <td style="padding: 5px; width: 21%;">Flat Fee</td>
-
 
                     <td style="padding: 5px; width: 21%;">Rate %<br /></td>
 
@@ -383,31 +370,25 @@
                 </tr>
                 @foreach (var tradeConcessionLetter in legalEntityConcession.TradeConcessionLetters)
                 {
-                <tr>
+                    <tr>
 
+                        <td>@tradeConcessionLetter.ProductType</td>
+                        <td>@tradeConcessionLetter.Product</td>
 
-                    <td>@tradeConcessionLetter.ProductType</td>
-                    <td>@tradeConcessionLetter.Product</td>
+                        <td>@tradeConcessionLetter.Communication</td>
 
-                    <td>@tradeConcessionLetter.Communication</td>
+                        <td>@tradeConcessionLetter.EstFee</td>
 
+                        <td>@tradeConcessionLetter.AdValorem</td>
+                        <td>@tradeConcessionLetter.Min</td>
+                        <td>@tradeConcessionLetter.Max</td>
+                        <td>@tradeConcessionLetter.FlatFee</td>
 
-                    <td>@tradeConcessionLetter.EstFee</td>
+                        <td>@tradeConcessionLetter.RatePercentage</td>
 
-
-                    <td>@tradeConcessionLetter.AdValorem</td>
-                    <td>@tradeConcessionLetter.Min</td>
-                    <td>@tradeConcessionLetter.Max</td>
-                    <td>@tradeConcessionLetter.FlatFee</td>
-
-
-                    <td>@tradeConcessionLetter.RatePercentage</td>
-
-
-
-                    <td>@tradeConcessionLetter.ConcessionStartDate</td>
-                    <td>@tradeConcessionLetter.ConcessionEndDate</td>
-                </tr>
+                        <td>@tradeConcessionLetter.ConcessionStartDate</td>
+                        <td>@tradeConcessionLetter.ConcessionEndDate</td>
+                    </tr>
                 }
             </table>
         }
@@ -440,7 +421,6 @@
         }
     }
 }
-
 
 @if (Model.TransactionalLegalEntityConcessions != null)
 {
@@ -502,7 +482,6 @@
     }
 }
 
-
 @if (Model.InvestmentLegalEntityConcessions != null)
 {
     <p style="font-weight: bold;">INVESTMENTS</p>
@@ -525,18 +504,17 @@
                 </tr>
                 @foreach (var investmentConcessionLetter in legalEntityConcession.InvestmentConcessionLetters)
                 {
-                <tr>
+                    <tr>
 
+                        <td>@investmentConcessionLetter.Product</td>
 
-                    <td>@investmentConcessionLetter.Product</td>
-
-                    <td>@investmentConcessionLetter.AccountNumber</td>
-                    <td>@investmentConcessionLetter.Balance</td>
-                    <td>@investmentConcessionLetter.NoticePeriod</td>
-                    <td>@investmentConcessionLetter.Rate</td>
-                    <td>@investmentConcessionLetter.ConcessionStartDate</td>
-                    <td>@investmentConcessionLetter.ConcessionEndDate</td>
-                </tr>
+                        <td>@investmentConcessionLetter.AccountNumber</td>
+                        <td>@investmentConcessionLetter.Balance</td>
+                        <td>@investmentConcessionLetter.NoticePeriod</td>
+                        <td>@investmentConcessionLetter.Rate</td>
+                        <td>@investmentConcessionLetter.ConcessionStartDate</td>
+                        <td>@investmentConcessionLetter.ConcessionEndDate</td>
+                    </tr>
                 }
             </table>
         }
@@ -570,7 +548,76 @@
     }
 }
 
+@if (Model.GlmsLegalEntityConcessions != null)
+{
+    <p style="font-weight: bold;">GLMS</p>
+    foreach (var legalEntityConcession in Model.GlmsLegalEntityConcessions)
+    {
+        <p><strong>Concession ID:</strong> @legalEntityConcession.ConcessionReferenceNumber</p>
 
+        if (legalEntityConcession.HasGlmsConcessionLetters)
+        {
+            <table border="1" width="100%">
+                <tr style="background: #dbe5f1;">
+                    <td style="padding: 5px;">Group Number</td>
+                    <td style="padding: 5px;">Interest Pricing Category</td>
+                    <td style="padding: 5px;">Interest Type</td>
+                    <td style="padding: 5px;">Slab Type</td>
+                    <td style="padding: 5px;">Rate Type</td>
+                    <td style="padding: 5px;">Tier From</td>
+                    <td style="padding: 5px;">Base Rate</td>
+                    <td style="padding: 5px;">Spread</td>
+                    <td style="padding: 5px;">Value</td>
+                    <td style="padding: 5px;">Concession Start Date</td>
+                    <td style="padding: 5px;">Concession End Date</td>
+                </tr>
+                @foreach (var glmsConcessionLetter in legalEntityConcession.GlmsConcessionLetters)
+                {
+                    <tr>
+                        <td>@glmsConcessionLetter.GroupNumber</td>
+                        <td>@glmsConcessionLetter.InterestPricingCategory</td>
+                        <td>@glmsConcessionLetter.InterestType</td>
+                        <td>@glmsConcessionLetter.SlabType</td>
+                        <td>@glmsConcessionLetter.RateType</td>
+                        <td>@glmsConcessionLetter.TierFrom</td>
+                        <td>@glmsConcessionLetter.BaseRate</td>
+                        <td>@glmsConcessionLetter.Spread</td>
+                        <td>@glmsConcessionLetter.Value</td>
+                        <td>@glmsConcessionLetter.ConcessionStartDate</td>
+                        <td>@glmsConcessionLetter.ConcessionEndDate</td>
+                    </tr>
+                }
+            </table>
+        }
+
+        if (legalEntityConcession.HasConditionConcessionLetters)
+        {
+            <!-- Conditions of grant -->
+            <table border="1" width="100%" style="margin-top: 15px;">
+                <tr style="background: #dbe5f1;">
+                    <td colspan="5" style="padding: 5px; font-weight: bold;">Conditions of Grant</td>
+                </tr>
+                <tr style="background: #dbe5f1;">
+                    <td style="padding: 5px;">Condition Measure</td>
+                    <td style="padding: 5px;">Condition Product</td>
+                    <td style="padding: 5px;">Expected Turnover Value</td>
+                    <td style="padding: 5px;">Period</td>
+                    <td style="padding: 5px;">Deadline</td>
+                </tr>
+                @foreach (var condition in legalEntityConcession.ConditionConcessionLetters)
+                {
+                    <tr>
+                        <td>@condition.ConditionMeasure</td>
+                        <td>@condition.ConditionProduct</td>
+                        <td>@condition.Value</td>
+                        <td>@condition.ConditionPeriod</td>
+                        <td>@condition.Deadline</td>
+                    </tr>
+                }
+            </table>
+        }
+    }
+}
 
 <p style="margin:0; color: #17365d; font-weight:bold; margin-top: 50px; page-break-before: always;">Terms and Conditions</p>
 <ol>
@@ -599,4 +646,3 @@
         <td>Date</td>
     </tr>
 </table>
-
