@@ -24,9 +24,7 @@ export class PageHeaderComponent implements OnInit {
     constructor(@Inject(UserService) private userService, @Inject(UserConcessionsService) private userConcessionsService, ) {       
     }  
 
-    ngOnInit() {
-
-        this.showUatWarning = window.location.hostname.indexOf('psdc-sw001inav') >= 0 ? true : false;
+    ngOnInit() {        
 
         this.observableLoggedInUser = this.userService.getData();
         this.observableLoggedInUser.subscribe(user => {
@@ -70,6 +68,7 @@ export class PageHeaderComponent implements OnInit {
             });
 
         this.enforceMyAcess();
+        this.uatWarning();        
     }
 
     aESelected(ae: AccountExecutiveAssistant) {
@@ -128,6 +127,14 @@ export class PageHeaderComponent implements OnInit {
             }      
             
         }, error => {           
+            this.usererrorMessage = <any>error;
+        });
+    }
+
+    uatWarning() {
+        this.userService.getUATWarning().subscribe(result => {
+            this.showUatWarning = result;
+        }, error => {
             this.usererrorMessage = <any>error;
         });
     }

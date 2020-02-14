@@ -29,6 +29,11 @@ export class UserService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
+    getUATWarning(): Observable<User> {
+        const url = "/api/Application/UatWarning";
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
 
     private extractData(response: Response) {
         let body = response.json();

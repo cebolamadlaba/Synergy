@@ -25,9 +25,9 @@ namespace StandardBank.ConcessionManagement.Common
         /// <param name="smtpPort">The SMTP port.</param>
         /// <param name="emailTemplatePath">The email template path.</param>
         /// <param name="letterTemplatePath">The letter template path.</param>
-        public ConfigurationData(string connectionString, string overrideLoggedInUser, string databaseType,
-            string smtpServer, string smtpUserName, string smtpPassword, string defaultEmail, int smtpPort,
-            string emailTemplatePath, string letterTemplatePath, string enforceMyAccess, string serverURL, int monthOfExpiry)
+        public ConfigurationData(string connectionString, string overrideLoggedInUser, string databaseType, string smtpServer,
+             string smtpUserName, string smtpPassword, string defaultEmail, int smtpPort, string emailTemplatePath,
+             string letterTemplatePath, string enforceMyAccess, string serverURL, int monthOfExpiry, string showUatWarning)
         {
             ConnectionString = connectionString;
             OverrideLoggedInUser = overrideLoggedInUser;
@@ -42,6 +42,7 @@ namespace StandardBank.ConcessionManagement.Common
             EnforceMyAccess = enforceMyAccess;
             ServerURL = serverURL;
             MonthOfExpiry = monthOfExpiry;
+            ShowUatWarning = showUatWarning;
         }
 
         /// <summary>
@@ -68,6 +69,12 @@ namespace StandardBank.ConcessionManagement.Common
         /// Gets the override logged in user
         /// </summary>
         public string OverrideLoggedInUser { get; set; }
+
+        /// <summary>
+        /// Gets UAT warning message
+        /// </summary>
+        public string ShowUatWarning { get; set; }
+
         /// <summary>
         /// Get the stmp server
         /// </summary>
