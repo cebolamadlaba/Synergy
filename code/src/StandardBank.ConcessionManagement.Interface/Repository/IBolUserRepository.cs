@@ -20,5 +20,6 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
 
         IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsersByLegalEntityId(int legalEntityId);
 
+        IEnumerable<BOLChargeCodeRelationship>  GetBOLChargeCodeRelationships();
     }
 }

@@ -491,6 +491,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return _mapper.Map<IEnumerable<BOLChargeCodeType>>(chargecodetypes);
         }
 
+        public IEnumerable<BOLChargeCodeRelationship> GetBOLChargeCodeRelationships()
+        {
+            var chargeCodeRelationships = _bolRepository.GetBOLChargeCodeRelationships();
+            return _mapper.Map<IEnumerable<BOLChargeCodeRelationship>>(chargeCodeRelationships);
+        }
+
         public LegalEntity GetLegalEntity(int sapbpid)
         {
             var legalEntity = this._legalEntityRepository.ReadBySAPBPIDIsActive(sapbpid, true);

@@ -10,5 +10,6 @@ export class BolChargeCode {
     fkChargeCodeTypeId: number;
     isActive: boolean;
     IsNonUniversal: boolean;
+    rate: number;
     riskGroups: Array<RiskGroup>;
 }

@@ -158,6 +158,8 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         IEnumerable<BOLChargeCode> GetBOLChargeCodesAll();
         IEnumerable<BOLChargeCodeType> GetBOLChargeCodeTypes();
 
+        IEnumerable<Model.Repository.BOLChargeCodeRelationship> GetBOLChargeCodeRelationships();
+
         IEnumerable<TradeProductType> GetTradeProductTypes();
 
         string GetTradeProducTypeName(int tradeProductTypeId);

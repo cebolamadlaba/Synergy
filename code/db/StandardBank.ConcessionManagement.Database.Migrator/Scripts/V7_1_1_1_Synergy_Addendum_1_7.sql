@@ -50,6 +50,29 @@ DROP CONSTRAINT FK_rtblChargeCode_rtblChargeCodeType
 ALTER TABLE [dbo].[rtblBOLChargeCode] 
 DROP COLUMN fkChargeCodeTypeId
 
+-- Alter Charge Code table and add Rate column --
+
+  Alter Table [CMS_Dev_V2].[dbo].[rtblBOLChargeCode]
+  Add Rate decimal(5, 2) Null
+
+-- Insert Charge Code Rate values --
+
+  Update [CMS_Dev_V2].[dbo].[rtblBOLChargeCode]
+  Set [Rate] = 1.00
+  Where ChargeCode In ('BCN0', 'BFN0', 'SVF5', 'SVP4', 'EFTB')
+
+  Update [CMS_Dev_V2].[dbo].[rtblBOLChargeCode]
+  Set [Rate] = 2.50
+  Where ChargeCode In ('BCV0', 'BFV0', 'SVA7', 'SVA6')
+
+  Update [CMS_Dev_V2].[dbo].[rtblBOLChargeCode]
+  Set [Rate] = 1.01
+  Where ChargeCode In ('EFTP')
+
+  Update [CMS_Dev_V2].[dbo].[rtblBOLChargeCode]
+  Set [Rate] = 0.00
+  Where ChargeCode In ('BAS0')
+
 -- Create GLMS Standard Pricing --
 
 CREATE TABLE [dbo].[rtblGlmsStandardPricing](
