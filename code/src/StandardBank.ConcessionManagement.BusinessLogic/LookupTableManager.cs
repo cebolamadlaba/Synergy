@@ -503,6 +503,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return _mapper.Map<LegalEntity>(legalEntity);
         }
 
+        public LegalEntity GetLegalEntityById(int legalEntityId)
+        {
+            var legalEntity = this._legalEntityRepository.ReadByIdIsActive(legalEntityId, true);
+            return _mapper.Map<LegalEntity>(legalEntity);
+        }
+
         public IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsers(int riskGroupNumber)
         {
             var bolusers = _bolRepository.GetLegalEntityBOLUsers(riskGroupNumber);

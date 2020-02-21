@@ -168,6 +168,8 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 
         LegalEntity GetLegalEntity(int sapbpid);
 
+        LegalEntity GetLegalEntityById(int legalEntityId);
+
         IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsers(int riskGroupNumber);
 
         IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsersByLegalEntityId(int legalEntityId);
