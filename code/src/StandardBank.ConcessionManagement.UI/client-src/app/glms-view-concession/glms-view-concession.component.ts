@@ -24,6 +24,7 @@ import { SlabType } from "../models/slab-type";
 import { InterestPricingCategory } from "../models/interest-pricing-category";
 import { GlmsGroup } from "../models/glms-group"
 import { RateType } from "../models/rate-type";
+import { ArchiveType } from "../models/archive-type";
 
 import { BaseComponentService } from '../services/base-component.service';
 import * as moment from 'moment';
@@ -116,6 +117,12 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
     selectedInterestPricingCategory: InterestPricingCategory[];
     interestPricingCategory: InterestPricingCategory[];
 
+    standardFixedRate: ArchiveType.StandardFixedRate;
+    standardLinkedToPrime: ArchiveType.StandardLinkedToPrime;
+
+    isConcessionDetail = false;
+    selectedConcessionDetailId: number;
+
     observableGlmsView: Observable<GlmsView>;
     glmsView: GlmsView = new GlmsView();
     selectedProductTypes: ProductType[];
@@ -192,6 +199,9 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         this.baseRateCode = [new BaseRateCode()];
         this.selectedBaseRateCode = [new BaseRateCode()];
 
+        this.standardFixedRate = ArchiveType.StandardFixedRate;
+        this.standardLinkedToPrime = ArchiveType.StandardLinkedToPrime;
+
         this.glmsConcession = new GlmsConcession();
         this.glmsConcession.concession = new Concession();
         this.glmsConcession.concession.concessionComments = [new ConcessionComment()];
@@ -216,6 +226,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
             motivation: new FormControl(),
         });
 
+        this.isConcessionDetail = false;
         this.getInitialData();
     }
 
@@ -295,8 +306,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
                     let selectedSlapType = this.slabType.filter(_ => _.id === glmsConcessionDetail.slabTypeId);
                     currentConcession.get('slabType').setValue(selectedSlapType[0]);
-
-                    this.slabType[rowIndex] = selectedSlapType[0];
 
                     let selectedInterestType = this.interestType.filter(_ => _.id === glmsConcessionDetail.interestTypeId);
                     currentConcession.get('interestType').setValue(selectedInterestType[0]);
@@ -1419,13 +1428,18 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         }
     }
 
-    archiveConcessiondetail(concessionDetailId: number) {
+    setSelectedConcessionDetail(concessionDetailId: number) {
+        this.selectedConcessionDetailId = concessionDetailId;
+        this.isConcessionDetail = true;
+    }
+
+    archiveConcessiondetail(archiveType: ArchiveType) {
 
         if (confirm("Please note that the account will be put back to standard pricing. Are you sure you want to delete this concession ?")) {
             this.isLoading = true;
             this.errorMessage = null;
 
-            this.userConcessionsService.deactivateConcessionDetailed(concessionDetailId).subscribe(entity => {
+            this.userConcessionsService.deactivateConcessionDetailed(this.selectedConcessionDetailId, archiveType).subscribe(entity => {
 
                 this.warningMessage = "Concession item has been deleted";
 
@@ -1438,14 +1452,20 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
                 this.isLoading = false;
             });
         }
+        this.isConcessionDetail = false;
     }
 
-    archiveConcession() {
+    archiveConcession(archiveType: ArchiveType) {
+
+        if (this.isConcessionDetail) {
+            return this.archiveConcessiondetail(archiveType);
+        }
+
         if (confirm("Please note that the account will be put back to standard pricing. Are you sure you want to delete this concession ?")) {
             this.isLoading = true;
             this.errorMessage = null;
 
-            this.userConcessionsService.deactivateConcession(this.concessionReferenceId).subscribe(entity => {
+            this.userConcessionsService.deactivateConcession(this.concessionReferenceId, archiveType).subscribe(entity => {
                 this.warningMessage = "Concession has been deleted";
 
                 this.isLoading = false;

@@ -7,6 +7,7 @@ using StandardBank.ConcessionManagement.Model.Common;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Bol;
 using StandardBank.ConcessionManagement.Model.UserInterface.Cash;
+using StandardBank.ConcessionManagement.Model.UserInterface.Glms;
 using StandardBank.ConcessionManagement.Model.UserInterface.Investment;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using StandardBank.ConcessionManagement.Model.UserInterface.Trade;
@@ -74,6 +75,16 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IInvestmentManager _investmentManager;
 
         /// <summary>
+        /// The Glms manager
+        /// </summary>
+        private readonly IGlmsManager _glmsManager;
+
+        /// <summary>
+        /// The Glms lookup table manager
+        /// </summary>
+        private readonly IGlmsLookupTableManager _glmsLookupTableManager;
+
+        /// <summary>
         /// The razor renderer
         /// </summary>
         private readonly IRazorRenderer _razorRenderer;
@@ -116,7 +127,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IRazorRenderer razorRenderer, ITransactionalManager transactionalManager,
             IConcessionInboxViewRepository concessionInboxViewRepository, ILookupTableManager lookupTableManager,
             IBolManager bolManager, IBusinessCentreManager businessCentreManager, ITradeManager tradeManager,
-            IInvestmentManager investmentManager)
+            IInvestmentManager investmentManager, IGlmsManager glmsManager, IGlmsLookupTableManager glmsLookupTableManager)
         {
             _templatePath = configurationData.LetterTemplatePath;
             _fileUtiltity = fileUtiltity;
@@ -134,6 +145,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _businessCentreManager = businessCentreManager;
             _tradeManager = tradeManager;
             _investmentManager = investmentManager;
+            _glmsManager = glmsManager;
+            _glmsLookupTableManager = glmsLookupTableManager;
         }
 
         /// <summary>
@@ -235,6 +248,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                     case Constants.ConcessionType.Investment:
                         PopulateLegalEntityInvestmentConcessionLetter(concessionInboxViews, requestor, legalEntityConcession);
+                        break;
+
+                    case Constants.ConcessionType.Glms:
+                        PopulateLegalEntityGlsmConcessionLetter(concessionInboxViews, requestor, legalEntityConcession);
                         break;
 
                     default:
@@ -425,6 +442,32 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
         }
 
+        private void PopulateLegalEntityGlsmConcessionLetter(IEnumerable<ConcessionInboxView> concessionInboxViews, User requestor,
+            LegalEntityConcession legalEntityConcession)
+        {
+            var glmsConcession = _glmsManager.GetGlmsConcession(legalEntityConcession.ConcessionReferenceNumber, requestor);
+            var glsmConcessionDetails = glmsConcession.GlmsConcessionDetails.OrderBy(_ => _.AccountNumber);
+
+            foreach (var concessionInboxView in concessionInboxViews)
+            {
+                foreach (var glsmConcessionDetail in glsmConcessionDetails)
+                {
+                    if (concessionInboxView.ConcessionDetailId == glsmConcessionDetail.ConcessionDetailId)
+                    {
+                        var glmsConcessionLetters = new List<GlmsConcessionLetter>();
+
+                        if (legalEntityConcession.GlmsConcessionLetters != null)
+                        {
+                            glmsConcessionLetters.AddRange(legalEntityConcession.GlmsConcessionLetters);
+                        }
+
+                        glmsConcessionLetters.Add(PopulateGlmsConcessionLetter(glsmConcessionDetail));
+                        legalEntityConcession.GlmsConcessionLetters = glmsConcessionLetters; 
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Populates the legal entity cash concession letter.
         /// </summary>
@@ -432,7 +475,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="requestor">The requestor.</param>
         /// <param name="legalEntityConcession">The legal entity concession.</param>
         private void PopulateLegalEntityCashConcessionLetter(IEnumerable<ConcessionInboxView> concessionInboxViews, User requestor,
-            LegalEntityConcession legalEntityConcession)
+        LegalEntityConcession legalEntityConcession)
         {
             var cashConcession =
                 _cashManager.GetCashConcession(legalEntityConcession.ConcessionReferenceNumber, requestor);
@@ -899,6 +942,33 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Populates the Glms concession letter
+        /// </summary>
+        /// <param name="glmsConcessionDetail"></param>
+        /// <returns></returns>
+        private GlmsConcessionLetter PopulateGlmsConcessionLetter(GlmsConcessionDetail glmsConcessionDetail)
+        {
+            var dataTier = glmsConcessionDetail.GlmsTierData.FirstOrDefault();
+            var baseRate = dataTier.BaseRateId > 0 ? _glmsLookupTableManager.GetBaseRateCodes()
+                .FirstOrDefault(_ => _.Id == dataTier.BaseRateId).Description : "N/A";
+
+            return new GlmsConcessionLetter
+            {
+                GroupNumber = glmsConcessionDetail.GroupNumber.Value.ToString(),
+                InterestPricingCategory = glmsConcessionDetail.InterestPricingCategory,
+                InterestType = _glmsLookupTableManager.GetInterestTypes().FirstOrDefault(_ => _.Id == glmsConcessionDetail.InterestTypeId).Description,
+                SlabType = _glmsLookupTableManager.GetSlabTypes().FirstOrDefault(_ => _.Id == glmsConcessionDetail.SlabTypeId).Description,
+                TierFrom = dataTier.TierFrom.ToString("N2", CultureInfo.InvariantCulture),
+                RateType = _glmsLookupTableManager.GetRateTypes().FirstOrDefault(_ => _.Id == dataTier.RateTypeId).Description,
+                BaseRate = baseRate,
+                Spread = dataTier.Spread.ToString("N2", CultureInfo.InvariantCulture),
+                Value = dataTier.Value.ToString("N2", CultureInfo.InvariantCulture),
+                ConcessionEndDate = glmsConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy"),
+                ConcessionStartDate = glmsConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy")
+            };
+        }
+
+        /// <summary>
         /// Populates the base concession letter.
         /// </summary>
         /// <param name="riskGroupNumber">The risk group number.</param>
@@ -907,7 +977,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="legalEntityId">The legal entity identifier.</param>
         /// <returns></returns>
         private Model.BusinessLogic.LetterGenerator.ConcessionLetter PopulateBaseConcessionLetter(int? riskGroupNumber, User requestor, User bcm,
-            int legalEntityId)
+        int legalEntityId)
         {
             var legalEntity = _legalEntityRepository.ReadById(legalEntityId);
 

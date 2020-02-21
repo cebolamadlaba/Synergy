@@ -978,6 +978,28 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
+        /// Get the ConcessionDetailed for Concession Detailed Id
+        /// </summary>
+        /// <param name="ConcessionDetailId"></param>
+        /// <returns></returns>
+        public ConcessionDetail GetConcessionDetailed(int ConcessionDetailId)
+        {
+            var concession = _concessionDetailRepository.ReadById(ConcessionDetailId);
+
+            return concession;
+        }
+
+        /// <summary>
+        /// Get the Concession for Concession Id
+        /// </summary>
+        /// <param name="concessionId"></param>
+        /// <returns></returns>
+        public Concession GetConcessionForConcessionId(int concessionId)
+        {
+            return _concessionRepository.ReadById(concessionId); 
+        }
+
+        /// <summary>
         /// Creates the concession condition.
         /// </summary>
         /// <param name="concessionCondition">The concession condition.</param>
@@ -1272,14 +1294,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 return false;
             }
 
-            //you can only extend a concession three times
             var extensionRelationshipId = _lookupTableManager.GetRelationshipId(Constants.RelationshipType.Extension);
 
             var relationships =
                 _concessionRelationshipRepository.ReadByChildConcessionIdRelationshipIdRelationships(concession.Id,
                     extensionRelationshipId);
 
-            if (relationships != null && relationships.Count() >= 3)
+            //you can only extend a concession once
+            if (relationships != null && relationships.Count() >= 1)
             {
                 return false;
             }

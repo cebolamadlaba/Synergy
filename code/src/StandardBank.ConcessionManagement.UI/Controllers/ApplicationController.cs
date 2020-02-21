@@ -103,6 +103,15 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(_siteHelper.LoggedInUser(this));
         }
 
+        /// <summary>
+        /// Gets the logged in user
+        /// </summary>
+        /// <returns></returns>
+        [Route("UatWarning")]
+        public IActionResult UatWarning()
+        {
+            return Ok(_siteHelper.UATWarning());
+        }
 
         [Route("ValidateUserMyAccess")]
         public IActionResult ValidateUserMyAccess()

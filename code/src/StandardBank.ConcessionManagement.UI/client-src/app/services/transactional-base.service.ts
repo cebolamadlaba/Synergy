@@ -6,6 +6,7 @@ import { FileService } from '../services/file.service';
 import { TransactionalConcessionDetail } from "../models/transactional-concession-detail";
 import { TransactionalConcessionEnum } from "../models//transactional-concession-enum";
 import { ConditionType } from "../models/condition-type";
+import { TransactionalConcession } from '../models/transactional-concession';
 
 @Injectable()
 export class TransactionalBaseService {
@@ -102,6 +103,21 @@ export class TransactionalBaseService {
         if (!this.validationError)
             this.validationError = [];
 
-        this.validationError.push(validationDetail);
+        if (!this.validationError.includes(validationDetail)) {
+            this.validationError.push(validationDetail);
+        }
+    }
+
+    checkConcessionExpiryDate(transactionalConcession: TransactionalConcession) {
+        if (transactionalConcession.transactionalConcessionDetails.length > 1) {
+            var firstDate;
+            transactionalConcession.transactionalConcessionDetails.forEach(concession => {
+                if (!firstDate) {
+                    firstDate = concession.expiryDate;
+                } else if (firstDate.getTime() != concession.expiryDate.getTime()) {
+                    this.addValidationError("All concessions must have the same expiry date.");
+                }
+            });
+        }
     }
 }

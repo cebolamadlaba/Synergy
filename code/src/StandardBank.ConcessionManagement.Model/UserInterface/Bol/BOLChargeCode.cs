@@ -6,7 +6,6 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Bol
 {
     public class BOLChargeCode
     {
-
         public int pkChargeCodeId { get; set; }
 
         public string Description { get; set; }     
@@ -22,6 +21,8 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Bol
         public int length { get; set; }
 
         public bool IsActive { get; set; }
+
+        public decimal Rate { get; set; }
 
         public List<RiskGroup> RiskGroups { get; set; }
 
