@@ -32,6 +32,7 @@ import { UserService } from "../services/user.service";
 
 import { BolChargeCodeType } from "../models/bol-chargecodetype";
 import { BolChargeCode } from "../models/bol-chargecode";
+import { BolChargeCodeRelationship } from "../models/bol-chargeCodeRelationship";
 import { LegalEntityBOLUser } from "../models/legal-entity-bol-user";
 import { LegalEntity } from "../models/legal-entity";
 
@@ -104,6 +105,9 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
     observableBolChargeCodes: Observable<BolChargeCode[]>;
     bolchargecodes: BolChargeCode[];
 
+    observableBolChargeCodeRelationships: Observable<BolChargeCodeRelationship[]>;
+    bolChargeCodeRelationships: BolChargeCodeRelationship[];
+
     observableLegalEntityBOLUsers: Observable<LegalEntityBOLUser[]>;
     legalentitybolusers: LegalEntityBOLUser[];
 
@@ -131,6 +135,7 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
         this.riskGroup = new RiskGroup();
         this.bolchargecodetypes = [new BolChargeCodeType()];
         this.bolchargecodes = [new BolChargeCode()];
+        this.bolChargeCodeRelationships = [new BolChargeCodeRelationship()];
         this.legalentitybolusers = [new LegalEntityBOLUser()];
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
@@ -189,7 +194,8 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
                 this.lookupDataService.getLegalEntityBOLUsers(this.riskGroupNumber),
                 this.lookupDataService.getPeriods(),
                 this.lookupDataService.getPeriodTypes(),
-                this.lookupDataService.getRiskGroup(this.riskGroupNumber)
+                this.lookupDataService.getRiskGroup(this.riskGroupNumber),
+                this.lookupDataService.getBOLChargeCodeRelationships()
             ]).subscribe(results => {
                 this.setInitialData(results, true);
             }, error => {
@@ -205,7 +211,8 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
                 this.lookupDataService.getLegalEntityBOLUsersBySAPBPID(this.sapbpid),
                 this.lookupDataService.getPeriods(),
                 this.lookupDataService.getPeriodTypes(),
-                this.lookupDataService.getLegalEntity(this.sapbpid)
+                this.lookupDataService.getLegalEntity(this.sapbpid),
+                this.lookupDataService.getBOLChargeCodeRelationships()
             ]).subscribe(results => {
                 this.setInitialData(results, false);
             }, error => {
@@ -233,6 +240,7 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
         this.legalentitybolusers = <any>results[3];
         this.periods = <any>results[4];
         this.periodTypes = <any>results[5];
+        this.bolChargeCodeRelationships = <any>results[7];
 
         this.populateForm();
     }
@@ -497,7 +505,9 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
         let currentProduct = control.controls[rowIndex];
         var selectedproduct = currentProduct.get('product').value;
 
-        this.selectedProducts[rowIndex].bolchargecodes = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedproduct.pkChargeCodeTypeId);
+        var selectedProductRelationships = this.bolChargeCodeRelationships.filter(cr => cr.fkChargeCodeTypeId == selectedproduct.pkChargeCodeTypeId);
+        this.selectedProducts[rowIndex].bolchargecodes = this.bolchargecodes.filter(re =>
+            selectedProductRelationships.find(({ fkChargeCodeId }) => re.pkChargeCodeId == fkChargeCodeId));
 
         currentProduct.get('chargecode').setValue(this.selectedProducts[rowIndex].bolchargecodes[0]);
     }

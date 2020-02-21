@@ -21,6 +21,7 @@ import { ApprovedConcessionDetail } from "../models/approved-concession-detail";
 
 import { BolChargeCodeType } from "../models/bol-chargecodetype";
 import { BolChargeCode } from "../models/bol-chargecode";
+import { BolChargeCodeRelationship } from "../models/bol-chargeCodeRelationship";
 
 import { TradeProductType } from "../models/trade-product-type";
 import { TradeProduct } from "../models/trade-product";
@@ -95,6 +96,11 @@ export class LookupDataService {
 
     getBOLChargeCodeTypes(): Observable<BolChargeCodeType[]> {
         const url = "/api/Condition/BOLChargeCodeTypes";
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
+    getBOLChargeCodeRelationships(): Observable<BolChargeCodeRelationship[]> {
+        const url = "/api/Condition/BOLChargeCodeRelationships";
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 

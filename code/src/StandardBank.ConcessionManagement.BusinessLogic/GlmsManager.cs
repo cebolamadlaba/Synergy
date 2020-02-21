@@ -8,6 +8,7 @@ using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Glms;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -58,10 +59,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return _concessionGlmsRepository.Create(concessionGlms);
         }
 
-        public ConcessionGlms UpdateConcessionGlms(GlmsConcessionDetail glmsConcessionDetail, Concession concession)
+        public ConcessionGlms UpdateConcessionGlms(GlmsConcessionDetail glmsConcessionDetail, Concession concession, int? archiveType = null)
         {
             var concessionGlms = MapGlms(glmsConcessionDetail);
+
             concessionGlms.ConcessionId = concession.Id;
+            concessionGlms.ArchiveTypeId = archiveType ?? null;
+            concessionGlms.Archived = DateTime.Now;
+
             _concessionGlmsRepository.Update(concessionGlms);
 
             return concessionGlms;
@@ -189,6 +194,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         private ConcessionGlms MapGlms(GlmsConcessionDetail glmsConcessionDetail)
         {
+            var product = new Model.UserInterface.Glms.GlmsProduct();
+            if (glmsConcessionDetail.LegalEntityId.HasValue)
+            {
+                var legalEntity = _lookupTableManager.GetLegalEntityById(glmsConcessionDetail.LegalEntityId.Value);
+                product = GetGlmsProductsByLegalEntity(legalEntity).FirstOrDefault();
+            }
+            
             ConcessionGlms glmsConcession = new ConcessionGlms()
             {
                 InterestPricingCategoryId = glmsConcessionDetail.interestPricingCategoryId,
@@ -199,7 +211,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 LegalEntityAccountId = glmsConcessionDetail.LegalEntityAccountId,
                 LegalEntityId = glmsConcessionDetail.LegalEntityId,
                 ExpiryDate = glmsConcessionDetail.ExpiryDate,
-                ProductTypeId = 1
+                DateApproved = glmsConcessionDetail.DateApproved,
+                ProductTypeId = product.GlmsProductId
             };
 
             return glmsConcession;

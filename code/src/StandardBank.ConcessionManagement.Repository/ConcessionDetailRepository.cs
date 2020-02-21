@@ -161,16 +161,16 @@ namespace StandardBank.ConcessionManagement.Repository
                         WHERE [pkConcessionDetailId] = @ConcessionDetailId",
                         new
                         {
-                            ConcessionDetailId = model.ConcessionDetailId,
-                            ConcessionId = model.ConcessionId,
-                            LegalEntityId = model.LegalEntityId,
-                            LegalEntityAccountId = model.LegalEntityAccountId,
-                            ExpiryDate = model.ExpiryDate,
-                            DateApproved = model.DateApproved,
-                            IsMismatched = model.IsMismatched,
-                            PriceExported = model.PriceExported,
-                            PriceExportedDate = model.PriceExportedDate,
-                            Archived = model.Archived
+                            model.ConcessionDetailId,
+                            model.ConcessionId,
+                            model.LegalEntityId,
+                            model.LegalEntityAccountId,
+                            model.ExpiryDate,
+                            model.DateApproved,
+                            model.IsMismatched,
+                            model.PriceExported,
+                            model.PriceExportedDate,
+                            model.Archived
                         });
                 }
             }

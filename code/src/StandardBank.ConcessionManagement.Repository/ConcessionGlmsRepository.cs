@@ -129,24 +129,26 @@ namespace StandardBank.ConcessionManagement.Repository
                     @"UPDATE [dbo].[tblConcessionGlms]
                     SET [fkConcessionId] = @ConcessionId,
                         [fkConcessionDetailId] = @ConcessionDetailId, 
-                        [fkProductId] = @fkProductId,
-                        [fkLegalEntityAccountId] = @fkLegalEntityAccountId, 
-                        [fkGroupId] = @fkGroupId,
-                        [fkInterestPricingCategoryId] = @fkSlabTypeId,
-                        [fkSlabTypeId] = @fkInterestPricingCategoryId,
-                        [fkInterestTypeId] = @fkInterestTypeId
-                    WHERE [pkConcessionGlmsId] = @Id",
+                        [fkProductId] = @ProductTypeId,
+                        [fkLegalEntityAccountId] = @LegalEntityAccountId, 
+                        [fkGroupId] = @GlmsGroupId,
+                        [fkInterestPricingCategoryId] = @SlabTypeId,
+                        [fkSlabTypeId] = @InterestPricingCategoryId,
+                        [fkInterestTypeId] = @InterestTypeId,
+                        [fkArchiveTypeId] = @ArchiveTypeId
+                    WHERE [fkConcessionId] = @ConcessionId AND [fkConcessionDetailId] = @ConcessionDetailId",
                     new
                     {
-                        Id = model.Id,
-                        ConcessionId = model.ConcessionId,
-                        ConcessionDetailId = model.ConcessionDetailId,
-                        fkProductId = model.ProductTypeId,
-                        fkLegalEntityAccountId = model.LegalEntityAccountId,
-                        fkGroupId = model.GlmsGroupId,
-                        fkSlabTypeId = model.SlabTypeId,
-                        fkInterestPricingCategoryId = model.InterestPricingCategoryId,
-                        fkInterestTypeId = model.InterestTypeId
+                        model.Id,
+                        model.ConcessionId,
+                        model.ConcessionDetailId,
+                        model.ProductTypeId,
+                        model.LegalEntityAccountId,
+                        model.GlmsGroupId,
+                        model.SlabTypeId,
+                        model.InterestPricingCategoryId,
+                        model.InterestTypeId,
+                        model.ArchiveTypeId
                     });
             }
 
