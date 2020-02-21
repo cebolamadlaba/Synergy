@@ -81,6 +81,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(_lookupTableManager.GetBOLChargeCodeTypes());
         }
 
+        [Route("BOLChargeCodeRelationships")]
+        public IActionResult GetBOLChargeCodeRelationships()
+        {
+            return Ok(_lookupTableManager.GetBOLChargeCodeRelationships());
+        }
 
         [Route("TradeProductTypes")]
         public IActionResult GetTradeProductTypes()

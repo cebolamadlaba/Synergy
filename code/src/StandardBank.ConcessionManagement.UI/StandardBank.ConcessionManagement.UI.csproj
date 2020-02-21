@@ -33,8 +33,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="client-src\app\constants\bol-chargeCode-types.ts" />
     <None Remove="client-src\app\models\archive-type.ts" />
     <None Remove="client-src\app\models\bol-chargecode.ts" />
+    <None Remove="client-src\app\models\bol-chargeCodeRelationship.ts" />
     <None Remove="client-src\app\models\bol-chargecodetype.ts" />
     <None Remove="client-src\app\models\bol-view.ts" />
     <None Remove="client-src\app\models\cash-concession-enum.ts" />
@@ -91,7 +93,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="client-src\app\constants\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
@@ -119,7 +120,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="client-src\app\constants\bol-chargeCode-types.ts" />
     <TypeScriptCompile Include="client-src\app\models\archive-type.ts" />
+    <TypeScriptCompile Include="client-src\app\models\bol-chargeCodeRelationship.ts" />
     <TypeScriptCompile Include="client-src\app\models\concession-condition-return-object.ts" />
     <TypeScriptCompile Include="client-src\app\models\transactional-concession-enum.ts" />
     <TypeScriptCompile Include="client-src\app\models\legal-entity-address.ts" />

@@ -143,7 +143,6 @@
                 <th>User ID</th>
                 <th>Charge code</th>
                 <th>Rate</th>
-
                 <th>Expiry Date</th>
                 <th></th>
             </tr>
@@ -153,27 +152,29 @@
 
             <tr *ngFor="let itemrow of bolConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
                 <td class="length-long">
-                    <select formControlName="product" class="form-control" [attr.disabled]="disableField('product',i)" (change)="productTypeChanged(i)">
+                    <select *ngIf="!isBolSalaryPaymentsChildLineItem(i)" formControlName="product" class="form-control" [attr.disabled]="disableField('product',i)" (change)="productTypeChanged(i)">
                         <option *ngFor="let productOption of bolchargecodetypes" [ngValue]="productOption">{{productOption.description}}</option>
                     </select>
                 </td>
                 <td class="length-medium">
-                    <select formControlName="userid" class="form-control" [attr.disabled]="disableField('userid',i)">
+                    <select *ngIf="!isBolSalaryPaymentsChildLineItem(i)" formControlName="userid" class="form-control" [attr.disabled]="disableField('userid',i)">
                         <option *ngFor="let useridOption of legalentitybolusers" [ngValue]="useridOption">{{useridOption.bolUserId}}</option>
                     </select>
                 </td>
                 <td class="length-long">
-                    <select formControlName="chargecode" class="form-control" [attr.disabled]="disableField('chargecode',i)">
+                    <select formControlName="chargecode" class="form-control" [attr.disabled]="disableField('chargecode',i) || isBolSalaryPayment(i)" (change)="chargeCodeChanged(i)">
                         <option *ngFor="let bolchargecodeOption of selectedProducts[i].bolchargecodes" [ngValue]="bolchargecodeOption">{{bolchargecodeOption.description}}</option>
                     </select>
                 </td>
 
+                <td class="length-long"><input type="number" class="form-control" formControlName="rate" [attr.disabled]="disableField('unitcharge',i) || isBolSalaryPayment(i)" /></td>
+                <td class="length-short"><input *ngIf="!isBolSalaryPaymentsChildLineItem(i)" type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="disableField('expiryDate',i)" /></td>
 
-
-                <td class="length-long"><input type="number" class="form-control" formControlName="unitcharge" [attr.disabled]="disableField('unitcharge',i)" /></td>
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="disableField('expiryDate',i)" /></td>
-
-                <td class="delete"><button *ngIf="bolConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                <td class="delete">
+                    <button *ngIf="bolConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage && !isBolSalaryPaymentsChildLineItem(i)" (click)="deleteConcessionRow(i)" class="btn-delete">
+                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                    </button>
+                </td>
             </tr>
         </tbody>
     </table>

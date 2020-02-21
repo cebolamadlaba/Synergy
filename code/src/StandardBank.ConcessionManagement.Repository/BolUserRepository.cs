@@ -75,6 +75,16 @@ namespace StandardBank.ConcessionManagement.Repository
             }
         }
 
+        public IEnumerable<BOLChargeCodeRelationship> GetBOLChargeCodeRelationships()
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<BOLChargeCodeRelationship>(
+                    @"SELECT *
+                    from rtblBOLChargeCodeRelationship");
+            }
+        }
+
         public IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsers(int riskGroupNumber)
         {
             using (var db = _dbConnectionFactory.Connection())

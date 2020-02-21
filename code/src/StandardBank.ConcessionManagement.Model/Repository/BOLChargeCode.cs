@@ -30,5 +30,7 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public decimal StandardPricingOption3 { get; set; }
 
         public bool IsNonUniversal { get; set; }
+
+        public decimal Rate { get; set; }
     }
 }
