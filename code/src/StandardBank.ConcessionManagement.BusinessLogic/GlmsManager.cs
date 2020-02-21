@@ -204,6 +204,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 LegalEntityAccountId = glmsConcessionDetail.LegalEntityAccountId,
                 LegalEntityId = glmsConcessionDetail.LegalEntityId,
                 ExpiryDate = glmsConcessionDetail.ExpiryDate,
+                DateApproved = glmsConcessionDetail.DateApproved,
                 ProductTypeId = 1
             };
 

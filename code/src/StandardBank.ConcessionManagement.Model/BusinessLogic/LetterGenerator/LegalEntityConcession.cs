@@ -122,5 +122,10 @@ namespace StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator
         public IEnumerable<TradeConcessionLetter> TradeConcessionLetters { get; set; }
 
         public IEnumerable<InvestmentConcessionLetter> InvestmentConcessionLetters { get; set; }
+
+        public IEnumerable<GlmsConcessionLetter> GlmsConcessionLetters { get; set; }
+
+        public bool HasGlmsConcessionLetters => GlmsConcessionLetters != null &&
+                                                  GlmsConcessionLetters.Any();
     }
 }

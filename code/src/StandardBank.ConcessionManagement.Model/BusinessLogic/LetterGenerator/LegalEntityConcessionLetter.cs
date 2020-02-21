@@ -262,5 +262,26 @@ namespace StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator
                 return null;
             }
         }
+
+        /// <summary>
+        /// Get the Glms legal entity concessions.
+        /// </summary>
+        /// <value>
+        /// The Glms legal entity concessions.
+        /// </value>
+        public IEnumerable<LegalEntityConcession> GlmsLegalEntityConcessions 
+        { 
+            get 
+            {
+                if (LegalEntityConcessions != null && 
+                    LegalEntityConcessions.Any(_ => _.ConcessionType.Equals(Constants.ConcessionType.Glms)))
+                {
+                    return LegalEntityConcessions.Where(_ => _.ConcessionType.Equals(Constants.ConcessionType.Glms))
+                        .OrderBy(_ => _.ConcessionReferenceNumber);
+                }
+
+                return null;
+            }
+        }
     }
 }
