@@ -64,6 +64,16 @@ namespace StandardBank.ConcessionManagement.UI.Helpers.Implementation
         }
 
         /// <summary>
+        /// Gets the UAT Warning
+        /// </summary>
+        /// <returns></returns>
+        public bool UATWarning()
+        {
+            return !string.IsNullOrWhiteSpace(_configurationData.ShowUatWarning)  &&
+                _configurationData.ShowUatWarning.Equals("true");           
+        }
+
+        /// <summary>
         /// Gets the user identity.
         /// </summary>
         /// <param name="controller">The controller.</param>

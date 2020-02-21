@@ -17,20 +17,20 @@ export class PageHeaderComponent implements OnInit {
     observableLoggedInUser: Observable<User>;
     observableMyAccessnUser: Observable<User>;
     user: User;
-    usererrorMessage: String 
+    usererrorMessage: String;
+    showUatWarning = false;
     currentExecutiveUser = "";
 
-    constructor( @Inject(UserService) private userService, @Inject(UserConcessionsService) private userConcessionsService,) { }  
+    constructor(@Inject(UserService) private userService, @Inject(UserConcessionsService) private userConcessionsService, ) {       
+    }  
 
-    ngOnInit() {      
-
-        //this.currentExecutiveUser = StaticClass.GetUser();
+    ngOnInit() {        
 
         this.observableLoggedInUser = this.userService.getData();
         this.observableLoggedInUser.subscribe(user => {
 
             //set AE to first value
-            this.user = user;
+            this.user = user;            
 
             if (user.isAdminAssistant) {
 
@@ -68,6 +68,7 @@ export class PageHeaderComponent implements OnInit {
             });
 
         this.enforceMyAcess();
+        this.uatWarning();        
     }
 
     aESelected(ae: AccountExecutiveAssistant) {
@@ -126,6 +127,14 @@ export class PageHeaderComponent implements OnInit {
             }      
             
         }, error => {           
+            this.usererrorMessage = <any>error;
+        });
+    }
+
+    uatWarning() {
+        this.userService.getUATWarning().subscribe(result => {
+            this.showUatWarning = result;
+        }, error => {
             this.usererrorMessage = <any>error;
         });
     }

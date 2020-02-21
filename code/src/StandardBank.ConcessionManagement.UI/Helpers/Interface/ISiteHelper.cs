@@ -28,5 +28,11 @@ namespace StandardBank.ConcessionManagement.UI.Helpers.Interface
         /// <param name="controller">The controller.</param>
         /// <returns></returns>
         int GetUserIdForFiltering(Controller controller);
+
+        /// <summary>
+        /// Gets the UAT Warning.
+        /// </summary>
+        /// <returns></returns>
+        bool UATWarning();
     }
 }

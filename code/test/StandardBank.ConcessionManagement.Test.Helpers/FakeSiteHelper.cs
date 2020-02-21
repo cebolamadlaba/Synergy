@@ -54,5 +54,14 @@ namespace StandardBank.ConcessionManagement.Test.Helpers
         {
             return 1;
         }
+
+        /// <summary>
+        /// Gets the UAT Warning
+        /// </summary>
+        /// <returns></returns>
+        public bool UATWarning()
+        {
+            return false;
+        }
     }
 }

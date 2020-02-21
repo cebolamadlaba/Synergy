@@ -24,12 +24,24 @@ namespace StandardBank.ConcessionManagement.Interface.Common
         /// Gets the override logged in user
         /// </summary>
         string OverrideLoggedInUser { get; set; }
+
+        /// <summary>
+        /// Gets the UAT warning 
+        /// </summary>
+        string ShowUatWarning { get; set; }
+
         string SmtpServer { get; set; }
+
         int SmtpPort { get; set; }
+
         string SmtpServerUserName { get; set; }
+
         string SmtpServerPassword { get; set; }
+
         string DefaultEmail { get; set; }
+
         string DateDatabaseConnection { get; set; }
+
         string EmailTemplatePath { get; set; }
 
         string EnforceMyAccess { get; set; }

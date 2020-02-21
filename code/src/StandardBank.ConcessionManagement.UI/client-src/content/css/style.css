@@ -962,6 +962,10 @@ label, th {
     margin-bottom: 15px
 }
 
+.uat-warning {
+    padding-left: 15px;
+}
+
 .form-feedback-container {
     margin: -15px 0 15px
 }
