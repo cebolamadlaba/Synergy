@@ -11,5 +11,6 @@ export class BolConcessionDetail extends BaseConcessionDetail {
     loadedRate: string;
     approvedRate: string;
     fkChargeCodeId: number;
+    fkChargeCodeTypeId: number;
     fkLegalEntityBOLUserId: number;
 }

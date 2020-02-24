@@ -321,18 +321,27 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
                     let selectedBOLUser = this.legalentitybolusers.filter(_ => _.pkLegalEntityBOLUserId == bolConcessionDetail.fkLegalEntityBOLUserId);
                     currentConcession.get('userid').setValue(selectedBOLUser[0]);
 
-
                     let selectedChargeCode = this.bolchargecodes.filter(_ => _.pkChargeCodeId == bolConcessionDetail.fkChargeCodeId);
-                    let chargecodetypeid = selectedChargeCode[0].fkChargeCodeTypeId.valueOf();
-
-                    let selectedChargeCodeType = this.bolchargecodetypes.filter(_ => _.pkChargeCodeTypeId == chargecodetypeid);
-                    currentConcession.get('product').setValue(selectedChargeCodeType[0]);
-
-                    var selectedproduct = currentConcession.get('product').value;
-                    let chargecodes = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedChargeCodeType[0].pkChargeCodeTypeId);
-                    this.selectedProducts[rowIndex].bolchargecodes = chargecodes;
-
                     currentConcession.get('chargecode').setValue(selectedChargeCode[0]);
+
+                    if (bolConcessionDetail.fkChargeCodeTypeId == null) {
+                        let chargecodetypeid = selectedChargeCode[0].fkChargeCodeTypeId.valueOf();
+
+                        let selectedChargeCodeType = this.bolchargecodetypes.filter(_ => _.pkChargeCodeTypeId == chargecodetypeid);
+                        currentConcession.get('product').setValue(selectedChargeCodeType[0]);
+
+                        let chargecodes = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedChargeCodeType[0].pkChargeCodeTypeId);
+                        this.selectedProducts[rowIndex].bolchargecodes = chargecodes;                        
+                    }
+                    else {
+                        let selectedChargeCodeType = this.bolchargecodetypes.filter(_ => _.pkChargeCodeTypeId == bolConcessionDetail.fkChargeCodeTypeId);
+                        currentConcession.get('product').setValue(selectedChargeCodeType[0]);
+
+                        var selectedProductRelationships = this.bolChargeCodeRelationships.filter(cr => cr.fkChargeCodeTypeId == bolConcessionDetail.fkChargeCodeTypeId);
+
+                        this.selectedProducts[rowIndex].bolchargecodes = this.bolchargecodes.filter(re =>
+                            selectedProductRelationships.find(({ fkChargeCodeId }) => re.pkChargeCodeId == fkChargeCodeId));
+                    }                 
 
                     if (bolConcessionDetail.expiryDate) {
                         var formattedExpiryDate = this.datepipe.transform(bolConcessionDetail.expiryDate, 'yyyy-MM-dd');
