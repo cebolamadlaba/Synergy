@@ -46,6 +46,14 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public int? fkChargeCodeId { get; set; }
 
         /// <summary>
+        /// Gets or sets the Charge Code Type.
+        /// </summary>
+        /// <value>
+        /// Charge Code Type Id
+        /// </value>
+        public int? fkChargeCodeTypeId { get; set; }
+
+        /// <summary>
         /// Gets or sets the TransactionValue.
         /// </summary>
         /// <value>

@@ -42,34 +42,26 @@ Select @chargeCodeTypeId, pkChargeCodeId
 From rtblBOLChargeCode
 Where ChargeCode In ('BCN0', 'BCV0', 'BFN0', 'BFV0', 'BAS0', 'SVA7', 'SVF5', 'SVA6', 'SVP4', 'EFTB', 'EFTP')
 
--- Optional To Drop the foreign key and the column ---
-
-ALTER TABLE [dbo].[rtblBOLChargeCodeTest] 
-DROP CONSTRAINT FK_rtblChargeCode_rtblChargeCodeType
-
-ALTER TABLE [dbo].[rtblBOLChargeCode] 
-DROP COLUMN fkChargeCodeTypeId
-
 -- Alter Charge Code table and add Rate column --
 
-  Alter Table [CMS_Dev_V2].[dbo].[rtblBOLChargeCode]
+  Alter Table [dbo].[rtblBOLChargeCode]
   Add Rate decimal(5, 2) Null
 
 -- Insert Charge Code Rate values --
 
-  Update [CMS_Dev_V2].[dbo].[rtblBOLChargeCode]
+  Update [dbo].[rtblBOLChargeCode]
   Set [Rate] = 1.00
   Where ChargeCode In ('BCN0', 'BFN0', 'SVF5', 'SVP4', 'EFTB')
 
-  Update [CMS_Dev_V2].[dbo].[rtblBOLChargeCode]
+  Update [dbo].[rtblBOLChargeCode]
   Set [Rate] = 2.50
   Where ChargeCode In ('BCV0', 'BFV0', 'SVA7', 'SVA6')
 
-  Update [CMS_Dev_V2].[dbo].[rtblBOLChargeCode]
+  Update [dbo].[rtblBOLChargeCode]
   Set [Rate] = 1.01
   Where ChargeCode In ('EFTP')
 
-  Update [CMS_Dev_V2].[dbo].[rtblBOLChargeCode]
+  Update [dbo].[rtblBOLChargeCode]
   Set [Rate] = 0.00
   Where ChargeCode In ('BAS0')
 
@@ -116,5 +108,10 @@ Values ('Standard linked to prime'),
 
 Alter Table tblConcessionGlms
 Add fkArchiveTypeId int Null Foreign Key (fkArchiveTypeId) References rtblArchiveType(pkArchiveTypeId)
+
+-- Add Charge Code Type foreign Key to tblConcessionBol --
+
+Alter Table tblConcessionBol
+Add fkChargeCodeTypeId int Null Foreign Key (fkChargeCodeTypeId) References rtblBOLChargeCodeType(pkChargeCodeTypeId)
 
 

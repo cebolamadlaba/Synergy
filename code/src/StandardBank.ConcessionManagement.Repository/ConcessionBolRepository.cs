@@ -48,8 +48,8 @@ namespace StandardBank.ConcessionManagement.Repository
                 model.ConcessionDetailId = concessionDetail.ConcessionDetailId;
 
                 const string sql =
-                    @"INSERT [dbo].[tblConcessionBol] ([fkConcessionId], [fkConcessionDetailId], [fkLegalEntityBOLUserId], [fkChargeCodeId], [LoadedRate]) 
-                    VALUES (@ConcessionId, @fkConcessionDetailId, @fkLegalEntityBOLUserId, @fkChargeCodeId, @LoadedRate) 
+                    @"INSERT [dbo].[tblConcessionBol] ([fkConcessionId], [fkConcessionDetailId], [fkLegalEntityBOLUserId], [fkChargeCodeId], [LoadedRate], [fkChargeCodeTypeId]) 
+                    VALUES (@ConcessionId, @fkConcessionDetailId, @fkLegalEntityBOLUserId, @fkChargeCodeId, @LoadedRate, @fkChargeCodeTypeId) 
                     SELECT CAST(SCOPE_IDENTITY() as int)";
 
                 using (var db = _dbConnectionFactory.Connection())
@@ -61,6 +61,7 @@ namespace StandardBank.ConcessionManagement.Repository
                             fkConcessionDetailId = model.ConcessionDetailId,
                             fkLegalEntityBOLUserId = model.fkLegalEntityBOLUserId,
                             fkChargeCodeId = model.fkChargeCodeId,
+                            model.fkChargeCodeTypeId,
                             LoadedRate = model.LoadedRate
                         }).Single();
                 }
@@ -266,6 +267,7 @@ namespace StandardBank.ConcessionManagement.Repository
                             [fkConcessionDetailId] = @fkConcessionDetailId, 
                             [fkLegalEntityBOLUserId] = @fkLegalEntityBOLUserId, 
                             [fkChargeCodeId] = @fkChargeCodeId, 
+                            [fkChargeCodeTypeId] = @fkChargeCodeTypeId, 
                             [LoadedRate] = @LoadedRate, 
                             [ApprovedRate] = @ApprovedRate
                         WHERE [pkConcessionBolId] = @Id",
@@ -277,7 +279,8 @@ namespace StandardBank.ConcessionManagement.Repository
                             fkLegalEntityBOLUserId = model.fkLegalEntityBOLUserId,
                             fkChargeCodeId = model.fkChargeCodeId,
                             LoadedRate = model.LoadedRate,
-                            ApprovedRate = model.ApprovedRate
+                            ApprovedRate = model.ApprovedRate,
+                            model.fkChargeCodeTypeId
                         });
 
 
