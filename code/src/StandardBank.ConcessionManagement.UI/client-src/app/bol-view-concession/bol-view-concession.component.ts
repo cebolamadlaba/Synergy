@@ -311,28 +311,41 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
                     currentConcession.get('concessionDetailId').setValue(bolConcessionDetail.concessionDetailId);
 
                     if (bolConcessionDetail.loadedRate) {
-                        bolConcessionDetail.loadedRate = this.baseComponentService.formatDecimalThree(Number(bolConcessionDetail.loadedRate));
+                        var loadedRate = bolConcessionDetail.loadedRate.replace(',', '.');
+                        bolConcessionDetail.loadedRate = this.baseComponentService.formatDecimalThree(Number(loadedRate));
                         currentConcession.get('unitcharge').setValue(bolConcessionDetail.loadedRate);
                     }
 
-                    if (bolConcessionDetail.approvedRate)
+                    if (bolConcessionDetail.approvedRate) {
+                        var approvedRate = bolConcessionDetail.loadedRate.replace(',', '.');
+                        bolConcessionDetail.approvedRate = this.baseComponentService.formatDecimalThree(Number(approvedRate));
                         currentConcession.get('unitchargeApproved').setValue(bolConcessionDetail.approvedRate);
+                    }                        
 
                     let selectedBOLUser = this.legalentitybolusers.filter(_ => _.pkLegalEntityBOLUserId == bolConcessionDetail.fkLegalEntityBOLUserId);
                     currentConcession.get('userid').setValue(selectedBOLUser[0]);
 
-
                     let selectedChargeCode = this.bolchargecodes.filter(_ => _.pkChargeCodeId == bolConcessionDetail.fkChargeCodeId);
-                    let chargecodetypeid = selectedChargeCode[0].fkChargeCodeTypeId.valueOf();
-
-                    let selectedChargeCodeType = this.bolchargecodetypes.filter(_ => _.pkChargeCodeTypeId == chargecodetypeid);
-                    currentConcession.get('product').setValue(selectedChargeCodeType[0]);
-
-                    var selectedproduct = currentConcession.get('product').value;
-                    let chargecodes = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedChargeCodeType[0].pkChargeCodeTypeId);
-                    this.selectedProducts[rowIndex].bolchargecodes = chargecodes;
-
                     currentConcession.get('chargecode').setValue(selectedChargeCode[0]);
+
+                    if (bolConcessionDetail.fkChargeCodeTypeId == null) {
+                        let chargecodetypeid = selectedChargeCode[0].fkChargeCodeTypeId.valueOf();
+
+                        let selectedChargeCodeType = this.bolchargecodetypes.filter(_ => _.pkChargeCodeTypeId == chargecodetypeid);
+                        currentConcession.get('product').setValue(selectedChargeCodeType[0]);
+
+                        let chargecodes = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedChargeCodeType[0].pkChargeCodeTypeId);
+                        this.selectedProducts[rowIndex].bolchargecodes = chargecodes;                        
+                    }
+                    else {
+                        let selectedChargeCodeType = this.bolchargecodetypes.filter(_ => _.pkChargeCodeTypeId == bolConcessionDetail.fkChargeCodeTypeId);
+                        currentConcession.get('product').setValue(selectedChargeCodeType[0]);
+
+                        var selectedProductRelationships = this.bolChargeCodeRelationships.filter(cr => cr.fkChargeCodeTypeId == bolConcessionDetail.fkChargeCodeTypeId);
+
+                        this.selectedProducts[rowIndex].bolchargecodes = this.bolchargecodes.filter(re =>
+                            selectedProductRelationships.find(({ fkChargeCodeId }) => re.pkChargeCodeId == fkChargeCodeId));
+                    }                 
 
                     if (bolConcessionDetail.expiryDate) {
                         var formattedExpiryDate = this.datepipe.transform(bolConcessionDetail.expiryDate, 'yyyy-MM-dd');
@@ -557,7 +570,7 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
                 bolConcessionDetail.concessionDetailId = concessionFormItem.get('concessionDetailId').value;
 
             if (concessionFormItem.get('product').value) {
-
+                bolConcessionDetail.fkChargeCodeTypeId = concessionFormItem.get('product').value.pkChargeCodeTypeId;
             } else {
                 this.addValidationError("Product not selected");
             }

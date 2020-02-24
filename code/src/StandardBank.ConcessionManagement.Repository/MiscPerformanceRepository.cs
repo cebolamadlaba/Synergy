@@ -1120,14 +1120,15 @@ namespace StandardBank.ConcessionManagement.Repository
 					    co.Length [ChargeCodeLength],
 					    bo.BOLUserId,
                         bl.fkLegalEntityBOLUserId,
-                        bl.fkChargeCodeId
+                        bl.fkChargeCodeId,
+                        bl.fkChargeCodeTypeId
                     FROM [dbo].[tblConcessionDetail] cd
                         join [dbo].[tblConcessionBol] bl on cd.pkConcessionDetailId = bl.fkConcessionDetailId
                         JOIN [dbo].[tblLegalEntityBOLUser] bo on bl.fkLegalEntityBOLUserId = bo.pkLegalEntityBOLUserId
                         left join tblLegalEntityAccount la on bo.fkLegalEntityAccountId = la.pkLegalEntityAccountId
                         left JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = la.fkLegalEntityId
-                        JOIN [dbo].rtblBOLChargeCode co on bl.fkChargeCodeId = co.pkChargeCodeId
-                        JOIN rtblBOLChargeCodeType ct on co.fkChargeCodeTypeId = ct.pkChargeCodeTypeId
+                        left JOIN [dbo].rtblBOLChargeCode co on bl.fkChargeCodeId = co.pkChargeCodeId
+                        left JOIN rtblBOLChargeCodeType ct on co.fkChargeCodeTypeId = ct.pkChargeCodeTypeId
                     where cd.fkConcessionId = @concessionId  
                         and cd.Archived is null", 
                     new { concessionId });

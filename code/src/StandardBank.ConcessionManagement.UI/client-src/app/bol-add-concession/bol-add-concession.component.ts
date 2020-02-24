@@ -334,6 +334,8 @@ export class BolAddConcessionComponent extends BolConcessionBaseService implemen
 
         if (existBolSalaryPayments && selectedproduct.description.toUpperCase() == BolChargeCodeTypes.BolSalaryPayments) {
             this.addValidationError("You cannot have more than one Bol Salary Payments concession.");
+
+            currentProduct.get('product').setValue(this.selectedProducts[rowIndex]);
             return;
         }
 
@@ -348,6 +350,15 @@ export class BolAddConcessionComponent extends BolConcessionBaseService implemen
         currentProduct.get('rate').setValue(this.selectedProducts[rowIndex].bolchargecodes[0].rate);
 
         if (selectedproduct.description.toUpperCase() == BolChargeCodeTypes.BolSalaryPayments) {
+            var concessionRows = control.controls.length;
+            if (concessionRows > 1 && rowIndex != (concessionRows - 1)) {
+                // Removes the concession from its current row and add it as the last row
+                control.removeAt(rowIndex);
+                this.selectedProducts.splice(rowIndex, 1);
+
+                control.push(currentProduct);
+            }
+
             this.addBolSalaryPaymentsLineItems(selectedproduct);
         }
     }
@@ -401,8 +412,12 @@ export class BolAddConcessionComponent extends BolConcessionBaseService implemen
         var selectedproduct = currentProduct.get('product').value;
 
         if (selectedproduct.description.toUpperCase() == BolChargeCodeTypes.BolSalaryPayments ||
-            this.isBolSalaryPaymentsChildLineItem(rowIndex))
+            this.isBolSalaryPaymentsChildLineItem(rowIndex)) {
             return '';
+        }
+        else if (this.saveMessage) {
+            return '';
+        }
 
         return null;
     }
@@ -450,7 +465,7 @@ export class BolAddConcessionComponent extends BolConcessionBaseService implemen
             let bolConcessionDetail = new BolConcessionDetail();
 
             if (concessionFormItem.get('product').value) {
-
+                bolConcessionDetail.fkChargeCodeTypeId = concessionFormItem.get('product').value.pkChargeCodeTypeId;
             } else {
                 this.addValidationError("Product not selected");
             }
