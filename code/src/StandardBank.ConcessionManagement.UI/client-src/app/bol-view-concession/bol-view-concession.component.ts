@@ -311,12 +311,16 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
                     currentConcession.get('concessionDetailId').setValue(bolConcessionDetail.concessionDetailId);
 
                     if (bolConcessionDetail.loadedRate) {
-                        bolConcessionDetail.loadedRate = this.baseComponentService.formatDecimalThree(Number(bolConcessionDetail.loadedRate));
+                        var loadedRate = bolConcessionDetail.loadedRate.replace(',', '.');
+                        bolConcessionDetail.loadedRate = this.baseComponentService.formatDecimalThree(Number(loadedRate));
                         currentConcession.get('unitcharge').setValue(bolConcessionDetail.loadedRate);
                     }
 
-                    if (bolConcessionDetail.approvedRate)
+                    if (bolConcessionDetail.approvedRate) {
+                        var approvedRate = bolConcessionDetail.loadedRate.replace(',', '.');
+                        bolConcessionDetail.approvedRate = this.baseComponentService.formatDecimalThree(Number(approvedRate));
                         currentConcession.get('unitchargeApproved').setValue(bolConcessionDetail.approvedRate);
+                    }                        
 
                     let selectedBOLUser = this.legalentitybolusers.filter(_ => _.pkLegalEntityBOLUserId == bolConcessionDetail.fkLegalEntityBOLUserId);
                     currentConcession.get('userid').setValue(selectedBOLUser[0]);
@@ -566,7 +570,7 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
                 bolConcessionDetail.concessionDetailId = concessionFormItem.get('concessionDetailId').value;
 
             if (concessionFormItem.get('product').value) {
-
+                bolConcessionDetail.fkChargeCodeTypeId = concessionFormItem.get('product').value.pkChargeCodeTypeId;
             } else {
                 this.addValidationError("Product not selected");
             }
