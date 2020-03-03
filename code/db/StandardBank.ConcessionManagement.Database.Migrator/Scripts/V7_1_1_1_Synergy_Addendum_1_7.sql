@@ -51,15 +51,11 @@ Where ChargeCode In ('BCN0', 'BCV0', 'BFN0', 'BFV0', 'BAS0', 'SVA7', 'SVF5', 'SV
 
   Update [dbo].[rtblBOLChargeCode]
   Set [Rate] = 1.00
-  Where ChargeCode In ('BCN0', 'BFN0', 'SVF5', 'SVP4', 'EFTB')
+  Where ChargeCode In ('BCN0', 'BFN0', 'SVF5', 'SVP4')
 
   Update [dbo].[rtblBOLChargeCode]
   Set [Rate] = 2.50
-  Where ChargeCode In ('BCV0', 'BFV0', 'SVA7', 'SVA6')
-
-  Update [dbo].[rtblBOLChargeCode]
-  Set [Rate] = 1.01
-  Where ChargeCode In ('EFTP')
+  Where ChargeCode In ('BCV0', 'BFV0', 'SVA7', 'SVA6', 'EFTB', 'EFTP')
 
   Update [dbo].[rtblBOLChargeCode]
   Set [Rate] = 0.00
