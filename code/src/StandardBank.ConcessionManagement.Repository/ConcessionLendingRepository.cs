@@ -70,7 +70,7 @@ namespace StandardBank.ConcessionManagement.Repository
                         AverageBalance = model.AverageBalance,
                         ServiceFee = model.ServiceFee,
                         Frequency = model.Frequency,
-                        MRS_ERI = model.MRS_BRI
+                        MRS_ERI = model.MRS_ERI
                     }).Single();
             }
 
@@ -233,7 +233,7 @@ namespace StandardBank.ConcessionManagement.Repository
                         AverageBalance = model.AverageBalance,
                         ServiceFee = model.ServiceFee,
                         Frequency = model.Frequency,
-                        MRS_ERI = model.MRS_BRI
+                        MRS_ERI = model.MRS_ERI
                     });
             }
 
