@@ -292,7 +292,7 @@ export class TransactionalAddConcessionComponent extends TransactionalBaseServic
             if (transactionalConcessionDetail.accountNumber) {
                 if (this.clientAccounts) {
                     let selectedAccountNo = this.clientAccounts.filter(_ => _.accountNumber == transactionalConcessionDetail.accountNumber);
-                    if (selectedAccountNo != null) {
+                    if (selectedAccountNo.length > 0) {
                         currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
                     } else {
                         this.addValidationError('AccountNumber doesnt belong to selected risk group');
