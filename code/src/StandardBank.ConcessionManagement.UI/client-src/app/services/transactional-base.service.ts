@@ -59,7 +59,10 @@ export class TransactionalBaseService {
                         detail.transactionType = cell.v;
                         break;
                     case TransactionalConcessionEnum.ExpiryDate:
-                        detail.expiryDate = new Date(cell.w);
+                        var expiryDate = cell.w.split('/')
+                        var newDate = expiryDate[1] + '/' + expiryDate[0] + '/' + expiryDate[2];
+
+                        detail.expiryDate = new Date(newDate);
                         break;
                 }
 
