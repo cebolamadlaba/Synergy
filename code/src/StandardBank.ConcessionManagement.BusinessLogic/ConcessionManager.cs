@@ -1295,6 +1295,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             var extensionRelationshipId = _lookupTableManager.GetRelationshipId(Constants.RelationshipType.Extension);
+            var childConcessionRelationships = _concessionRelationshipRepository.ReadByParentConcessionId(concession.Id);
+
+            if (childConcessionRelationships != null && childConcessionRelationships.Any())
+            {
+                var mostRecentCHildConcession = childConcessionRelationships.Last();
+
+                if (mostRecentCHildConcession.RelationshipId != extensionRelationshipId)
+                {
+                    return true;
+                }
+            }
 
             var relationships =
                 _concessionRelationshipRepository.ReadByChildConcessionIdRelationshipIdRelationships(concession.Id,
@@ -1336,6 +1347,24 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         if (childConcession.StatusId != declinedStatus && childConcession.StatusId != removedStatus)
                             return true;
                     }
+                }
+            }
+
+            return false;
+        }
+
+        private bool HasExtensionChild(int concessionId)
+        {
+            var childConcessionRelationships = _concessionRelationshipRepository.ReadByParentConcessionId(concessionId);
+
+            if (childConcessionRelationships != null && childConcessionRelationships.Any())
+            {
+                var mostRecentCHildConcession = childConcessionRelationships.Last();
+
+                var extensionStatus = _lookupTableManager.GetRelationshipId(Constants.RelationshipType.Extension);
+                if (mostRecentCHildConcession.RelationshipId == extensionStatus)
+                {
+                    return true;
                 }
             }
 
