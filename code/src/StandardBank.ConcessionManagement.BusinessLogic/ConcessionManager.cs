@@ -1295,6 +1295,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             var extensionRelationshipId = _lookupTableManager.GetRelationshipId(Constants.RelationshipType.Extension);
+            var childConcessionRelationships = _concessionRelationshipRepository.ReadByParentConcessionId(concession.Id);
+
+            if (childConcessionRelationships != null && childConcessionRelationships.Any())
+            {
+                var mostRecentCHildConcession = childConcessionRelationships.Last();
+
+                if (mostRecentCHildConcession.RelationshipId != extensionRelationshipId)
+                {
+                    return true;
+                }
+            }
 
             var relationships =
                 _concessionRelationshipRepository.ReadByChildConcessionIdRelationshipIdRelationships(concession.Id,
