@@ -1353,24 +1353,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return false;
         }
 
-        private bool HasExtensionChild(int concessionId)
-        {
-            var childConcessionRelationships = _concessionRelationshipRepository.ReadByParentConcessionId(concessionId);
-
-            if (childConcessionRelationships != null && childConcessionRelationships.Any())
-            {
-                var mostRecentCHildConcession = childConcessionRelationships.Last();
-
-                var extensionStatus = _lookupTableManager.GetRelationshipId(Constants.RelationshipType.Extension);
-                if (mostRecentCHildConcession.RelationshipId == extensionStatus)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         /// <summary>
         /// Gets the concession comments.
         /// </summary>
