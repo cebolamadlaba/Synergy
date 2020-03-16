@@ -18,7 +18,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             Config = config;
         }
 
-        public SendResponse Send(Email email, CancellationToken? token = default)
+        public SendResponse Send(Email email, CancellationToken? token = default(CancellationToken?))
         {
             var response = new SendResponse();
             if (token?.IsCancellationRequested ?? false)
@@ -47,7 +47,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
         }
 
-        public async Task<SendResponse> SendAsync(Email email, CancellationToken? token = default)
+        public async Task<SendResponse> SendAsync(Email email, CancellationToken? token = default(CancellationToken?))
         {
             var response = new SendResponse();
             if (token?.IsCancellationRequested ?? false)
