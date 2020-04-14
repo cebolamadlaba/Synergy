@@ -1296,9 +1296,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var extensionRelationshipId = _lookupTableManager.GetRelationshipId(Constants.RelationshipType.Extension);
 
-            var relationships =
-                _concessionRelationshipRepository.ReadByChildConcessionIdRelationshipIdRelationships(concession.Id,
-                    extensionRelationshipId);
+            var relationships = _concessionRelationshipRepository.ReadByChildConcessionId(concession.Id);
 
             //you can only extend a concession once
             if (relationships != null && relationships.Any())
