@@ -477,8 +477,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// Gets the Glms Group.
         /// </summary>
         /// <returns></returns>
-        [Route("GlmsGroup")]
-        public IActionResult GlmsGroup()
+        [Route("GlmsGroup/{riskGroupNumber}/{sapBpId}")]
+        public IActionResult GlmsGroup(int riskGroupNumber, int sapBpId)
         {
             return Ok(_glmsLookupTableManager.GetGlmsGroups());
         }

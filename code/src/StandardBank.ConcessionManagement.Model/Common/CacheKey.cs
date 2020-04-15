@@ -162,6 +162,7 @@
             public static class GlmsGroupRepository
             {
                 public const string ReadAll = "CacheKey.Repository.GlmsGroupRepository.ReadAll";
+                public const string ReadAllByRiskGroupAndOrSapBpId = "CacheKey.Repository.GlmsGroupRepository.ReadAllByRiskGroupAndOrSapBpId";
             }
 
 

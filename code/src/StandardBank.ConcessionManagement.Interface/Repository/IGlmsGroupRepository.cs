@@ -22,5 +22,6 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <returns></returns>
         IEnumerable<GlmsGroup> ReadAll();
 
+        IEnumerable<GlmsGroup> ReadAllByRiskGroupAndOrSapBpId(int riskGroupNumber, int? sapBpId);
     }
 }
