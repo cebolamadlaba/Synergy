@@ -31,8 +31,6 @@ import { MOnthEnum } from '../models/month-enum';
 import { GlmsView } from '../models/glms-view';
 import { GlmsConcessionService } from '../services/glms-concession.service';
 import { ProductType } from '../models/product-type';
-import { ClientAccountArray } from '../models/client-account-array';
-import { ClientAccount } from '../models/client-account';
 import { GlmsConcession } from '../models/glms-concession';
 import { Concession } from '../models/concession';
 import { GlmsConcessionDetail } from '../models/glms-concession-detail';
@@ -201,7 +199,6 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         return this.formBuilder.group({
             disablecontrolset: [''],
             productType: [''],
-            accountNumber: [''],
             expiryDate: [''],
             slabType: [''],
             interestType: [''],
@@ -368,7 +365,6 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
 
         let hasTypeId: boolean = false;
         let hasLegalEntityId: boolean = false;
-        let hasLegalEntityAccountId: boolean = false;
 
         for (let concessionFormItem of concessions.controls) {
             if (!glmsConcession.glmsConcessionDetails)
