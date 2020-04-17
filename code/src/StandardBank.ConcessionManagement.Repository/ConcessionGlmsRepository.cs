@@ -46,8 +46,8 @@ namespace StandardBank.ConcessionManagement.Repository
                 model.ConcessionDetailId = concessionDetail.ConcessionDetailId;
 
                 const string sql =
-                    @"INSERT [dbo].[tblConcessionGlms] ([fkConcessionId], [fkConcessionDetailId], [fkProductId], [fkGroupId], [fkInterestPricingCategoryId],[fkSlabTypeId],[fkInterestTypeId]) 
-                    VALUES (@fkConcessionId, @fkConcessionDetailId, @fkProductId, @fkGroupId, @fkInterestPricingCategoryId,@fkSlabTypeId,@fkInterestTypeId) 
+                    @"INSERT [dbo].[tblConcessionGlms] ([fkConcessionId], [fkConcessionDetailId], [fkGroupId], [fkInterestPricingCategoryId],[fkSlabTypeId],[fkInterestTypeId]) 
+                    VALUES (@fkConcessionId, @fkConcessionDetailId, @fkGroupId, @fkInterestPricingCategoryId,@fkSlabTypeId,@fkInterestTypeId) 
                     SELECT CAST(SCOPE_IDENTITY() as int)";
 
                 using (var db = _dbConnectionFactory.Connection())
@@ -57,7 +57,6 @@ namespace StandardBank.ConcessionManagement.Repository
                         {
                             fkConcessionId = model.ConcessionId,
                             fkConcessionDetailId = model.ConcessionDetailId,
-                            fkProductId = model.ProductTypeId,
                             fkGroupId = model.GlmsGroupId,
                             fkSlabTypeId = model.SlabTypeId,
                             fkInterestPricingCategoryId = model.InterestPricingCategoryId,
@@ -82,7 +81,6 @@ namespace StandardBank.ConcessionManagement.Repository
                     @"SELECT [pkConcessionGlmsId] [Id],
                              t.[fkConcessionId] [ConcessionId],
                              [fkConcessionDetailId] [ConcessionDetailId],
-                             [fkProductId],
                              d.[fkLegalEntityId] [LegalEntityId],
                              d.[ExpiryDate] 
                     FROM [dbo].[tblConcessionGlms] t
@@ -104,7 +102,6 @@ namespace StandardBank.ConcessionManagement.Repository
                     @"Select [pkConcessionGlmsId] [Id],
                              t.[fkConcessionId] [ConcessionId],
                              [fkConcessionDetailId] [ConcessionDetailId],
-                             [fkProductId],
                              d.[fkLegalEntityId] [LegalEntityId],
                              d.[ExpiryDate] 
                     FROM [dbo].[tblConcessionGlms] t
@@ -124,7 +121,6 @@ namespace StandardBank.ConcessionManagement.Repository
                     @"UPDATE [dbo].[tblConcessionGlms]
                     SET [fkConcessionId] = @ConcessionId,
                         [fkConcessionDetailId] = @ConcessionDetailId, 
-                        [fkProductId] = @ProductTypeId,
                         [fkGroupId] = @GlmsGroupId,
                         [fkInterestPricingCategoryId] = @SlabTypeId,
                         [fkSlabTypeId] = @InterestPricingCategoryId,
@@ -136,7 +132,6 @@ namespace StandardBank.ConcessionManagement.Repository
                         model.Id,
                         model.ConcessionId,
                         model.ConcessionDetailId,
-                        model.ProductTypeId,
                         model.GlmsGroupId,
                         model.SlabTypeId,
                         model.InterestPricingCategoryId,

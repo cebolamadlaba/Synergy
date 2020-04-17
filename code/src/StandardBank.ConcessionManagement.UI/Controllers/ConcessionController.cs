@@ -328,7 +328,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 {
                     _glmsManager.UpdateConcessionGlms(glmsConcessionDetail, gmlsConcession.Concession, archiveType);
                     break;
-                }                
+                }
             }
         }
 
@@ -480,7 +480,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("GlmsGroup/{riskGroupNumber}/{sapBpId}")]
         public IActionResult GlmsGroup(int riskGroupNumber, int sapBpId)
         {
-            return Ok(_glmsLookupTableManager.GetGlmsGroups());
+            return Ok(_glmsLookupTableManager.GetGlmsGroups(riskGroupNumber, sapBpId));
         }
 
         /// <summary>

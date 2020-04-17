@@ -70,12 +70,10 @@ namespace StandardBank.ConcessionManagement.Repository
 
         public IEnumerable<GlmsGroup> ReadAllByRiskGroupAndOrSapBpId(int riskGroupNumber, int? sapBpId)
         {
-            Func<IEnumerable<GlmsGroup>> function = () =>
+            using (var db = _dbConnectionFactory.Connection())
             {
-                using (var db = _dbConnectionFactory.Connection())
-                {
-                    return db.Query<GlmsGroup>(
-                        @"SELECT  Distinct [pkGlmsGroupId] [Id], 
+                return db.Query<GlmsGroup>(
+                    @"SELECT  Distinct [pkGlmsGroupId] [Id], 
                                     [GroupNumber],
                                     [GroupName], 
                                     gg.[IsActive] 
@@ -85,11 +83,8 @@ namespace StandardBank.ConcessionManagement.Repository
                             Left Join tblLegalEntity le On le.pkLegalEntityId = pg.fkLegalEntityId
                             Where (@sapBpId = 0 And rg.RiskGroupNumber = @riskGroupNumber)
                             Or (@sapBpId <> 0 And le.CustomerNumber = @sapBpId)"
-                        , new { riskGroupNumber, sapBpId });
-                }
-            };
-
-            return _cacheManager.ReturnFromCache(function, 1440, CacheKey.Repository.GlmsGroupRepository.ReadAllByRiskGroupAndOrSapBpId);
+                    , new { riskGroupNumber, sapBpId });
+            }
         }
     }
 }

@@ -192,13 +192,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         private ConcessionGlms MapGlms(GlmsConcessionDetail glmsConcessionDetail)
         {
-            var product = new Model.UserInterface.Glms.GlmsProduct();
-            if (glmsConcessionDetail.LegalEntityId.HasValue)
-            {
-                var legalEntity = _lookupTableManager.GetLegalEntityById(glmsConcessionDetail.LegalEntityId.Value);
-                product = GetGlmsProductsByLegalEntity(legalEntity).FirstOrDefault();
-            }
-
             ConcessionGlms glmsConcession = new ConcessionGlms()
             {
                 InterestPricingCategoryId = glmsConcessionDetail.interestPricingCategoryId,
@@ -206,11 +199,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 ConcessionDetailId = glmsConcessionDetail.ConcessionDetailId,
                 GlmsGroupId = glmsConcessionDetail.GlmsGroupId,
                 InterestTypeId = glmsConcessionDetail.InterestTypeId,
-                //LegalEntityAccountId = glmsConcessionDetail.LegalEntityAccountId,
-                LegalEntityId = glmsConcessionDetail.LegalEntityId,
                 ExpiryDate = glmsConcessionDetail.ExpiryDate,
-                DateApproved = glmsConcessionDetail.DateApproved,
-                ProductTypeId = product.GlmsProductId
+                DateApproved = glmsConcessionDetail.DateApproved
             };
 
             return glmsConcession;
