@@ -56,16 +56,35 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     return db.Query<GlmsGroup>(
-                        @"SELECT [pkGlmsGroupId] [Id], 
-                                [GroupNumber],
-                                [GroupName], 
-                                [IsActive] 
-                        FROM [dbo].[tblGlmsGroup]");
+                        @"SELECT Distinct [pkGlmsGroupId] [Id], 
+                                    [GroupNumber],
+                                    [GroupName], 
+                                    [IsActive] 
+                            FROM [dbo].[tblGlmsGroup] gg
+                            Inner Join tblProductGlms pg On pg.fkGroupId = gg.pkGlmsGroupId");
                 }
             };
 
             return _cacheManager.ReturnFromCache(function, 1440, CacheKey.Repository.GlmsGroupRepository.ReadAll);
         }
 
+        public IEnumerable<GlmsGroup> ReadAllByRiskGroupAndOrSapBpId(int riskGroupNumber, int? sapBpId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<GlmsGroup>(
+                    @"SELECT  Distinct [pkGlmsGroupId] [Id], 
+                                    [GroupNumber],
+                                    [GroupName], 
+                                    gg.[IsActive] 
+                            FROM [dbo].[tblGlmsGroup] gg
+                            Inner Join tblProductGlms pg On pg.fkGroupId = gg.pkGlmsGroupId
+                            Inner Join tblRiskGroup rg On rg.pkRiskGroupId = pg.fkRiskGroupId
+                            Left Join tblLegalEntity le On le.pkLegalEntityId = pg.fkLegalEntityId
+                            Where (@sapBpId = 0 And rg.RiskGroupNumber = @riskGroupNumber)
+                            Or (@sapBpId <> 0 And le.CustomerNumber = @sapBpId)"
+                    , new { riskGroupNumber, sapBpId });
+            }
+        }
     }
 }

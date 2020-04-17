@@ -102,20 +102,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         public GlmsView GetGlmsViewData(int riskGroupNumber, int sapbpid, User currentUser)
         {
-            bool hasOnlySapBpId = riskGroupNumber < 1 && sapbpid > 0;
-
             var GlmsConcessions = new List<GlmsConcession>();
             RiskGroup riskGroup = null;
             Model.UserInterface.LegalEntity legalEntity = null;
             IEnumerable<Concession> concessions = null;
             IEnumerable<Model.UserInterface.Glms.GlmsProduct> GlmsProducts = null;
-            if (!hasOnlySapBpId)
+            if (riskGroupNumber > 0)
             {
                 riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
                 concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.Glms, currentUser);
                 GlmsProducts = GetGlmsProducts(riskGroup);
             }
-            else
+            if (sapbpid > 0)
             {
                 legalEntity = _lookupTableManager.GetLegalEntity(sapbpid);
                 concessions = _concessionManager.GetApprovedConcessionsForLegalEntityId(legalEntity.Id, Constants.ConcessionType.Glms, currentUser);
@@ -194,13 +192,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         private ConcessionGlms MapGlms(GlmsConcessionDetail glmsConcessionDetail)
         {
-            var product = new Model.UserInterface.Glms.GlmsProduct();
-            if (glmsConcessionDetail.LegalEntityId.HasValue)
-            {
-                var legalEntity = _lookupTableManager.GetLegalEntityById(glmsConcessionDetail.LegalEntityId.Value);
-                product = GetGlmsProductsByLegalEntity(legalEntity).FirstOrDefault();
-            }
-            
             ConcessionGlms glmsConcession = new ConcessionGlms()
             {
                 InterestPricingCategoryId = glmsConcessionDetail.interestPricingCategoryId,
@@ -208,11 +199,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 ConcessionDetailId = glmsConcessionDetail.ConcessionDetailId,
                 GlmsGroupId = glmsConcessionDetail.GlmsGroupId,
                 InterestTypeId = glmsConcessionDetail.InterestTypeId,
-                LegalEntityAccountId = glmsConcessionDetail.LegalEntityAccountId,
-                LegalEntityId = glmsConcessionDetail.LegalEntityId,
                 ExpiryDate = glmsConcessionDetail.ExpiryDate,
-                DateApproved = glmsConcessionDetail.DateApproved,
-                ProductTypeId = product.GlmsProductId
+                DateApproved = glmsConcessionDetail.DateApproved
             };
 
             return glmsConcession;

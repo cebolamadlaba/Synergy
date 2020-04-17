@@ -32,8 +32,6 @@ import { MOnthEnum } from '../models/month-enum';
 import { GlmsView } from '../models/glms-view';
 import { GlmsConcessionService } from '../services/glms-concession.service';
 import { ProductType } from '../models/product-type';
-import { ClientAccountArray } from '../models/client-account-array';
-import { ClientAccount } from '../models/client-account';
 import { GlmsConcession } from '../models/glms-concession';
 import { ConcessionComment } from "../models/concession-comment";
 import { Concession } from '../models/concession';
@@ -96,8 +94,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
     entityNumber: string;
 
     isLoading = true;
-    selectedAccountNumbers: ClientAccountArray[];
-    clientAccounts: ClientAccount[];
 
     selectedSlabType: SlabType[];
     slabType: SlabType[];
@@ -177,9 +173,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
         this.glmsTierData = [new GlmsTierData()];
         this.selectedGlmsTierData = [new GlmsTierData()];
-
-        this.clientAccounts = [new ClientAccount()];
-        this.selectedAccountNumbers = [new ClientAccountArray()];
 
         this.interestType = [new InterestType()];
         this.selectedInterestType = [new InterestType()];
@@ -319,11 +312,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
                     this.interestPricingCategory[rowIndex] = selectedInterestPricingCategory[0];
 
-                    if (this.clientAccounts) {
-                        let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == glmsConcessionDetail.legalEntityAccountId);
-                        currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
-                    }
-
                     if (glmsConcessionDetail.expiryDate) {
                         var formattedExpiryDate = this.datepipe.transform(glmsConcessionDetail.expiryDate, 'yyyy-MM-dd');
                         currentConcession.get('expiryDate').setValue(formattedExpiryDate);
@@ -385,12 +373,10 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
     initConcessionItemRows() {
 
         this.selectedProductTypes.push(new ProductType());
-        this.selectedAccountNumbers.push(new ClientAccountArray());
 
         return this.formBuilder.group({
             disablecontrolset: [''],
             productType: [''],
-            accountNumber: [''],
             expiryDate: [''],
             slabType: [''],
             interestType: [''],
@@ -426,8 +412,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
                 this.lookupDataService.getPeriodTypes(),
                 this.lookupDataService.getConditionTypes(),
                 this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-                this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, this.sapbpid, ConcessionTypes.Glms),
-                this.getGlmsGroup(),
+                this.getGlmsGroup(this.riskGroupNumber, this.sapbpid),
                 this.getInterestType(),
                 this.getSlabType(),
                 this.getRateType(),
@@ -448,8 +433,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
                 this.lookupDataService.getPeriodTypes(),
                 this.lookupDataService.getConditionTypes(),
                 this.lookupDataService.getLegalEntity(this.sapbpid),
-                this.lookupDataService.getClientAccountsConcessionType(this.riskGroupNumber, this.sapbpid, ConcessionTypes.Glms),
-                this.getGlmsGroup(),
+                this.getGlmsGroup(this.riskGroupNumber, this.sapbpid),
                 this.getInterestType(),
                 this.getSlabType(),
                 this.getRateType(),
@@ -477,15 +461,12 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         this.periods = <any>results[1];
         this.periodTypes = <any>results[2];
         this.conditionTypes = <any>results[3];
-        this.clientAccounts = <any>results[5];
-        this.conditionTypes = <any>results[3];
-        this.clientAccounts = <any>results[5];
-        this.glmsGroup = <any>results[6];
-        this.interestType = <any>results[7];
-        this.slabType = <any>results[8];
-        this.rateType = <any>results[9];
-        this.baseRateCode = <any>results[10];
-        this.interestPricingCategory = <any>results[11];
+        this.glmsGroup = <any>results[5];
+        this.interestType = <any>results[6];
+        this.slabType = <any>results[7];
+        this.rateType = <any>results[8];
+        this.baseRateCode = <any>results[9];
+        this.interestPricingCategory = <any>results[10];
 
         this.isLoading = false;
 
@@ -579,10 +560,11 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         var glmsConcession = new GlmsConcession();
         glmsConcession.concession = new Concession();
 
-        if (this.riskGroup)
-            glmsConcession.concession.riskGroupId = this.riskGroup.id;
-        if (this.legalEntity)
-            glmsConcession.concession.legalEntityId = this.legalEntity.id;
+        if (this.glmsConcession.concession.riskGroupId)
+            glmsConcession.concession.riskGroupId = this.glmsConcession.concession.riskGroupId;
+
+        if (this.glmsConcession.concession.legalEntityId)
+            glmsConcession.concession.legalEntityId = this.glmsConcession.concession.legalEntityId;
 
         if (this.glmsConcessionForm.controls['smtDealNumber'].value) {
             glmsConcession.concession.smtDealNumber = this.glmsConcessionForm.controls['smtDealNumber'].value;
@@ -590,20 +572,19 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         else {
 
             this.addValidationError("SMT Deal Number not captured");
-        }            
+        }
 
         if (this.glmsConcessionForm.controls['motivation'].value)
             glmsConcession.concession.motivation = this.glmsConcessionForm.controls['motivation'].value;
         else {
 
             glmsConcession.concession.motivation = '.';
-        }           
-        
+        }
+
         const concessions = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
 
         let hasTypeId: boolean = false;
         let hasLegalEntityId: boolean = false;
-        let hasLegalEntityAccountId: boolean = false;
 
         for (let concessionFormItem of concessions.controls) {
             if (!glmsConcession.glmsConcessionDetails)
@@ -620,7 +601,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
             else {
 
                 this.addValidationError("Group not selected");
-            }             
+            }
 
             if (concessionFormItem.get('interestPricingCategory').value) {
                 glmsConcessionDetail.interestPricingCategoryId = concessionFormItem.get('interestPricingCategory').value.id;
@@ -667,9 +648,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
             if (this.isApproving) {
                 glmsConcessionDetail.dateApproved = new Date();
             }
-
-            glmsConcessionDetail.legalEntityId = this.clientAccounts[0].legalEntityId;
-            glmsConcessionDetail.legalEntityAccountId = this.clientAccounts[0].legalEntityAccountId;
 
             glmsConcession.glmsConcessionDetails.push(glmsConcessionDetail);
         }
@@ -893,11 +871,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
         if (this.productTypes) {
             newRow.controls['productType'].setValue(this.productTypes[0]);
-        }            
-
-        if (this.clientAccounts) {
-            newRow.controls['accountNumber'].setValue(this.clientAccounts[0]);
-        }            
+        }
 
         control.push(newRow);
     }
@@ -911,7 +885,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         const control = <FormArray>this.glmsConcessionForm.controls['conditionItemsRows'];
         if (control.length == 0) {
             control.push(this.initConditionItemRows());
-        }            
+        }
     }
 
     addNewTierRow() {
@@ -933,7 +907,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         const control = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
         if (control.length == 0) {
             control.push(this.initTierItemRows());
-        }            
+        }
     }
 
     deleteConcessionRow(index: number) {
@@ -941,7 +915,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
             const control = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
 
             this.selectedProductTypes.splice(index, 1);
-            this.selectedAccountNumbers.splice(index, 1);
             this.selectedInterestType.splice(index, 1);
             this.selectedRateType.splice(index, 1);
             this.selectedGlmsGroup.splice(index, 1);
