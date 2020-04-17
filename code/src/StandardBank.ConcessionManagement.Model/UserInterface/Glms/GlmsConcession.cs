@@ -48,6 +48,5 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Glms
         public User CurrentUser { get; set; }
 
         public IEnumerable<string> PrimeRate { get; set; }
-
     }
 }

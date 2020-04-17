@@ -22,7 +22,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
     /// </summary>
     /// <seealso cref="StandardBank.ConcessionManagement.Interface.BusinessLogic.IGlmsLookupTableManager" />
     public class GlmsLookupTableManager : IGlmsLookupTableManager
-    {      
+    {
         /// <summary>
         /// The mapper
         /// </summary>
@@ -65,7 +65,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GlmsLookupTableManager"/> class.
-       
+
         public GlmsLookupTableManager(IMapper mapper,
             IGlmsGroupRepository glmsGroupRepository,
             IInterestPricingCategoryRepository interestPricingCategoryRepository,
@@ -75,18 +75,24 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IBaseRateCodeRepository baseRateCodeRepository)
         {
             _mapper = mapper;
-             _glmsGroupRepository = glmsGroupRepository;
+            _glmsGroupRepository = glmsGroupRepository;
             _interestPricingCategoryRepository = interestPricingCategoryRepository;
             _interestTypeRepository = interestTypeRepository;
             _rateTypeRepository = rateTypeRepository;
             _slabTypeRepository = slabTypeRepository;
             _baseRateCodeRepository = baseRateCodeRepository;
 
-        }  
+        }
 
         public IEnumerable<GlmsGroup> GetGlmsGroups()
         {
             var glmsGroup = _glmsGroupRepository.ReadAll();
+            return _mapper.Map<IEnumerable<GlmsGroup>>(glmsGroup);
+        }
+
+        public IEnumerable<GlmsGroup> GetGlmsGroups(int riskGroupNumber, int? sapBpId)
+        {
+            var glmsGroup = _glmsGroupRepository.ReadAllByRiskGroupAndOrSapBpId(riskGroupNumber, sapBpId);
             return _mapper.Map<IEnumerable<GlmsGroup>>(glmsGroup);
         }
 

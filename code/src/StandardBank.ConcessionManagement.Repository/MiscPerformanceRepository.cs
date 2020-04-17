@@ -301,6 +301,43 @@ namespace StandardBank.ConcessionManagement.Repository
                                     }
                                     break;
                                 }
+                            case Model.BusinessLogic.Constants.ConcessionType.Glms:
+                                {
+                                    if (riskGroupNumber > 0)
+                                    {
+                                        sql =
+                                            @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId],
+                                                    lea.[pkLegalEntityAccountId] [LegalEntityAccountId],
+                                                    rg.[pkRiskGroupId] [RiskGroupId],
+                                                    lea.[AccountNumber],
+                                                    le.[CustomerName] 
+                                                FROM [dbo].[tblRiskGroup] rg
+                                                    JOIN [dbo].[tblLegalEntity] le on le.[fkRiskGroupId] = rg.[pkRiskGroupId]
+                                                    JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+	                                                Join [dbo].[tblProductGlms] pg On pg.fkRiskGroupId = rg.pkRiskGroupId
+                                                WHERE rg.[RiskGroupNumber] = @riskGroupNumber
+                                                    AND rg.[IsActive] = 1
+                                                    AND le.[IsActive] = 1
+                                                    AND lea.[IsActive] = 1
+                                                    AND (@userId Is Null Or le.[fkUserId] = @userId)";
+                                    }
+                                    else if (legalEntityCustomerNumber.HasValue && legalEntityCustomerNumber > 0)
+                                    {
+                                        sql =
+                                            @"SELECT distinct le.[pkLegalEntityId] [LegalEntityId],
+                                                    lea.[pkLegalEntityAccountId] [LegalEntityAccountId],
+                                                    lea.[AccountNumber],
+                                                    le.[CustomerName]
+                                                FROM [dbo].[tblLegalEntity] le
+                                                    JOIN [dbo].[tblLegalEntityAccount] lea on lea.[fkLegalEntityId] = le.[pkLegalEntityId]
+                                                    Join [dbo].[tblProductGlms] pg On pg.fkLegalEntityId = le.pkLegalEntityId
+                                                WHERE le.[CustomerNumber] = @legalEntityCustomerNumber
+                                                    AND le.[IsActive] = 1
+                                                    --AND lea.[IsActive] = 1
+                                                    AND (@userId Is Null Or le.[fkUserId] = @userId)";
+                                    }
+                                    break;
+                                }
                             default:
                                 {
                                     if (riskGroupNumber > 0)
@@ -746,7 +783,7 @@ namespace StandardBank.ConcessionManagement.Repository
 						    JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = trade.[fkLegalEntityAccountId]
 						    JOIN [dbo].rtblTradeProduct prod on trade.fkTradeProductId = prod.pkTradeProductId
 						    JOIN [dbo].rtblTradeProductType ty on prod.fkTradeProductTypeId = ty.pkTradeProductTypeId					
-						where trade.fkLegalEntityId =  @legalEntityId", 
+						where trade.fkLegalEntityId =  @legalEntityId",
                         new { legalEntityId, legalEntityName },
                         commandTimeout: Int32.MaxValue);
 
@@ -781,7 +818,7 @@ namespace StandardBank.ConcessionManagement.Repository
                             JOIN [dbo].[rtblProduct] p on p.[pkProductId] = pinv.[fkProductId]
                             JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = pinv.[fkLegalEntityId]
                             JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = pinv.[fkLegalEntityAccountId]
-                        WHERE pinv.[fkRiskGroupId] = @riskGroupId", 
+                        WHERE pinv.[fkRiskGroupId] = @riskGroupId",
                         new { riskGroupId, riskGroupName },
                         commandTimeout: Int32.MaxValue);
 
@@ -815,7 +852,7 @@ namespace StandardBank.ConcessionManagement.Repository
                             JOIN [dbo].[rtblProduct] p on p.[pkProductId] = pinv.[fkProductId]
                             JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = pinv.[fkLegalEntityId]
                             JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = pinv.[fkLegalEntityAccountId]
-                        WHERE le.[pkLegalEntityId] = @legalEntityId", 
+                        WHERE le.[pkLegalEntityId] = @legalEntityId",
                         new { legalEntityId, legalEntityName },
                         commandTimeout: Int32.MaxValue);
 
@@ -859,7 +896,7 @@ namespace StandardBank.ConcessionManagement.Repository
                             JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = pt.[fkLegalEntityAccountId]
                             JOIN [dbo].[rtblTransactionType] tt on tt.[pkTransactionTypeId] = pt.[fkTransactionTypeId]
                             JOIN [dbo].[rtblTransactionTableNumber] ttn on ttn.[pkTransactionTableNumberId] = pt.[fkTransactionTableNumberId]
-                        WHERE pt.[fkRiskGroupId] = @riskGroupId", 
+                        WHERE pt.[fkRiskGroupId] = @riskGroupId",
                         new { riskGroupId, riskGroupName },
                         commandTimeout: Int32.MaxValue);
 
@@ -896,7 +933,7 @@ namespace StandardBank.ConcessionManagement.Repository
                             JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = pt.[fkLegalEntityAccountId]
                             JOIN [dbo].[rtblTransactionType] tt on tt.[pkTransactionTypeId] = pt.[fkTransactionTypeId]
                             JOIN [dbo].[rtblTransactionTableNumber] ttn on ttn.[pkTransactionTableNumberId] = pt.[fkTransactionTableNumberId]
-                        WHERE le.[pkLegalEntityId] = @legalEntityId", 
+                        WHERE le.[pkLegalEntityId] = @legalEntityId",
                         new { legalEntityId, legalEntityName },
                         commandTimeout: Int32.MaxValue);
 
@@ -921,19 +958,19 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     var glmsProducts = db.Query<GlmsProduct>(
-                        @"SELECT pglms.pkProductGlmsId [GlmsProductId],
+                        @"SELECT Distinct pglms.pkProductGlmsId [GlmsProductId],
 		                    pglms.GroupType,
 	                        le.[CustomerName] [legalEntity],
 	                        pricing.Description pricingDescription,
 	                        pglms.Spread,
 		                    pglms.RateType,
                             @riskGroupName [RiskGroupName],
-                            lea.[AccountNumber]
+	                        lea.[AccountNumber]
                         FROM [dbo].tblProductGlms pglms
                             JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = pglms.[fkLegalEntityId]
                             JOIN [dbo].tblInterestPricingCategory pricing on pricing.pkInterestPricingCategoryId= pglms.fkInterestPricingCategoryId
-                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = pglms.[fkLegalEntityAccountId]
-                        WHERE pglms.[fkRiskGroupId] = @riskGroupId", 
+                            JOIN [dbo].[tblLegalEntityAccount] lea On lea.fkLegalEntityId = le.pkLegalEntityId
+                        WHERE pglms.[fkRiskGroupId] = @riskGroupId",
                         new { riskGroupId, riskGroupName },
                         commandTimeout: Int32.MaxValue);
 
@@ -957,18 +994,18 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     var glmsProducts = db.Query<GlmsProduct>(
-                        @"SELECT pglms.pkProductGlmsId [GlmsProductId],
-		                    pglms.GroupType,
+                        @"SELECT Distinct pglms.pkProductGlmsId [GlmsProductId],
+	                        pglms.GroupType,
 	                        le.[CustomerName] [legalEntity],
 	                        pricing.Description pricingDescription,
 	                        pglms.Spread,
-		                    pglms.RateType,
-                            lea.[AccountNumber]
+	                        pglms.RateType,
+	                        lea.AccountNumber [AccountNumber]
                         FROM [dbo].tblProductGlms pglms
                             JOIN [dbo].[tblLegalEntity] le ON le.[pkLegalEntityId] = pglms.[fkLegalEntityId]
                             JOIN [dbo].tblInterestPricingCategory pricing ON pricing.pkInterestPricingCategoryId= pglms.fkInterestPricingCategoryId
-                            JOIN [dbo].[tblLegalEntityAccount] lea on lea.[pkLegalEntityAccountId] = pglms.[fkLegalEntityAccountId]
-                        WHERE le.[pkLegalEntityId] = @legalEntityId", 
+	                        JOIN [dbo].[tblLegalEntityAccount] lea On lea.fkLegalEntityId = le.pkLegalEntityId
+                        WHERE le.[pkLegalEntityId] = @legalEntityId",
                         new { legalEntityId, legalEntityName },
                         commandTimeout: Int32.MaxValue);
 
@@ -1033,7 +1070,7 @@ namespace StandardBank.ConcessionManagement.Repository
                         LEFT JOIN [dbo].[rtblTableNumber] atn on atn.[pkTableNumberId] = cc.[fkApprovedTableNumberId]
                         LEFT JOIN [dbo].[rtblTableNumber] ltn on ltn.[pkTableNumberId] = cc.[fkLoadedTableNumberId]
                     WHERE cd.[fkConcessionId] = @concessionId  
-                        and cd.Archived is null", 
+                        and cd.Archived is null",
                     new { concessionId });
             }
         }
@@ -1085,9 +1122,9 @@ namespace StandardBank.ConcessionManagement.Repository
                             JOIN [dbo].[rtblProduct] pt on pt.[pkProductId] = cl.[fkProductTypeId]
                             LEFT JOIN [dbo].[rtblReviewFeeType] rft on rft.[pkReviewFeeTypeId] = cl.[fkReviewFeeTypeId]
                         WHERE cd.[fkConcessionId] = @concessionId 
-                            and cd.Archived is null", 
+                            and cd.Archived is null",
                         new { concessionId });
-                    }
+                }
             }
             catch (Exception ex)
             {
@@ -1130,7 +1167,7 @@ namespace StandardBank.ConcessionManagement.Repository
                         left JOIN [dbo].rtblBOLChargeCode co on bl.fkChargeCodeId = co.pkChargeCodeId
                         left JOIN rtblBOLChargeCodeType ct on co.fkChargeCodeTypeId = ct.pkChargeCodeTypeId
                     where cd.fkConcessionId = @concessionId  
-                        and cd.Archived is null", 
+                        and cd.Archived is null",
                     new { concessionId });
             }
         }
@@ -1179,7 +1216,7 @@ namespace StandardBank.ConcessionManagement.Repository
 				        left JOIN rtblTradeProduct tp on tr.fkTradeProductId = tp.pkTradeProductId
                         left JOIN rtblTradeProductType ty on tp.fkTradeProductTypeId = ty.pkTradeProductTypeId
                     where cd.fkConcessionId = @concessionId  
-                        and cd.Archived is null", 
+                        and cd.Archived is null",
                     new { concessionId });
             }
         }
@@ -1217,7 +1254,7 @@ namespace StandardBank.ConcessionManagement.Repository
                         left join tblLegalEntityAccount ac on pinv.fkLegalEntityAccountId = ac.pkLegalEntityAccountId				
                         left JOIN [dbo].[rtblProduct] p on p.[pkProductId] = pinv.fkProductId
                     where cd.fkConcessionId = @concessionId  
-                        and cd.Archived is null", 
+                        and cd.Archived is null",
                     new { concessionId });
             }
         }
@@ -1228,38 +1265,33 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 var query = db.Query<GlmsConcessionDetail>(
-                    @"SELECT cd.[pkConcessionDetailId] [ConcessionDetailId], 
-                        cd.[fkConcessionId] [ConcessionId], 
-                        cd.[fkLegalEntityId] [LegalEntityId],
-                        cd.[fkLegalEntityAccountId] [LegalEntityAccountId],  
-                        le.[CustomerName] [LegalEntity],                    
-                        cd.[ExpiryDate], 
-                        [DateApproved], 
-                        [IsMismatched], 
-                        [PriceExported], 
-                        [PriceExportedDate],                  
-					    pinv.pkConcessionGlmsId [GlmsConcessionDetailId],
-                        ac.AccountNumber,			
-                        p.GroupType GlmsProduct,										
-                        pinv.fkLegalEntityAccountId,
-                        pinv.fkProductId [productTypeId],                  				               
-					    pinv.fkLegalEntityAccountId,
-                        glmsGroup.GroupNumber,
-                        pinv.fkSlabTypeId SlabTypeId,
-					    pinv.fkInterestPricingCategoryId interestPricingCategoryId,				
-                        pinv.fkGroupId GlmsGroupId,
-                        pinv.fkInterestTypeId InterestTypeId,
-                        intCat.Description InterestPricingCategory
-                    FROM [dbo].[tblConcessionDetail] cd
-                        left join [dbo].[tblConcessionGlms] pinv on cd.pkConcessionDetailId = pinv.fkConcessionDetailId
-                        left JOIN [dbo].tblLegalEntityAccount lea on pinv.fkLegalEntityAccountId = lea.pkLegalEntityAccountId  
-                        left JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = lea.fkLegalEntityId
-                        left join tblLegalEntityAccount ac on pinv.fkLegalEntityAccountId = ac.pkLegalEntityAccountId				
-                        left JOIN [dbo].[tblProductGlms] p on p.pkProductGlmsId = pinv.fkProductId
-                        left join [dbo].[tblGlmsGroup] glmsGroup on glmsGroup.pkGlmsGroupId = pinv.fkGroupId
-	                    left join [dbo].[tblInterestPricingCategory] intCat on intCat.pkInterestPricingCategoryId = pinv.fkInterestPricingCategoryId
+                    @"SELECT	Distinct cd.[pkConcessionDetailId] [ConcessionDetailId], 
+		                        cd.[fkConcessionId] [ConcessionId], 
+		                        le.[pkLegalEntityId] [LegalEntityId], 
+		                        le.[CustomerName] [LegalEntity],                    
+		                        cd.[ExpiryDate], 
+		                        [DateApproved], 
+		                        [IsMismatched], 
+		                        [PriceExported], 
+		                        [PriceExportedDate],                  
+		                        cg.pkConcessionGlmsId [GlmsConcessionDetailId],
+		                        pg.GroupType GlmsProduct,										
+		                        gg.GroupNumber,
+		                        cg.fkSlabTypeId SlabTypeId,
+		                        cg.fkInterestPricingCategoryId interestPricingCategoryId,				
+		                        cg.fkGroupId GlmsGroupId,
+		                        cg.fkInterestTypeId InterestTypeId,
+		                        ic.Description InterestPricingCategory
+                    From		tblConcession c
+                    Inner Join	tblConcessionDetail cd			On	cd.fkConcessionId		=	c.pkConcessionId
+                    Inner Join	tblConcessionGlms cg			On	cg.fkConcessionDetailId	=	cd.pkConcessionDetailId
+                    Inner join	tblProductGlms pg				on	pg.fkGroupId			=	cg.fkGroupId
+											                    And	pg.fkRiskGroupId		=	c.fkRiskGroupId
+                    Inner Join	tblLegalEntity le				On	le.pkLegalEntityId		=	pg.fkLegalEntityId
+                    Inner join	tblGlmsGroup gg					on	gg.pkGlmsGroupId		=	cg.fkGroupId
+                    Inner join	tblInterestPricingCategory ic	on	ic.pkInterestPricingCategoryId = cg.fkInterestPricingCategoryId
                     WHERE cd.fkConcessionId = @concessionId  
-                        and cd.Archived is null", 
+                    and cd.Archived is null",
                     new { concessionId });
 
                 return query;
@@ -1310,7 +1342,7 @@ namespace StandardBank.ConcessionManagement.Repository
                         LEFT JOIN [dbo].[rtblTransactionTableNumber] atn on atn.[pkTransactionTableNumberId] = ct.[fkApprovedTransactionTableNumberId]
                         LEFT JOIN [dbo].[rtblTransactionTableNumber] ltn on ltn.[pkTransactionTableNumberId] = ct.[fkLoadedTransactionTableNumberId]
                     WHERE cd.[fkConcessionId] = @concessionId 
-                        and cd.Archived is null", 
+                        and cd.Archived is null",
                     new { concessionId });
             }
         }
@@ -1376,7 +1408,7 @@ namespace StandardBank.ConcessionManagement.Repository
 		                    JOIN [dbo].[rtblRole] r ON r.[pkRoleId] = ur.[fkRoleId] and r.[RoleName] = 'BCM'
 	                    ) bcmtable ON bcmtable.[fkCentreId] = c.[pkCentreId]
 	                    JOIN [dbo].[rtblRegion] r ON r.[pkRegionId] = c.[fkRegionId]
-                    where pkCentreId = @pkCentreId", 
+                    where pkCentreId = @pkCentreId",
                     new { pkCentreId }).FirstOrDefault();
             }
         }
