@@ -45,7 +45,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 fileUtiltity.Object, concessionManager.Object, pdfUtility.Object, userManager.Object,
                 lendingManager.Object, legalEntityRepository.Object, cashManager.Object,
                 razorRenderer.Object, transactionalManager.Object, concessionInboxViewRepository.Object,
-                lookupTableManager.Object,null,null,null,null);
+                lookupTableManager.Object, null, null, null, null, null, null);
 
             var concession = new Concession
             {
@@ -85,7 +85,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                             ExpiryDate = DateTime.Now.AddDays(100)
                         }
                     },
-                    ConcessionConditions = new[] {new ConcessionCondition()},
+                    ConcessionConditions = new[] { new ConcessionCondition() },
                     CurrentUser = new User()
                 });
 
@@ -106,7 +106,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             razorRenderer.Setup(_ => _.Parse(It.IsAny<string>(), It.IsAny<Model.BusinessLogic.LetterGenerator.ConcessionLetter>(), It.IsAny<bool>()))
                 .Returns($"<html><body><h1>Test</h1><p>{concession.RiskGroupNumber}</p></body></html>");
 
-           // var result = letterGeneratorManager.GenerateLetters("L0001");
+            // var result = letterGeneratorManager.GenerateLetters("L0001");
 
             //Assert.NotNull(result);
         }
@@ -133,7 +133,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 fileUtiltity.Object, concessionManager.Object, pdfUtility.Object, userManager.Object,
                 lendingManager.Object, legalEntityRepository.Object, cashManager.Object,
                 razorRenderer.Object, transactionalManager.Object, concessionInboxViewRepository.Object,
-                lookupTableManager.Object,null,null,null,  null);
+                lookupTableManager.Object, null, null, null, null, null, null);
 
             var concession = new Concession
             {
@@ -161,7 +161,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                             ExpiryDate = DateTime.Now.AddDays(100)
                         }
                     },
-                    ConcessionConditions = new[] {new ConcessionCondition()},
+                    ConcessionConditions = new[] { new ConcessionCondition() },
                     CurrentUser = new User()
                 });
 
@@ -209,7 +209,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                 fileUtiltity.Object, concessionManager.Object, pdfUtility.Object, userManager.Object,
                 lendingManager.Object, legalEntityRepository.Object, cashManager.Object,
                 razorRenderer.Object, transactionalManager.Object, concessionInboxViewRepository.Object,
-                lookupTableManager.Object,null,null,null,null);
+                lookupTableManager.Object, null, null, null, null, null, null);
 
             var concession = new Concession
             {
@@ -237,7 +237,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
                             ExpiryDate = DateTime.Now.AddDays(100)
                         }
                     },
-                    ConcessionConditions = new[] {new ConcessionCondition()},
+                    ConcessionConditions = new[] { new ConcessionCondition() },
                     CurrentUser = new User()
                 });
 
@@ -258,7 +258,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Test.UnitTest
             razorRenderer.Setup(_ => _.Parse(It.IsAny<string>(), It.IsAny<Model.BusinessLogic.LetterGenerator.ConcessionLetter>(), It.IsAny<bool>()))
                 .Returns($"<html><body><h1>Test</h1><p>{concession.RiskGroupNumber}</p></body></html>");
 
-           // var result = letterGeneratorManager.GenerateLetters("T0001");
+            // var result = letterGeneratorManager.GenerateLetters("T0001");
 
             //Assert.NotNull(result);
         }

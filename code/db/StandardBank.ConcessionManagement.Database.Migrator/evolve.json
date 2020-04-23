@@ -1,6 +1,6 @@
 {
-"Evolve.ConnectionString": "Server=.;Database=ConcessionPricingToolBetaV2;Integrated Security=true",
-"Evolve.Driver": "sqlserver",
-"Evolve.Locations": "Scripts",
-"Evolve.Command": "migrate"
+    "Evolve.ConnectionString": "Server=.;Database=CMS_Dev_V2;Integrated Security=true",
+    "Evolve.Driver": "sqlserver",
+    "Evolve.Locations": "ScriptsDecoy",
+    "Evolve.Command": "migrate"
 }

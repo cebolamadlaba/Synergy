@@ -125,10 +125,10 @@
     <Build Include="dbo\Tables\tblProductInvestment.sql" />
     <Build Include="dbo\Tables\tblFinancialInvestment.sql" />
     <Build Include="dbo\Tables\rtblRegion.sql" />
-    <Build Include="dbo\Views\ConcessionInboxView.sql" />
+    <None Include="dbo\Views\ConcessionInboxView.sql" />
     <Build Include="dbo\Stored Procedures\UpdateUser.sql" />
     <Build Include="dbo\Stored Procedures\CreateUser.sql" />
-    <Build Include="dbo\Views\ConcessionConditionView.sql" />
+    <None Include="dbo\Views\ConcessionConditionView.sql" />
     <Build Include="dbo\Tables\rtblTransactionTableNumber.sql" />
     <None Include="Change Scripts\Old Migrator\V1_0_0__09_create_rtblPeriod.sql" />
     <None Include="Change Scripts\Old Migrator\V1_0_1__10_create_rtblPeriodType.sql" />
@@ -284,7 +284,7 @@
     <Build Include="HangFire\Tables\State.sql" />
     <Build Include="HangFire\Tables\Job.sql" />
     <Build Include="HangFire\Tables\Schema.sql" />
-    <Build Include="dbo\Views\ConcessionInboxView_1.sql" />
+    <None Include="dbo\Views\ConcessionInboxView_1.sql" />
     <Build Include="Security\HangFire.sql" />
   </ItemGroup>
   <ItemGroup>
