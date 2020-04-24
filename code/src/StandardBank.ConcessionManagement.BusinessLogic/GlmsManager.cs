@@ -166,7 +166,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 {
                     if (productgrouping != null && productgrouping.GlmsProducts != null)
                     {
-                        productgrouping.GlmsProducts = productgrouping.GlmsProducts.OrderBy(o => o.AccountNumber).ThenBy(o => o.GroupType).ToList();
+                        productgrouping.GlmsProducts = productgrouping.GlmsProducts.OrderBy(o => o.GroupNumber).ThenBy(o => o.GroupType).ToList();
                     }
                 }
             }
