@@ -363,10 +363,11 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
 
         const concessions = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
 
-        let hasTypeId: boolean = false;
-        let hasLegalEntityId: boolean = false;
+        let hasInterestPricingCategory: boolean = false;
+        let hasInterestType: boolean = false;
 
         for (let concessionFormItem of concessions.controls) {
+
             if (!glmsConcession.glmsConcessionDetails)
                 glmsConcession.glmsConcessionDetails = [];
 
@@ -384,8 +385,10 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
 
             if (concessionFormItem.get('interestPricingCategory').value) {
                 glmsConcessionDetail.interestPricingCategoryId = concessionFormItem.get('interestPricingCategory').value.id;
+                hasInterestPricingCategory = true;
             } else {
                 this.addValidationError("Interest Pricing Category not selected");
+                hasInterestPricingCategory = false;
             }
 
             if (concessionFormItem.get('slabType').value) {
@@ -396,8 +399,10 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
 
             if (concessionFormItem.get('interestType').value) {
                 glmsConcessionDetail.interestTypeId = concessionFormItem.get('interestType').value.id;
+                hasInterestType = true;
             } else {
                 this.addValidationError("Interest Type not selected");
+                hasInterestType = false;
             }
 
             if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
@@ -416,6 +421,18 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
             }
 
             glmsConcession.glmsConcessionDetails.push(glmsConcessionDetail);
+
+            if (hasInterestPricingCategory && hasInterestType) {
+                let hasDuplicates = this.baseComponentService.HasDuplicateInterestProfile(
+                    glmsConcession.glmsConcessionDetails,
+                    concessionFormItem.get('interestPricingCategory').value.id,
+                    concessionFormItem.get('interestType').value.id);
+                if (hasDuplicates) {
+                    this.addValidationError("Duplicate Interest Pricing Category / Interest Type selection found. Please verify and update.");
+                    break;
+                }
+            }
+
         }
 
         const conditions = <FormArray>this.glmsConcessionForm.controls['conditionItemsRows'];
