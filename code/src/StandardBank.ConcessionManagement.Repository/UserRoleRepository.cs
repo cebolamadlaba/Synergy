@@ -57,7 +57,12 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<UserRole>(
-                    "SELECT [pkUserRoleId] [Id], [fkUserId] [UserId], [fkRoleId] [RoleId], [IsActive] FROM [dbo].[tblUserRole] WHERE [pkUserRoleId] = @Id",
+                    @"SELECT [pkUserRoleId] [Id], 
+                        [fkUserId] [UserId], 
+                        [fkRoleId] [RoleId], 
+                        [IsActive] 
+                    FROM [dbo].[tblUserRole] 
+                    WHERE [pkUserRoleId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -72,7 +77,11 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<UserRole>(
-                    @"SELECT [pkUserRoleId] [Id], [fkUserId] [UserId], [fkRoleId] [RoleId],[fkSubRoleId] [SubRoleId], [IsActive] 
+                    @"SELECT [pkUserRoleId] [Id], 
+                        [fkUserId] [UserId], 
+                        [fkRoleId] [RoleId],
+                        [fkSubRoleId] [SubRoleId], 
+                        [IsActive] 
                     FROM [dbo].[tblUserRole] 
                     WHERE [fkUserId] = @userId",
                     new { userId });
@@ -88,7 +97,11 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<UserRole>(
-                    "SELECT [pkUserRoleId] [Id], [fkUserId] [UserId], [fkRoleId] [RoleId], [IsActive] FROM [dbo].[tblUserRole]");
+                    @"SELECT [pkUserRoleId] [Id], 
+                        [fkUserId] [UserId], 
+                        [fkRoleId] [RoleId], 
+                        [IsActive] 
+                    FROM [dbo].[tblUserRole]");
             }
         }
 
@@ -100,9 +113,12 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblUserRole]
-                            SET [fkUserId] = @UserId, [fkRoleId] = @RoleId, [IsActive] = @IsActive
-                            WHERE [pkUserRoleId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblUserRole]
+                    SET [fkUserId] = @UserId, 
+                        [fkRoleId] = @RoleId, 
+                        [IsActive] = @IsActive
+                    WHERE [pkUserRoleId] = @Id",
                     new {Id = model.Id, UserId = model.UserId, RoleId = model.RoleId, IsActive = model.IsActive});
             }
         }
@@ -115,7 +131,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblUserRole] WHERE [pkUserRoleId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblUserRole] 
+                            WHERE [pkUserRoleId] = @Id",
                     new {model.Id});
             }
         }

@@ -5,9 +5,12 @@ import * as fileSaver from 'file-saver';
 import { FileService } from '../services/file.service';
 import { TransactionalConcessionDetail } from "../models/transactional-concession-detail";
 import { TransactionalConcessionEnum } from "../models//transactional-concession-enum";
+import { ConditionType } from "../models/condition-type";
+import { TransactionalConcession } from '../models/transactional-concession';
 
 @Injectable()
 export class TransactionalBaseService {
+    validationError: String[];
 
     constructor() { }
 
@@ -36,7 +39,7 @@ export class TransactionalBaseService {
 
             let detail = new TransactionalConcessionDetail();
             transactionalConcessionDetails.push(detail);
-           
+
             for (let colNum = range.s.c; colNum <= colCount; colNum++) {
 
                 // get the cell value.
@@ -45,7 +48,7 @@ export class TransactionalBaseService {
                 // ignore null cells.
                 if (cell == null) { continue; }
 
-                switch (colNum) {               
+                switch (colNum) {
                     case TransactionalConcessionEnum.AccNumber:
                         detail.accountNumber = cell.v;
                         break;
@@ -56,7 +59,10 @@ export class TransactionalBaseService {
                         detail.transactionType = cell.v;
                         break;
                     case TransactionalConcessionEnum.ExpiryDate:
-                        detail.expiryDate = new Date(cell.w);
+                        var expiryDate = cell.w.split('/')
+                        var newDate = expiryDate[1] + '/' + expiryDate[0] + '/' + expiryDate[2];
+
+                        detail.expiryDate = new Date(newDate);
                         break;
                 }
 
@@ -66,4 +72,55 @@ export class TransactionalBaseService {
         return transactionalConcessionDetails.filter(value => JSON.stringify(value) !== '{}');;
     }
 
+    disableFieldBase(fieldname: string, canEdit: boolean, index: number = null, selectedConditionTypes: ConditionType[], isRecalling: boolean = null, motivationEnabled: boolean = null) {
+        switch (fieldname) {
+            case 'smtDealNumber':
+                if (isRecalling == null) {
+                    return canEdit ? null : '';
+                } else {
+                    return (isRecalling || canEdit) ? null : '';
+                }
+            case 'motivation':
+                if (motivationEnabled == null) {
+                    return canEdit ? null : '';
+                } else {
+                    return motivationEnabled ? null : '';
+                }
+            case 'transactionType':
+            case 'accountNumber':
+            case 'transactionTableNumber':
+            case 'expiryDate':
+                return canEdit ? null : '';
+            case 'interestRate':
+                return selectedConditionTypes[index] != null && selectedConditionTypes[index].enableInterestRate ? null : '';
+            case 'volume':
+                return selectedConditionTypes[index] != null && selectedConditionTypes[index].enableConditionVolume ? null : '';
+            case 'value':
+                return selectedConditionTypes[index] != null && selectedConditionTypes[index].enableConditionValue ? null : '';
+            default:
+                break;
+        }
+    }
+
+    addValidationError(validationDetail) {
+        if (!this.validationError)
+            this.validationError = [];
+
+        if (!this.validationError.includes(validationDetail)) {
+            this.validationError.push(validationDetail);
+        }
+    }
+
+    checkConcessionExpiryDate(transactionalConcession: TransactionalConcession) {
+        if (transactionalConcession.transactionalConcessionDetails.length > 1) {
+            var firstDate;
+            transactionalConcession.transactionalConcessionDetails.forEach(concession => {
+                if (!firstDate) {
+                    firstDate = concession.expiryDate;
+                } else if (firstDate.getTime() != concession.expiryDate.getTime()) {
+                    this.addValidationError("All concessions must have the same expiry date.");
+                }
+            });
+        }
+    }
 }

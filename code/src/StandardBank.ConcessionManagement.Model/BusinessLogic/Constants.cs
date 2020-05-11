@@ -46,8 +46,6 @@
             public const string BusinessOnlineDesc = "Business Online";
             public const string Cash = "Cash";
             public const string Glms = "Glms";
-            
-
         }
 
         public static class SubRoleType
@@ -55,8 +53,6 @@
             public const string TradeBanker = "Trade Banker";
             public const string BOLConsultant = "BOL Consultant";
         }
-
-
 
         public static class ReferenceType
         {
@@ -114,6 +110,7 @@
             public const string MininumAverageCreditBalance = "Mininum Average Credit Balance";
             public const string MininumTurnover = "Mininum Turnover";
             public const string CreditFacility = "Credit Facility";
+            public const string Other = "Other";
         }
 
         public static class RagStatusResult
@@ -162,6 +159,12 @@
                 public const string NoticeDeposit = "Notice deposit (BND)";
                 public const string RetailCallDeposit = "Retail wholesale call deposit (BCL) ";
             }
+        }
+
+        public enum ArchiveType
+        {
+            StandardLinkedToPrime = 1,
+            StandardFixedRate
         }
 
         public static class Trade

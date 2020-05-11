@@ -41,14 +41,16 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 //filter by riskgroup.
                 List<BOLChargeCode> chargeCodes = db.Query<BOLChargeCode>(
-                    string.Format(@" SELECT chargeCode.*  
-                                    FROM rtblBOLChargeCode chargeCode 
-                                    INNER JOIN tblRiskGroupNonUniversalChargeCode riskChargeCode ON riskChargeCode.ChargeCodeId = chargeCode.pkChargeCodeId
-                                    WHERE riskChargeCode.RiskGroupId = {0}
+                    string.Format(
+                        @"SELECT chargeCode.*  
+                        FROM rtblBOLChargeCode chargeCode 
+                        INNER JOIN tblRiskGroupNonUniversalChargeCode riskChargeCode ON riskChargeCode.ChargeCodeId = chargeCode.pkChargeCodeId
+                        WHERE riskChargeCode.RiskGroupId = {0}
 
-                                    Union
+                        Union
 
-                                    SELECT * from rtblBOLChargeCode where IsNonUniversal = 0", riskGroupNumber)).ToList();
+                        SELECT * from rtblBOLChargeCode where IsNonUniversal = 0", 
+                        riskGroupNumber)).ToList();
 
                 return chargeCodes;
 
@@ -66,7 +68,20 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<BOLChargeCodeType>("SELECT pkChargeCodeTypeId,Description  from rtblBOLChargeCodeType");
+                return db.Query<BOLChargeCodeType>(
+                    @"SELECT pkChargeCodeTypeId,
+                             Description  
+                    from rtblBOLChargeCodeType");
+            }
+        }
+
+        public IEnumerable<BOLChargeCodeRelationship> GetBOLChargeCodeRelationships()
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<BOLChargeCodeRelationship>(
+                    @"SELECT *
+                    from rtblBOLChargeCodeRelationship");
             }
         }
 
@@ -74,12 +89,19 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<LegalEntityBOLUser>(string.Format(@"SELECT pkLegalEntityBOLUserId,fkLegalEntityAccountId, BOLUserId,pkLegalEntityId [legalEntityId] ,pkLegalEntityAccountId [legalEntityAccountId]  from tblLegalEntityBOLUser
-                                                join tblLegalEntityAccount on tblLegalEntityBOLUser.fkLegalEntityAccountId = tblLegalEntityAccount.pkLegalEntityAccountId
-                                                join tblLegalEntity on tblLegalEntityAccount.fkLegalEntityId = tblLegalEntity.pkLegalEntityId
-                                                join tblRiskGroup on tblLegalEntity.fkRiskGroupId = tblRiskGroup.pkRiskGroupId
-												where RiskGroupNumber = {0}", riskGroupNumber));
-            }
+                return db.Query<LegalEntityBOLUser>(string.Format(
+                    @"SELECT pkLegalEntityBOLUserId,
+                             fkLegalEntityAccountId, 
+                             BOLUserId,
+                             pkLegalEntityId [legalEntityId],
+                             pkLegalEntityAccountId [legalEntityAccountId]  
+                    from tblLegalEntityBOLUser
+                    join tblLegalEntityAccount on tblLegalEntityBOLUser.fkLegalEntityAccountId = tblLegalEntityAccount.pkLegalEntityAccountId
+                    join tblLegalEntity on tblLegalEntityAccount.fkLegalEntityId = tblLegalEntity.pkLegalEntityId
+                    join tblRiskGroup on tblLegalEntity.fkRiskGroupId = tblRiskGroup.pkRiskGroupId
+					where RiskGroupNumber = {0}", 
+                    riskGroupNumber));
+}
         }
 
         public IEnumerable<LegalEntityBOLUser> GetLegalEntityBOLUsersByLegalEntityId(int legalEntityId)
@@ -87,11 +109,16 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<LegalEntityBOLUser>(string.Format(
-                    @"SELECT pkLegalEntityBOLUserId,fkLegalEntityAccountId, BOLUserId,pkLegalEntityId [legalEntityId] ,pkLegalEntityAccountId [legalEntityAccountId]  
-                        from tblLegalEntityBOLUser
-                        join tblLegalEntityAccount on tblLegalEntityBOLUser.fkLegalEntityAccountId = tblLegalEntityAccount.pkLegalEntityAccountId
-                        join tblLegalEntity on tblLegalEntityAccount.fkLegalEntityId = tblLegalEntity.pkLegalEntityId
-                        Where	tblLegalEntity.pkLegalEntityId = {0}", legalEntityId));
+                    @"SELECT pkLegalEntityBOLUserId,
+                             fkLegalEntityAccountId, 
+                             BOLUserId,
+                             pkLegalEntityId [legalEntityId],
+                             pkLegalEntityAccountId [legalEntityAccountId]  
+                    from tblLegalEntityBOLUser
+                    join tblLegalEntityAccount on tblLegalEntityBOLUser.fkLegalEntityAccountId = tblLegalEntityAccount.pkLegalEntityAccountId
+                    join tblLegalEntity on tblLegalEntityAccount.fkLegalEntityId = tblLegalEntity.pkLegalEntityId
+                    Where tblLegalEntity.pkLegalEntityId = {0}", 
+                    legalEntityId));
             }
         }
 

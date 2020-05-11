@@ -103,6 +103,15 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(_siteHelper.LoggedInUser(this));
         }
 
+        /// <summary>
+        /// Gets the logged in user
+        /// </summary>
+        /// <returns></returns>
+        [Route("UatWarning")]
+        public IActionResult UatWarning()
+        {
+            return Ok(_siteHelper.UATWarning());
+        }
 
         [Route("ValidateUserMyAccess")]
         public IActionResult ValidateUserMyAccess()
@@ -128,8 +137,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 }
             }
 
-            //Func<Model.UserInterface.User> function = () =>
-            //{
             string reason = "";
 
             if (theuser == null)
@@ -193,9 +200,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             reason = "";
 
             try
-            {             
+            {
 
-                MyAccess.AuditServiceClient client = new MyAccess.AuditServiceClient();                
+                MyAccess.AuditServiceClient client = new MyAccess.AuditServiceClient();
                 AuthenticationResult result = client.AuthUserAsync(aNumber, applicationName).Result;
 
                 if (string.IsNullOrEmpty(result.Reason))
@@ -226,11 +233,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                         _exceptionLogRepository.Create(exceptionLog);
 
 
-                        reason = "No access granted " +  result.Reason;
+                        reason = "No access granted " + result.Reason;
                         return false;
-                    }                                    
+                    }
                 }
-               
+
             }
             catch (Exception ex)
             {
@@ -238,7 +245,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 var exceptionLog = new ExceptionLog
                 {
                     ExceptionMessage = ex.Message,
-                    ExceptionData =  "ANumber:" + aNumber + "Response:" + reason,
+                    ExceptionData = "ANumber:" + aNumber + "Response:" + reason,
                     ExceptionSource = "CMS.AuthenticateUserForApplication",
                     ExceptionType = "MyAccess",
                     Logdate = DateTime.Now
@@ -250,7 +257,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 reason = "MyAccess service returned an error. Please contact admin.";
                 return false;
             }
-          
+
         }
         /// <summary>
         /// Tests the logger
@@ -294,7 +301,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public async Task<IActionResult> RunDailyScheduledJobs()
         {
             foreach (var dailyScheduledJob in _dailyScheduledJobs)
+            {
                 await dailyScheduledJob.Run();
+            }
 
             return Ok("Done");
         }

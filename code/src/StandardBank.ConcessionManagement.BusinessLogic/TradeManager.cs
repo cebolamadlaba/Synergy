@@ -1,24 +1,23 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
-using StandardBank.ConcessionManagement.BusinessLogic.Features.TradeConcession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.ConcessionCondition;
+using StandardBank.ConcessionManagement.BusinessLogic.Features.TradeConcession;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Trade;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 using RiskGroup = StandardBank.ConcessionManagement.Model.UserInterface.RiskGroup;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
-using System;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
-
     public class TradeManager : ITradeManager
     {
         /// <summary>
@@ -73,7 +72,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 ConcessionConditions = _concessionManager.GetConcessionConditions(concession.Id),
                 CurrentUser = user
             };
-
         }
 
         public ConcessionTrade DeleteConcessionTrade(TradeConcessionDetail tradeConcessionDetail)
@@ -82,7 +80,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             _concessionTradeRpository.Delete(concessionBol);
             return concessionBol;
-
         }
 
         public ConcessionTrade UpdateConcessionTrade(TradeConcessionDetail tradeConcessionDetail, Concession concession)
@@ -100,8 +97,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 _ruleManager.UpdateBaseFieldsOnApproval(mappedConcessionTrade);
 
                 var productType = _lookupTableManager.GetTradeProducTypeName(tradeConcessionDetail.fkTradeProductId.Value);
-                // Set Expiry Date for Local Guarantee.
 
+                // Set Expiry Date for Local Guarantee.
                 switch (productType)
                 {
                     case Constants.Trade.TradeProductType.LocalGuarantee:
@@ -116,24 +113,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                             mappedConcessionTrade.ApprovedRate = mappedConcessionTrade.FlatFee.Value;
                         break;
                 }
-
-
             }
             else if (concession.Status == Constants.ConcessionStatus.Pending &&
                      concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges)
             {
-
                 //Rate becomes approved rate
                 mappedConcessionTrade.ApprovedRate = mappedConcessionTrade.Rate;
-
             }
 
             _concessionTradeRpository.Update(mappedConcessionTrade);
 
             return mappedConcessionTrade;
-
         }
-
 
         public TradeView GetTradeViewData(int riskGroupNumber, int sapbpid, User currentUser)
         {
@@ -184,10 +175,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     var productgrouping = groupedinfo.Where(g => g.LegalEntity == product.LegalEntity).FirstOrDefault();
                     if (productgrouping == null)
                     {
-                        TradeProductGroup newgroup = new TradeProductGroup();
-                        newgroup.LegalEntity = product.LegalEntity;
-                        newgroup.RiskGroupName = product.RiskGroupName;
-                        newgroup.TradeProducts = new List<Model.UserInterface.Trade.TradeProduct>();
+                        TradeProductGroup newgroup = new TradeProductGroup
+                        {
+                            LegalEntity = product.LegalEntity,
+                            RiskGroupName = product.RiskGroupName,
+                            TradeProducts = new List<Model.UserInterface.Trade.TradeProduct>()
+                        };
                         newgroup.TradeProducts.Add(product);
 
                         groupedinfo.Add(newgroup);
@@ -196,15 +189,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     {
                         productgrouping.TradeProducts.Add(product);
                     }
-
                 }
                 //sort
                 foreach (var productgrouping in groupedinfo)
                 {
                     if (productgrouping != null && productgrouping.TradeProducts != null)
+                    {
                         productgrouping.TradeProducts = productgrouping.TradeProducts.OrderBy(o => o.AccountNumber).ThenBy(o => o.TradeProductType).ToList();
-
-
+                    }
                 }
             }
 
@@ -217,7 +209,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 TradeProductGroups = groupedinfo.OrderBy(o => o.LegalEntity)
             };
         }
-
 
         private IEnumerable<Model.UserInterface.Trade.TradeProduct> GetTradeProducts(RiskGroup riskGroup)
         {
@@ -236,29 +227,45 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             //if there are any conditions that have been removed, delete them
             foreach (var condition in databaseTradeConcession.ConcessionConditions)
+            {
                 if (tradeConcession.ConcessionConditions.All(_ => _.ConcessionConditionId != condition.ConcessionConditionId))
+                {
                     await _mediator.Send(new DeleteConcessionCondition(condition, user));
+                }
+            }
 
             //if there are any bol concession details that have been removed delete them
             foreach (var tradeConcessionDetail in databaseTradeConcession.TradeConcessionDetails)
+            {
                 if (tradeConcession.TradeConcessionDetails.All(_ => _.TradeConcessionDetailId !=
-                                                                  tradeConcessionDetail.TradeConcessionDetailId))
+                                                                                  tradeConcessionDetail.TradeConcessionDetailId))
+                {
                     await _mediator.Send(new DeleteTradeConcessionDetail(tradeConcessionDetail, user));
+                }
+            }
 
             //update the concession
             var concession = await _mediator.Send(new UpdateConcession(tradeConcession.Concession, user));
 
             //add all the new conditions and bol details and comments
             foreach (var tradeConcessionDetail in tradeConcession.TradeConcessionDetails)
+            {
                 await _mediator.Send(new AddOrUpdateTradeConcessionDetail(tradeConcessionDetail, user, concession));
+            }
 
             if (tradeConcession.ConcessionConditions != null && tradeConcession.ConcessionConditions.Any())
+            {
                 foreach (var concessionCondition in tradeConcession.ConcessionConditions)
+                {
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+                }
+            }
 
             if (!string.IsNullOrWhiteSpace(tradeConcession.Concession.Comments))
+            {
                 await _mediator.Send(new AddConcessionComment(concession.Id, databaseTradeConcession.Concession.SubStatusId,
-                    tradeConcession.Concession.Comments, user));
+                                   tradeConcession.Concession.Comments, user));
+            }
 
             //send the notification email
             await _mediator.Send(new ForwardConcession(tradeConcession.Concession, user));

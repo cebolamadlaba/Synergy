@@ -142,17 +142,14 @@
         <div class="row">
             <!-- SMT deal number -->
             <label>SMT Deal Number</label>
-            <!--<input type="text" numbersOnly="true" class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="isRecalling ? null : ''" />-->
-            <input type="text" numbersOnly="true" class="form-control" [attr.disabled]="(isRecalling || canEdit) ? null : ''" formControlName="smtDealNumber" maxlength="16" required />
-
-
+            <input type="text" numbersOnly="true" class="form-control" [attr.disabled]="disableField('smtDealNumber')" formControlName="smtDealNumber" maxlength="16" required />
         </div>
     </div>
     <div class="col-md-7 col-md-offset-1">
         <div class="row">
             <!-- Motivation -->
             <label>Motivation</label>
-            <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="motivationEnabled ? null : ''"></textarea>
+            <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="disableField('motivation')"></textarea>
         </div>
         <div class="row" *ngIf="canBcmApprove || canPcmApprove || canApproveChanges">
             <!-- Comments -->
@@ -195,30 +192,30 @@
                     <input formControlName="isExpired" style="display: none;" />
                     <input formControlName="isExpiring" style="display: none;" />
 
-                    <select formControlName="product" class="form-control" [attr.disabled]="canEdit ? null : ''" (change)="productTypeChanged(i)" [class.markred]="bcmhochanged(i,'product')">
+                    <select formControlName="product" class="form-control" [attr.disabled]="disableField('product',i)" (change)="productTypeChanged(i)" [class.markred]="bcmhochanged(i,'product')">
                         <option *ngFor="let productOption of bolchargecodetypes" [ngValue]="productOption">{{productOption.description}}</option>
                     </select>
                 </td>
                 <td class="length-medium">
-                    <select formControlName="userid" class="form-control" [attr.disabled]="canEdit ? null : ''" [class.markred]="bcmhochanged(i,'userid')">
+                    <select formControlName="userid" class="form-control" [attr.disabled]="disableField('userid',i)" [class.markred]="bcmhochanged(i,'userid')">
                         <option *ngFor="let useridOption of legalentitybolusers" [ngValue]="useridOption">{{useridOption.bolUserId}}</option>
                     </select>
                 </td>
 
                 <td class="length-long">
-                    <select formControlName="chargecode" class="form-control" [attr.disabled]="canEdit ? null : ''" [class.markred]="bcmhochanged(i,'chargecode')">
+                    <select formControlName="chargecode" class="form-control" [attr.disabled]="disableField('chargecode',i)" [class.markred]="bcmhochanged(i,'chargecode')">
                         <option *ngFor="let bolchargecodeOption of selectedProducts[i].bolchargecodes" [ngValue]="bolchargecodeOption">{{bolchargecodeOption.description}}</option>
                     </select>
                 </td>
 
 
-                <td class="length-long"><input type="number" class="form-control" formControlName="unitcharge" [attr.disabled]="canEdit ? null : ''" [class.markred]="bcmhochanged(i,'unitcharge')" /></td>
+                <td class="length-long"><input type="number" class="form-control" formControlName="unitcharge" [attr.disabled]="disableField('unitcharge',i)" [class.markred]="bcmhochanged(i,'unitcharge')" /></td>
 
                 <td class="length-long" *ngIf="isApproved"><input type="number" class="form-control" formControlName="unitchargeApproved" [class.markred]="bcmhochanged(i,'unitchargeApproved')" /></td>
 
 
 
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" [style.background-color]="getBackgroundColour(i)" [class.markred]="bcmhochanged(i,'expiryDate')" /></td>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="disableField('expiryDate',i)" [style.background-color]="getBackgroundColour(i)" [class.markred]="bcmhochanged(i,'expiryDate')" /></td>
                 <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>
                 <td *ngIf="canArchive" class="delete">
                     <button *ngIf="bolConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="archiveConcessiondetail(itemrow.get('concessionDetailId').value)" class="btn-delete" title="Remove"><i class="fa fa-trash" aria-hidden="true" style="color:#920000"></i></button>
@@ -247,6 +244,7 @@
                             <th>Interest Rate</th>
                             <th>Volume</th>
                             <th>Value</th>
+                            <th>Comment</th>
                             <th>Period</th>
                         </tr>
                     </thead>
@@ -263,6 +261,7 @@
                             <td><span *ngIf="itemrow.get('interestRate').value">{{itemrow.get('interestRate').value | number:'1.2-2'}}</span></td>
                             <td>{{itemrow.get('volume').value}}</td>
                             <td><span *ngIf="itemrow.get('value').value">{{itemrow.get('value').value | number:'1.2-2'}}</span></td>
+                            <td>{{itemrow.get('conditionComment').value}}</td>
                             <td>{{itemrow.get('periodType').value?.description}} {{itemrow.get('period').value?.description}}</td>
                         </tr>
                     </tbody>
@@ -276,73 +275,12 @@
     <div bsModal #manageConditionsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="manageConditionsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="col-md-12 modal-header">
-                    <h4>Manage Conditions</h4>
-                </div>
-                <div class="col-md-12 modal-body">
-                    <div class="row" *ngIf="canBcmApprove || canPcmApprove || isEditing || isRecalling">
-                        <div class="col-md-12 modal-title">
-                            <button type="button" class="btn btn-primary" (click)="addNewConditionRow()">Add Condition</button>
-                        </div>
-                    </div>
-                    <table class="form-concessions-table" formArrayName="conditionItemsRows" style="width:100%;">
-                        <thead class="form-concessions-table-headings">
-                            <tr *ngIf="bolConcessionForm.controls.conditionItemsRows.controls.length > 0">
-                                <th>Condition Type</th>
-                                <th>Product Type</th>
-                                <th>Interest Rate</th>
-                                <th>Volume</th>
-                                <th>Value</th>
-                                <th>Period Type</th>
-                                <th>Period</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody class="form-concessions-table-content">
-                            <tr *ngIf="bolConcessionForm.controls.conditionItemsRows.controls.length == 0">
-                                <td colspan="8" class="searchEmptyState">
-                                    No conditions added
-                                </td>
-                            </tr>
-                            <tr *ngFor="let itemrow of bolConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
-                                <td class="length-long">
-                                    <input formControlName="concessionConditionId" style="display: none;" />
-
-                                    <select formControlName="conditionType" (change)="conditionTypeChanged(i)">
-                                        <option *ngFor="let conditionTypeOption of conditionTypes" [ngValue]="conditionTypeOption">{{conditionTypeOption?.description}}</option>
-                                    </select>
-                                </td>
-                                <td class="length-long">
-
-                                    <select formControlName="conditionProduct" *ngIf="selectedConditionTypes[i] != null">
-                                        <option *ngFor="let conditionProductOption of selectedConditionTypes[i].conditionProducts" [ngValue]="conditionProductOption">{{conditionProductOption?.description}}</option>
-                                    </select>
-                                </td>
-
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="interestRate" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableInterestRate ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
-
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="volume" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionVolume ? null : ''" /></td>
-
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionValue ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
-
-                                <td class="length-medium">
-
-                                    <select formControlName="periodType" (change)="validatePeriod(itemrow)">
-                                        <option *ngFor="let periodTypeOption of periodTypes" [ngValue]="periodTypeOption">{{periodTypeOption?.description}}</option>
-                                    </select>
-                                </td>
-
-                                <td class="length-long">
-
-                                    <select formControlName="period" (change)="validatePeriod(itemrow)">
-                                        <option *ngFor="let periodOption of periods" [ngValue]="periodOption">{{periodOption?.description}}</option>
-                                    </select>
-                                </td>
-                                <td><button type="button" (click)="deleteConditionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <app-concession-condition-modal [selectedConditionTypes]="selectedConditionTypes"
+                                                [concessionForm]="bolConcessionForm"
+                                                [conditionTypes]="conditionTypes"
+                                                [periodTypes]="periodTypes"
+                                                [periods]="periods"
+                                                (myEvent)="validatePeriod($event)"></app-concession-condition-modal>
                 <div class="modal-footer">
                     <div class="float-right">
                         <button type="button" class="btn btn-primary" (click)="manageConditionsModal.hide()">Done</button>
@@ -435,8 +373,6 @@
             <button type="button" class="btn btn-success" (click)="bcmApproveConcession()" *ngIf="canBcmApprove">Forward</button>
             <button type="button" class="btn btn-danger" (click)="pcmDeclineConcession()" *ngIf="canPcmApprove">Decline</button>
             <button type="button" class="btn btn-success" (click)="pcmApproveConcession()" *ngIf="canPcmApprove">Approve</button>
-            <!--<button type="button" class="btn btn-success" (click)="extendConcession()" *ngIf="canExtend">Extend</button>-->
-            <!--<button type="button" class="btn btn-success" (click)="editConcession('Renew')" *ngIf="canRenew">Renew</button>-->
             <button type="button" class="btn btn-success" (click)="editConcession('Resubmit')" *ngIf="canResubmit">Resubmit</button>
             <button type="button" class="btn btn-success" (click)="editConcession('UpdateApproved')" *ngIf="canUpdate">Update</button>
             <button type="button" class="btn btn-warning" (click)="archiveConcession()" *ngIf="canArchive">Archive</button>
@@ -450,7 +386,5 @@
         </div>
     </div>
 </form>
-
-<!--<pre>{{bolConcessionForm.value | json}}</pre>-->
 
 <p>&nbsp;</p>

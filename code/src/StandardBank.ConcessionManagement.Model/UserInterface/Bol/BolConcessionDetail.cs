@@ -49,8 +49,6 @@
         /// </value>
         public int? fkChargeCodeId { get; set; }
 
-     
-
-
+        public int? fkChargeCodeTypeId { get; set; }
     }
 }

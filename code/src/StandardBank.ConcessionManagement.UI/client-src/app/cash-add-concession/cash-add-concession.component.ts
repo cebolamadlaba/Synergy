@@ -23,6 +23,7 @@ import { DecimalPipe } from '@angular/common';
 import { ConcessionTypes } from '../constants/concession-types';
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
+import { ConcessionConditionReturnObject } from '../models/concession-condition-return-object';	
 import * as fileSaver from 'file-saver';
 import { FileService } from '../services/file.service';
 import * as XLSX from 'xlsx';
@@ -37,10 +38,9 @@ import { BaseComponentService } from '../services/base-component.service';
     styleUrls: ['./cash-add-concession.component.css'],
     providers: [DatePipe]
 })
-export class CashAddConcessionComponent implements OnInit, OnDestroy {
+export class CashAddConcessionComponent extends CashBaseService implements OnInit, OnDestroy {
     private sub: any;
     errorMessage: String;
-    validationError: String[];
     saveMessage: String;
     showHide = false;
     observableRiskGroup: Observable<RiskGroup>;
@@ -86,10 +86,10 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
         private location: Location,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(CashConcessionService) private cashConcessionService,
-        @Inject(CashBaseService) private cashBaseService,
         private fileService: FileService,
         private datepipe: DatePipe,
         private baseComponentService: BaseComponentService) {
+        super();
         this.riskGroup = new RiskGroup();
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
@@ -136,6 +136,7 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             interestRate: [''],
             volume: [''],
             value: [''],
+            conditionComment: [''],
             periodType: [''],
             period: ['']
         });
@@ -218,7 +219,6 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             control.controls[0].get('tableNumber').setValue(this.tableNumbers[0]);
 
             this.tableNumberChanged(0);
-
         }
 
         this.isLoading = false;
@@ -232,7 +232,6 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     onFileSelected(event) {
-
         var file: File = event.target.files[0];
         var fileReader: FileReader = new FileReader();
 
@@ -245,10 +244,8 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             self.xlsxModel.fileContent = fileReader.result;
             self.xlsxModel.selectedFileName = file.name;
 
-            self.cashConcessionDetail = self.cashBaseService.processFileContent(self.xlsxModel);
+            self.cashConcessionDetail = self.processFileContent(self.xlsxModel);
             self.populateCashConcessionByFile();
-
-           // self.fileInput.nativeElement.value = '';
         }
 
         fileReader.readAsBinaryString(file);
@@ -323,7 +320,6 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
             newRow.controls['accrualType'].setValue(this.accrualTypes[0]);
 
         control.push(newRow);
-
     }
 
     addNewConditionRow() {
@@ -409,21 +405,15 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
     }
 
     onExpiryDateChanged(itemrow) {
-        
+
         var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
         if (validationErrorMessage != null) {
             this.addValidationError(validationErrorMessage);
         }
     }
 
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
-    }
-
     getCashConcession(): CashConcession {
+
         var cashConcession = new CashConcession();
         cashConcession.concession = new Concession();
 
@@ -504,54 +494,11 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
         const conditions = <FormArray>this.cashConcessionForm.controls['conditionItemsRows'];
 
-        for (let conditionFormItem of conditions.controls) {
-            if (!cashConcession.concessionConditions)
-                cashConcession.concessionConditions = [];
+        let concessionConditionReturnObject = this.baseComponentService.getConsessionConditionData(conditions, cashConcession.concessionConditions, this.validationError);
+        cashConcession.concessionConditions = concessionConditionReturnObject.concessionConditions;
+        this.validationError = concessionConditionReturnObject.validationError;
 
-            let concessionCondition = new ConcessionCondition();
-
-            if (conditionFormItem.get('conditionType').value)
-                concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;
-            else
-                this.addValidationError("Condition type not selected");
-
-            if (conditionFormItem.get('conditionProduct').value)
-                concessionCondition.conditionProductId = conditionFormItem.get('conditionProduct').value.id;
-            else
-                this.addValidationError("Condition product not selected");
-
-            if (conditionFormItem.get('interestRate').value)
-                concessionCondition.interestRate = conditionFormItem.get('interestRate').value;
-
-            if (conditionFormItem.get('volume').value)
-                concessionCondition.conditionVolume = conditionFormItem.get('volume').value;
-
-            if (conditionFormItem.get('value').value == null || (<string>conditionFormItem.get('value').value).length < 1) {
-                var value = conditionFormItem.get('conditionType').value;
-                if (value != null && value.enableConditionValue == true)
-                    this.addValidationError("Conditions: 'Value' is a mandatory field");
-            }
-            else if (conditionFormItem.get('value').value)
-                concessionCondition.conditionValue = conditionFormItem.get('value').value;
-
-            if (conditionFormItem.get('periodType').value) {
-                concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
-            } else {
-                this.addValidationError("Period type not selected");
-            }
-
-            if (conditionFormItem.get('period').value) {
-                concessionCondition.periodId = conditionFormItem.get('period').value.id;
-            } else {
-                this.addValidationError("Period not selected");
-            }
-
-            if (conditionFormItem.get('periodType').value.description == 'Once-off' && conditionFormItem.get('period').value.description == 'Monthly') {
-                this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
-            }
-
-            cashConcession.concessionConditions.push(concessionCondition);
-        }
+        this.checkConcessionExpiryDate(cashConcession);
 
         return cashConcession;
     }
@@ -585,10 +532,16 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-
     }
 
-
+    disableField(index: number, fieldname: string) {
+        return this.disableFieldBase(
+            this.selectedConditionTypes[index],
+            fieldname,
+            this.saveMessage == null,
+            this.saveMessage != null
+        );
+    }
 
     goBack() {
         this.location.back();
@@ -596,17 +549,5 @@ export class CashAddConcessionComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.sub.unsubscribe();
-    }
-
-    validatePeriod(itemrow) {
-        this.validationError = null;
-
-        let selectedPeriodType = itemrow.controls.periodType.value.description;
-
-        let selectedPeriod = itemrow.controls.period.value.description;
-
-        if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
-            this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
-        }
     }
 }

@@ -48,9 +48,9 @@ namespace StandardBank.ConcessionManagement.Repository
                 model.ConcessionDetailId = concessionDetail.ConcessionDetailId;
 
                 const string sql =
-                    @"INSERT [dbo].[tblConcessionBol] ([fkConcessionId], [fkConcessionDetailId], [fkLegalEntityBOLUserId], [fkChargeCodeId], [LoadedRate]) 
-                VALUES (@ConcessionId, @fkConcessionDetailId, @fkLegalEntityBOLUserId, @fkChargeCodeId, @LoadedRate) 
-                SELECT CAST(SCOPE_IDENTITY() as int)";
+                    @"INSERT [dbo].[tblConcessionBol] ([fkConcessionId], [fkConcessionDetailId], [fkLegalEntityBOLUserId], [fkChargeCodeId], [LoadedRate], [fkChargeCodeTypeId]) 
+                    VALUES (@ConcessionId, @fkConcessionDetailId, @fkLegalEntityBOLUserId, @fkChargeCodeId, @LoadedRate, @fkChargeCodeTypeId) 
+                    SELECT CAST(SCOPE_IDENTITY() as int)";
 
                 using (var db = _dbConnectionFactory.Connection())
                 {
@@ -61,6 +61,7 @@ namespace StandardBank.ConcessionManagement.Repository
                             fkConcessionDetailId = model.ConcessionDetailId,
                             fkLegalEntityBOLUserId = model.fkLegalEntityBOLUserId,
                             fkChargeCodeId = model.fkChargeCodeId,
+                            model.fkChargeCodeTypeId,
                             LoadedRate = model.LoadedRate
                         }).Single();
                 }
@@ -110,7 +111,14 @@ namespace StandardBank.ConcessionManagement.Repository
                     else
                     {
                         const string sql =
-                       @"Update [dbo].[rtblBOLChargeCode] set [Description] = @Description , [ChargeCode] =  @ChargeCode, [Length] = @Length , [fkChargeCodeTypeId] = @fkChargeCodeTypeId, [IsActive] = @IsActive,[IsNonUniversal]=@IsNonUniversal where pkChargeCodeId = @pkChargeCodeId";
+                       @"Update [dbo].[rtblBOLChargeCode] 
+                        set [Description] = @Description , 
+                            [ChargeCode] =  @ChargeCode, 
+                            [Length] = @Length , 
+                            [fkChargeCodeTypeId] = @fkChargeCodeTypeId, 
+                            [IsActive] = @IsActive,
+                            [IsNonUniversal]=@IsNonUniversal 
+                        where pkChargeCodeId = @pkChargeCodeId";
 
                         using (var db = _dbConnectionFactory.Connection())
                         {
@@ -133,7 +141,14 @@ namespace StandardBank.ConcessionManagement.Repository
                 {
 
                     const string sql =
-                       @"Update [dbo].[rtblBOLChargeCode] set [Description] = @Description , [ChargeCode] =  @ChargeCode, [Length] = @Length , [fkChargeCodeTypeId] = @fkChargeCodeTypeId, [IsActive],,[IsNonUniversal]=@IsNonUniversal = @IsActive where pkChargeCodeId = @pkChargeCodeId";
+                       @"Update [dbo].[rtblBOLChargeCode] 
+                        set [Description] = @Description , 
+                            [ChargeCode] =  @ChargeCode, 
+                            [Length] = @Length , 
+                            [fkChargeCodeTypeId] = @fkChargeCodeTypeId, 
+                            [IsActive] = @IsActive ,
+                            [IsNonUniversal] = @IsNonUniversal
+                        where pkChargeCodeId = @pkChargeCodeId";
 
                     using (var db = _dbConnectionFactory.Connection())
                     {
@@ -169,8 +184,8 @@ namespace StandardBank.ConcessionManagement.Repository
 
                 const string sql =
                     @"INSERT [dbo].[rtblBOLChargeCodeType] ([Description]) 
-                VALUES (@Description) 
-                SELECT CAST(SCOPE_IDENTITY() as int)";
+                    VALUES (@Description) 
+                    SELECT CAST(SCOPE_IDENTITY() as int)";
 
                 using (var db = _dbConnectionFactory.Connection())
                 {
@@ -202,14 +217,13 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionBol>(
-                    @"SELECT	[pkConcessionBolId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], 
-		                    --[fkTransactionGroupId] [TransactionGroupId], 
-		                    --[fkBusinesOnlineTransactionTypeId] [BusinesOnlineTransactionTypeId], 
-		                    --[BolUseId], 
-		                    --[TransactionVolume], 
-		                    --[TransactionValue], 
-		                    --[Fee], 
-		                    d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
+                    @"SELECT [pkConcessionBolId] [Id], 
+                             t.[fkConcessionId] [ConcessionId], 
+                             [fkConcessionDetailId] 
+                             [ConcessionDetailId], 
+		                     d.[fkLegalEntityId] [LegalEntityId], 
+                             d.[fkLegalEntityAccountId] [LegalEntityAccountId], 
+                             d.[ExpiryDate] 
                     FROM [dbo].[tblConcessionBol] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
                     WHERE [pkConcessionBolId] = @Id",
@@ -226,14 +240,12 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionBol>(
-                    @"SELECT [pkConcessionBolId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], 
-		                    --[fkTransactionGroupId] [TransactionGroupId], 
-		                    --[fkBusinesOnlineTransactionTypeId] [BusinesOnlineTransactionTypeId], 
-		                    --[BolUseId], 
-		                    --[TransactionVolume], 
-		                    --[TransactionValue], 
-		                    --[Fee], 
-		                    d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate] 
+                    @"SELECT [pkConcessionBolId] [Id], 
+                             t.[fkConcessionId] [ConcessionId], 
+                             [fkConcessionDetailId] [ConcessionDetailId],
+		                     d.[fkLegalEntityId] [LegalEntityId], 
+                             d.[fkLegalEntityAccountId] [LegalEntityAccountId], 
+                             d.[ExpiryDate] 
                     FROM [dbo].[tblConcessionBol] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]");
             }
@@ -249,8 +261,16 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 using (var db = _dbConnectionFactory.Connection())
                 {
-                    db.Execute(@"UPDATE [dbo].[tblConcessionBol] set [fkConcessionId] = @fkConcessionId, [fkConcessionDetailId] = @fkConcessionDetailId, [fkLegalEntityBOLUserId] = @fkLegalEntityBOLUserId, [fkChargeCodeId] = @fkChargeCodeId, [LoadedRate] = @LoadedRate, [ApprovedRate] = @ApprovedRate
-                WHERE [pkConcessionBolId] = @Id",
+                    db.Execute(
+                        @"UPDATE [dbo].[tblConcessionBol] 
+                        set [fkConcessionId] = @fkConcessionId, 
+                            [fkConcessionDetailId] = @fkConcessionDetailId, 
+                            [fkLegalEntityBOLUserId] = @fkLegalEntityBOLUserId, 
+                            [fkChargeCodeId] = @fkChargeCodeId, 
+                            [fkChargeCodeTypeId] = @fkChargeCodeTypeId, 
+                            [LoadedRate] = @LoadedRate, 
+                            [ApprovedRate] = @ApprovedRate
+                        WHERE [pkConcessionBolId] = @Id",
                         new
                         {
                             Id = model.Id,
@@ -259,7 +279,8 @@ namespace StandardBank.ConcessionManagement.Repository
                             fkLegalEntityBOLUserId = model.fkLegalEntityBOLUserId,
                             fkChargeCodeId = model.fkChargeCodeId,
                             LoadedRate = model.LoadedRate,
-                            ApprovedRate = model.ApprovedRate
+                            ApprovedRate = model.ApprovedRate,
+                            model.fkChargeCodeTypeId
                         });
 
 
@@ -283,7 +304,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblConcessionBol] WHERE [pkConcessionBolId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblConcessionBol] 
+                            WHERE [pkConcessionBolId] = @Id",
                     new { model.Id });
             }
 

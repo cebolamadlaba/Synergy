@@ -1,8 +1,18 @@
 <div class="header">
     <div class="logo-mark"></div>
-    <div class="logo-text">Synergy Concessions </div>
-</div>
+    <div class="logo-text">Synergy Concessions</div>
 
+    <div class="row">
+        <!-- UAT warning message -->
+        <div class="col-md-12" *ngIf="showUatWarning">
+            <div class="form-feedback-container" style="margin:0px;">
+                <div class="alert-warning uat-warning">
+                    <h4><B>This site is for testing purposes only!</B></h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="row">
     <!-- Error message -->

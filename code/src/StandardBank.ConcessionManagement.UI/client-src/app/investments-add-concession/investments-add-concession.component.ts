@@ -35,19 +35,20 @@ import { Concession } from "../models/concession";
 import { UserService } from "../services/user.service";
 
 import { BaseComponentService } from '../services/base-component.service';
+import { InvestmentBaseService } from '../services/investment-base.service';
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
 
 @Component({
     selector: 'app-investments-add-concession',
     templateUrl: './investments-add-concession.component.html',
-    styleUrls: ['./investments-add-concession.component.css']
+    styleUrls: ['./investments-add-concession.component.css'],
+    providers: [InvestmentBaseService]
 })
-export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
+export class InvestmentAddConcessionComponent extends InvestmentBaseService implements OnInit, OnDestroy {
     private sub: any;
 
     errorMessage: String;
-    validationError: String[];
     saveMessage: String;
     showHide = false;
     observableRiskGroup: Observable<RiskGroup>;
@@ -101,8 +102,10 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
         private formBuilder: FormBuilder,
         private location: Location,
         @Inject(LookupDataService) private lookupDataService,
+        @Inject(InvestmentBaseService) private investmentBaseService,
         @Inject(InvestmentConcessionService) private investmentConcessionService,
         private baseComponentService: BaseComponentService) {
+        super();
         this.riskGroup = new RiskGroup();
 
         this.productTypes = [new ProductType()];
@@ -255,6 +258,7 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
             interestRate: [''],
             volume: [''],
             value: [''],
+            conditionComment: [''],
             periodType: [''],
             period: ['']
         });
@@ -358,13 +362,6 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
             this.selectedInvestmentConcession[rowIndex] = true;
 
         }
-    }
-
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
     }
 
     getInvestmentConcession(): InvestmentConcession {
@@ -482,60 +479,9 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
 
         const conditions = <FormArray>this.investmentConcessionForm.controls['conditionItemsRows'];
 
-        for (let conditionFormItem of conditions.controls) {
-            if (!investmentConcession.concessionConditions)
-                investmentConcession.concessionConditions = [];
-
-            let concessionCondition = new ConcessionCondition();
-
-            if (conditionFormItem.get('conditionType').value)
-                concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;
-            else
-                this.addValidationError("Condition type not selected");
-
-            if (conditionFormItem.get('conditionProduct').value)
-                concessionCondition.conditionProductId = conditionFormItem.get('conditionProduct').value.id;
-            else
-                this.addValidationError("Condition product not selected");
-
-            if (conditionFormItem.get('interestRate').value)
-                concessionCondition.interestRate = conditionFormItem.get('interestRate').value;
-
-            if (conditionFormItem.get('volume').value)
-                concessionCondition.conditionVolume = conditionFormItem.get('volume').value;
-
-            if (conditionFormItem.get('value').value == null || (<string>conditionFormItem.get('value').value).length < 1) {
-                var value = conditionFormItem.get('conditionType').value;
-                if (value != null && value.enableConditionValue == true)
-                    this.addValidationError("Conditions: 'Value' is a mandatory field");
-            }
-            else if (conditionFormItem.get('value').value)
-                concessionCondition.conditionValue = conditionFormItem.get('value').value;
-
-            if (conditionFormItem.get('periodType').value) {
-                concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
-            } else {
-                this.addValidationError("Period type not selected");
-            }
-
-            if (conditionFormItem.get('period').value) {
-                concessionCondition.periodId = conditionFormItem.get('period').value.id;
-            } else {
-                this.addValidationError("Period not selected");
-            }
-
-            if (conditionFormItem.get('period').value) {
-                concessionCondition.periodId = conditionFormItem.get('period').value.id;
-            } else {
-                this.addValidationError("Period not selected");
-            }
-
-            if (conditionFormItem.get('periodType').value.description == 'Once-off' && conditionFormItem.get('period').value.description == 'Monthly') {
-                this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
-            }
-
-            investmentConcession.concessionConditions.push(concessionCondition);
-        }
+        let concessionConditionReturnObject = this.baseComponentService.getConsessionConditionData(conditions, investmentConcession.concessionConditions, this.validationError);
+        investmentConcession.concessionConditions = concessionConditionReturnObject.concessionConditions;
+        this.validationError = concessionConditionReturnObject.validationError;
 
         return investmentConcession;
     }
@@ -575,7 +521,6 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
 
         if ($event.target.value) {
             $event.target.value = this.baseComponentService.formatDecimalThree($event.target.value);
-            //$event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
         }
         else {
 
@@ -594,23 +539,25 @@ export class InvestmentAddConcessionComponent implements OnInit, OnDestroy {
         }
     }
 
+    disableNoticePeriod(index) {
+        return ((this.selectedInvestmentConcession[index] == true) || this.saveMessage) ? 'disabled' : null;
+    }
+
+    disableField(index, fieldName) {
+        return this.disableFieldBase(
+            this.selectedConditionTypes[index],
+            fieldName,
+            this.saveMessage == null,
+            this.saveMessage != null,
+            this.saveMessage == null,
+            this.selectedInvestmentConcession[index]);
+    }
+
     goBack() {
         this.router.navigate(['/pricing', this.riskGroupNumber]);
     }
 
     ngOnDestroy() {
         this.sub.unsubscribe();
-    }
-
-    validatePeriod(itemrow) {
-        this.validationError = null;
-
-        let selectedPeriodType = itemrow.controls.periodType.value.description;
-
-        let selectedPeriod = itemrow.controls.period.value.description;
-
-        if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
-            this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
-        }
     }
 }

@@ -117,13 +117,13 @@
 
         <div class="row">
             <label>SMT Deal Number</label>
-            <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="saveMessage ? '' : null" />
+            <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="disableField('smtDealNumber')" />
         </div>
 
     </div>
     <div class="col-md-7 col-md-offset-1">
         <label>Motivation</label>
-        <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="saveMessage ? '' : null"></textarea>
+        <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="disableField('motivation')"></textarea>
     </div>
 
     <!-- Concession table -->
@@ -143,7 +143,6 @@
                 <th>User ID</th>
                 <th>Charge code</th>
                 <th>Rate</th>
-
                 <th>Expiry Date</th>
                 <th></th>
             </tr>
@@ -153,27 +152,29 @@
 
             <tr *ngFor="let itemrow of bolConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
                 <td class="length-long">
-                    <select formControlName="product" class="form-control" [attr.disabled]="saveMessage ? '' : null" (change)="productTypeChanged(i)">
+                    <select *ngIf="!isBolSalaryPaymentsChildLineItem(i)" formControlName="product" class="form-control" [attr.disabled]="disableField('product',i)" (change)="productTypeChanged(i)">
                         <option *ngFor="let productOption of bolchargecodetypes" [ngValue]="productOption">{{productOption.description}}</option>
                     </select>
                 </td>
                 <td class="length-medium">
-                    <select formControlName="userid" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                    <select *ngIf="!isBolSalaryPaymentsChildLineItem(i)" formControlName="userid" class="form-control" [attr.disabled]="disableField('userid',i)">
                         <option *ngFor="let useridOption of legalentitybolusers" [ngValue]="useridOption">{{useridOption.bolUserId}}</option>
                     </select>
                 </td>
                 <td class="length-long">
-                    <select formControlName="chargecode" class="form-control" [attr.disabled]="saveMessage ? '' : null">
+                    <select formControlName="chargecode" class="form-control" [attr.disabled]="disableField('chargecode',i) || isBolSalaryPayment(i)" (change)="chargeCodeChanged(i)">
                         <option *ngFor="let bolchargecodeOption of selectedProducts[i].bolchargecodes" [ngValue]="bolchargecodeOption">{{bolchargecodeOption.description}}</option>
                     </select>
                 </td>
 
+                <td class="length-long"><input type="number" class="form-control" formControlName="rate" [attr.disabled]="disableField('unitcharge',i) || isBolSalaryPayment(i)" /></td>
+                <td class="length-short"><input *ngIf="!isBolSalaryPaymentsChildLineItem(i)" type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="disableField('expiryDate',i)" /></td>
 
-
-                <td class="length-long"><input type="number" class="form-control" formControlName="unitcharge" [attr.disabled]="saveMessage ? '' : null" /></td>
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="saveMessage ? '' : null" /></td>
-
-                <td class="delete"><button *ngIf="bolConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                <td class="delete">
+                    <button *ngIf="bolConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage && !isBolSalaryPaymentsChildLineItem(i)" (click)="deleteConcessionRow(i)" class="btn-delete">
+                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                    </button>
+                </td>
             </tr>
         </tbody>
     </table>
@@ -195,6 +196,7 @@
                             <th>Interest Rate</th>
                             <th>Volume</th>
                             <th>Value</th>
+                            <th>Comment</th>
                             <th>Period</th>
                         </tr>
                     </thead>
@@ -211,6 +213,7 @@
                             <td><span *ngIf="itemrow.get('interestRate').value">{{itemrow.get('interestRate').value | number:'1.2-2'}}</span></td>
                             <td>{{itemrow.get('volume').value}}</td>
                             <td><span *ngIf="itemrow.get('value').value">{{itemrow.get('value').value | number:'1.2-2'}}</span></td>
+                            <td>{{itemrow.get('conditionComment').value}}</td>
                             <td>{{itemrow.get('periodType').value.description}} {{itemrow.get('period').value.description}}</td>
                         </tr>
                     </tbody>
@@ -224,70 +227,12 @@
     <div bsModal #manageConditionsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="manageConditionsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="col-md-12 modal-header">
-                    <h4>Manage Conditions</h4>
-                </div>
-                <div class="col-md-12 modal-body">
-                    <div class="row">
-                        <div class="col-md-12 modal-title">
-                            <button type="button" class="btn btn-primary" (click)="addNewConditionRow()">Add Condition</button>
-                        </div>
-                    </div>
-                    <table class="form-concessions-table" formArrayName="conditionItemsRows" style="width:100%">
-                        <thead class="form-concessions-table-headings">
-                            <tr *ngIf="bolConcessionForm.controls.conditionItemsRows.controls.length > 0">
-                                <th>Condition Type</th>
-                                <th>Product Type</th>
-                                <th>Interest Rate</th>
-                                <th>Volume</th>
-                                <th>Value/Balance</th>
-                                <th>Period Type</th>
-                                <th>Period</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody class="form-concessions-table-content">
-                            <tr *ngIf="bolConcessionForm.controls.conditionItemsRows.controls.length == 0">
-                                <td colspan="8" class="searchEmptyState">
-                                    No conditions added
-                                </td>
-                            </tr>
-                            <tr *ngFor="let itemrow of bolConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
-                                <td class="length-long">
-                                    <!-- Condition type -->
-                                    <select formControlName="conditionType" (change)="conditionTypeChanged(i)">
-                                        <option *ngFor="let conditionTypeOption of conditionTypes" [ngValue]="conditionTypeOption">{{conditionTypeOption.description}}</option>
-                                    </select>
-                                </td>
-                                <td class="length-long">
-                                    <!-- Product type -->
-                                    <select formControlName="conditionProduct" *ngIf="selectedConditionTypes[i] != null">
-                                        <option *ngFor="let conditionProductOption of selectedConditionTypes[i].conditionProducts" [ngValue]="conditionProductOption">{{conditionProductOption.description}}</option>
-                                    </select>
-                                </td>
-                                <!-- Interest rate -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="interestRate" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableInterestRate ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
-                                <!-- Volume -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="volume" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionVolume ? null : ''" /></td>
-                                <!-- Value -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionValue ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
-                                <!-- Period type -->
-                                <td class="length-medium">
-                                    <select formControlName="periodType" (change)="validatePeriod(itemrow)">
-                                        <option *ngFor="let periodTypeOption of periodTypes" [ngValue]="periodTypeOption">{{periodTypeOption?.description}}</option>
-                                    </select>
-                                </td>
-                                <!-- Period -->
-                                <td class="length-long">
-                                    <select formControlName="period" (change)="validatePeriod(itemrow)">
-                                        <option *ngFor="let periodOption of periods" [ngValue]="periodOption">{{periodOption?.description}}</option>
-                                    </select>
-                                </td>
-                                <td><button class="btn-delete" type="button" (click)="deleteConditionRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <app-concession-condition-modal [selectedConditionTypes]="selectedConditionTypes"
+                                                [concessionForm]="bolConcessionForm"
+                                                [conditionTypes]="conditionTypes"
+                                                [periodTypes]="periodTypes"
+                                                [periods]="periods"
+                                                (myEvent)="validatePeriod($event)"></app-concession-condition-modal>
                 <div class="modal-footer">
                     <div class="float-right">
                         <button type="button" class="btn btn-primary" (click)="manageConditionsModal.hide()">Done</button>
@@ -307,5 +252,3 @@
 
 
 </form>
-
-<!--<pre>{{bolConcessionForm.value | json}}</pre>-->

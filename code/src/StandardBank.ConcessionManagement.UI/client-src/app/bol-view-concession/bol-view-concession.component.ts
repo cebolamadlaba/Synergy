@@ -32,12 +32,14 @@ import { UserService } from "../services/user.service";
 
 import { BolChargeCodeType } from "../models/bol-chargecodetype";
 import { BolChargeCode } from "../models/bol-chargecode";
+import { BolChargeCodeRelationship } from "../models/bol-chargeCodeRelationship";
 import { LegalEntityBOLUser } from "../models/legal-entity-bol-user";
 import { LegalEntity } from "../models/legal-entity";
 
 import { BaseComponentService } from '../services/base-component.service';
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
+import { BolConcessionBaseService } from '../services/bol-concession-base.service';
 
 @Component({
     selector: 'app-bol-view-concession',
@@ -45,12 +47,11 @@ import { MOnthEnum } from '../models/month-enum';
     styleUrls: ['./bol-view-concession.component.css'],
     providers: [DatePipe]
 })
-export class BolViewConcessionComponent implements OnInit, OnDestroy {
+export class BolViewConcessionComponent extends BolConcessionBaseService implements OnInit, OnDestroy {
 
     concessionReferenceId: string;
     private sub: any;
     errorMessage: String;
-    validationError: String[];
     saveMessage: String;
     warningMessage: String;
     observableRiskGroup: Observable<RiskGroup>;
@@ -104,6 +105,9 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
     observableBolChargeCodes: Observable<BolChargeCode[]>;
     bolchargecodes: BolChargeCode[];
 
+    observableBolChargeCodeRelationships: Observable<BolChargeCodeRelationship[]>;
+    bolChargeCodeRelationships: BolChargeCodeRelationship[];
+
     observableLegalEntityBOLUsers: Observable<LegalEntityBOLUser[]>;
     legalentitybolusers: LegalEntityBOLUser[];
 
@@ -127,9 +131,11 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         @Inject(BolConcessionService) private bolConcessionService,
         private baseComponentService: BaseComponentService) {
 
+        super();
         this.riskGroup = new RiskGroup();
         this.bolchargecodetypes = [new BolChargeCodeType()];
         this.bolchargecodes = [new BolChargeCode()];
+        this.bolChargeCodeRelationships = [new BolChargeCodeRelationship()];
         this.legalentitybolusers = [new LegalEntityBOLUser()];
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
@@ -177,12 +183,10 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                 this.capturedComments = value.comments;
             }
         });
-
-
     }
 
     getInitialData() {
-        if (this.riskGroupNumber != null && this.riskGroupNumber != 0) {
+        if (this.riskGroupNumber !== 0) {
             Observable.forkJoin([
                 this.lookupDataService.getConditionTypes(),
                 this.lookupDataService.getBOLChargeCodeTypes(),
@@ -190,7 +194,8 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                 this.lookupDataService.getLegalEntityBOLUsers(this.riskGroupNumber),
                 this.lookupDataService.getPeriods(),
                 this.lookupDataService.getPeriodTypes(),
-                this.lookupDataService.getRiskGroup(this.riskGroupNumber)
+                this.lookupDataService.getRiskGroup(this.riskGroupNumber),
+                this.lookupDataService.getBOLChargeCodeRelationships()
             ]).subscribe(results => {
                 this.setInitialData(results, true);
             }, error => {
@@ -206,7 +211,8 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                 this.lookupDataService.getLegalEntityBOLUsersBySAPBPID(this.sapbpid),
                 this.lookupDataService.getPeriods(),
                 this.lookupDataService.getPeriodTypes(),
-                this.lookupDataService.getLegalEntity(this.sapbpid)
+                this.lookupDataService.getLegalEntity(this.sapbpid),
+                this.lookupDataService.getBOLChargeCodeRelationships()
             ]).subscribe(results => {
                 this.setInitialData(results, false);
             }, error => {
@@ -234,6 +240,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         this.legalentitybolusers = <any>results[3];
         this.periods = <any>results[4];
         this.periodTypes = <any>results[5];
+        this.bolChargeCodeRelationships = <any>results[7];
 
         this.populateForm();
     }
@@ -256,9 +263,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                     }
 
                     // Removed as per SBSA.Anthony's request - 2019-07-15
-                    //if (!bolConcession.concession.isInProgressExtension) {
-                        this.canEdit = bolConcession.currentUser.canPcmApprove;
-                    //}
+                    this.canEdit = bolConcession.currentUser.canPcmApprove;
                 }
 
                 //if it's still pending and the user is a requestor then they can recall it
@@ -306,28 +311,41 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                     currentConcession.get('concessionDetailId').setValue(bolConcessionDetail.concessionDetailId);
 
                     if (bolConcessionDetail.loadedRate) {
-                        bolConcessionDetail.loadedRate = this.baseComponentService.formatDecimalThree(Number(bolConcessionDetail.loadedRate));
+                        var loadedRate = bolConcessionDetail.loadedRate.replace(',', '.');
+                        bolConcessionDetail.loadedRate = this.baseComponentService.formatDecimalThree(Number(loadedRate));
                         currentConcession.get('unitcharge').setValue(bolConcessionDetail.loadedRate);
                     }
 
-                    if (bolConcessionDetail.approvedRate)
+                    if (bolConcessionDetail.approvedRate) {
+                        var approvedRate = bolConcessionDetail.loadedRate.replace(',', '.');
+                        bolConcessionDetail.approvedRate = this.baseComponentService.formatDecimalThree(Number(approvedRate));
                         currentConcession.get('unitchargeApproved').setValue(bolConcessionDetail.approvedRate);
+                    }                        
 
                     let selectedBOLUser = this.legalentitybolusers.filter(_ => _.pkLegalEntityBOLUserId == bolConcessionDetail.fkLegalEntityBOLUserId);
                     currentConcession.get('userid').setValue(selectedBOLUser[0]);
 
-
                     let selectedChargeCode = this.bolchargecodes.filter(_ => _.pkChargeCodeId == bolConcessionDetail.fkChargeCodeId);
-                    let chargecodetypeid = selectedChargeCode[0].fkChargeCodeTypeId.valueOf();
-
-                    let selectedChargeCodeType = this.bolchargecodetypes.filter(_ => _.pkChargeCodeTypeId == chargecodetypeid);
-                    currentConcession.get('product').setValue(selectedChargeCodeType[0]);
-
-                    var selectedproduct = currentConcession.get('product').value;
-                    let chargecodes = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedChargeCodeType[0].pkChargeCodeTypeId);
-                    this.selectedProducts[rowIndex].bolchargecodes = chargecodes;
-
                     currentConcession.get('chargecode').setValue(selectedChargeCode[0]);
+
+                    if (bolConcessionDetail.fkChargeCodeTypeId == null) {
+                        let chargecodetypeid = selectedChargeCode[0].fkChargeCodeTypeId.valueOf();
+
+                        let selectedChargeCodeType = this.bolchargecodetypes.filter(_ => _.pkChargeCodeTypeId == chargecodetypeid);
+                        currentConcession.get('product').setValue(selectedChargeCodeType[0]);
+
+                        let chargecodes = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedChargeCodeType[0].pkChargeCodeTypeId);
+                        this.selectedProducts[rowIndex].bolchargecodes = chargecodes;                        
+                    }
+                    else {
+                        let selectedChargeCodeType = this.bolchargecodetypes.filter(_ => _.pkChargeCodeTypeId == bolConcessionDetail.fkChargeCodeTypeId);
+                        currentConcession.get('product').setValue(selectedChargeCodeType[0]);
+
+                        var selectedProductRelationships = this.bolChargeCodeRelationships.filter(cr => cr.fkChargeCodeTypeId == bolConcessionDetail.fkChargeCodeTypeId);
+
+                        this.selectedProducts[rowIndex].bolchargecodes = this.bolchargecodes.filter(re =>
+                            selectedProductRelationships.find(({ fkChargeCodeId }) => re.pkChargeCodeId == fkChargeCodeId));
+                    }                 
 
                     if (bolConcessionDetail.expiryDate) {
                         var formattedExpiryDate = this.datepipe.transform(bolConcessionDetail.expiryDate, 'yyyy-MM-dd');
@@ -366,6 +384,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                     currentCondition.get('interestRate').setValue(concessionCondition.interestRate);
                     currentCondition.get('volume').setValue(concessionCondition.conditionVolume);
                     currentCondition.get('value').setValue(concessionCondition.conditionValue);
+                    currentCondition.get('conditionComment').setValue(concessionCondition.conditionComment);
 
                     let selectedPeriodType = this.periodTypes.filter(_ => _.id == concessionCondition.periodTypeId);
                     currentCondition.get('periodType').setValue(selectedPeriodType[0]);
@@ -415,6 +434,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             interestRate: [''],
             volume: [''],
             value: [''],
+            conditionComment: [''],
             periodType: [''],
             period: ['']
         });
@@ -485,7 +505,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
             var formattedDateOpened = this.datepipe.transform(this.bolConcession.concession.dateOpened, 'yyyy-MM-dd');
         }
 
-        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidationForView(itemrow.controls['expiryDate'].value,formattedDateOpened);
+        var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidationForView(itemrow.controls['expiryDate'].value, formattedDateOpened);
         if (validationErrorMessage != null) {
             this.addValidationError(validationErrorMessage);
         }
@@ -498,17 +518,11 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         let currentProduct = control.controls[rowIndex];
         var selectedproduct = currentProduct.get('product').value;
 
-        this.selectedProducts[rowIndex].bolchargecodes = this.bolchargecodes.filter(re => re.fkChargeCodeTypeId == selectedproduct.pkChargeCodeTypeId);
+        var selectedProductRelationships = this.bolChargeCodeRelationships.filter(cr => cr.fkChargeCodeTypeId == selectedproduct.pkChargeCodeTypeId);
+        this.selectedProducts[rowIndex].bolchargecodes = this.bolchargecodes.filter(re =>
+            selectedProductRelationships.find(({ fkChargeCodeId }) => re.pkChargeCodeId == fkChargeCodeId));
 
         currentProduct.get('chargecode').setValue(this.selectedProducts[rowIndex].bolchargecodes[0]);
-
-    }
-
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
     }
 
     getBolConcession(isNew: boolean): BolConcession {
@@ -556,7 +570,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                 bolConcessionDetail.concessionDetailId = concessionFormItem.get('concessionDetailId').value;
 
             if (concessionFormItem.get('product').value) {
-
+                bolConcessionDetail.fkChargeCodeTypeId = concessionFormItem.get('product').value.pkChargeCodeTypeId;
             } else {
                 this.addValidationError("Product not selected");
             }
@@ -584,9 +598,9 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
                 this.addValidationError("User ID not selected");
             }
 
-            if (concessionFormItem.get('expiryDate').value)
+            if (concessionFormItem.get('expiryDate').value && !this.baseComponentService.isAppprovingOrDeclining)
                 this.onExpiryDateChanged(concessionFormItem);
-                bolConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+            bolConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
 
             bolConcession.bolConcessionDetails.push(bolConcessionDetail);
 
@@ -598,7 +612,6 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
                 if (hasDuplicates) {
                     this.addValidationError("Duplicate Account / Product pricing found. Please select different account.");
-
                     break;
                 }
             }
@@ -606,59 +619,9 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
         const conditions = <FormArray>this.bolConcessionForm.controls['conditionItemsRows'];
 
-        for (let conditionFormItem of conditions.controls) {
-
-            if (!bolConcession.concessionConditions)
-                bolConcession.concessionConditions = [];
-
-
-            let concessionCondition = new ConcessionCondition();
-
-            if (!isNew && conditionFormItem.get('concessionConditionId').value)
-                concessionCondition.concessionConditionId = conditionFormItem.get('concessionConditionId').value;
-
-            if (conditionFormItem.get('conditionType').value)
-                concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;
-            else
-                this.addValidationError("Condition type not selected");
-
-            if (conditionFormItem.get('conditionProduct').value)
-                concessionCondition.conditionProductId = conditionFormItem.get('conditionProduct').value.id;
-            else
-                this.addValidationError("Condition product not selected");
-
-            if (conditionFormItem.get('interestRate').value)
-                concessionCondition.interestRate = conditionFormItem.get('interestRate').value;
-
-            if (conditionFormItem.get('volume').value)
-                concessionCondition.conditionVolume = conditionFormItem.get('volume').value;
-
-            if (conditionFormItem.get('value').value == null || (<string>conditionFormItem.get('value').value).length < 1) {
-                var value = conditionFormItem.get('conditionType').value;
-                if (value != null && value.enableConditionValue == true)
-                    this.addValidationError("Conditions: 'Value' is a mandatory field");
-            }
-            else if (conditionFormItem.get('value').value)
-                concessionCondition.conditionValue = conditionFormItem.get('value').value;
-
-            if (conditionFormItem.get('periodType').value) {
-                concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
-            } else {
-                this.addValidationError("Period type not selected");
-            }
-
-            if (conditionFormItem.get('period').value) {
-                concessionCondition.periodId = conditionFormItem.get('period').value.id;
-            } else {
-                this.addValidationError("Period not selected");
-            }
-
-            if (conditionFormItem.get('periodType').value.description == 'Once-off' && conditionFormItem.get('period').value.description == 'Monthly') {
-                this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
-            }
-
-            bolConcession.concessionConditions.push(concessionCondition);
-        }
+        let concessionConditionReturnObject = this.baseComponentService.getConsessionConditionData(conditions, bolConcession.concessionConditions, this.validationError);
+        bolConcession.concessionConditions = concessionConditionReturnObject.concessionConditions;
+        this.validationError = concessionConditionReturnObject.validationError;
 
         return bolConcession;
     }
@@ -687,7 +650,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
     bcmApproveConcession() {
         this.isLoading = true;
-
+        this.baseComponentService.isAppprovingOrDeclining = true;
         this.errorMessage = null;
         this.validationError = null;
 
@@ -721,6 +684,8 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
     bcmDeclineConcession() {
         this.isLoading = true;
 
+        this.baseComponentService.isAppprovingOrDeclining = true;
+
         this.errorMessage = null;
         this.validationError = null;
 
@@ -738,7 +703,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         if (!this.validationError) {
             this.bolConcessionService.postUpdateBolData(bolConcession).subscribe(entity => {
                 console.log("data saved");
-                
+
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;
                 this.bolConcession = entity;
@@ -755,7 +720,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
     pcmApproveConcession() {
         this.isLoading = true;
-
+        this.baseComponentService.isAppprovingOrDeclining = true;
         this.errorMessage = null;
         this.validationError = null;
 
@@ -848,22 +813,6 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
         }
 
         const conditions = <FormArray>this.bolConcessionForm.controls['conditionItemsRows'];
-        //this is detailed line items,  but not yet the controls
-        //for (let conditionFormItem of conditions.controls) {
-
-        //    let controls = (<FormGroup>conditionFormItem).controls;
-
-        //    for (const fieldname in controls) { // 'field' is a string
-
-        //        const abstractControl = controls[fieldname];
-        //        if (abstractControl.dirty) {
-
-        //            changedProperties.push({ rowIndex, fieldname });
-        //        }
-        //    }
-        //    rowIndex++;
-        //}
-
 
         return JSON.stringify(changedProperties);
     }
@@ -887,6 +836,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var bolConcession = this.getBolConcession(false);
 
@@ -1071,7 +1021,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
     requestorApproveConcession() {
         this.isLoading = true;
-
+        this.baseComponentService.isAppprovingOrDeclining = true;
         this.errorMessage = null;
         this.validationError = null;
 
@@ -1106,6 +1056,7 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var bolConcession = this.getBolConcession(false);
         bolConcession.concession.status = ConcessionStatus.Declined;
@@ -1186,19 +1137,9 @@ export class BolViewConcessionComponent implements OnInit, OnDestroy {
 
     setTwoNumberDecimal($event) {
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-      
     }
 
- 
-    validatePeriod(itemrow) {
-        this.validationError = null;
-
-        let selectedPeriodType = itemrow.controls.periodType.value.description;
-
-        let selectedPeriod = itemrow.controls.period.value.description;
-
-        if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
-            this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
-        }
+    disableField(fieldname: string, index: number = null) {
+        return this.disableFieldBase(fieldname, this.canEdit, index, this.selectedConditionTypes, this.isRecalling, this.motivationEnabled)
     }
 }

@@ -54,6 +54,7 @@
 
     </div>
 </div>
+
 <!-- Error message -->
 <div class="col-md-12" *ngIf="(errorMessage) && !isLoading">
     <div class="form-feedback-container">
@@ -81,6 +82,16 @@
         </div>
     </div>
 </div>
+
+<!-- Warning message -->
+<div class="col-md-12" *ngIf="warningMessage && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-warning">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{warningMessage}}</p>
+        </div>
+    </div>
+</div>
+
 <!-- Success message -->
 <div class="col-md-12" *ngIf="saveMessage && !isLoading">
     <div class="form-feedback-container">
@@ -105,20 +116,20 @@
 
         <div class="row">
             <label>SMT Deal Number</label>
-            <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="(isRecalling || canEdit) ? null : ''" />
+            <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="disableField('smtDealNumber')" />
         </div>
 
     </div>
     <div class="col-md-7 col-md-offset-1">
         <label>Motivation</label>
-        <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="motivationEnabled ? null : ''"></textarea>
+        <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="disableField('motivation')"></textarea>
     </div>
 
     <!-- Concession table -->
     <div class="col-md-12" style="border-bottom: 1px solid gray; margin-bottom: 15px;">
         <div class="row">
             <h3 class="table-title">Concessions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" style="margin-top: 15px;" [attr.disabled]="canEdit ? null : ''" *ngIf="!saveMessage">New Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" style="margin-top: 15px;" [attr.disabled]="disableField('concessions')" *ngIf="!saveMessage">New Concession</button>
         </div>
     </div>
 
@@ -139,38 +150,38 @@
             <tr *ngFor="let itemrow of glmsConcessionForm.controls.concessionItemRows.controls; let i=index" [formGroupName]="i">
                 <td class="length-long">
                     <!-- Group -->
-                    <select formControlName="glmsGroup" class="form-control" [attr.disabled]="canEdit ? null : ''">
+                    <select formControlName="glmsGroup" class="form-control" [attr.disabled]="disableField('glmsGroup',i)">
                         <option *ngFor="let glmsGroupOption of glmsGroup" [ngValue]="glmsGroupOption">{{glmsGroupOption.groupName}}</option>
                     </select>
                 </td>
                 <td class="length-long">
                     <!-- Interest Pricing Category -->
-                    <select formControlName="interestPricingCategory" class="form-control" [attr.disabled]="canEdit ? null : ''">
+                    <select formControlName="interestPricingCategory" class="form-control" [attr.disabled]="disableField('interestPricingCategory',i)">
                         <option *ngFor="let interestPricingCategoryOption of interestPricingCategory" [ngValue]="interestPricingCategoryOption">{{interestPricingCategoryOption.description}}</option>
                     </select>
                 </td>
                 <td class="length-short">
                     <!-- Interest Type -->
-                    <select formControlName="interestType" class="form-control" [attr.disabled]="canEdit ? null : ''">
+                    <select formControlName="interestType" class="form-control" [attr.disabled]="disableField('interestType',i)">
                         <option *ngFor="let interestTypeOption of interestType" [ngValue]="interestTypeOption"> {{interestTypeOption.description}}</option>
                     </select>
                 </td>
                 <td class="length-short">
                     <!-- Slab Type -->
-                    <select formControlName="slabType" class="form-control" [attr.disabled]="canEdit ? null : ''">
+                    <select formControlName="slabType" class="form-control" [attr.disabled]="disableField('slabType',i)">
                         <option *ngFor="let slabTypeOption of slabType" [ngValue]="slabTypeOption"> {{slabTypeOption.description}}</option>
                     </select>
                 </td>
                 <!-- expiry Date-->
-                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="canEdit ? null : ''" /></td>
+                <td class="length-short"><input type="date" formControlName="expiryDate" class="form-control" [attr.disabled]="disableField('expiryDate',i)" /></td>
                 <td class="length-short" *ngIf="isApproved"><input type="date" formControlName="dateApproved" class="form-control" /></td>
 
                 <!--Tier information-->
-                <td><button class="length-long btn btn-primary" (click)="openTier(manageTierModal.show(),i)" [attr.disabled]="canEdit ? null : ''">Add Tier</button></td>
+                <td><button class="length-long btn btn-primary" (click)="openTier(manageTierModal.show(),i)" [attr.disabled]="disableField('addTier',i)">Add Tier</button></td>
 
                 <td class="delete" *ngIf="canArchive">
 
-                    <button *ngIf="glmsConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="archiveConcessiondetail(itemrow.get('concessionDetailId').value)" class="btn-delete" title="Remove"><i class="fa fa-trash" aria-hidden="true" style="color:#920000"></i></button>
+                    <button *ngIf="glmsConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="setSelectedConcessionDetail(itemrow.get('concessionDetailId').value); archiveConcessionModal.show()" class="btn-delete" title="Remove"><i class="fa fa-trash" aria-hidden="true" style="color:#920000"></i></button>
                 </td>
                 <td class="length-short" *ngIf="(canBcmApprove || canPcmApprove || isEditing || isRecalling ) && glmsConcessionForm.controls.concessionItemRows.controls.length > 1">
 
@@ -184,7 +195,7 @@
     <div class="col-md-12">
         <div class="row">
             <h3 class="table-title">Conditions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" style="margin-top: 15px;" [attr.disabled]="canEdit ? null : ''" *ngIf="!saveMessage">Manage Conditions</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="manageConditionsModal.show()" style="margin-top: 15px;" [attr.disabled]="disableField('manageConditions')" *ngIf="!saveMessage">Manage Conditions</button>
 
             <div class="table-container">
                 <table class="table table-bordered table-hover header-fixed table-striped">
@@ -196,6 +207,7 @@
                             <th>Interest Rate</th>
                             <th>Volume</th>
                             <th>Value</th>
+                            <th>Comment</th>
                             <th>Period</th>
                         </tr>
                     </thead>
@@ -212,6 +224,7 @@
                             <td><span *ngIf="itemrow.get('interestRate').value">{{itemrow.get('interestRate').value | number:'1.2-2'}}</span></td>
                             <td>{{itemrow.get('volume').value}}</td>
                             <td><span *ngIf="itemrow.get('value').value">{{itemrow.get('value').value | number:'1.2-2'}}</span></td>
+                            <td>{{itemrow.get('conditionComment').value}}</td>
                             <td>{{itemrow.get('periodType').value.description}} {{itemrow.get('period').value.description}}</td>
                         </tr>
                     </tbody>
@@ -299,70 +312,12 @@
     <div bsModal #manageConditionsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="manageConditionsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="col-md-12 modal-header">
-                    <h4>Manage Conditions</h4>
-                </div>
-                <div class="col-md-12 modal-body">
-                    <div class="row">
-                        <div class="col-md-12 modal-title">
-                            <button type="button" class="btn btn-primary" (click)="addNewConditionRow()">Add Condition</button>
-                        </div>
-                    </div>
-                    <table class="form-concessions-table" formArrayName="conditionItemsRows" style="width:100%">
-                        <thead class="form-concessions-table-headings">
-                            <tr *ngIf="glmsConcessionForm.controls.conditionItemsRows.controls.length > 0">
-                                <th>Condition Type</th>
-                                <th>Product Type</th>
-                                <th>Interest Rate</th>
-                                <th>Volume</th>
-                                <th>Value/Balance</th>
-                                <th>Period Type</th>
-                                <th>Period</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody class="form-concessions-table-content">
-                            <tr *ngIf="glmsConcessionForm.controls.conditionItemsRows.controls.length == 0">
-                                <td colspan="8" class="searchEmptyState">
-                                    No conditions added
-                                </td>
-                            </tr>
-                            <tr *ngFor="let itemrow of glmsConcessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
-                                <td class="length-long">
-                                    <!-- Condition type -->
-                                    <select formControlName="conditionType" (change)="conditionTypeChanged(i)">
-                                        <option *ngFor="let conditionTypeOption of conditionTypes" [ngValue]="conditionTypeOption">{{conditionTypeOption.description}}</option>
-                                    </select>
-                                </td>
-                                <td class="length-long">
-                                    <!-- Product type -->
-                                    <select formControlName="conditionProduct" *ngIf="selectedConditionTypes[i] != null">
-                                        <option *ngFor="let conditionProductOption of selectedConditionTypes[i].conditionProducts" [ngValue]="conditionProductOption">{{conditionProductOption.description}}</option>
-                                    </select>
-                                </td>
-                                <!-- Interest rate -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="interestRate" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableInterestRate ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
-                                <!-- Volume -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="volume" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionVolume ? null : ''" /></td>
-                                <!-- Value -->
-                                <td class="length-short"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="selectedConditionTypes[i] != null && selectedConditionTypes[i].enableConditionValue ? null : ''" (change)="setTwoNumberDecimal($event)" /></td>
-                                <!-- Period type -->
-                                <td class="length-medium">
-                                    <select formControlName="periodType" (change)="validatePeriod(itemrow)">
-                                        <option *ngFor="let periodTypeOption of periodTypes" [ngValue]="periodTypeOption">{{periodTypeOption?.description}}</option>
-                                    </select>
-                                </td>
-                                <!-- Period -->
-                                <td class="length-long">
-                                    <select formControlName="period" (change)="validatePeriod(itemrow)">
-                                        <option *ngFor="let periodOption of periods" [ngValue]="periodOption">{{periodOption?.description}}</option>
-                                    </select>
-                                </td>
-                                <td><button class="btn-delete" type="button" (click)="deleteConditionRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <app-concession-condition-modal [selectedConditionTypes]="selectedConditionTypes"
+                                                [concessionForm]="glmsConcessionForm"
+                                                [conditionTypes]="conditionTypes"
+                                                [periodTypes]="periodTypes"
+                                                [periods]="periods"
+                                                (myEvent)="validatePeriod($event)"></app-concession-condition-modal>
                 <div class="modal-footer">
                     <div class="float-right">
                         <button type="button" class="btn btn-primary" (click)="manageConditionsModal.hide()">Done</button>
@@ -371,6 +326,7 @@
             </div>
         </div>
     </div>
+
     <!-- Modal Tier -->
     <div bsModal #manageTierModal="bs-modal" class="modal" id="manageTierModal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="manageTierModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -443,13 +399,36 @@
                 </div>
                 <div class="modal-footer">
                     <div class="float-right">
-                        <!--<button type="button" class="btn btn-primary" (click)="manageTierModal.hide()">Cancel</button>-->
                         <button type="button" class="btn btn-primary" (click)="closeTierModal(manageTierModal.hide())">Done</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Modal archive concession -->
+    <div bsModal #archiveConcessionModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="archiveConcessionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="col-md-12 modal-header">
+                    <h4>Archive Concession</h4>
+                </div>
+                <div class="col-md-12 modal-body">
+                    <div class="col-md-12 modal-title">
+                        <label>Do you want this account to be on a Standard Fixed Rate or Standard Linked to Prime?</label>
+                    </div>
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-primary btn-archive" (click)="archiveConcessionModal.hide(); archiveConcession(standardLinkedToPrime)">Standard Linked To Prime</button>
+                        <button type="button" class="btn btn-primary btn-archive" (click)="archiveConcessionModal.hide(); archiveConcession(standardFixedRate)">Standard Fixed Rate</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-cancel" (click)="archiveConcessionModal.hide()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Form buttons -->
     <div class="footer-buttons">
         <div class="float-right">
@@ -462,7 +441,7 @@
             <button type="button" class="btn btn-success" (click)="editConcession('Renew')" *ngIf="canRenew">Renew</button>
             <button type="button" class="btn btn-success" (click)="editConcession('Resubmit')" *ngIf="canResubmit">Resubmit</button>
             <button type="button" class="btn btn-success" (click)="editConcession('UpdateApproved')" *ngIf="canUpdate">Update</button>
-            <button type="button" class="btn btn-warning" (click)="archiveConcession()" *ngIf="canArchive">Archive</button>
+            <button type="button" class="btn btn-warning" (click)="archiveConcessionModal.show()" *ngIf="canArchive">Archive</button>
 
             <button type="button" class="btn btn-primary" (click)="saveConcession()" *ngIf="isEditing">Save</button>
 
@@ -474,9 +453,4 @@
     </div>
 </form>
 
-
-
-<!--<pre>{{glmsConcessionForm.value | json}}</pre>-->
-
 <p>&nbsp;</p>
-

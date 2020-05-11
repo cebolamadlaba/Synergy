@@ -38,6 +38,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         private readonly ILegalEntityAddressManager _legalEntityAddressManager;
 
         /// <summary>
+        /// The Glms manager
+        /// </summary>
+        private readonly IGlmsManager _glmsManager;
+
+        /// <summary>
         /// The site helper
         /// </summary>
         private readonly ISiteHelper _siteHelper;
@@ -62,7 +67,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <param name="mediator">The mediator.</param>
         public ConcessionController(IConcessionManager concessionManager, ILookupTableManager lookupTableManager, ILegalEntityAddressManager legalEntityAddressManager,
             ISiteHelper siteHelper, ILetterGeneratorManager letterGeneratorManager, IMediator mediator,
-            IGlmsLookupTableManager glmsLookupTableManager)
+            IGlmsLookupTableManager glmsLookupTableManager, IGlmsManager glmsManager)
         {
             _concessionManager = concessionManager;
             _lookupTableManager = lookupTableManager;
@@ -71,6 +76,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             _letterGeneratorManager = letterGeneratorManager;
             _mediator = mediator;
             _glmsLookupTableManager = glmsLookupTableManager;
+            _glmsManager = glmsManager;
         }
 
         /// <summary>
@@ -174,27 +180,31 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         [Route("SearchConsessions")]
         public IActionResult SearchConsessions()
         {
-            var userId = _siteHelper.GetUserIdForFiltering(this);
-            return Ok(_concessionManager.SearchConsessions(userId));
+            var user = _siteHelper.LoggedInUser(this);
+            return Ok(_concessionManager.SearchConsessions(user));
         }
 
         [Route("SearchConsessions/{region}/{centre}/{status}/{datefilter}")]
         public IActionResult SearchConsessions(int region, int centre, string status, DateTime datefilter)
         {
-            var userId = _siteHelper.GetUserIdForFiltering(this);
-            return Ok(_concessionManager.SearchConsessions(region, centre, status, datefilter, userId));
+            var user = _siteHelper.LoggedInUser(this);
+            return Ok(_concessionManager.SearchConsessions(region, centre, status, datefilter, user));
         }
 
         [Route("GetLegalEntityAddress/{legalEntityId}")]
         public IActionResult GetLegalEntityAddress(int legalEntityId)
         {
             if (legalEntityId < 1)
+            {
                 return NoContent();
+            }
 
             LegalEntityAddress legalEntityAddress = this._legalEntityAddressManager.GetLegalEntityAddressByLegalEntityId(legalEntityId);
 
             if (legalEntityAddress == null)
+            {
                 legalEntityAddress = this._legalEntityAddressManager.GetLegalEntityAddressFromLegalEntityRepository(legalEntityId);
+            }
 
             return Ok(legalEntityAddress);
         }
@@ -207,9 +217,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public IActionResult UserApprovedConcessions()
         {
             var userAEId = _siteHelper.GetUserIdForFiltering(this);
-            var currentUser= _siteHelper.LoggedInUser(this);
+            var currentUser = _siteHelper.LoggedInUser(this);
 
-            return Ok(_concessionManager.GetApprovedConcessionsForUser(userAEId,currentUser));
+            return Ok(_concessionManager.GetApprovedConcessionsForUser(userAEId, currentUser));
         }
 
         /// <summary>
@@ -257,14 +267,28 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// </summary>
         /// <param name="concessionReferenceId">The concession reference identifier.</param>
         /// <returns></returns>
-        [Route("DeactivateConcession/{concessionReferenceId}")]
-        public async Task<IActionResult> DeactivateConcession(string concessionReferenceId)
+        [Route("DeactivateConcession/{concessionReferenceId}/{archiveType?}")]
+        public async Task<IActionResult> DeactivateConcession(string concessionReferenceId, int? archiveType)
         {
             var user = _siteHelper.LoggedInUser(this);
+
+            if (archiveType.HasValue)
+            {
+                UpdateGlmsConcession(concessionReferenceId, user, archiveType);
+            }
 
             await _mediator.Send(new DeactivateConcession(concessionReferenceId, false, user));
 
             return Ok(true);
+        }
+
+        private void UpdateGlmsConcession(string concessionReferenceId, Model.UserInterface.User user, int? archiveType)
+        {
+            var concession = _glmsManager.GetGlmsConcession(concessionReferenceId, user);
+            foreach (var glmsConcessionDetail in concession.GlmsConcessionDetails)
+            {
+                _glmsManager.UpdateConcessionGlms(glmsConcessionDetail, concession.Concession, archiveType);
+            }
         }
 
         [Route("RecallConcession/{concessionReferenceId}")]
@@ -277,14 +301,35 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(true);
         }
 
-        [Route("DeactivateConcessionDetailed/{concessionReferenceDetailedId}")]
-        public async Task<IActionResult> DeactivateConcessionDetailed(int concessionReferenceDetailedId)
+        [Route("DeactivateConcessionDetailed/{concessionReferenceDetailedId}/{archiveType?}")]
+        public async Task<IActionResult> DeactivateConcessionDetailed(int concessionReferenceDetailedId, int? archiveType)
         {
             var user = _siteHelper.LoggedInUser(this);
+
+            if (archiveType.HasValue)
+            {
+                UpdateGlmsConcessionDetailed(concessionReferenceDetailedId, user, archiveType);
+            }
 
             await _mediator.Send(new DeactivateConcessionDetailed(concessionReferenceDetailedId, user));
 
             return Ok(true);
+        }
+
+        private void UpdateGlmsConcessionDetailed(int concessionReferenceId, Model.UserInterface.User user, int? archiveType)
+        {
+            var concessionDetailed = _concessionManager.GetConcessionDetailed(concessionReferenceId);
+            var concession = _concessionManager.GetConcessionForConcessionId(concessionDetailed.ConcessionId);
+            var gmlsConcession = _glmsManager.GetGlmsConcession(concession.ConcessionRef, user);
+
+            foreach (var glmsConcessionDetail in gmlsConcession.GlmsConcessionDetails)
+            {
+                if (glmsConcessionDetail.ConcessionDetailId == concessionDetailed.ConcessionDetailId)
+                {
+                    _glmsManager.UpdateConcessionGlms(glmsConcessionDetail, gmlsConcession.Concession, archiveType);
+                    break;
+                }                
+            }
         }
 
         /// <summary>
@@ -347,11 +392,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var convertedConcessionDetailId = Convert.ToInt32(concessionDetailId);
 
             var result = new FileContentResult(
-
                 //this will be repalced by the actual bytes retrieved from db or disk  - TBA
                 _letterGeneratorManager.DownloadLetterForConcessionDetail(convertedConcessionDetailId, userId),
-
-
                 "application/pdf")
             {
                 FileDownloadName = $"ConcessionLetter_{concessionDetailId.Replace(",", "_")}.pdf"
@@ -404,7 +446,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             };
 
             return Ok(file);
-            
         }
 
 

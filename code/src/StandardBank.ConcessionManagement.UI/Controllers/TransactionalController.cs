@@ -130,58 +130,61 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <returns></returns>
         private async Task UpdateTransactionalConcession(TransactionalConcession transactionalConcession, User user)
         {
-            var databaseTransactionalConcession =
-                _transactionalManager.GetTransactionalConcession(transactionalConcession.Concession.ReferenceNumber,
-                    user);
+            var databaseTransactionalConcession = _transactionalManager.GetTransactionalConcession(transactionalConcession.Concession.ReferenceNumber, user);
 
             //if there are any conditions that have been removed, delete them
             foreach (var condition in databaseTransactionalConcession.ConcessionConditions)
-                if (transactionalConcession.ConcessionConditions.All(
-                    _ => _.ConcessionConditionId != condition.ConcessionConditionId))
+            {
+                if (transactionalConcession.ConcessionConditions.All(_ => _.ConcessionConditionId != condition.ConcessionConditionId))
+                {
                     await _mediator.Send(new DeleteConcessionCondition(condition, user));
+                }
+            }
 
             //if there are any cash concession details that have been removed delete them
-            foreach (var transactionalConcessionDetail in databaseTransactionalConcession
-                .TransactionalConcessionDetails)
-                if (transactionalConcession.TransactionalConcessionDetails.All(
-                    _ => _.TransactionalConcessionDetailId !=
-                         transactionalConcessionDetail.TransactionalConcessionDetailId))
+            foreach (var transactionalConcessionDetail in databaseTransactionalConcession.TransactionalConcessionDetails)
+            {
+                if (transactionalConcession.TransactionalConcessionDetails.All(_ => _.TransactionalConcessionDetailId != transactionalConcessionDetail.TransactionalConcessionDetailId))
+                {
                     await _mediator.Send(new DeleteTransactionalConcessionDetail(transactionalConcessionDetail, user));
+                }
+            }
 
             if (!transactionalConcession.Concession.AENumberUserId.HasValue)
+            {
                 transactionalConcession.Concession.AENumberUserId = databaseTransactionalConcession.Concession.AENumberUserId;
+            }
 
             //update the concession
             var concession = await _mediator.Send(new UpdateConcession(transactionalConcession.Concession, user));
 
             //add all the new conditions and cash details and comments
             foreach (var transactionalConcessionDetail in transactionalConcession.TransactionalConcessionDetails)
-                await _mediator.Send(
-                    new AddOrUpdateTransactionalConcessionDetail(transactionalConcessionDetail, user, concession));
+            {
+                await _mediator.Send(new AddOrUpdateTransactionalConcessionDetail(transactionalConcessionDetail, user, concession));
+            }
 
-            if (transactionalConcession.ConcessionConditions != null &&
-                transactionalConcession.ConcessionConditions.Any())
+            if (transactionalConcession.ConcessionConditions != null && transactionalConcession.ConcessionConditions.Any())
+            {
                 foreach (var concessionCondition in transactionalConcession.ConcessionConditions)
+                {
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+                }
+            }
 
             if (!string.IsNullOrWhiteSpace(transactionalConcession.Concession.Comments))
-                await _mediator.Send(new AddConcessionComment(concession.Id,
-                    databaseTransactionalConcession.Concession.SubStatusId,
-                    transactionalConcession.Concession.Comments, user));
-
+            {
+                await _mediator.Send(new AddConcessionComment(concession.Id, databaseTransactionalConcession.Concession.SubStatusId, transactionalConcession.Concession.Comments, user));
+            }
 
             if ((transactionalConcession.Concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges || transactionalConcession.Concession.SubStatus == Constants.ConcessionSubStatus.HoApprovedWithChanges) && transactionalConcession.Concession.ConcessionComments != null)
             {
                 if (transactionalConcession.Concession.ConcessionComments.Count() > 0 && transactionalConcession.Concession.ConcessionComments.First().UserDescription == "LogChanges")
                 {
                     await _mediator.Send(new AddConcessionComment(concession.Id, databaseTransactionalConcession.Concession.SubStatusId, "LogChanges:" + transactionalConcession.Concession.ConcessionComments.First().Comment, user));
-
-
                 }
             }
         }
-
-
 
         /// <summary>
         /// Creates a new transactional concession
@@ -200,20 +203,24 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var concession = await _mediator.Send(new AddConcession(transactionalConcession.Concession, user));
 
             foreach (var transactionalConcessionDetail in transactionalConcession.TransactionalConcessionDetails)
-                await _mediator.Send(
-                    new AddOrUpdateTransactionalConcessionDetail(transactionalConcessionDetail, user, concession));
+            {
+                await _mediator.Send(new AddOrUpdateTransactionalConcessionDetail(transactionalConcessionDetail, user, concession));
+            }
 
-            if (transactionalConcession.ConcessionConditions != null &&
-                transactionalConcession.ConcessionConditions.Any())
+            if (transactionalConcession.ConcessionConditions != null && transactionalConcession.ConcessionConditions.Any())
+            {
                 foreach (var concessionCondition in transactionalConcession.ConcessionConditions)
+                {
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
-
+                }
+            }
 
             var bcmPendingStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.NewSubmission);
 
             if (!string.IsNullOrWhiteSpace(transactionalConcession.Concession.Comments))
-                await _mediator.Send(new AddConcessionComment(concession.Id, bcmPendingStatusId,
-                    transactionalConcession.Concession.Comments, user));
+            {
+                await _mediator.Send(new AddConcessionComment(concession.Id, bcmPendingStatusId, transactionalConcession.Concession.Comments, user));
+            }
 
             return Ok(transactionalConcession);
         }
@@ -343,9 +350,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         private async Task<TransactionalConcession> CreateChildConcession(TransactionalConcession transactionalConcession, User user, string relationship)
         {
             //get the parent cash concession details
-            var parentCashConcession =
-                _transactionalManager.GetTransactionalConcession(transactionalConcession.Concession.ReferenceNumber,
-                    user);
+            var parentCashConcession = _transactionalManager.GetTransactionalConcession(transactionalConcession.Concession.ReferenceNumber, user);
 
             var parentConcessionId = parentCashConcession.Concession.Id;
 
@@ -356,13 +361,17 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var concession = await _mediator.Send(new AddConcession(transactionalConcession.Concession, user));
 
             foreach (var transactionalConcessionDetail in transactionalConcession.TransactionalConcessionDetails)
-                await _mediator.Send(
-                    new AddOrUpdateTransactionalConcessionDetail(transactionalConcessionDetail, user, concession));
+            {
+                await _mediator.Send(new AddOrUpdateTransactionalConcessionDetail(transactionalConcessionDetail, user, concession));
+            }
 
-            if (transactionalConcession.ConcessionConditions != null &&
-                transactionalConcession.ConcessionConditions.Any())
+            if (transactionalConcession.ConcessionConditions != null && transactionalConcession.ConcessionConditions.Any())
+            {
                 foreach (var concessionCondition in transactionalConcession.ConcessionConditions)
+                {
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+                }
+            }
 
             //link the new concession to the old concession
             var concessionRelationship = new ConcessionRelationship
@@ -376,8 +385,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             await _mediator.Send(new AddConcessionRelationship(concessionRelationship, user));
 
-            var returnConcession =
-                _transactionalManager.GetTransactionalConcession(parentCashConcession.Concession.ReferenceNumber, user);
+            var returnConcession = _transactionalManager.GetTransactionalConcession(parentCashConcession.Concession.ReferenceNumber, user);
             returnConcession.Concession.ChildReferenceNumber = concession.ReferenceNumber;
             return returnConcession;
         }

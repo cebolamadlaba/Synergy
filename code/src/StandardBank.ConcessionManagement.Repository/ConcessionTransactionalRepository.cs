@@ -79,7 +79,19 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionTransactional>(
-                    @"SELECT [pkConcessionTransactionalId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkTransactionTypeId] [TransactionTypeId], [fkTransactionTableNumberId] [TransactionTableNumberId], [fkApprovedTransactionTableNumberId] [ApprovedTransactionTableNumberId], [fkLoadedTransactionTableNumberId] [LoadedTransactionTableNumberId], [AdValorem], [Fee], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate], d.[DateApproved] 
+                    @"SELECT [pkConcessionTransactionalId] [Id],
+                            t.[fkConcessionId] [ConcessionId],
+                            [fkConcessionDetailId] [ConcessionDetailId],
+                            [fkTransactionTypeId] [TransactionTypeId],
+                            [fkTransactionTableNumberId] [TransactionTableNumberId],
+                            [fkApprovedTransactionTableNumberId] [ApprovedTransactionTableNumberId],
+                            [fkLoadedTransactionTableNumberId] [LoadedTransactionTableNumberId],
+                            [AdValorem],
+                            [Fee],
+                            d.[fkLegalEntityId] [LegalEntityId],
+                            d.[fkLegalEntityAccountId] [LegalEntityAccountId],
+                            d.[ExpiryDate],
+                            d.[DateApproved] 
                     FROM [dbo].[tblConcessionTransactional] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
                     WHERE [pkConcessionTransactionalId] = @Id",
@@ -97,7 +109,19 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionTransactional>(
-                    @"SELECT [pkConcessionTransactionalId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkTransactionTypeId] [TransactionTypeId], [fkTransactionTableNumberId] [TransactionTableNumberId], [fkApprovedTransactionTableNumberId] [ApprovedTransactionTableNumberId], [fkLoadedTransactionTableNumberId] [LoadedTransactionTableNumberId], [AdValorem], [Fee], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate], d.[DateApproved]  
+                    @"SELECT [pkConcessionTransactionalId] [Id],
+                            t.[fkConcessionId] [ConcessionId],
+                            [fkConcessionDetailId] [ConcessionDetailId],
+                            [fkTransactionTypeId] [TransactionTypeId],
+                            [fkTransactionTableNumberId] [TransactionTableNumberId],
+                            [fkApprovedTransactionTableNumberId] [ApprovedTransactionTableNumberId],
+                            [fkLoadedTransactionTableNumberId] [LoadedTransactionTableNumberId],
+                            [AdValorem],
+                            [Fee],
+                            d.[fkLegalEntityId] [LegalEntityId],
+                            d.[fkLegalEntityAccountId] [LegalEntityAccountId],
+                            d.[ExpiryDate],
+                            d.[DateApproved]  
                     FROM [dbo].[tblConcessionTransactional] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
                     WHERE t.[fkConcessionId] = @concessionId",
@@ -114,7 +138,19 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionTransactional>(
-                    @"SELECT [pkConcessionTransactionalId] [Id], t.[fkConcessionId] [ConcessionId], [fkConcessionDetailId] [ConcessionDetailId], [fkTransactionTypeId] [TransactionTypeId], [fkTransactionTableNumberId] [TransactionTableNumberId], [fkApprovedTransactionTableNumberId] [ApprovedTransactionTableNumberId], [fkLoadedTransactionTableNumberId] [LoadedTransactionTableNumberId], [AdValorem], [Fee], d.[fkLegalEntityId] [LegalEntityId], d.[fkLegalEntityAccountId] [LegalEntityAccountId], d.[ExpiryDate], d.[DateApproved]  
+                    @"SELECT [pkConcessionTransactionalId] [Id],
+                        t.[fkConcessionId] [ConcessionId],
+                        [fkConcessionDetailId] [ConcessionDetailId],
+                        [fkTransactionTypeId] [TransactionTypeId],
+                        [fkTransactionTableNumberId] [TransactionTableNumberId],
+                        [fkApprovedTransactionTableNumberId] [ApprovedTransactionTableNumberId],
+                        [fkLoadedTransactionTableNumberId] [LoadedTransactionTableNumberId],
+                        [AdValorem],
+                        [Fee],
+                        d.[fkLegalEntityId] [LegalEntityId],
+                        d.[fkLegalEntityAccountId] [LegalEntityAccountId],
+                        d.[ExpiryDate],
+                        d.[DateApproved]  
                     FROM [dbo].[tblConcessionTransactional] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]");
             }
@@ -128,9 +164,17 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblConcessionTransactional]
-                            SET [fkConcessionId] = @ConcessionId, [fkConcessionDetailId] = @ConcessionDetailId, [fkTransactionTypeId] = @TransactionTypeId, [fkTransactionTableNumberId] = @TransactionTableNumberId, [fkApprovedTransactionTableNumberId] = @ApprovedTransactionTableNumberId, [fkLoadedTransactionTableNumberId] = @LoadedTransactionTableNumberId, [AdValorem] = @AdValorem, [Fee] = @Fee
-                            WHERE [pkConcessionTransactionalId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblConcessionTransactional]
+                    SET [fkConcessionId] = @ConcessionId,
+                        [fkConcessionDetailId] = @ConcessionDetailId,
+                        [fkTransactionTypeId] = @TransactionTypeId,
+                        [fkTransactionTableNumberId] = @TransactionTableNumberId,
+                        [fkApprovedTransactionTableNumberId] = @ApprovedTransactionTableNumberId,
+                        [fkLoadedTransactionTableNumberId] = @LoadedTransactionTableNumberId,
+                        [AdValorem] = @AdValorem,
+                        [Fee] = @Fee
+                    WHERE [pkConcessionTransactionalId] = @Id",
                     new
                     {
                         Id = model.Id,
@@ -156,7 +200,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblConcessionTransactional] WHERE [pkConcessionTransactionalId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblConcessionTransactional] 
+                            WHERE [pkConcessionTransactionalId] = @Id",
                     new {model.Id});
             }
 

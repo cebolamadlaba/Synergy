@@ -29,6 +29,8 @@ import { BaseComponentService } from '../services/base-component.service';
 import { LegalEntity } from "../models/legal-entity";
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
+import { ConcessionConditionReturnObject } from '../models/concession-condition-return-object';	
+import { CashBaseService } from '../services/cash-base.service';
 
 
 @Component({
@@ -37,12 +39,11 @@ import { MOnthEnum } from '../models/month-enum';
     styleUrls: ['./cash-view-concession.component.css'],
     providers: [DatePipe]
 })
-export class CashViewConcessionComponent implements OnInit, OnDestroy {
+export class CashViewConcessionComponent extends CashBaseService implements OnInit, OnDestroy {
 
     concessionReferenceId: string;
     private sub: any;
     errorMessage: String;
-    validationError: String[];
     saveMessage: String;
     warningMessage: String;
     observableRiskGroup: Observable<RiskGroup>;
@@ -112,6 +113,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         @Inject(CashConcessionService) private cashConcessionService,
         @Inject(UserConcessionsService) private userConcessionsService,
         private baseComponentService: BaseComponentService) {
+        super();
         this.riskGroup = new RiskGroup();
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
@@ -172,9 +174,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                     }
 
                     // Removed as per SBSA.Anthony's request - 2019-07-15
-                    //if (!cashConcession.concession.isInProgressExtension) {
                     this.canEdit = cashConcession.currentUser.canPcmApprove;
-                    //}
                 }
 
                 //if it's still pending and the user is a requestor then they can recall it
@@ -280,6 +280,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
                     currentCondition.get('interestRate').setValue(this.baseComponentService.formatDecimal(concessionCondition.interestRate));
                     currentCondition.get('volume').setValue(concessionCondition.conditionVolume);
                     currentCondition.get('value').setValue(concessionCondition.conditionValue);
+                    currentCondition.get('conditionComment').setValue(concessionCondition.conditionComment);
 
                     let selectedPeriodType = this.periodTypes.filter(_ => _.id == concessionCondition.periodTypeId);
                     currentCondition.get('periodType').setValue(selectedPeriodType[0]);
@@ -359,7 +360,6 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
         }
         this.clientAccounts = <any>results[7];
 
-
         this.populateForm();
     }
 
@@ -391,6 +391,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             interestRate: [''],
             volume: [''],
             value: [''],
+            conditionComment: [''],
             periodType: [''],
             period: ['']
         });
@@ -466,13 +467,6 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             control.controls[rowIndex].get('adValorem').setValue(null);
     }
 
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
-    }
-
     getCashConcession(isNew: boolean): CashConcession {
         var cashConcession = new CashConcession();
         cashConcession.concession = new Concession();
@@ -509,7 +503,11 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             let cashConcessionDetail = new CashConcessionDetail();
 
             if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
-                this.onExpiryDateChanged(concessionFormItem);
+
+                if (!this.baseComponentService.isAppprovingOrDeclining) {
+                    this.onExpiryDateChanged(concessionFormItem);
+                }
+
                 cashConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
             else {
@@ -573,57 +571,11 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
         const conditions = <FormArray>this.cashConcessionForm.controls['conditionItemsRows'];
 
-        for (let conditionFormItem of conditions.controls) {
-            if (!cashConcession.concessionConditions)
-                cashConcession.concessionConditions = [];
+        let concessionConditionReturnObject = this.baseComponentService.getConsessionConditionData(conditions, cashConcession.concessionConditions, this.validationError);
+        cashConcession.concessionConditions = concessionConditionReturnObject.concessionConditions;
+        this.validationError = concessionConditionReturnObject.validationError;
 
-            let concessionCondition = new ConcessionCondition();
-
-            if (!isNew && conditionFormItem.get('concessionConditionId').value)
-                concessionCondition.concessionConditionId = conditionFormItem.get('concessionConditionId').value;
-
-            if (conditionFormItem.get('conditionType').value)
-                concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;
-            else
-                this.addValidationError("Condition type not selected");
-
-            if (conditionFormItem.get('conditionProduct').value)
-                concessionCondition.conditionProductId = conditionFormItem.get('conditionProduct').value.id;
-            else
-                this.addValidationError("Condition product not selected");
-
-            if (conditionFormItem.get('interestRate').value)
-                concessionCondition.interestRate = conditionFormItem.get('interestRate').value;
-
-            if (conditionFormItem.get('volume').value)
-                concessionCondition.conditionVolume = conditionFormItem.get('volume').value;
-
-            if (conditionFormItem.get('value').value == null || (<string>conditionFormItem.get('value').value).length < 1) {
-                var value = conditionFormItem.get('conditionType').value;
-                if (value != null && value.enableConditionValue == true)
-                    this.addValidationError("Conditions: 'Value' is a mandatory field");
-            }
-            else if (conditionFormItem.get('value').value)
-                concessionCondition.conditionValue = conditionFormItem.get('value').value;
-
-            if (conditionFormItem.get('periodType').value) {
-                concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
-            } else {
-                this.addValidationError("Period type not selected");
-            }
-
-            if (conditionFormItem.get('period').value) {
-                concessionCondition.periodId = conditionFormItem.get('period').value.id;
-            } else {
-                this.addValidationError("Period not selected");
-            }
-
-            if (conditionFormItem.get('periodType').value.description == 'Once-off' && conditionFormItem.get('period').value.description == 'Monthly') {
-                this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
-            }
-
-            cashConcession.concessionConditions.push(concessionCondition);
-        }
+        this.checkConcessionExpiryDate(cashConcession);
 
         return cashConcession;
     }
@@ -655,6 +607,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var cashConcession = this.getCashConcession(false);
         cashConcession.concession.subStatus = ConcessionSubStatus.PCMPending;
@@ -685,6 +638,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var cashConcession = this.getCashConcession(false);
         cashConcession.concession.status = ConcessionStatus.Declined;
@@ -717,6 +671,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var cashConcession = this.getCashConcession(false);
 
@@ -736,8 +691,6 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
             }
 
             cashConcession.concession.concessionComments = this.GetChanges(cashConcession.concession.id);
-
-
 
         } else {
             cashConcession.concession.status = ConcessionStatus.Approved;
@@ -796,7 +749,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
             let controls = (<FormGroup>concessionFormItem).controls;
 
-            for (const fieldname in controls) { // 'field' is a string
+            for (const fieldname in controls) {
 
                 const abstractControl = controls[fieldname];
                 if (abstractControl.dirty) {
@@ -828,6 +781,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var cashConcession = this.getCashConcession(false);
 
@@ -1016,6 +970,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var cashConcession = this.getCashConcession(false);
         cashConcession.concession.status = ConcessionStatus.ApprovedWithChanges;
@@ -1048,6 +1003,7 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
 
         this.errorMessage = null;
         this.validationError = null;
+        this.baseComponentService.isAppprovingOrDeclining = true;
 
         var cashConcession = this.getCashConcession(false);
         cashConcession.concession.status = ConcessionStatus.Declined;
@@ -1127,21 +1083,23 @@ export class CashViewConcessionComponent implements OnInit, OnDestroy {
     }
 
     setTwoNumberDecimal($event) {
-        $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
-        
+        $event.target.value = this.baseComponentService.formatDecimal($event.target.value);        
     }
 
-    
+    canEditSMTDealNumber() {
+        return (this.isRecalling || this.canEdit) ? null : '';
+    }
 
-    validatePeriod(itemrow) {
-        this.validationError = null;
+    isMotivationEnabled() {
+        return this.motivationEnabled ? null : '';
+    }
 
-        let selectedPeriodType = itemrow.controls.periodType.value.description;
-
-        let selectedPeriod = itemrow.controls.period.value.description;
-
-        if (selectedPeriodType == 'Once-off' && selectedPeriod == 'Monthly') {
-            this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
-        }
+    disableField(index: number, fieldname: string) {
+        return this.disableFieldBase(
+            this.selectedConditionTypes[index],
+            fieldname,
+            this.canEdit,
+            this.canEdit != null
+        );
     }
 }

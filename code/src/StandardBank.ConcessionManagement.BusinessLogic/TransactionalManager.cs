@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.ConcessionCondition;
@@ -11,6 +8,9 @@ using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface.Transactional;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Concession = StandardBank.ConcessionManagement.Model.UserInterface.Concession;
 using RiskGroup = StandardBank.ConcessionManagement.Model.UserInterface.RiskGroup;
 using User = StandardBank.ConcessionManagement.Model.UserInterface.User;
@@ -20,7 +20,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
     /// <summary>
     /// Transactional manager
     /// </summary>
-    /// <seealso cref="StandardBank.ConcessionManagement.Interface.BusinessLogic.ITransactionalManager" />
+    /// <seealso cref="ITransactionalManager" />
     public class TransactionalManager : ITransactionalManager
     {
         /// <summary>
@@ -62,7 +62,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         private readonly ITransactionTableNumberRepository _transactionTableNumberRepository;
 
-
         /// <summary>
         /// The misc performance repository
         /// </summary>
@@ -95,7 +94,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _miscPerformanceRepository = miscPerformanceRepository;
             _mediator = mediator;
             _transactionTableNumberRepository = transactionTableNumberRepository;
-
         }
 
         /// <summary>
@@ -192,20 +190,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
         }
 
-
         public Model.Repository.TransactionTableNumber CreateupdateTransactionTableNumber(Model.UserInterface.Transactional.TransactionTableNumber transactionTableNumber)
         {
-
             return _transactionTableNumberRepository.CreateupdateTransactionTableNumber(_mapper.Map<Model.Repository.TransactionTableNumber>(transactionTableNumber));
         }
 
-
         public TransactionType CreateTransactionType(TransactionType transactionType)
         {
-
             int transactionaltypeid = _lookupTableManager.GetConcessionTypeId(Constants.ConcessionType.Transactional);
             transactionType.ConcessionTypeId = transactionaltypeid;
-
 
             return _transactionTableNumberRepository.Create(transactionType);
         }
@@ -329,10 +322,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     var productgrouping = groupedinfo.Where(g => g.CustomerName == product.CustomerName).FirstOrDefault();
                     if (productgrouping == null)
                     {
-                        TransactionalProductGroup newgroup = new TransactionalProductGroup();
-                        newgroup.CustomerName = product.CustomerName;
-                        newgroup.RiskGroupName = product.RiskGroupName;
-                        newgroup.TransactionalProducts = new List<TransactionalProduct>();
+                        TransactionalProductGroup newgroup = new TransactionalProductGroup
+                        {
+                            CustomerName = product.CustomerName,
+                            RiskGroupName = product.RiskGroupName,
+                            TransactionalProducts = new List<TransactionalProduct>()
+                        };
                         newgroup.TransactionalProducts.Add(product);
 
                         groupedinfo.Add(newgroup);
@@ -346,8 +341,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 foreach (var productgrouping in groupedinfo)
                 {
                     if (productgrouping != null && productgrouping.TransactionalProducts != null)
+                    {
                         productgrouping.TransactionalProducts = productgrouping.TransactionalProducts.OrderBy(o => o.AccountNumber).ThenBy(o => o.TransactionType).ToList();
-
+                    }
                 }
             }
 
@@ -368,13 +364,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public decimal GetLatestCrsOrMrs(int riskGroupNumber)
         {
-            var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
-
-            var transactionFinancial =
-                _financialTransactionalRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ??
-                new FinancialTransactional();
-
-            return transactionFinancial.LatestCrsOrMrs;
+            return GetTransactionalFinancial(riskGroupNumber).LatestCrsOrMrs;
         }
 
         /// <summary>
@@ -383,6 +373,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <param name="riskGroupNumber">The risk group number.</param>
         /// <returns></returns>
         public TransactionalFinancial GetTransactionalFinancialForRiskGroupNumber(int riskGroupNumber)
+        {
+            return GetTransactionalFinancial(riskGroupNumber);
+        }
+
+        private TransactionalFinancial GetTransactionalFinancial(int riskGroupNumber)
         {
             var riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
 
@@ -431,35 +426,51 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             //if there are any conditions that have been removed, delete them
             foreach (var condition in databaseTransactionalConcession.ConcessionConditions)
+            {
                 if (transactionalConcession.ConcessionConditions.All(
-                    _ => _.ConcessionConditionId != condition.ConcessionConditionId))
+                                    _ => _.ConcessionConditionId != condition.ConcessionConditionId))
+                {
                     await _mediator.Send(new DeleteConcessionCondition(condition, user));
+                }
+            }
 
             //if there are any cash concession details that have been removed delete them
             foreach (var transactionalConcessionDetail in databaseTransactionalConcession
                 .TransactionalConcessionDetails)
+            {
                 if (transactionalConcession.TransactionalConcessionDetails.All(
-                    _ => _.TransactionalConcessionDetailId !=
-                         transactionalConcessionDetail.TransactionalConcessionDetailId))
+                                    _ => _.TransactionalConcessionDetailId !=
+                                         transactionalConcessionDetail.TransactionalConcessionDetailId))
+                {
                     await _mediator.Send(new DeleteTransactionalConcessionDetail(transactionalConcessionDetail, user));
+                }
+            }
 
             //update the concession
             var concession = await _mediator.Send(new UpdateConcession(transactionalConcession.Concession, user));
 
             //add all the new conditions and cash details and comments
             foreach (var transactionalConcessionDetail in transactionalConcession.TransactionalConcessionDetails)
+            {
                 await _mediator.Send(
-                    new AddOrUpdateTransactionalConcessionDetail(transactionalConcessionDetail, user, concession));
+                                    new AddOrUpdateTransactionalConcessionDetail(transactionalConcessionDetail, user, concession));
+            }
 
             if (transactionalConcession.ConcessionConditions != null &&
                 transactionalConcession.ConcessionConditions.Any())
+            {
                 foreach (var concessionCondition in transactionalConcession.ConcessionConditions)
+                {
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+                }
+            }
 
             if (!string.IsNullOrWhiteSpace(transactionalConcession.Concession.Comments))
+            {
                 await _mediator.Send(new AddConcessionComment(concession.Id,
-                    databaseTransactionalConcession.Concession.SubStatusId,
-                    transactionalConcession.Concession.Comments, user));
+                                    databaseTransactionalConcession.Concession.SubStatusId,
+                                    transactionalConcession.Concession.Comments, user));
+            }
 
             //send the notification email
             await _mediator.Send(new ForwardConcession(transactionalConcession.Concession, user));

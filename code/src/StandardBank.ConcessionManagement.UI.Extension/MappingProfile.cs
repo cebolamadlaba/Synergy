@@ -101,13 +101,13 @@ namespace StandardBank.ConcessionManagement.UI.Extension
                 .ForMember(target => target.LendingConcessionDetailId, _ => _.MapFrom(source => source.Id))
                 .ForMember(target => target.ApprovedMap, _ => _.MapFrom(source => source.ApprovedMarginToPrime))
                 .ForMember(target => target.LoadedMap, _ => _.MapFrom(source => source.LoadedMarginToPrime))
-                .ForMember(target => target.MrsEri, _ => _.MapFrom(source => source.MRS_BRI));
+                .ForMember(target => target.MrsEri, _ => _.MapFrom(source => source.MRS_ERI));
             CreateMap<Model.UserInterface.Lending.LendingConcessionDetail, Model.Repository.ConcessionLending>()
                 .ForMember(target => target.MarginToPrime, _ => _.MapFrom(source => source.MarginAgainstPrime))
                 .ForMember(target => target.Id, _ => _.MapFrom(source => source.LendingConcessionDetailId))
                 .ForMember(target => target.ApprovedMarginToPrime, _ => _.MapFrom(source => source.ApprovedMap))
                 .ForMember(target => target.LoadedMarginToPrime, _ => _.MapFrom(source => source.LoadedMap))
-                .ForMember(target => target.MRS_BRI, _ => _.MapFrom(source => source.MrsEri));
+                .ForMember(target => target.MRS_ERI, _ => _.MapFrom(source => source.MrsEri));
 
             //ConcessionRelationship
             CreateMap<Model.Repository.ConcessionRelationship, Model.UserInterface.ConcessionRelationship>()

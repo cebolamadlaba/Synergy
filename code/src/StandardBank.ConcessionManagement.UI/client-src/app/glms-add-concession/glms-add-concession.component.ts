@@ -44,15 +44,14 @@ import { DISABLED } from '@angular/forms/src/model';
 import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
-  selector: 'app-glms-add-concession',
-  templateUrl: './glms-add-concession.component.html',
-  styleUrls: ['./glms-add-concession.component.css']
+    selector: 'app-glms-add-concession',
+    templateUrl: './glms-add-concession.component.html',
+    styleUrls: ['./glms-add-concession.component.css']
 })
 export class GlmsAddConcessionComponent extends GlmsBaseService implements OnInit {
     private sub: any;
 
     errorMessage: String;
-    validationError: String[];
     saveMessage: String;
     showHide = false;
     observableRiskGroup: Observable<RiskGroup>;
@@ -62,7 +61,7 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
     sapbpid: number;
     today: string;
     glmsConcessionItemIndex: number;
-  
+
     public glmsConcessionForm: FormGroup;
 
     entityName: string;
@@ -119,10 +118,11 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         public http: Http,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(GlmsConcessionService) private glmsConcessionService,
+        @Inject(BaseComponentService) private baseComponentService,
         public userService: UserService) {
-        super(http,router,userService);
+        super(http, router, userService);
         this.riskGroup = new RiskGroup();
-  
+
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
 
@@ -158,7 +158,6 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
 
         this.baseRateCode = [new BaseRateCode()];
         this.selectedBaseRateCode = [new BaseRateCode()];
-
     }
 
     ngOnInit() {
@@ -209,13 +208,12 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
             disablecontrolset: [''],
             productType: [''],
             accountNumber: [''],
-            expiryDate: [''],                     
+            expiryDate: [''],
             slabType: [''],
             interestType: [''],
             interestPricingCategory: [''],
             glmsGroup: [''],
             concessionItemTier: [''],
-
         });
     }
 
@@ -235,7 +233,7 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
     getInitialData() {
         if (this.riskGroupNumber != null && this.riskGroupNumber != 0) {
             Observable.forkJoin([
-                this.lookupDataService.getProductTypes(ConcessionTypes.Glms),                                       
+                this.lookupDataService.getProductTypes(ConcessionTypes.Glms),
                 this.lookupDataService.getPeriods(),
                 this.lookupDataService.getPeriodTypes(),
                 this.lookupDataService.getConditionTypes(),
@@ -268,7 +266,7 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
                 this.getRateType(),
                 this.getBaseRateCode(),
                 this.getInterestPricingCategory(),
-               
+
             ]).subscribe(results => {
                 this.setInitialData(results, false);
             }, error => {
@@ -278,13 +276,6 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         }
     }
 
-    addValidationError(validationDetail) {
-        if (!this.validationError)
-            this.validationError = [];
-
-        this.validationError.push(validationDetail);
-    }
-
     setInitialData(results: {}[], isForRiskGroup: boolean) {
 
         if (isForRiskGroup) {
@@ -292,7 +283,7 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         }
         else {
             this.legalEntity = <any>results[4];
-        }     
+        }
         this.periods = <any>results[1];
         this.periodTypes = <any>results[2];
         this.conditionTypes = <any>results[3];
@@ -311,11 +302,10 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         const control = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
         const tierForm = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
 
-
         if (this.productTypes) {
             control.controls[0].get('productType').setValue(this.productTypes[0]);
 
-            this.selectedProductTypes[0] = this.productTypes[0]; 
+            this.selectedProductTypes[0] = this.productTypes[0];
         }
 
         if (this.glmsGroup) {
@@ -353,6 +343,7 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
             interestRate: [''],
             volume: [''],
             value: [''],
+            conditionComment: [''],
             periodType: [''],
             period: ['']
         });
@@ -360,26 +351,30 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
 
     getglmsConcession(): GlmsConcession {
         var glmsConcession = new GlmsConcession();
-           glmsConcession.concession = new Concession();
+        glmsConcession.concession = new Concession();
 
-        if (this.riskGroup)
+        if (this.riskGroup) {
             glmsConcession.concession.riskGroupId = this.riskGroup.id;
-        if (this.legalEntity)
+        }
+            
+        if (this.legalEntity) {
             glmsConcession.concession.legalEntityId = this.legalEntity.id;
-
-
+        }         
+        
         if (this.glmsConcessionForm.controls['smtDealNumber'].value) {
             glmsConcession.concession.smtDealNumber = this.glmsConcessionForm.controls['smtDealNumber'].value;
         }
-        else
-            this.addConcessionValidationError("SMT Deal Number not captured");
+        else {
+            this.addValidationError("SMT Deal Number not captured");
+        }            
 
-        if (this.glmsConcessionForm.controls['motivation'].value)
+        if (this.glmsConcessionForm.controls['motivation'].value) {
             glmsConcession.concession.motivation = this.glmsConcessionForm.controls['motivation'].value;
-        else
+        }
+        else {
             glmsConcession.concession.motivation = '.';
-
-
+        }           
+        
         const concessions = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
 
         let hasTypeId: boolean = false;
@@ -396,30 +391,27 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
 
             if (concessionFormItem.get('glmsGroup').value) {
 
-                glmsConcessionDetail.glmsGroupId = concessionFormItem.get('glmsGroup').value.id;          
+                glmsConcessionDetail.glmsGroupId = concessionFormItem.get('glmsGroup').value.id;
             }
-            else
+            else {
                 this.addValidationError("Group not selected");
-
-
+            }                
+            
             if (concessionFormItem.get('interestPricingCategory').value) {
-                glmsConcessionDetail.interestPricingCategoryId = concessionFormItem.get('interestPricingCategory').value.id;     
+                glmsConcessionDetail.interestPricingCategoryId = concessionFormItem.get('interestPricingCategory').value.id;
             } else {
-
                 this.addValidationError("Interest Pricing Category not selected");
             }
-           
-            if (concessionFormItem.get('slabType').value) {
-                glmsConcessionDetail.slabTypeId = concessionFormItem.get('slabType').value.id; 
-            } else {
 
+            if (concessionFormItem.get('slabType').value) {
+                glmsConcessionDetail.slabTypeId = concessionFormItem.get('slabType').value.id;
+            } else {
                 this.addValidationError("Slab Type not selected");
             }
 
             if (concessionFormItem.get('interestType').value) {
-                glmsConcessionDetail.interestTypeId = concessionFormItem.get('interestType').value.id; 
+                glmsConcessionDetail.interestTypeId = concessionFormItem.get('interestType').value.id;
             } else {
-
                 this.addValidationError("Interest Type not selected");
             }
 
@@ -435,8 +427,7 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
                 glmsConcessionDetail.glmsTierData = concessionFormItem.get('concessionItemTier').value;
             }
             else {
-                
-                 this.addValidationError("Concession line Tier data not set");
+                this.addValidationError("Concession line Tier data not set");
             }
 
             glmsConcessionDetail.legalEntityId = this.clientAccounts[0].legalEntityId;
@@ -447,60 +438,9 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
 
         const conditions = <FormArray>this.glmsConcessionForm.controls['conditionItemsRows'];
 
-        for (let conditionFormItem of conditions.controls) {
-            if (!glmsConcession.concessionConditions)
-                glmsConcession.concessionConditions = [];
-
-            let concessionCondition = new ConcessionCondition();
-
-            if (conditionFormItem.get('conditionType').value)
-                concessionCondition.conditionTypeId = conditionFormItem.get('conditionType').value.id;
-            else
-                this.addValidationError("Condition type not selected");
-
-            if (conditionFormItem.get('conditionProduct').value)
-                concessionCondition.conditionProductId = conditionFormItem.get('conditionProduct').value.id;
-            else
-                this.addValidationError("Condition product not selected");
-
-            if (conditionFormItem.get('interestRate').value)
-                concessionCondition.interestRate = conditionFormItem.get('interestRate').value;
-
-            if (conditionFormItem.get('volume').value)
-                concessionCondition.conditionVolume = conditionFormItem.get('volume').value;
-
-            if (conditionFormItem.get('value').value == null || (<string>conditionFormItem.get('value').value).length < 1) {
-                var value = conditionFormItem.get('conditionType').value;
-                if (value != null && value.enableConditionValue == true)
-                    this.addValidationError("Conditions: 'Value' is a mandatory field");
-            }
-            else if (conditionFormItem.get('value').value)
-                concessionCondition.conditionValue = conditionFormItem.get('value').value;
-
-            if (conditionFormItem.get('periodType').value) {
-                concessionCondition.periodTypeId = conditionFormItem.get('periodType').value.id;
-            } else {
-                this.addValidationError("Period type not selected");
-            }
-
-            if (conditionFormItem.get('period').value) {
-                concessionCondition.periodId = conditionFormItem.get('period').value.id;
-            } else {
-                this.addValidationError("Period not selected");
-            }
-
-            if (conditionFormItem.get('period').value) {
-                concessionCondition.periodId = conditionFormItem.get('period').value.id;
-            } else {
-                this.addValidationError("Period not selected");
-            }
-
-            if (conditionFormItem.get('periodType').value.description == 'Once-off' && conditionFormItem.get('period').value.description == 'Monthly') {
-                this.addValidationError("Conditions: The Period 'Monthly' cannot be selected for Period Type 'Once-off'");
-            }
-
-            glmsConcession.concessionConditions.push(concessionCondition);
-        }
+        let concessionConditionReturnObject = this.baseComponentService.getConsessionConditionData(conditions, glmsConcession.concessionConditions, this.validationError);
+        glmsConcession.concessionConditions = concessionConditionReturnObject.concessionConditions;
+        this.validationError = concessionConditionReturnObject.validationError;
 
         return glmsConcession;
     }
@@ -523,7 +463,7 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         this.populateTierForm(i);
     }
 
-    rateTypeChange(rowIndex: number){
+    rateTypeChange(rowIndex: number) {
 
         const control = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
         let currentRow = control.controls[rowIndex];
@@ -537,7 +477,7 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
             currentRow.get('baseRate').enable();
             currentRow.get('spread').enable();
         }
-        else  {
+        else {
 
             currentRow.get('baseRate').disable();
             currentRow.get('baseRate').setValue(null);
@@ -552,18 +492,18 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
     closeTierModal(x) {
 
         let tierItemsList = [new GlmsTierData()];
-      
+
         const concessions = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
         const tierForm = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
 
         var lastRow = tierForm.length - 1;
         if (tierForm.length > 0) {
-          tierForm.controls[lastRow].get('tieredTo').setValue(0);
+            tierForm.controls[lastRow].get('tieredTo').setValue(0);
         }
-       
+
         for (let glmsTierFormItem of tierForm.value) {
 
-            let tierItem = new GlmsTierData();        
+            let tierItem = new GlmsTierData();
 
             if (glmsTierFormItem.tieredFrom) {
                 tierItem.tierFrom = glmsTierFormItem.tieredFrom;
@@ -593,27 +533,24 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
                     this.addValidationError("BaseRate not selected");
                 }
 
-                 if (glmsTierFormItem.spread) {
+                if (glmsTierFormItem.spread) {
                     tierItem.spread = glmsTierFormItem.spread;
-                  } else {
+                } else {
                     this.addValidationError("Spread not selected");
-                  }
+                }
             }
-           
+
             if (glmsTierFormItem.rateType) {
                 tierItem.rateTypeId = glmsTierFormItem.rateType.id;
             } else {
                 this.addValidationError("RateType not selected");
             }
-                 
+
             tierItemsList.push(tierItem);
         }
 
-      
-
-
-        tierItemsList.splice(0,1);
-        concessions.controls[this.glmsConcessionItemIndex].get('concessionItemTier').setValue(tierItemsList);       
+        tierItemsList.splice(0, 1);
+        concessions.controls[this.glmsConcessionItemIndex].get('concessionItemTier').setValue(tierItemsList);
     }
 
     populateTierForm(rowIndex: number) {
@@ -636,25 +573,25 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
             }
 
             for (let glmsTierFormItem of concessions.controls[rowIndex].get('concessionItemTier').value) {
-     
+
                 this.addNewTierRow();
-         
-                const  newTierForm = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
+
+                const newTierForm = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
                 let currentConcession = newTierForm.controls[newTierForm.length - 1];
 
                 let selectedRateType = this.rateType.filter(_ => _.id === glmsTierFormItem.rateTypeId);
-                if (selectedRateType.length>0) {
-                    currentConcession.get('rateType').setValue(selectedRateType[0]);               
+                if (selectedRateType.length > 0) {
+                    currentConcession.get('rateType').setValue(selectedRateType[0]);
                 }
-               
+
                 let selectedBaseRate = this.baseRateCode.filter(_ => _.id === glmsTierFormItem.baseRateId);
-                if (selectedBaseRate.length>0) {
-                    currentConcession.get('baseRate').setValue(selectedBaseRate[0]);         
+                if (selectedBaseRate.length > 0) {
+                    currentConcession.get('baseRate').setValue(selectedBaseRate[0]);
                 } else {
                     currentConcession.get('baseRate').disable();
                 }
 
-                if (glmsTierFormItem.rateTypeId ==1) {
+                if (glmsTierFormItem.rateTypeId == 1) {
                     if (glmsTierFormItem.value) {
                         currentConcession.get('value').setValue(glmsTierFormItem.value);
                     } else {
@@ -675,25 +612,22 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
 
                 currentConcession.get('tieredFrom').setValue(glmsTierFormItem.tierFrom);
                 currentConcession.get('tieredTo').setValue(glmsTierFormItem.tierTo);
-               
-                            
+
                 roIndex++;
             }
 
         } else {
 
-            for (let x in tierForm.controls)
-            {
+            for (let x in tierForm.controls) {
                 while (tierForm.length > 0) {
                     var i = 0;
                     this.deleteTierRow(i);
                     i++;
-                }   
+                }
             }
-        
+
             this.addNewTierRow();
         }
-
     }
 
     addNewConcessionRow() {
@@ -709,7 +643,6 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
             newRow.controls['accountNumber'].setValue(this.clientAccounts[0]);
 
         control.push(newRow);
-
     }
 
     addNewConditionRow() {
@@ -736,11 +669,10 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
             control.push(this.initTierItemRows());
             this.onTierLineAdd(rowNumber);
         }
-           
     }
 
     checkTiervalidation(row) {
-        
+
         let tieredFrom = 0;
         let tieredTo = 0;
         this.tierValidationError = null;
@@ -754,7 +686,7 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         if (row.get('tieredTo').value == "") {
             this.addTierValidationError("Tier To cannot be empty");
         } else {
-            tieredTo=row.get('tieredTo').value;
+            tieredTo = row.get('tieredTo').value;
         }
 
         if (tieredFrom > tieredTo) {
@@ -762,13 +694,11 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         }
     }
 
-
     addNewTierRowIfNone() {
         const control = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
         if (control.length == 0)
             control.push(this.initTierItemRows());
     }
-
 
     deleteConcessionRow(index: number) {
         if (confirm("Are you sure you want to remove this row?")) {
@@ -796,7 +726,6 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         this.selectedConditionTypes.splice(index, 1);
     }
 
-
     deleteTierRow(index: number) {
         const control = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
         control.removeAt(index);
@@ -806,13 +735,13 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
     disableRows() {
         const concessions = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
         for (let concessionFormItem of concessions.controls) {
-            
+
             concessionFormItem.disable();
         }
     }
 
     onExpiryDateChanged(itemrow) {
-       
+
         var validationErrorMessage = this.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
         if (validationErrorMessage != null) {
             this.addValidationError(validationErrorMessage);
@@ -831,8 +760,8 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
             var newValue = control.controls[index - 1].get('tieredTo').value;
             newValue = Number(newValue) + 1;
             control.controls[index].get('tieredFrom').disable();
-            control.controls[index].get('tieredFrom').setValue(newValue);      
-        }      
+            control.controls[index].get('tieredFrom').setValue(newValue);
+        }
     }
 
     onSubmit() {
@@ -850,7 +779,7 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         glmsConcession.concession.legalEntityId = this.clientAccounts[0].legalEntityId;
 
         if (!this.validationError) {
-            this.glmsConcessionService.postNewGlmsData(glmsConcession).subscribe(entity => {         
+            this.glmsConcessionService.postNewGlmsData(glmsConcession).subscribe(entity => {
                 this.saveMessage = entity.concession.referenceNumber;
                 this.isLoading = false;
             }, error => {
@@ -862,7 +791,7 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         }
     }
 
-   goBack() {
+    goBack() {
         this.router.navigate(['/pricing', this.riskGroupNumber]);
     }
 
@@ -870,4 +799,7 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         this.sub.unsubscribe();
     }
 
+    disableField(fieldname: string, index: number = null) {
+        return this.disableFieldBase(fieldname, this.saveMessage == null, index, this.selectedConditionTypes, null, null)
+    }
 }

@@ -67,7 +67,16 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<User>(
-                    "SELECT [pkUserId] [Id], [ANumber], [EmailAddress], [FirstName], [Surname], [IsActive], [ContactNumber], [CanApprove] FROM [dbo].[tblUser] WHERE [pkUserId] = @Id",
+                    @"SELECT [pkUserId] [Id], 
+                        [ANumber], 
+                        [EmailAddress], 
+                        [FirstName], 
+                        [Surname], 
+                        [IsActive], 
+                        [ContactNumber], 
+                        [CanApprove] 
+                    FROM [dbo].[tblUser]
+                    WHERE [pkUserId] = @Id",
                     new {id}).SingleOrDefault();
             }
         }
@@ -82,7 +91,14 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<User>(
-                    @"SELECT [pkUserId] [Id], [ANumber], [EmailAddress], [FirstName], [Surname], [IsActive], [ContactNumber], [CanApprove] 
+                    @"SELECT [pkUserId] [Id], 
+                        [ANumber], 
+                        [EmailAddress], 
+                        [FirstName], 
+                        [Surname], 
+                        [IsActive], 
+                        [ContactNumber], 
+                        [CanApprove] 
                     FROM [dbo].[tblUser] 
                     WHERE [ANumber] = @aNumber",
                     new {aNumber}).SingleOrDefault();
@@ -98,7 +114,15 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<User>(
-                    "SELECT [pkUserId] [Id], [ANumber], [EmailAddress], [FirstName], [Surname], [IsActive], [ContactNumber], [CanApprove] FROM [dbo].[tblUser]");
+                    @"SELECT [pkUserId] [Id],
+	                    [ANumber],
+	                    [EmailAddress],
+	                    [FirstName],
+	                    [Surname],
+	                    [IsActive],
+	                    [ContactNumber],
+	                    [CanApprove] 
+                    FROM [dbo].[tblUser]");
             }
         }
 
@@ -112,9 +136,17 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<User>(
-                    @"SELECT u.[pkUserId] [Id], u.[ANumber], u.[EmailAddress], u.[FirstName], u.[Surname], u.[IsActive], u.[ContactNumber], u.[CanApprove] FROM [dbo].[tblUser] u
-                    JOIN [dbo].[tblUserRole] ur ON ur.[fkUserId] = u.[pkUserId]
-                    JOIN [dbo].[rtblRole] r ON r.[pkRoleId] = ur.[fkRoleId]
+                    @"SELECT u.[pkUserId] [Id],
+	                    u.[ANumber],
+	                    u.[EmailAddress],
+	                    u.[FirstName],
+	                    u.[Surname],
+	                    u.[IsActive],
+	                    u.[ContactNumber],
+	                    u.[CanApprove] 
+                    FROM [dbo].[tblUser] u
+                        JOIN [dbo].[tblUserRole] ur ON ur.[fkUserId] = u.[pkUserId]
+                        JOIN [dbo].[rtblRole] r ON r.[pkRoleId] = ur.[fkRoleId]
                     WHERE r.[RoleName] = @roleName
                     ORDER BY u.[FirstName], u.[Surname]", new {roleName});
             }
@@ -131,13 +163,22 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<User>(
-                    @"SELECT u.[pkUserId] [Id], u.[ANumber], u.[EmailAddress], u.[FirstName], u.[Surname], u.[IsActive], u.[ContactNumber], u.[CanApprove] FROM [dbo].[tblUser] u
-                    JOIN [dbo].[tblCentreUser] cu ON cu.[fkUserId] = u.[pkUserId]
-                    JOIN [dbo].[tblUserRole] ur ON ur.[fkUserId] = u.[pkUserId]
-                    JOIN [dbo].[rtblRole] r ON r.[pkRoleId] = ur.[fkRoleId]
+                    @"SELECT u.[pkUserId] [Id],
+                        u.[ANumber],
+                        u.[EmailAddress],
+                        u.[FirstName],
+                        u.[Surname],
+                        u.[IsActive],
+                        u.[ContactNumber],
+                        u.[CanApprove] 
+                    FROM [dbo].[tblUser] u
+                        JOIN [dbo].[tblCentreUser] cu ON cu.[fkUserId] = u.[pkUserId]
+                        JOIN [dbo].[tblUserRole] ur ON ur.[fkUserId] = u.[pkUserId]
+                        JOIN [dbo].[rtblRole] r ON r.[pkRoleId] = ur.[fkRoleId]
                     WHERE r.[RoleName] = @roleName
-                    AND cu.[fkCentreId] = @centreId
-                    ORDER BY u.[FirstName], u.[Surname]", new {roleName, centreId});
+                        AND cu.[fkCentreId] = @centreId
+                    ORDER BY u.[FirstName], u.[Surname]", 
+                    new {roleName, centreId});
             }
         }
 
@@ -151,8 +192,16 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<User>(
-                    @"SELECT u.[pkUserId] [Id], u.[ANumber], u.[EmailAddress], u.[FirstName], u.[Surname], u.[IsActive], u.[ContactNumber], u.[CanApprove] FROM [dbo].[tblUser] u
-                    JOIN [dbo].[tblCentreUser] cu ON cu.[fkUserId] = u.[pkUserId]
+                    @"SELECT u.[pkUserId] [Id],
+                        u.[ANumber],
+                        u.[EmailAddress],
+                        u.[FirstName],
+                        u.[Surname],
+                        u.[IsActive],
+                        u.[ContactNumber],
+                        u.[CanApprove] 
+                    FROM [dbo].[tblUser] u
+                        JOIN [dbo].[tblCentreUser] cu ON cu.[fkUserId] = u.[pkUserId]
                     WHERE cu.[fkCentreId] = @centreId
                     ORDER BY u.[FirstName], u.[Surname]", new {centreId});
             }
@@ -178,7 +227,8 @@ namespace StandardBank.ConcessionManagement.Repository
                           INNER JOIN tblUser us 
 	                        ON us.pkUserId=lea.fkUserId
                       WHERE riskgroup.RiskGroupNumber = @sapbpidOrRiskGroupNumber 
-                            OR lea.CustomerNumber  = @sapbpidOrRiskGroupNumber ", new { sapbpidOrRiskGroupNumber }).FirstOrDefault();
+                            OR lea.CustomerNumber  = @sapbpidOrRiskGroupNumber ", 
+                    new { sapbpidOrRiskGroupNumber }).FirstOrDefault();
             }
         }
 
@@ -190,9 +240,16 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblUser]
-                            SET [ANumber] = @ANumber, [EmailAddress] = @EmailAddress, [FirstName] = @FirstName, [Surname] = @Surname, [IsActive] = @IsActive, [ContactNumber] = @ContactNumber, [CanApprove] = @CanApprove
-                            WHERE [pkUserId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblUser]
+                    SET [ANumber] = @ANumber,
+                        [EmailAddress] = @EmailAddress,
+                        [FirstName] = @FirstName,
+                        [Surname] = @Surname,
+                        [IsActive] = @IsActive,
+                        [ContactNumber] = @ContactNumber,
+                        [CanApprove] = @CanApprove
+                    WHERE [pkUserId] = @Id",
                     new
                     {
                         Id = model.Id,
@@ -215,7 +272,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblUser] WHERE [pkUserId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblUser] 
+                            WHERE [pkUserId] = @Id",
                     new {model.Id});
             }
         }

@@ -7,6 +7,7 @@ using StandardBank.ConcessionManagement.BusinessLogic.Features.Concession;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.ConcessionCondition;
 using StandardBank.ConcessionManagement.BusinessLogic.Features.LendingConcession;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
+using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
@@ -38,20 +39,25 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
         private readonly ILookupTableManager _lookupTableManager;
 
+        private readonly IConfigurationData _configurationData;
+
         /// <summary>
         /// Initializes the controller
         /// </summary>
         /// <param name="lendingManager"></param>
         /// <param name="siteHelper"></param>
         /// <param name="mediator"></param>
-        public LendingController(ILendingManager lendingManager, ISiteHelper siteHelper, IMediator mediator, IBusinessCentreManager businessCentreManager, ILookupTableManager lookupTableManager)
+        public LendingController(ILendingManager lendingManager, ISiteHelper siteHelper, IMediator mediator, IBusinessCentreManager businessCentreManager, ILookupTableManager lookupTableManager,
+            IConfigurationData configurationData)
         {
             _lendingManager = lendingManager;
             _siteHelper = siteHelper;
             _mediator = mediator;
             _bcmManager = businessCentreManager;
             _lookupTableManager = lookupTableManager;
+            _configurationData = configurationData;
         }
+
 
         /// <summary>
         /// Gets the lending view data
@@ -91,17 +97,24 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var concession = await _mediator.Send(new AddConcession(lendingConcession.Concession, user));
 
             foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
+            {
                 await _mediator.Send(new AddOrUpdateLendingConcessionDetail(lendingConcessionDetail, user, concession));
+            }
 
             if (lendingConcession.ConcessionConditions != null && lendingConcession.ConcessionConditions.Any())
+            {
                 foreach (var concessionCondition in lendingConcession.ConcessionConditions)
+                {
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+                }
+            }
 
             var bcmPendingStatusId = _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.NewSubmission);
 
             if (!string.IsNullOrWhiteSpace(lendingConcession.Concession.Comments))
-                await _mediator.Send(new AddConcessionComment(concession.Id, bcmPendingStatusId,
-                    lendingConcession.Concession.Comments, user));
+            {
+                await _mediator.Send(new AddConcessionComment(concession.Id, bcmPendingStatusId, lendingConcession.Concession.Comments, user));
+            }
 
             return Ok(lendingConcession);
         }
@@ -128,8 +141,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             return Ok(_lendingManager.GetLendingConcession(detail.ReferenceNumber, user));
         }
-
-
 
         /// <summary>
         /// Updates the lending
@@ -160,44 +171,56 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             //if there are any conditions that have been removed, delete them
             foreach (var condition in databaseLendingConcession.ConcessionConditions)
+            {
                 if (lendingConcession.ConcessionConditions.All(_ => _.ConcessionConditionId != condition.ConcessionConditionId))
+                {
                     await _mediator.Send(new DeleteConcessionCondition(condition, user));
+                }
+            }
 
             //if there are any lending concession details that have been removed delete them
             foreach (var lendingConcessionDetail in databaseLendingConcession.LendingConcessionDetails)
-                if (lendingConcession.LendingConcessionDetails.All(_ => _.LendingConcessionDetailId !=
-                                                                        lendingConcessionDetail
-                                                                            .LendingConcessionDetailId))
+            {
+                if (lendingConcession.LendingConcessionDetails.All(_ => _.LendingConcessionDetailId != lendingConcessionDetail.LendingConcessionDetailId))
+                {
                     await _mediator.Send(new DeleteLendingConcessionDetail(lendingConcessionDetail, user));
+                }
+            }
 
             if (!lendingConcession.Concession.AENumberUserId.HasValue)
+            {
                 lendingConcession.Concession.AENumberUserId = databaseLendingConcession.Concession.AENumberUserId;
+            }
 
             //update the concession
             var concession = await _mediator.Send(new UpdateConcession(lendingConcession.Concession, user));
 
             //add all the new conditions and lending details and comments
             foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
+            {
                 await _mediator.Send(new AddOrUpdateLendingConcessionDetail(lendingConcessionDetail, user, concession));
+            }
 
             if (lendingConcession.ConcessionConditions != null && lendingConcession.ConcessionConditions.Any())
+            {
                 foreach (var concessionCondition in lendingConcession.ConcessionConditions)
+                {
                     await _mediator.Send(new AddOrUpdateConcessionCondition(concessionCondition, user, concession));
+                }
+            }
 
             if (!string.IsNullOrWhiteSpace(lendingConcession.Concession.Comments))
-                await _mediator.Send(new AddConcessionComment(concession.Id, databaseLendingConcession.Concession.SubStatusId,
-                    lendingConcession.Concession.Comments, user));
+            {
+                await _mediator.Send(new AddConcessionComment(concession.Id, databaseLendingConcession.Concession.SubStatusId, lendingConcession.Concession.Comments, user));
+            }
 
             if ((lendingConcession.Concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges || lendingConcession.Concession.SubStatus == Constants.ConcessionSubStatus.HoApprovedWithChanges) && lendingConcession.Concession.ConcessionComments != null)
             {
                 if (lendingConcession.Concession.ConcessionComments.Count() > 0 && lendingConcession.Concession.ConcessionComments.First().UserDescription == "LogChanges")
                 {
                     await _mediator.Send(new AddConcessionComment(concession.Id, databaseLendingConcession.Concession.SubStatusId, "LogChanges:" + lendingConcession.Concession.ConcessionComments.First().Comment, user));
-
-
                 }
             }
-
         }
 
         /// <summary>
@@ -224,8 +247,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var user = _siteHelper.LoggedInUser(this);
 
             //get the lending concession details
-            var lendingConcession =
-                _lendingManager.GetLendingConcession(concessionReferenceId, user);
+            var lendingConcession = _lendingManager.GetLendingConcession(concessionReferenceId, user);
 
             var parentConcessionId = lendingConcession.Concession.Id;
 
@@ -252,7 +274,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 lendingConcessionDetail.DateApproved = null;
 
                 if (relationshipType != Constants.RelationshipType.Extension)
+                {
                     lendingConcessionDetail.ExpiryDate = null;
+                }
 
                 lendingConcessionDetail.LendingConcessionDetailId = 0;
                 await _mediator.Send(new AddOrUpdateLendingConcessionDetail(lendingConcessionDetail, user, concession));
@@ -354,8 +378,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         private async Task<LendingConcession> CreateChildConcession(LendingConcession lendingConcession, User user, string relationship)
         {
             //get the parent lending concession details
-            var parentLendingConcession =
-                _lendingManager.GetLendingConcession(lendingConcession.Concession.ReferenceNumber, user);
+            var parentLendingConcession = _lendingManager.GetLendingConcession(lendingConcession.Concession.ReferenceNumber, user);
 
             var parentConcessionId = parentLendingConcession.Concession.Id;
 
@@ -363,27 +386,25 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             lendingConcession.Concession.ConcessionType = Constants.ConcessionType.Lending;
             lendingConcession.Concession.Type = Constants.ReferenceType.Existing;
             var concession = new Concession();
-            try
-            {
-                 concession = await _mediator.Send(new AddConcession(lendingConcession.Concession, user));
-            }
-            catch (Exception ex)
-            {
 
-            }
+            concession = await _mediator.Send(new AddConcession(lendingConcession.Concession, user));
+
             foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
             {
                 if (relationship != Constants.RelationshipType.Extension)
-                    lendingConcessionDetail.ExpiryDate = null;
-                try
                 {
-                    await _mediator.Send(new AddOrUpdateLendingConcessionDetail(lendingConcessionDetail, user, concession));
+                    lendingConcessionDetail.ExpiryDate = null;
                 }
-                catch (Exception ex)
+                else
                 {
 
+                    if (lendingConcessionDetail.ExpiryDate != null)
+                    {
+                        var dateExp = Convert.ToDateTime(lendingConcessionDetail.ExpiryDate);
+                        lendingConcessionDetail.ExpiryDate = dateExp.AddMonths(_configurationData.MonthOfExpiry);
+                    }
                 }
-                
+                await _mediator.Send(new AddOrUpdateLendingConcessionDetail(lendingConcessionDetail, user, concession));
             }
 
             if (lendingConcession.ConcessionConditions != null && lendingConcession.ConcessionConditions.Any())
@@ -399,15 +420,10 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 ParentConcessionId = parentConcessionId,
                 ChildConcessionId = concession.Id
             };
-            try { 
-            await _mediator.Send(new AddConcessionRelationship(concessionRelationship, user));
-        }
-                catch (Exception ex)
-                {
 
-                }
-    var returnConcession =
-                _lendingManager.GetLendingConcession(parentLendingConcession.Concession.ReferenceNumber, user);
+            await _mediator.Send(new AddConcessionRelationship(concessionRelationship, user));
+
+            var returnConcession = _lendingManager.GetLendingConcession(parentLendingConcession.Concession.ReferenceNumber, user);
 
             returnConcession.Concession.ChildReferenceNumber = concession.ReferenceNumber;
             return returnConcession;

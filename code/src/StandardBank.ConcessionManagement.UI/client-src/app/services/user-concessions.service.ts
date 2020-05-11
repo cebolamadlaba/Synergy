@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import { UserConcessions } from "../models/user-concessions";
 import { ApprovedConcession } from "../models/approved-concession";
+import { ArchiveType } from '../models/archive-type';
 
 @Injectable()
 export class UserConcessionsService {
@@ -42,13 +43,13 @@ export class UserConcessionsService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    deactivateConcession(concessionReferenceId: string): Observable<boolean> {
-        const url = "/api/Concession/DeactivateConcession/" + concessionReferenceId;
+    deactivateConcession(concessionReferenceId: string, archiveType?: ArchiveType): Observable<boolean> {
+        const url = "/api/Concession/DeactivateConcession/" + concessionReferenceId + "/" + archiveType;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    deactivateConcessionDetailed(concessionReferenceDetailedId: number): Observable<boolean> {
-        const url = "/api/Concession/DeactivateConcessionDetailed/" + concessionReferenceDetailedId;
+    deactivateConcessionDetailed(concessionReferenceDetailedId: number, archiveType?: ArchiveType): Observable<boolean> {
+        const url = "/api/Concession/DeactivateConcessionDetailed/" + concessionReferenceDetailedId + "/" + archiveType;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 

@@ -61,7 +61,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE FROM [dbo].[tblLegalEntityAddress] WHERE [pkLegalEntityAddressId] = @Id",
+                db.Execute(@"DELETE FROM [dbo].[tblLegalEntityAddress] 
+                            WHERE [pkLegalEntityAddressId] = @Id",
                     new { model.Id });
             }
 
@@ -76,7 +77,16 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     return db.Query<LegalEntityAddress>(
-                        "SELECT [pkLegalEntityAddressId] [Id],[fkLegalEntityId] [LegalEntityId],[ContactPerson],[CustomerName],[PostalAddress],[City],[PostalCode],[DateCreated],[Datemodified] FROM [dbo].[tblLegalEntityAddress]");
+                        @"SELECT [pkLegalEntityAddressId] [Id],
+		                        [fkLegalEntityId] [LegalEntityId],
+		                        [ContactPerson],
+		                        [CustomerName],
+		                        [PostalAddress],
+		                        [City],
+		                        [PostalCode],
+		                        [DateCreated],
+		                        [Datemodified] 
+                        FROM [dbo].[tblLegalEntityAddress]");
                 }
             };
 
@@ -97,16 +107,17 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblLegalEntityAddress]
-                            SET [fkLegalEntityId] = @LegalEntityId, 
-                                [ContactPerson] = @ContactPerson, 
-                                [CustomerName] = @CustomerName, 
-                                [PostalAddress] = @PostalAddress, 
-                                [City] = @City, 
-                                [PostalCode] = @PostalCode, 
-                                [DateCreated] = @DateCreated, 
-                                [Datemodified] = @Datemodified
-                            WHERE [pkLegalEntityAddressId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblLegalEntityAddress]
+                    SET [fkLegalEntityId] = @LegalEntityId, 
+                        [ContactPerson] = @ContactPerson, 
+                        [CustomerName] = @CustomerName, 
+                        [PostalAddress] = @PostalAddress, 
+                        [City] = @City, 
+                        [PostalCode] = @PostalCode, 
+                        [DateCreated] = @DateCreated, 
+                        [Datemodified] = @Datemodified
+                    WHERE [pkLegalEntityAddressId] = @Id",
                     new
                     {
                         Id = model.Id,

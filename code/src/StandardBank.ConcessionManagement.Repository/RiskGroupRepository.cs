@@ -74,9 +74,13 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     return db.Query<RiskGroup>(
-                            @"SELECT [pkRiskGroupId] [Id], [fkMarketSegmentId] [MarketSegmentId], [RiskGroupNumber], [RiskGroupName], [IsActive] 
-                            FROM [dbo].[tblRiskGroup]
-                            WHERE [pkRiskGroupId] = @id", new { id })
+                        @"SELECT [pkRiskGroupId] [Id], 
+                            [fkMarketSegmentId] [MarketSegmentId], 
+                            [RiskGroupNumber], 
+                            [RiskGroupName], 
+                            [IsActive] 
+                        FROM [dbo].[tblRiskGroup]
+                        WHERE [pkRiskGroupId] = @id", new { id })
                         .FirstOrDefault();
                 }
             }
@@ -98,10 +102,15 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     return db.Query<RiskGroup>(
-                        @"SELECT [pkRiskGroupId] [Id], [fkMarketSegmentId] [MarketSegmentId], [RiskGroupNumber], [RiskGroupName], [IsActive] 
+                        @"SELECT [pkRiskGroupId] [Id], 
+                            [fkMarketSegmentId] [MarketSegmentId], 
+                            [RiskGroupNumber], 
+                            [RiskGroupName], 
+                            [IsActive] 
                         FROM [dbo].[tblRiskGroup]
                         WHERE [pkRiskGroupId] = @id
-                        AND [IsActive] = @isActive", new { id, isActive }).Single();
+                        AND [IsActive] = @isActive", 
+                        new { id, isActive }).Single();
                 }
             }
 
@@ -122,10 +131,15 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     return db.Query<RiskGroup>(
-                        @"SELECT [pkRiskGroupId] [Id], [fkMarketSegmentId] [MarketSegmentId], [RiskGroupNumber], [RiskGroupName], [IsActive] 
+                        @"SELECT [pkRiskGroupId] [Id], 
+                            [fkMarketSegmentId] [MarketSegmentId], 
+                            [RiskGroupNumber], 
+                            [RiskGroupName], 
+                            [IsActive] 
                         FROM [dbo].[tblRiskGroup]
                         WHERE [RiskGroupNumber] = @riskGroupNumber
-                        AND [IsActive] = @isActive", new { riskGroupNumber, isActive }).FirstOrDefault();
+                        AND [IsActive] = @isActive", 
+                        new { riskGroupNumber, isActive }).FirstOrDefault();
                 }
             }
 
@@ -142,11 +156,16 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     return db.Query<RiskGroup>(
-                        @"SELECT rg.[pkRiskGroupId] [Id], rg.[fkMarketSegmentId] [MarketSegmentId], rg.[RiskGroupNumber], rg.[RiskGroupName], rg.[IsActive] 
+                        @"SELECT rg.[pkRiskGroupId] [Id], 
+                            rg.[fkMarketSegmentId] [MarketSegmentId], 
+                            rg.[RiskGroupNumber], 
+                            rg.[RiskGroupName], 
+                            rg.[IsActive] 
                         FROM [dbo].[tblRiskGroup] rg
-                        Inner Join	[dbo].[tblLegalEntity] le On le.fkRiskGroupId = rg.pkRiskGroupId
+                            Inner Join	[dbo].[tblLegalEntity] le On le.fkRiskGroupId = rg.pkRiskGroupId
                         WHERE le.CustomerNumber = @sapbpid
-                        AND rg.[IsActive] = @isActive", new { sapbpid, isActive }).FirstOrDefault();
+                            AND rg.[IsActive] = @isActive", 
+                        new { sapbpid, isActive }).FirstOrDefault();
                 }
             }
 
@@ -165,7 +184,12 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<RiskGroup>(
-                    "SELECT [pkRiskGroupId] [Id], [fkMarketSegmentId] [MarketSegmentId], [RiskGroupNumber], [RiskGroupName], [IsActive] FROM [dbo].[tblRiskGroup]");
+                    @"SELECT [pkRiskGroupId] [Id], 
+                        [fkMarketSegmentId] [MarketSegmentId], 
+                        [RiskGroupNumber], 
+                        [RiskGroupName],
+                        [IsActive] 
+                    FROM [dbo].[tblRiskGroup]");
             }
         }
 
@@ -178,7 +202,13 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<RiskGroup>(
-                    "SELECT [pkRiskGroupId] [Id], [fkMarketSegmentId] [MarketSegmentId], [RiskGroupNumber], [RiskGroupName], [IsActive] FROM [dbo].[tblRiskGroup] Where [RiskGroupName] like '%" + searchGroup + "%'");
+                    $@"SELECT [pkRiskGroupId] [Id], 
+                        [fkMarketSegmentId] [MarketSegmentId], 
+                        [RiskGroupNumber], 
+                        [RiskGroupName], 
+                        [IsActive] 
+                    FROM [dbo].[tblRiskGroup] 
+                    Where [RiskGroupName] like '%{ searchGroup  }%'");
             }
         }
 
@@ -193,9 +223,13 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblRiskGroup]
-                            SET [fkMarketSegmentId] = @fkMarketSegmentId, [RiskGroupNumber] = @RiskGroupNumber, [RiskGroupName] = @RiskGroupName, [IsActive] = @IsActive
-                            WHERE [pkRiskGroupId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblRiskGroup]
+                    SET [fkMarketSegmentId] = @fkMarketSegmentId, 
+                        [RiskGroupNumber] = @RiskGroupNumber, 
+                        [RiskGroupName] = @RiskGroupName, 
+                        [IsActive] = @IsActive
+                    WHERE [pkRiskGroupId] = @Id",
                     new
                     {
                         Id = model.Id,
@@ -215,7 +249,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblRiskGroup] WHERE [pkRiskGroupId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblRiskGroup] 
+                            WHERE [pkRiskGroupId] = @Id",
                     new { model.Id });
             }
         }

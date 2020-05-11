@@ -80,7 +80,10 @@ namespace StandardBank.ConcessionManagement.Repository
                 using (var db = _dbConnectionFactory.Connection())
                 {
                     return db.Query<MarketSegment>(
-                        "SELECT [pkMarketSegmentId] [Id], [Description], [IsActive] FROM [dbo].[rtblMarketSegment]");
+                        @"SELECT [pkMarketSegmentId] [Id], 
+                                [Description], 
+                                [IsActive] 
+                        FROM [dbo].[rtblMarketSegment]");
                 }
             };
 
@@ -96,7 +99,8 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"UPDATE [dbo].[rtblMarketSegment]
-                            SET [Description] = @Description, [IsActive] = @IsActive
+                            SET [Description] = @Description, 
+                                [IsActive] = @IsActive
                             WHERE [pkMarketSegmentId] = @Id",
                     new {Id = model.Id, Description = model.Description, IsActive = model.IsActive});
             }
@@ -113,7 +117,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[rtblMarketSegment] WHERE [pkMarketSegmentId] = @Id",
+                db.Execute(@"DELETE [dbo].[rtblMarketSegment] 
+                            WHERE [pkMarketSegmentId] = @Id",
                     new {model.Id});
             }
 

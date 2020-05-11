@@ -103,9 +103,9 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        IEnumerable<SearchConcessionDetail> SearchConsessions(int userId);
+        IEnumerable<SearchConcessionDetail> SearchConsessions(User currentUser);
 
-        IEnumerable<SearchConcessionDetail> SearchConsessions(int region, int businesscentre, string status, DateTime datefilter, int userid);
+        IEnumerable<SearchConcessionDetail> SearchConsessions(int region, int businesscentre, string status, DateTime datefilter, User currentUser);
 
 
         /// <summary>
@@ -220,6 +220,20 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         /// <param name="concessionReferenceId">The concession reference identifier.</param>
         /// <returns></returns>
         Model.UserInterface.Concession GetConcessionForConcessionReferenceId(string concessionReferenceId, User currentUser);
+
+        /// <summary>
+        /// Get concession detailed
+        /// </summary>
+        /// <param name="ConcessionDetailId"></param>
+        /// <returns></returns>
+        ConcessionDetail GetConcessionDetailed(int ConcessionDetailId);
+
+        /// <summary>
+        /// Get concession for concession id
+        /// </summary>
+        /// <param name="concessionId"></param>
+        /// <returns></returns>
+        Concession GetConcessionForConcessionId(int concessionId);
 
         /// <summary>
         /// Gets the rag status.

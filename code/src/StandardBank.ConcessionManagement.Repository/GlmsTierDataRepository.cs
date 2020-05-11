@@ -51,7 +51,7 @@ namespace StandardBank.ConcessionManagement.Repository
                                 TierFrom = model.TierFrom,
                                 TierTo = model.TierTo,
                                 fkRateTypeId = model.RateTypeId,
-                                fkBaseRateId = model.BaseRateId,
+                                fkBaseRateId = model.BaseRateId == 0 ? null : model.BaseRateId,
                                 Spread = model.Spread,
                                 Value = model.Value
 
@@ -73,15 +73,14 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 return db.Query<GlmsTierData>(
                     @"SELECT [GlmsTierDataId] [Id],
-                                [fkGlmsConcessionId] [GlmsConcessionId],
-                                [TierFrom], 
-                                [TierTo],
-                                [fkRateTypeId] [RateTypeId],
-                                [fkBaseRateId] [BaseRateId], 
-                                [Spread],
-                                [Value]
-                    FROM 
-                      [dbo].[tblGlmsTierData] 
+                            [fkGlmsConcessionId] [GlmsConcessionId],
+                            [TierFrom], 
+                            [TierTo],
+                            [fkRateTypeId] [RateTypeId],
+                            [fkBaseRateId] [BaseRateId], 
+                            [Spread],
+                            [Value]
+                    FROM [dbo].[tblGlmsTierData] 
                     WHERE [GlmsTierDataId] = @Id",
                     new { id }).SingleOrDefault();
             }
@@ -99,15 +98,14 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                var results= db.Query<GlmsTierData>(
                     @"SELECT [GlmsTierDataId] [Id],
-                                [fkGlmsConcessionId] [GlmsConcessionId],
-                                [TierFrom], 
-                                [TierTo],
-                                [fkRateTypeId] [RateTypeId],
-                                [fkBaseRateId] [BaseRateId], 
-                                [Spread],
-                                [Value]
-                    FROM 
-                      [dbo].[tblGlmsTierData] 
+                            [fkGlmsConcessionId] [GlmsConcessionId],
+                            [TierFrom], 
+                            [TierTo],
+                            [fkRateTypeId] [RateTypeId],
+                            [fkBaseRateId] [BaseRateId], 
+                            [Spread],
+                            [Value]
+                    FROM [dbo].[tblGlmsTierData] 
                     WHERE [fkGlmsConcessionId] = @Id",
                     new { Id }).ToList();
 
@@ -126,21 +124,18 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 var results = db.Query<GlmsTierDataView>(
-                     @"SELECT
-                            rate.Description Rate,
+                     @"SELECT rate.Description Rate,
 		                    code.Description BaseRate
 		                    ,tierData.TierTo
 		                    ,tierData.TierFrom
 		                    ,tierData.Spread
 		                    ,tierData.Value
-                      FROM 
-                            tblGlmsTierData tierData
-                            INNER JOIN tblRateType rate 
-	                          ON rate.pkRateTypeId=tierData.fkRateTypeId
-	                        LEFT JOIN tblBaseRateCode code 
-		                      ON code.pkBaseRateCodeId = tierData.fkBaseRateId
-                      WHERE 
-                            tierData.fkGlmsConcessionId =@Id",
+                      FROM tblGlmsTierData tierData
+                        INNER JOIN tblRateType rate 
+	                        ON rate.pkRateTypeId=tierData.fkRateTypeId
+	                    LEFT JOIN tblBaseRateCode code 
+		                    ON code.pkBaseRateCodeId = tierData.fkBaseRateId
+                      WHERE tierData.fkGlmsConcessionId = @Id",
                      new { Id }).ToList();
 
                 return results;
@@ -155,14 +150,15 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                return db.Query<GlmsTierData>(@"SELECT [GlmsTierDataId] [Id],
-                                                        [fkGlmsConcessionId] [GlmsConcessionId], 
-                                                        [TierFrom], 
-                                                        [TierTo],
-                                                        [fkRateTypeId] [RateTypeId], 
-                                                        [fkBaseRateId] [BaseRateId], 
-                                                        [Spread], [Value]
-                                        FROM [dbo].[tblGlmsTierData]");
+                return db.Query<GlmsTierData>(
+                    @"SELECT [GlmsTierDataId] [Id],
+                            [fkGlmsConcessionId] [GlmsConcessionId], 
+                            [TierFrom], 
+                            [TierTo],
+                            [fkRateTypeId] [RateTypeId], 
+                            [fkBaseRateId] [BaseRateId], 
+                            [Spread], [Value]
+                    FROM [dbo].[tblGlmsTierData]");
             }
         }
 
@@ -174,15 +170,16 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute(@"UPDATE [dbo].[tblConcessionGlms]
-                            SET [fkGlmsConcessionId] = @GlmsConcessionId,
-                                [TierFrom] = @TierFrom, 
-                                [TierTo] = @TierTo,
-                                [fkRateTypeId] = @RateTypeId, 
-                                [fkBaseRateId] = @BaseRateId, 
-                                [Spread] = @Spread,
-                                [Value] = @Value
-                            WHERE [GlmsTierDataId] = @Id",
+                db.Execute(
+                    @"UPDATE [dbo].[tblConcessionGlms]
+                    SET [fkGlmsConcessionId] = @GlmsConcessionId,
+                        [TierFrom] = @TierFrom, 
+                        [TierTo] = @TierTo,
+                        [fkRateTypeId] = @RateTypeId, 
+                        [fkBaseRateId] = @BaseRateId, 
+                        [Spread] = @Spread,
+                        [Value] = @Value
+                    WHERE [GlmsTierDataId] = @Id",
                     new
                     {
                         fkGlmsConcessionId = model.GlmsConcessionId,
@@ -208,7 +205,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[tblGlmsTierData] WHERE [fkGlmsConcessionId] = @Id",
+                db.Execute(@"DELETE [dbo].[tblGlmsTierData] 
+                            WHERE [fkGlmsConcessionId] = @Id",
                     new { Id });
             }
         }

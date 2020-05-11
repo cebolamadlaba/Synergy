@@ -1,0 +1,72 @@
+
+<form [formGroup]="concessionForm">
+
+
+    <div class="col-md-12 modal-header">
+        <h4>Manage Conditions</h4>
+    </div>
+    <div class="col-md-12 modal-body">
+        <div class="row">
+            <div class="col-md-12 modal-title">
+                <button type="button" class="btn btn-primary" (click)="addNewConditionRow()">Add Condition</button>
+            </div>
+        </div>
+        <table class="form-concessions-table" formArrayName="conditionItemsRows" style="width:100%">
+            <thead class="form-concessions-table-headings">
+                <tr *ngIf="concessionForm.controls.conditionItemsRows.controls.length > 0">
+                    <th>Condition Type</th>
+                    <th>Product Type</th>
+                    <th>Interest Rate</th>
+                    <th>Volume</th>
+                    <th>Value</th>
+                    <th>Comment</th>
+                    <th>Period Type</th>
+                    <th>Period</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody class="form-concessions-table-content">
+                <tr *ngIf="concessionForm.controls.conditionItemsRows.controls.length == 0">
+                    <td colspan="8" class="searchEmptyState">
+                        No conditions added
+                    </td>
+                </tr>
+                <tr *ngFor="let itemrow of concessionForm.controls.conditionItemsRows.controls; let i=index" [formGroupName]="i">
+                    <td class="length-long">
+                        <!-- Condition type -->
+                        <select formControlName="conditionType" (change)="conditionTypeChanged(i)">
+                            <option *ngFor="let conditionTypeOption of conditionTypes" [ngValue]="conditionTypeOption">{{conditionTypeOption.description}}</option>
+                        </select>
+                    </td>
+                    <td class="length-short">
+                        <!-- Product type -->
+                        <select formControlName="conditionProduct" *ngIf="selectedConditionTypes[i] != null">
+                            <option *ngFor="let conditionProductOption of selectedConditionTypes[i].conditionProducts" [ngValue]="conditionProductOption">{{conditionProductOption.description}}</option>
+                        </select>
+                    </td>
+                    <!-- Interest rate -->
+                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="interestRate" [attr.disabled]="disableField('interestRate',i)" (change)="setTwoNumberDecimal($event)" /></td>
+                    <!-- Volume -->
+                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="volume" [attr.disabled]="disableField('volume',i)" /></td>
+                    <!-- Value -->
+                    <td class="length-short"><input type="text" numbersOnly="true" formControlName="value" [attr.disabled]="disableField('value',i)" (change)="setTwoNumberDecimal($event)" /></td>
+                    <!-- Comment -->
+                    <td class="length-long"><input type="text" maxlength="500" formControlName="conditionComment" [attr.disabled]="disableField('conditionComment',i)" /></td>
+                    <!-- Period type -->
+                    <td class="length-medium">
+                        <select formControlName="periodType" (change)="validatePeriod(itemrow)">
+                            <option *ngFor="let periodTypeOption of periodTypes" [ngValue]="periodTypeOption">{{periodTypeOption?.description}}</option>
+                        </select>
+                    </td>
+                    <!-- Period -->
+                    <td class="length-long">
+                        <select formControlName="period" (change)="validatePeriod(itemrow)">
+                            <option *ngFor="let periodOption of periods" [ngValue]="periodOption">{{periodOption?.description}}</option>
+                        </select>
+                    </td>
+                    <td><button class="btn-delete" type="button" (click)="deleteConditionRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</form>

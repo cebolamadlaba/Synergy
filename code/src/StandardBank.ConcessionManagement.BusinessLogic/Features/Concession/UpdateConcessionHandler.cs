@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Hangfire;
@@ -22,6 +23,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         /// The concession manager
         /// </summary>
         private readonly IConcessionManager _concessionManager;
+
+        /// <summary>
+        /// The concession repository
+        /// </summary>
+        private readonly IConcessionRepository _concessionRepository;
 
         /// <summary>
         /// The mediator
@@ -74,7 +80,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         public UpdateConcessionHandler(IConcessionManager concessionManager, IMediator mediator,
             ILogger<UpdateConcessionHandler> logger, IMapper mapper, ILookupTableManager lookupTableManager,
             IEmailManager emailManager, IUserManager userManager, IRiskGroupRepository riskGroupRepository,
-            IAENumberUserRepository aeNumberUserRepository)
+            IAENumberUserRepository aeNumberUserRepository, IConcessionRepository concessionRepository)
         {
             _concessionManager = concessionManager;
             _mediator = mediator;
@@ -85,6 +91,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
             _riskGroupRepository = riskGroupRepository;
             _logger = logger;
             _aeNumberUserRepository = aeNumberUserRepository;
+            _concessionRepository = concessionRepository;
         }
 
         /// <summary>
@@ -94,6 +101,23 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
         /// <returns></returns>
         public async Task<Model.UserInterface.Concession> Handle(UpdateConcession message)
         {
+            // check if the concession has been forwarded
+            if (message.Concession.BcmUserId.HasValue && message.Concession.Comments == Constants.EmailTemplates.ConcessionForwarded)
+            {
+                var concessions = _concessionRepository.ReadByConcessionRefIsActive(message.Concession.ReferenceNumber, true);
+
+                var currentConcession = concessions.Single();
+                if (currentConcession.DateActionedByBCM.HasValue || 
+                    currentConcession.DateActionedByHO.HasValue || 
+                    currentConcession.DateActionedByPCM.HasValue)
+                {
+                    _logger.LogWarning(new EventId(1, "ForwardingConcessionMoreThanOnce"), "Cannot forward Consession # {0} more than once",
+                    message.Concession.Id);
+
+                    return message.Concession;
+                }
+            }
+
             var result = _concessionManager.UpdateConcession(message.Concession, message.User);
 
             message.AuditRecord = new AuditRecord(result, message.User, AuditType.Update);

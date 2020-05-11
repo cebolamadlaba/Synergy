@@ -86,11 +86,26 @@ namespace StandardBank.ConcessionManagement.Repository
                 {
                     //insert a new value, if any values except isactive changes..
                     const string sql =
-                    @"if not exists(Select [fkTransactionTypeId],TariffTable, fee, AdValorem, isactive from rtblTransactionTableNumber where pkTransactionTableNumberId = @pkTransactionTableNumberId and TariffTable = @TariffTable and fee =  @Fee and AdValorem = @AdValorem)
+                    @"if not exists(Select [fkTransactionTypeId],TariffTable, fee, AdValorem, isactive 
+			                    from rtblTransactionTableNumber 
+			                    where pkTransactionTableNumberId = @pkTransactionTableNumberId 
+				                    and TariffTable = @TariffTable 
+				                    and fee =  @Fee 
+				                    and AdValorem = @AdValorem)
+                    begin
                         INSERT [dbo].[rtblTransactionTableNumber] ([fkTransactionTypeId], [TariffTable], [Fee], [AdValorem],[IsActive],[ActiveUntil]) 
-                            Select [fkTransactionTypeId], [TariffTable], [Fee], [AdValorem],0,@ActiveUntil from rtblTransactionTableNumber where pkTransactionTableNumberId = @pkTransactionTableNumberId;
+                        Select [fkTransactionTypeId], [TariffTable], [Fee], [AdValorem],0,@ActiveUntil 
+	                    from rtblTransactionTableNumber 
+	                    where pkTransactionTableNumberId = @pkTransactionTableNumberId;
+                    end
 
-                    Update [dbo].[rtblTransactionTableNumber] set [fkTransactionTypeId] = @fkTransactionTypeId , [TariffTable] =  @TariffTable, [Fee] = @Fee , [AdValorem] = @AdValorem, [IsActive] = @IsActive where pkTransactionTableNumberId = @pkTransactionTableNumberId";
+                    Update [dbo].[rtblTransactionTableNumber] 
+                    set [fkTransactionTypeId] = @fkTransactionTypeId , 
+	                    [TariffTable] =  @TariffTable, 
+	                    [Fee] = @Fee , 
+	                    [AdValorem] = @AdValorem, 
+	                    [IsActive] = @IsActive 
+                    where pkTransactionTableNumberId = @pkTransactionTableNumberId";
 
                     using (var db = _dbConnectionFactory.Connection())
                     {
@@ -129,7 +144,9 @@ namespace StandardBank.ConcessionManagement.Repository
 
                 if (model.ImportFileChannel != "" && model.Id > 0)
                 {
-                    string insert = @"INSERT INTO [dbo].[rtblTransactionTypeImport]([fkTransactionTypeId],[ImportFileChannel]) values(@fkTransactionTypeId,@ImportFileChannel);";
+                    string insert = 
+                        @"INSERT INTO [dbo].[rtblTransactionTypeImport]([fkTransactionTypeId],[ImportFileChannel]) 
+                        values(@fkTransactionTypeId,@ImportFileChannel);";
                     db.Execute(insert, new { fkTransactionTypeId = model.Id, ImportFileChannel = model.ImportFileChannel });
                 }
 
@@ -162,31 +179,20 @@ namespace StandardBank.ConcessionManagement.Repository
             {
                 using (var db = _dbConnectionFactory.Connection())
             	{
-                	return db.Query<TransactionTableNumber>("SELECT [pkTransactionTableNumberId] [Id], [fkTransactionTypeId] [TransactionTypeId], [TariffTable], [Fee], [AdValorem], [IsActive] FROM [dbo].[rtblTransactionTableNumber] where ActiveUntil is null");
+                	return db.Query<TransactionTableNumber>(
+                        @"SELECT [pkTransactionTableNumberId] [Id], 
+                            [fkTransactionTypeId] [TransactionTypeId], 
+                            [TariffTable], 
+                            [Fee], 
+                            [AdValorem], 
+                            [IsActive] 
+                        FROM [dbo].[rtblTransactionTableNumber] 
+                        where ActiveUntil is null");
             	}
             };
 
             return _cacheManager.ReturnFromCache(function, 1440, CacheKey.Repository.TransactionTableNumberRepository.ReadAll);
         }
-
-        /// <summary>
-        /// Updates the specified model.
-        /// </summary>
-        /// <param name="model">The model.</param>
-        //public void Update(TransactionTableNumber model)
-        //{
-        //    using (var db = _dbConnectionFactory.Connection())
-        //    {
-        //        db.Execute(@"Insert in
-        //                    UPDATE [dbo].[rtblTransactionTableNumber]
-        //                    SET [fkTransactionTypeId] = @TransactionTypeId, [TariffTable] = @TariffTable, [Fee] = @Fee, [AdValorem] = @AdValorem, [IsActive] = @IsActive
-        //                    WHERE [pkTransactionTableNumberId] = @Id",
-        //            new {Id = model.Id, TransactionTypeId = model.TransactionTypeId, TariffTable = model.TariffTable, Fee = model.Fee, AdValorem = model.AdValorem, IsActive = model.IsActive});
-        //    }
-
-        //    //clear out the cache because the data has changed
-        //    _cacheManager.Remove(CacheKey.Repository.TransactionTableNumberRepository.ReadAll);
-        //}
 
         /// <summary>
         /// Deletes the specified model.
@@ -196,7 +202,8 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                db.Execute("DELETE [dbo].[rtblTransactionTableNumber] WHERE [pkTransactionTableNumberId] = @Id",
+                db.Execute(@"DELETE [dbo].[rtblTransactionTableNumber] 
+                            WHERE [pkTransactionTableNumberId] = @Id",
                     new {model.Id});
             }
 

@@ -336,6 +336,10 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
     width: 150px
 }
 
+.btn-archive {
+    padding: 6px 12px !important;
+}
+
 .btn-delete {
     background: none;
     border: none;
@@ -956,6 +960,10 @@ label, th {
 
 .product-form {
     margin-bottom: 15px
+}
+
+.uat-warning {
+    padding-left: 15px;
 }
 
 .form-feedback-container {

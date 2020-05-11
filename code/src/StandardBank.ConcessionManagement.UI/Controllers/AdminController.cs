@@ -105,7 +105,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 var userCentres = new List<Centre>();
 
                 if (model.UserCentres != null)
+                {
                     userCentres.AddRange(model.UserCentres);
+                }
 
                 userCentres.Add(new Centre { Id = model.CentreId });
                 model.UserCentres = userCentres;

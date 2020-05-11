@@ -1,38 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using AutoMapper;
+﻿using AutoMapper;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
 using StandardBank.ConcessionManagement.Model.Repository;
 using StandardBank.ConcessionManagement.Model.UserInterface;
-using StandardBank.ConcessionManagement.Model.UserInterface.Bol;
-using StandardBank.ConcessionManagement.Model.UserInterface.Trade;
-
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using AccrualType = StandardBank.ConcessionManagement.Model.UserInterface.AccrualType;
+using BOLChargeCode = StandardBank.ConcessionManagement.Model.UserInterface.Bol.BOLChargeCode;
+using BOLChargeCodeType = StandardBank.ConcessionManagement.Model.UserInterface.Bol.BOLChargeCodeType;
 using ChannelType = StandardBank.ConcessionManagement.Model.UserInterface.ChannelType;
 using ConcessionType = StandardBank.ConcessionManagement.Model.UserInterface.ConcessionType;
 using ConditionProduct = StandardBank.ConcessionManagement.Model.UserInterface.ConditionProduct;
 using ConditionType = StandardBank.ConcessionManagement.Model.UserInterface.ConditionType;
+using LegalEntity = StandardBank.ConcessionManagement.Model.UserInterface.LegalEntity;
+using LegalEntityBOLUser = StandardBank.ConcessionManagement.Model.UserInterface.Bol.LegalEntityBOLUser;
 using Period = StandardBank.ConcessionManagement.Model.UserInterface.Period;
 using PeriodType = StandardBank.ConcessionManagement.Model.UserInterface.PeriodType;
 using ReviewFeeType = StandardBank.ConcessionManagement.Model.UserInterface.ReviewFeeType;
 using RiskGroup = StandardBank.ConcessionManagement.Model.UserInterface.RiskGroup;
 using TableNumber = StandardBank.ConcessionManagement.Model.UserInterface.TableNumber;
-using TransactionTableNumber = StandardBank.ConcessionManagement.Model.UserInterface.Transactional.TransactionTableNumber;
-using TransactionType = StandardBank.ConcessionManagement.Model.UserInterface.TransactionType;
-
-using LegalEntityBOLUser = StandardBank.ConcessionManagement.Model.UserInterface.Bol.LegalEntityBOLUser;
-using BOLChargeCode = StandardBank.ConcessionManagement.Model.UserInterface.Bol.BOLChargeCode;
-using BOLChargeCodeType = StandardBank.ConcessionManagement.Model.UserInterface.Bol.BOLChargeCodeType;
-
 using TradeProduct = StandardBank.ConcessionManagement.Model.UserInterface.Trade.TradeProduct;
 using TradeProductType = StandardBank.ConcessionManagement.Model.UserInterface.Trade.TradeProductType;
-
-using InvestmentProduct = StandardBank.ConcessionManagement.Model.UserInterface.Investment.InvestmentProduct;
-using LegalEntity = StandardBank.ConcessionManagement.Model.UserInterface.LegalEntity;
-
+using TransactionTableNumber = StandardBank.ConcessionManagement.Model.UserInterface.Transactional.TransactionTableNumber;
+using TransactionType = StandardBank.ConcessionManagement.Model.UserInterface.TransactionType;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic
 {
@@ -249,7 +241,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IEnumerable<RoleSubRole> subRoles = this._roleSubRoleRepository.ReadAll();
 
             if (roleId.HasValue)
+            {
                 return subRoles.Where(a => a.RoleId == null || a.RoleId.Value == roleId.Value);
+            }
 
             return subRoles;
         }
@@ -296,8 +290,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return subStatuses.First(_ => _.Description == subStatusName && _.IsActive).Id;
         }
-
-
 
         /// <summary>
         /// Gets the sub status description
@@ -461,9 +453,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             foreach (Period period in periodModels)
             {
                 if (period.Description != "Monthly")
+                {
                     continue;
+                }
 
-                period.PeriodType = "Ongoing";
+                period.PeriodType = Constants.PeriodType.Ongoing;
             }
 
             return periodModels;
@@ -497,9 +491,21 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return _mapper.Map<IEnumerable<BOLChargeCodeType>>(chargecodetypes);
         }
 
+        public IEnumerable<BOLChargeCodeRelationship> GetBOLChargeCodeRelationships()
+        {
+            var chargeCodeRelationships = _bolRepository.GetBOLChargeCodeRelationships();
+            return _mapper.Map<IEnumerable<BOLChargeCodeRelationship>>(chargeCodeRelationships);
+        }
+
         public LegalEntity GetLegalEntity(int sapbpid)
         {
             var legalEntity = this._legalEntityRepository.ReadBySAPBPIDIsActive(sapbpid, true);
+            return _mapper.Map<LegalEntity>(legalEntity);
+        }
+
+        public LegalEntity GetLegalEntityById(int legalEntityId)
+        {
+            var legalEntity = this._legalEntityRepository.ReadByIdIsActive(legalEntityId, true);
             return _mapper.Map<LegalEntity>(legalEntity);
         }
 
@@ -552,7 +558,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public IEnumerable<ConditionType> GetConditionTypes()
         {
-
             var mappedConditionTypes = new List<ConditionType>();
             var conditionTypes = _conditionTypeRepository.ReadAll();
             var conditionProducts = _conditionProductRepository.ReadAll().Where(_ => _.IsActive);
@@ -584,7 +589,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             return mappedConditionTypes;
-
         }
 
         /// <summary>
@@ -654,9 +658,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var concessionTypeId = GetConcessionTypeId(concessionType);
             var transactionTableNumbers =
-                _mapper.Map<IEnumerable<Model.UserInterface.Transactional.TransactionTableNumber>>(
+                _mapper.Map<IEnumerable<TransactionTableNumber>>(
                     _transactionTableNumberRepository.ReadAll().Where((_ => _.IsActive == true)));
-
 
             foreach (var transactionType in _transactionTypeRepository.ReadByConcessionTypeIdIsActive(concessionTypeId,
                 true))
@@ -679,14 +682,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var transactionTypes = _transactionTypeRepository.ReadAll(isActive);
 
             return GetTransactionTypesForConcessionType(Constants.ConcessionType.Transactional);
-
         }
 
         public IEnumerable<ConcessionType> GetConcessionTypes(bool isActive)
         {
             var concessionTypes = new List<ConcessionType>();
             _concessionTypeRepository.ReadAll(isActive);
-
 
             foreach (var concessiontType in concessionTypes)
             {
@@ -699,7 +700,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         public IEnumerable<TableNumber> GetTableNumbers(bool isActive)
         {
-
             try
             {
                 var tableNumbers = _tableNumberRepository.ReadAll();
@@ -711,10 +711,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
-
         }
 
         /// <summary>
@@ -848,7 +846,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         }
 
         /// <summary>
-        /// Gets the risk group 
+        /// Gets the risk group
         /// </summary>
         /// <returns></returns>
         public IEnumerable<RiskGroup> GetRiskGroups(string searchGroup)
@@ -857,7 +855,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             return _mapper.Map<IEnumerable<RiskGroup>>(riskGroups);
         }
-
 
         /// <summary>
         /// Gets the transaction table numbers.

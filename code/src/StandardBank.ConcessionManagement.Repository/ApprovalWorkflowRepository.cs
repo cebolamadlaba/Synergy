@@ -44,11 +44,15 @@ namespace StandardBank.ConcessionManagement.Repository
         /// <returns></returns>
         public IEnumerable<User> GetApproversByRoles(int centerId, IEnumerable<int> roles)
         {
-            const string sql = @"select u.ANumber, u.EmailAddress, u.FirstName, u.Surname
+            const string sql = @"select u.ANumber, 
+                                        u.EmailAddress, 
+                                        u.FirstName, 
+                                        u.Surname
                                 from [dbo].[tblUser] u
                                 join [dbo].[tblUserRole] ur on ur.fkUserId = u.pkUserId
                                 join [dbo].[tblCentreUser] cu on cu.fkUserId = u.pkUserId
-                                where ur.fkRoleId in @roles and cu.[fkCentreId] = @centerId";
+                                where ur.fkRoleId in @roles 
+                                    and cu.[fkCentreId] = @centerId";
 
             IEnumerable<User> Function()
             {
