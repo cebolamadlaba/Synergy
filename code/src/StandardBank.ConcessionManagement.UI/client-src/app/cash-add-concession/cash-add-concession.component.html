@@ -256,7 +256,7 @@
                                     <span>Upload</span>
                                     <i class="fa fa-chevron-up" aria-hidden="true"></i>
                                 </label>
-                                <input id="file-input" type="file" (change)="onFileSelected($event)" />
+                                <input id="file-input" type="file" (change)="onFileSelected($event,true)" />
                                 <button class="downImage btn" for="file-output" (click)="downloadFile('cash')">
                                     <i class="fa fa-chevron-down" aria-hidden="true"></i>
                                     <span>Download</span>

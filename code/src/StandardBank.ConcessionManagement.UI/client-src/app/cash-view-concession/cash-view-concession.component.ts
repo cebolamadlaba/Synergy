@@ -1,36 +1,31 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import { Observable } from "rxjs";
+import { DatePipe, Location } from '@angular/common';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { RiskGroup } from "../models/risk-group";
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { Location, DatePipe } from '@angular/common';
-import { Period } from "../models/period";
-import { PeriodType } from "../models/period-type";
-import { ConditionType } from "../models/condition-type";
-import { ClientAccount } from "../models/client-account";
-import { AccrualType } from "../models/accrual-type";
-import { ChannelType } from "../models/channel-type";
-import { LookupDataService } from "../services/lookup-data.service";
-import { CashConcession } from "../models/cash-concession";
-import { Concession } from "../models/concession";
-import { CashConcessionService } from "../services/cash-concession.service";
-import { CashConcessionDetail } from "../models/cash-concession-detail";
-import { ConcessionCondition } from "../models/concession-condition";
-import { TableNumber } from "../models/table-number";
-import { UserConcessionsService } from "../services/user-concessions.service";
-import { ConcessionComment } from "../models/concession-comment";
-import { CashFinancial } from "../models/cash-financial";
-import { DecimalPipe } from '@angular/common';
-import { ConcessionTypes } from '../constants/concession-types';
+import { Observable } from "rxjs";
 import { ConcessionStatus } from '../constants/concession-status';
 import { ConcessionSubStatus } from '../constants/concession-sub-status';
-import { BaseComponentService } from '../services/base-component.service';
+import { ConcessionTypes } from '../constants/concession-types';
+import { AccrualType } from "../models/accrual-type";
+import { CashConcession } from "../models/cash-concession";
+import { CashConcessionDetail } from "../models/cash-concession-detail";
+import { CashFinancial } from "../models/cash-financial";
+import { ChannelType } from "../models/channel-type";
+import { ClientAccount } from "../models/client-account";
+import { Concession } from "../models/concession";
+import { ConcessionComment } from "../models/concession-comment";
+import { ConditionType } from "../models/condition-type";
 import { LegalEntity } from "../models/legal-entity";
-import * as moment from 'moment';
-import { MOnthEnum } from '../models/month-enum';
-import { ConcessionConditionReturnObject } from '../models/concession-condition-return-object';	
+import { Period } from "../models/period";
+import { PeriodType } from "../models/period-type";
+import { RiskGroup } from "../models/risk-group";
+import { TableNumber } from "../models/table-number";
+import { BaseComponentService } from '../services/base-component.service';
 import { CashBaseService } from '../services/cash-base.service';
+import { CashConcessionService } from "../services/cash-concession.service";
+import { FileService } from '../services/file.service';
+import { LookupDataService } from "../services/lookup-data.service";
+import { UserConcessionsService } from "../services/user-concessions.service";
 
 
 @Component({
@@ -51,7 +46,6 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
     riskGroupNumber: number;
     sapbpid: number;
     legalEntity: LegalEntity;
-    public cashConcessionForm: FormGroup;
     selectedConditionTypes: ConditionType[];
     isLoading = true;
     canBcmApprove = false;
@@ -88,32 +82,32 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
     conditionTypes: ConditionType[];
 
     observableClientAccounts: Observable<ClientAccount[]>;
-    clientAccounts: ClientAccount[];
 
     observableAccrualTypes: Observable<AccrualType[]>;
-    accrualTypes: AccrualType[];
 
     observableChannelTypes: Observable<ChannelType[]>;
-    channelTypes: ChannelType[];
 
     observableCashConcession: Observable<CashConcession>;
     cashConcession: CashConcession;
 
     observableTableNumbers: Observable<TableNumber[]>;
-    tableNumbers: TableNumber[];
 
     observableCashFinancial: Observable<CashFinancial>;
     cashFinancial: CashFinancial;
 
     constructor(private route: ActivatedRoute,
-        private formBuilder: FormBuilder,
+        formBuilder: FormBuilder,
         private location: Location,
-        private datepipe: DatePipe,
+        datepipe: DatePipe,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(CashConcessionService) private cashConcessionService,
         @Inject(UserConcessionsService) private userConcessionsService,
+        fileService: FileService,
         private baseComponentService: BaseComponentService) {
         super();
+        this.formBuilder = formBuilder;
+        this.datepipe = datepipe;
+        this.fileService = fileService;
         this.riskGroup = new RiskGroup();
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
@@ -134,7 +128,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
         });
 
         this.cashConcessionForm = this.formBuilder.group({
-            concessionItemRows: this.formBuilder.array([this.initConcessionItemRows()]),
+            concessionItemRows: this.formBuilder.array([this.initConcessionItemRowsUpdate()]),
             conditionItemsRows: this.formBuilder.array([]),
             smtDealNumber: new FormControl(),
             motivation: new FormControl(),
@@ -363,24 +357,6 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
         this.populateForm();
     }
 
-    initConcessionItemRows() {
-        return this.formBuilder.group({
-            cashConcessionDetailId: [''],
-            concessionDetailId: [''],
-            channelType: [''],
-            accountNumber: [''],
-            baseRate: [{ value: '', disabled: true }],
-            adValorem: [{ value: '', disabled: true }],
-            tableNumber: [''],
-            approvedTableNumber: [{ value: '', disabled: true }],
-            accrualType: [''],
-            expiryDate: [''],
-            dateApproved: [{ value: '', disabled: true }],
-            isExpired: [''],
-            isExpiring: ['']
-        });
-    }
-
     initConditionItemRows() {
         this.selectedConditionTypes.push(new ConditionType());
 
@@ -399,7 +375,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
 
     addNewConcessionRow() {
         const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
-        var newRow = this.initConcessionItemRows();
+        var newRow = this.initConcessionItemRowsUpdate();
         newRow.controls['accrualType'].setValue(this.accrualTypes[0]);
         control.push(newRow);
     }
@@ -451,20 +427,6 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
         currentCondition.get('interestRate').setValue(null);
         currentCondition.get('volume').setValue(null);
         currentCondition.get('value').setValue(null);
-    }
-
-    tableNumberChanged(rowIndex) {
-        const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
-
-        if (control.controls[rowIndex].get('tableNumber').value.baseRate)
-            control.controls[rowIndex].get('baseRate').setValue(control.controls[rowIndex].get('tableNumber').value.baseRate.toFixed(2));
-        else
-            control.controls[rowIndex].get('baseRate').setValue(null);
-
-        if (control.controls[rowIndex].get('tableNumber').value.adValorem)
-            control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('tableNumber').value.adValorem.toFixed(3));
-        else
-            control.controls[rowIndex].get('adValorem').setValue(null);
     }
 
     getCashConcession(isNew: boolean): CashConcession {

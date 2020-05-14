@@ -30,6 +30,7 @@ import { ConcessionConditionReturnObject } from '../models/concession-condition-
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
 import { TransactionalBaseService } from '../services/transactional-base.service';
+import { FileService } from '../services/file.service';
 
 @Component({
     selector: 'app-transactional-view-concession',
@@ -40,7 +41,6 @@ import { TransactionalBaseService } from '../services/transactional-base.service
 export class TransactionalViewConcessionComponent extends TransactionalBaseService implements OnInit, OnDestroy {
 
     concessionReferenceId: string;
-    public transactionalConcessionForm: FormGroup;
     private sub: any;
     errorMessage: String;
     saveMessage: String;
@@ -55,7 +55,6 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
     createdDate: string;
 
     selectedConditionTypes: ConditionType[];
-    selectedTransactionTypes: TransactionType[];
     isLoading = true;
     canBcmApprove = false;
     canPcmApprove = false;
@@ -88,10 +87,8 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
     conditionTypes: ConditionType[];
 
     observableClientAccounts: Observable<ClientAccount[]>;
-    clientAccounts: ClientAccount[];
 
     observableTransactionTypes: Observable<TransactionType[]>;
-    transactionTypes: TransactionType[];
 
     observableTransactionalConcession: Observable<TransactionalConcession>;
     transactionalConcession: TransactionalConcession;
@@ -100,15 +97,19 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
     transactionalFinancial: TransactionalFinancial;
 
     constructor(private route: ActivatedRoute,
-        private formBuilder: FormBuilder,
+        formBuilder: FormBuilder,
         private location: Location,
-        private datepipe: DatePipe,
+        datepipe: DatePipe,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(TransactionalConcessionService) private transactionalConcessionService,
         @Inject(UserConcessionsService) private userConcessionsService,
+        fileService: FileService,
         private baseComponentService: BaseComponentService) {
         super();
+        this.formBuilder = formBuilder;
+        this.fileService = fileService;
         this.riskGroup = new RiskGroup();
+        this.datepipe = datepipe;
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
         this.conditionTypes = [new ConditionType()];
@@ -129,7 +130,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
         });
 
         this.transactionalConcessionForm = this.formBuilder.group({
-            concessionItemRows: this.formBuilder.array([this.initConcessionItemRows()]),
+            concessionItemRows: this.formBuilder.array([this.initConcessionItemRowsUpdate()]),
             conditionItemsRows: this.formBuilder.array([]),
             mrsCrs: new FormControl(),
             smtDealNumber: new FormControl(),
@@ -279,7 +280,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
                 for (let transactionalConcessionDetail of this.transactionalConcession.transactionalConcessionDetails) {
 
                     if (rowIndex != 0) {
-                        this.addNewConcessionRow();
+                        this.addNewConcessionRow(false);
                     }
 
                     const concessions = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
@@ -371,25 +372,6 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
         }
     }
 
-    initConcessionItemRows() {
-        this.selectedTransactionTypes.push(new TransactionType());
-
-        return this.formBuilder.group({
-            transactionalConcessionDetailId: [''],
-            concessionDetailId: [''],
-            transactionType: [''],
-            accountNumber: [''],
-            transactionTableNumber: [''],
-            flatFeeOrRate: [{ value: '', disabled: true }],
-            adValorem: [{ value: '', disabled: true }],
-            approvedTableNumber: [{ value: '', disabled: true }],
-            expiryDate: [''],
-            dateApproved: [{ value: '', disabled: true }],
-            isExpired: [''],
-            isExpiring: ['']
-        });
-    }
-
     initConditionItemRows() {
         this.selectedConditionTypes.push(new ConditionType());
 
@@ -404,11 +386,6 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
             periodType: [''],
             period: ['']
         });
-    }
-
-    addNewConcessionRow() {
-        const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
-        control.push(this.initConcessionItemRows());
     }
 
     addNewConditionRow() {
@@ -458,20 +435,6 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
 
         currentTransactionType.get('adValorem').setValue(null);
         currentTransactionType.get('flatFeeOrRate').setValue(null);
-    }
-
-    transactionTableNumberChanged(rowIndex) {
-        const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
-
-        if (control.controls[rowIndex].get('transactionTableNumber').value.fee)
-            control.controls[rowIndex].get('flatFeeOrRate').setValue(control.controls[rowIndex].get('transactionTableNumber').value.fee.toFixed(2));
-        else
-            control.controls[rowIndex].get('flatFeeOrRate').setValue(null);
-
-        if (control.controls[rowIndex].get('transactionTableNumber').value.adValorem)
-            control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('transactionTableNumber').value.adValorem.toFixed(3));
-        else
-            control.controls[rowIndex].get('adValorem').setValue(null);
     }
 
     getTransactionalConcession(isNew: boolean): TransactionalConcession {

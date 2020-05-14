@@ -1,36 +1,27 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import { Observable } from "rxjs";
+import { DatePipe, Location } from '@angular/common';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { RiskGroup } from "../models/risk-group";
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { Location, DatePipe } from '@angular/common';
+import { Observable } from "rxjs";
+import { ConcessionTypes } from '../constants/concession-types';
+import { AccrualType } from "../models/accrual-type";
+import { CashConcession } from "../models/cash-concession";
+import { CashConcessionDetail } from "../models/cash-concession-detail";
+import { ChannelType } from "../models/channel-type";
+import { ClientAccount } from "../models/client-account";
+import { Concession } from "../models/concession";
+import { ConditionType } from "../models/condition-type";
+import { LegalEntity } from "../models/legal-entity";
 import { Period } from "../models/period";
 import { PeriodType } from "../models/period-type";
-import { ConditionType } from "../models/condition-type";
-import { ClientAccount } from "../models/client-account";
-import { AccrualType } from "../models/accrual-type";
-import { ChannelType } from "../models/channel-type";
-import { LookupDataService } from "../services/lookup-data.service";
-import { CashConcession } from "../models/cash-concession";
-import { Concession } from "../models/concession";
-import { CashConcessionService } from "../services/cash-concession.service";
-import { CashConcessionDetail } from "../models/cash-concession-detail";
-import { ConcessionCondition } from "../models/concession-condition";
+import { RiskGroup } from "../models/risk-group";
 import { TableNumber } from "../models/table-number";
-import { LegalEntity } from "../models/legal-entity";
-import { DecimalPipe } from '@angular/common';
-import { ConcessionTypes } from '../constants/concession-types';
-import * as moment from 'moment';
-import { MOnthEnum } from '../models/month-enum';
-import { ConcessionConditionReturnObject } from '../models/concession-condition-return-object';	
-import * as fileSaver from 'file-saver';
-import { FileService } from '../services/file.service';
-import * as XLSX from 'xlsx';
-import { XlsxModel } from '../models/XlsxModel';
-import { CashBaseService } from '../services/cash-base.service';
-
 import { BaseComponentService } from '../services/base-component.service';
+import { CashBaseService } from '../services/cash-base.service';
+import { CashConcessionService } from "../services/cash-concession.service";
+import { FileService } from '../services/file.service';
+import { LookupDataService } from "../services/lookup-data.service";
+
 
 @Component({
     selector: 'app-cash-add-concession',
@@ -48,13 +39,10 @@ export class CashAddConcessionComponent extends CashBaseService implements OnIni
     riskGroupNumber: number;
     legalEntity: LegalEntity;
     sapbpid: number;
-    cashConcessionDetail = [new CashConcessionDetail()];
-    xlsxModel = new XlsxModel();
 
     subHeading: string;
     title: string;
 
-    public cashConcessionForm: FormGroup;
     selectedConditionTypes: ConditionType[];
     isLoading = true;
     observableLatestCrsOrMrs: Observable<number>;
@@ -70,26 +58,25 @@ export class CashAddConcessionComponent extends CashBaseService implements OnIni
     conditionTypes: ConditionType[];
 
     observableClientAccounts: Observable<ClientAccount[]>;
-    clientAccounts: ClientAccount[];
 
     observableAccrualTypes: Observable<AccrualType[]>;
-    accrualTypes: AccrualType[];
 
     observableChannelTypes: Observable<ChannelType[]>;
-    channelTypes: ChannelType[];
 
     observableTableNumbers: Observable<TableNumber[]>;
-    tableNumbers: TableNumber[];
 
     constructor(private route: ActivatedRoute,
-        private formBuilder: FormBuilder,
+        formBuilder: FormBuilder,
         private location: Location,
+        datepipe: DatePipe,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(CashConcessionService) private cashConcessionService,
-        private fileService: FileService,
-        private datepipe: DatePipe,
+        fileService: FileService,
         private baseComponentService: BaseComponentService) {
         super();
+        this.formBuilder = formBuilder;
+        this.datepipe = datepipe;
+        this.fileService = fileService;
         this.riskGroup = new RiskGroup();
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
@@ -105,7 +92,7 @@ export class CashAddConcessionComponent extends CashBaseService implements OnIni
         });
 
         this.cashConcessionForm = this.formBuilder.group({
-            concessionItemRows: this.formBuilder.array([this.initConcessionItemRows()]),
+            concessionItemRows: this.formBuilder.array([this.initConcessionItemRowsAdd()]),
             conditionItemsRows: this.formBuilder.array([]),
             smtDealNumber: new FormControl(),
             motivation: new FormControl()
@@ -113,18 +100,6 @@ export class CashAddConcessionComponent extends CashBaseService implements OnIni
 
         this.getInitialData();
 
-    }
-
-    initConcessionItemRows() {
-        return this.formBuilder.group({
-            channelType: [''],
-            accountNumber: [''],
-            tableNumber: [''],
-            baseRate: [{ value: '', disabled: true }],
-            adValorem: [{ value: '', disabled: true }],
-            accrualType: [''],
-            expiryDate: ['']
-        });
     }
 
     initConditionItemRows() {
@@ -224,104 +199,6 @@ export class CashAddConcessionComponent extends CashBaseService implements OnIni
         this.isLoading = false;
     }
 
-    downloadFile(name: string) {
-        this.fileService.downloadFile(name).subscribe(response => {
-            window.location.href = response.url;
-        }), error => console.log('Error downloading the file'),
-            () => console.info('File downloaded successfully');
-    }
-
-    onFileSelected(event) {
-        var file: File = event.target.files[0];
-        var fileReader: FileReader = new FileReader();
-
-        this.xlsxModel = new XlsxModel();
-        this.cashConcessionDetail = [new CashConcessionDetail()];
-
-        var self = this;
-        fileReader.onload = function (e) {
-            // set initial properties in order to process the file
-            self.xlsxModel.fileContent = fileReader.result;
-            self.xlsxModel.selectedFileName = file.name;
-
-            self.cashConcessionDetail = self.processFileContent(self.xlsxModel);
-            self.populateCashConcessionByFile();
-        }
-
-        fileReader.readAsBinaryString(file);
-    }
-
-    populateCashConcessionByFile() {
-
-        let rowIndex = 0;
-
-        for (let cashConcessionDetail of this.cashConcessionDetail) {
-
-            if (rowIndex != 0) {
-                this.addNewConcessionRow();
-            }
-
-            const concessions = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
-            let currentConcession = concessions.controls[concessions.length - 1];
-
-            if (cashConcessionDetail.channel) {
-                let selectedChannelType = this.channelTypes.filter(_ => _.description == cashConcessionDetail.channel);
-                currentConcession.get('channelType').setValue(selectedChannelType[0]);
-            }
-
-            if (cashConcessionDetail.accountNumber) {
-
-                if (this.clientAccounts) {
-
-                    let selectedAccountNo = this.clientAccounts.filter(_ => _.accountNumber == cashConcessionDetail.accountNumber);
-                    if (selectedAccountNo.length > 0) {
-                        currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
-                    } else {
-                        this.addValidationError('AccountNumber does not belong to selected risk group');
-                    }  
-                }  
-            }
-
-            if (cashConcessionDetail.tableNumberId) {
-                let selectedTableNumber = this.tableNumbers.filter(_ => _.tariffTable == cashConcessionDetail.tableNumberId);
-                currentConcession.get('tableNumber').setValue(selectedTableNumber[0]);
-                this.tableNumberChanged(concessions.length - 1);
-            }
-
-            if (cashConcessionDetail.accrualType) {
-                let selectedAccrualType = this.accrualTypes.filter(_ => _.description == cashConcessionDetail.accrualType);
-                currentConcession.get('accrualType').setValue(selectedAccrualType[0]);
-            }
-
-            if (cashConcessionDetail.expiryDate) {
-                var formattedExpiryDate = this.datepipe.transform(cashConcessionDetail.expiryDate, 'yyyy-MM-dd');
-                currentConcession.get('expiryDate').setValue(formattedExpiryDate);
-            }
-
-            rowIndex++;
-        }
-    }
-
-
-    addNewConcessionRow() {
-        const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
-        var newRow = this.initConcessionItemRows();
-
-        if (this.channelTypes)
-            newRow.controls['channelType'].setValue(this.channelTypes[0]);
-
-        if (this.tableNumbers)
-            newRow.controls['tableNumber'].setValue(this.tableNumbers[0]);
-
-        if (this.clientAccounts)
-            newRow.controls['accountNumber'].setValue(this.clientAccounts[0]);
-
-        if (this.accrualTypes)
-            newRow.controls['accrualType'].setValue(this.accrualTypes[0]);
-
-        control.push(newRow);
-    }
-
     addNewConditionRow() {
         const control = <FormArray>this.cashConcessionForm.controls['conditionItemsRows'];
         control.push(this.initConditionItemRows());
@@ -337,7 +214,7 @@ export class CashAddConcessionComponent extends CashBaseService implements OnIni
 
         const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
 
-        var newRow = this.initConcessionItemRows();
+        var newRow = this.initConcessionItemRowsAdd();
 
         if (control.controls[index].get('channelType').value)
             newRow.controls['channelType'].setValue(control.controls[index].get('channelType').value);
@@ -388,20 +265,6 @@ export class CashAddConcessionComponent extends CashBaseService implements OnIni
         currentCondition.get('interestRate').setValue(null);
         currentCondition.get('volume').setValue(null);
         currentCondition.get('value').setValue(null);
-    }
-
-    tableNumberChanged(rowIndex) {
-        const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
-
-        if (control.controls[rowIndex].get('tableNumber').value.baseRate)
-            control.controls[rowIndex].get('baseRate').setValue(control.controls[rowIndex].get('tableNumber').value.baseRate.toFixed(2));
-        else
-            control.controls[rowIndex].get('baseRate').setValue(null);
-
-        if (control.controls[rowIndex].get('tableNumber').value.adValorem)
-            control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('tableNumber').value.adValorem.toFixed(3));
-        else
-            control.controls[rowIndex].get('adValorem').setValue(null);
     }
 
     onExpiryDateChanged(itemrow) {
