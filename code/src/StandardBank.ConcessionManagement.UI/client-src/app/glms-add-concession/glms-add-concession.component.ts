@@ -496,58 +496,72 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         const tierForm = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
 
         var lastRow = tierForm.length - 1;
+
         if (tierForm.length > 0) {
+
             tierForm.controls[lastRow].get('tieredTo').setValue(0);
+       
+            if (tierForm.length == 1) {
+
+                this.addValidationError("Minimum of 2 tiers must be added ");
+            }
+
+            let rowIndex = 0;
+
+            for (let glmsTierFormItem of tierForm.value) {
+
+                let tierItem = new GlmsTierData();
+
+                if (rowIndex > 0) {
+
+                   glmsTierFormItem.tieredFrom = Number(tierForm.controls[rowIndex - 1].get('tieredTo').value) + 1;
+                }
+
+                if (glmsTierFormItem.tieredFrom) {
+                    tierItem.tierFrom = glmsTierFormItem.tieredFrom;
+                } else {
+                    tierItem.tierFrom = 0;
+                }
+
+                if (glmsTierFormItem.tieredTo) {
+                    tierItem.tierTo = glmsTierFormItem.tieredTo;
+                } else {
+                    tierItem.tierTo = 0;
+                }
+
+                if (glmsTierFormItem.rateType.description === "F") {
+                    if (glmsTierFormItem.value) {
+                        tierItem.value = glmsTierFormItem.value;
+                    } else {
+                        this.addValidationError("Value not selected");
+                    }
+                }
+
+                if (glmsTierFormItem.rateType.description === "V") {
+
+                    if (glmsTierFormItem.baseRate) {
+                        tierItem.baseRateId = glmsTierFormItem.baseRate.id;
+                    } else {
+                        this.addValidationError("BaseRate not selected");
+                    }
+
+                    if (glmsTierFormItem.spread) {
+                        tierItem.spread = glmsTierFormItem.spread;
+                    } else {
+                        this.addValidationError("Spread not selected");
+                    }
+                }
+
+                if (glmsTierFormItem.rateType) {
+                    tierItem.rateTypeId = glmsTierFormItem.rateType.id;
+                } else {
+                    this.addValidationError("RateType not selected");
+                }
+
+                tierItemsList.push(tierItem);
+                rowIndex++;
+            }
         }
-
-        for (let glmsTierFormItem of tierForm.value) {
-
-            let tierItem = new GlmsTierData();
-
-            if (glmsTierFormItem.tieredFrom) {
-                tierItem.tierFrom = glmsTierFormItem.tieredFrom;
-            } else {
-                tierItem.tierFrom = 0;
-            }
-
-            if (glmsTierFormItem.tieredTo) {
-                tierItem.tierTo = glmsTierFormItem.tieredTo;
-            } else {
-                tierItem.tierTo = 0;
-            }
-
-            if (glmsTierFormItem.rateType.description === "F") {
-                if (glmsTierFormItem.value) {
-                    tierItem.value = glmsTierFormItem.value;
-                } else {
-                    this.addValidationError("Value not selected");
-                }
-            }
-
-            if (glmsTierFormItem.rateType.description === "V") {
-
-                if (glmsTierFormItem.baseRate) {
-                    tierItem.baseRateId = glmsTierFormItem.baseRate.id;
-                } else {
-                    this.addValidationError("BaseRate not selected");
-                }
-
-                if (glmsTierFormItem.spread) {
-                    tierItem.spread = glmsTierFormItem.spread;
-                } else {
-                    this.addValidationError("Spread not selected");
-                }
-            }
-
-            if (glmsTierFormItem.rateType) {
-                tierItem.rateTypeId = glmsTierFormItem.rateType.id;
-            } else {
-                this.addValidationError("RateType not selected");
-            }
-
-            tierItemsList.push(tierItem);
-        }
-
         tierItemsList.splice(0, 1);
         concessions.controls[this.glmsConcessionItemIndex].get('concessionItemTier').setValue(tierItemsList);
     }
