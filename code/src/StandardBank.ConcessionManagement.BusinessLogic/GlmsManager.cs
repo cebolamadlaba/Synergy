@@ -81,7 +81,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 glmsConcessionDetail.GlmsTierData = _mapper.Map<IEnumerable<GlmsTierData>>(_glmsTierDataRepository.ReadAllById(glmsConcessionDetail.GlmsConcessionDetailId));
             }
-
+          
             return new GlmsConcession
             {
                 Concession = concession,
