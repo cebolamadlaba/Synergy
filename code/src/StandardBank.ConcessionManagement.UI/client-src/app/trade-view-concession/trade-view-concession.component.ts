@@ -37,6 +37,7 @@ import { TradeConcessionService } from "../services/trade-concession.service";
 
 import { TradeView } from "../models/trade-view";
 import { LegalEntity } from "../models/legal-entity";
+import { EditTypeEnum } from '../models/edit-type-enum';
 
 import { TradeConcessionBaseService } from '../services/trade-concession-base.service';
 import { BaseComponentService } from '../services/base-component.service';
@@ -198,6 +199,10 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
         });
     }
 
+    getTradeConcessionItemRows(): FormArray {
+        return <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+    }
+
     getInitialData() {
         if (this.riskGroupNumber != null && this.riskGroupNumber != 0) {
             Observable.forkJoin([
@@ -313,7 +318,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
                         this.addNewConcessionRow(false);
                     }
 
-                    const concessions = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+                    const concessions = this.getTradeConcessionItemRows();
                     let currentConcession = concessions.controls[concessions.length - 1];
 
                     currentConcession.get('tradeConcessionDetailId').setValue(tradeConcessionDetail.tradeConcessionDetailId);
@@ -517,7 +522,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
     }
 
     addNewConcessionRow(add: boolean) {
-        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+        const control = this.getTradeConcessionItemRows();
         var newRow = this.initConcessionItemRows();
         control.push(newRow);
 
@@ -548,7 +553,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
 
     deleteConcessionRow(index: number) {
         if (confirm("Please note that the account will be put back to standard pricing. Are you sure you want to delete this concession?")) {
-            const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+            const control = this.getTradeConcessionItemRows();
             control.removeAt(index);
 
             this.selectedProductTypes.splice(index, 1);
@@ -572,7 +577,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
         this.errorMessage = null;
         this.validationError = null;
 
-        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+        const control = this.getTradeConcessionItemRows();
         let term = control.controls[rowIndex].get('term').value;
 
         if (term < MOnthEnum.ThreeMonths) {
@@ -602,7 +607,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
     productTypeChanged(rowIndex) {
         this.notificationMessage = null;
 
-        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+        const control = this.getTradeConcessionItemRows();
 
         this.selectedProductTypes[rowIndex] = control.controls[rowIndex].get('producttype').value;
 
@@ -714,7 +719,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
         else
             tradeConcession.concession.motivation = '.';
 
-        const concessions = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getTradeConcessionItemRows();
 
         let hasTypeId: boolean = false;
         let hasLegalEntityId: boolean = false;
@@ -960,7 +965,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
 
 
     getBackgroundColour(rowIndex: number) {
-        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+        const control = this.getTradeConcessionItemRows();
 
         if (String(control.controls[rowIndex].get('isExpired').value) == "true") {
             return "#EC7063";
@@ -1029,7 +1034,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
         let changedProperties = [];
         let rowIndex = 0;
 
-        const concessions = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getTradeConcessionItemRows();
 
         //this is detailed line items,  but not yet the controls
         for (let concessionFormItem of concessions.controls) {
@@ -1236,6 +1241,18 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
         this.canArchive = false;
 
         this.tradeConcessionForm.controls['motivation'].setValue('');
+
+        if (editType == EditTypeEnum.Renew || editType == EditTypeEnum.UpdateApproved) {
+            const concessions = this.getTradeConcessionItemRows();
+            for (let concessionFormItem of concessions.controls) {
+                // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
+                if (concessionFormItem.get('expiryDate').value) {
+                    let expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+                    expiryDate = new Date(expiryDate.setFullYear(expiryDate.getFullYear() + 1));
+                    concessionFormItem.get('expiryDate').setValue(this.datepipe.transform(expiryDate, 'yyyy-MM-dd'));
+                }
+            }
+        }
     }
 
     saveConcession() {
@@ -1465,7 +1482,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
 
         if (event.target != null && $event.target.value != "") {
 
-            const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+            const control = this.getTradeConcessionItemRows();
             let currentrow = control.controls[rowIndex];
 
             if (controlname == "advalorem") {
@@ -1484,7 +1501,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
             }
         }
         else {
-            const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+            const control = this.getTradeConcessionItemRows();
             let currentrow = control.controls[rowIndex];
 
             if (controlname == "advalorem") {
@@ -1517,7 +1534,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
 
     setFlatFee($event, rowIndex, controlname) {
 
-        const control = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+        const control = this.getTradeConcessionItemRows();
         let currentrow = control.controls[rowIndex];
 
         if (event.target != null && $event.target.value != "") {

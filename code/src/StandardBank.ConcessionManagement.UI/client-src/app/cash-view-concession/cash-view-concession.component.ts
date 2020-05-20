@@ -26,7 +26,7 @@ import { CashConcessionService } from "../services/cash-concession.service";
 import { FileService } from '../services/file.service';
 import { LookupDataService } from "../services/lookup-data.service";
 import { UserConcessionsService } from "../services/user-concessions.service";
-
+import { EditTypeEnum } from '../models/edit-type-enum';
 
 @Component({
     selector: 'app-cash-view-concession',
@@ -150,6 +150,10 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
         });
     }
 
+    getCashConcessionItemRows(): FormArray {
+        return <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
+    }
+
     populateForm() {
         if (this.concessionReferenceId) {
             this.observableCashConcession = this.cashConcessionService.getCashConcessionData(this.concessionReferenceId);
@@ -209,7 +213,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
                         this.addNewConcessionRow();
                     }
 
-                    const concessions = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
+                    const concessions = this.getCashConcessionItemRows();
                     let currentConcession = concessions.controls[concessions.length - 1];
 
                     currentConcession.get('cashConcessionDetailId').setValue(cashConcessionDetail.cashConcessionDetailId);
@@ -374,7 +378,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
     }
 
     addNewConcessionRow() {
-        const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
+        const control = this.getCashConcessionItemRows();
         var newRow = this.initConcessionItemRowsUpdate();
         newRow.controls['accrualType'].setValue(this.accrualTypes[0]);
         control.push(newRow);
@@ -393,7 +397,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
 
     deleteConcessionRow(index: number) {
         if (confirm("Are you sure you want to remove this row?")) {
-            const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
+            const control = this.getCashConcessionItemRows();
             control.removeAt(index);
         }
     }
@@ -452,7 +456,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
         else
             cashConcession.concession.motivation = '.';
 
-        const concessions = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getCashConcessionItemRows();
 
         let hasChannelType: boolean = false;
         let hasLegalEntityId: boolean = false;
@@ -543,7 +547,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
     }
 
     getBackgroundColour(rowIndex: number) {
-        const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
+        const control = this.getCashConcessionItemRows();
 
         if (String(control.controls[rowIndex].get('isExpired').value) == "true") {
             return "#EC7063";
@@ -704,7 +708,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
         let changedProperties = [];
         let rowIndex = 0;
 
-        const concessions = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getCashConcessionItemRows();
 
         //this is detailed line items,  but not yet the controls
         for (let concessionFormItem of concessions.controls) {
@@ -819,6 +823,18 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
         this.canArchive = false;
 
         this.cashConcessionForm.controls['motivation'].setValue('');
+
+        if (editType == EditTypeEnum.Renew || editType == EditTypeEnum.UpdateApproved) {
+            const concessions = this.getCashConcessionItemRows();
+            for (let concessionFormItem of concessions.controls) {
+                // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
+                if (concessionFormItem.get('expiryDate').value) {
+                    let expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+                    expiryDate = new Date(expiryDate.setFullYear(expiryDate.getFullYear() + 1));
+                    concessionFormItem.get('expiryDate').setValue(this.datepipe.transform(expiryDate, 'yyyy-MM-dd'));
+                }
+            }
+        }
     }
 
     saveConcession() {
@@ -1045,7 +1061,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
     }
 
     setTwoNumberDecimal($event) {
-        $event.target.value = this.baseComponentService.formatDecimal($event.target.value);        
+        $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
     }
 
     canEditSMTDealNumber() {

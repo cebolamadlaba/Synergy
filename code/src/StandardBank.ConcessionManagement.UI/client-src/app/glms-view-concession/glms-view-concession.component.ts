@@ -25,6 +25,7 @@ import { InterestPricingCategory } from "../models/interest-pricing-category";
 import { GlmsGroup } from "../models/glms-group"
 import { RateType } from "../models/rate-type";
 import { ArchiveType } from "../models/archive-type";
+import { EditTypeEnum } from '../models/edit-type-enum';
 
 import { BaseComponentService } from '../services/base-component.service';
 import * as moment from 'moment';
@@ -223,6 +224,10 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         this.getInitialData();
     }
 
+    getGlmsConcessionItemRows(): FormArray {
+        return <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
+    }
+
     populateForm() {
         if (this.concessionReferenceId) {
             this.observableGlmsConcession = this.glmsConcessionService.getGlmsConcessionData(this.concessionReferenceId);
@@ -286,7 +291,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
                         this.addNewConcessionRow();
                     }
 
-                    const concessions = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
+                    const concessions = this.getGlmsConcessionItemRows();
                     let currentConcession = concessions.controls[concessions.length - 1];
 
                     currentConcession.get('glmsConcessionDetailId').setValue(glmsConcessionDetail.glmsConcessionDetailId);
@@ -470,7 +475,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
         this.isLoading = false;
 
-        const control = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
+        const control = this.getGlmsConcessionItemRows();
         const tierForm = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
 
         if (this.productTypes) {
@@ -581,7 +586,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
             glmsConcession.concession.motivation = '.';
         }
 
-        const concessions = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getGlmsConcessionItemRows();
 
         let hasTypeId: boolean = false;
         let hasLegalEntityId: boolean = false;
@@ -721,11 +726,23 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         this.canArchive = false;
 
         this.glmsConcessionForm.controls['motivation'].setValue('');
+
+        if (editType == EditTypeEnum.Renew || editType == EditTypeEnum.UpdateApproved) {
+            const concessions = this.getGlmsConcessionItemRows();
+            for (let concessionFormItem of concessions.controls) {
+                // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
+                if (concessionFormItem.get('expiryDate').value) {
+                    let expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+                    expiryDate = new Date(expiryDate.setFullYear(expiryDate.getFullYear() + 1));
+                    concessionFormItem.get('expiryDate').setValue(this.datepipe.transform(expiryDate, 'yyyy-MM-dd'));
+                }
+            }
+        }
     }
 
     populateTierForm(rowIndex: number) {
 
-        const concessions = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getGlmsConcessionItemRows();
         const tierForm = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
 
         var rowAtIndex = concessions.controls[rowIndex].get('concessionItemTier').value;
@@ -803,7 +820,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
         let tierItemsList = [new GlmsTierData()];
 
-        const concessions = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getGlmsConcessionItemRows();
         const tierForm = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
 
         var lastRow = tierForm.length - 1;
@@ -865,7 +882,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
     addNewConcessionRow() {
 
-        const control = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
+        const control = this.getGlmsConcessionItemRows();
 
         var newRow = this.initConcessionItemRows();
 
@@ -912,7 +929,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
     deleteConcessionRow(index: number) {
         if (confirm("Are you sure you want to remove this row?")) {
-            const control = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
+            const control = this.getGlmsConcessionItemRows();
 
             this.selectedProductTypes.splice(index, 1);
             this.selectedInterestType.splice(index, 1);
@@ -943,7 +960,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
     disableRows() {
 
-        const concessions = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getGlmsConcessionItemRows();
         for (let concessionFormItem of concessions.controls) {
 
             concessionFormItem.disable();
@@ -958,7 +975,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
     }
 
     getBackgroundColour(rowIndex: number) {
-        const control = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
+        const control = this.getGlmsConcessionItemRows();
 
         if (String(control.controls[rowIndex].get('isExpired').value) == "true") {
             return "#EC7063";
@@ -1118,7 +1135,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         let changedProperties = [];
         let rowIndex = 0;
 
-        const concessions = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getGlmsConcessionItemRows();
 
         //this is detailed line items,  but not yet the controls
         for (let concessionFormItem of concessions.controls) {
@@ -1220,7 +1237,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
     }
 
     loopRows() {
-        const concessions = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getGlmsConcessionItemRows();
         let rowIndex = 0;
         for (let concessionFormItem of concessions.controls) {
             rowIndex++;
