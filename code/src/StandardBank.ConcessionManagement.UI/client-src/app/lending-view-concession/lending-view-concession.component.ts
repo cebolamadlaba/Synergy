@@ -191,6 +191,10 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         return true;
     }
 
+    getLendingConcessionItemRows(): FormArray {
+        return <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+    }
+
     populateForm() {
         if (this.concessionReferenceId) {
             this.observableLendingConcession = this.lendingService.getLendingConcessionData(this.concessionReferenceId);
@@ -298,7 +302,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                     }
 
 
-                    const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+                    const concessions = this.getLendingConcessionItemRows();
                     let currentConcession = concessions.controls[concessions.length - 1];
 
                     currentConcession.get('lendingConcessionDetailId').setValue(lendingConcessionDetail.lendingConcessionDetailId);
@@ -497,7 +501,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     }
 
     addNewConcessionRow() {
-        const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        const control = this.getLendingConcessionItemRows();
         control.push(this.initConcessionItemRows());
     }
 
@@ -514,7 +518,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
     deleteConcessionRow(index: number) {
         if (confirm("Are you sure you want to remove this row?")) {
-            const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+            const control = this.getLendingConcessionItemRows();
             control.removeAt(index);
 
             this.selectedProductTypes.splice(index, 1);
@@ -544,7 +548,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         this.errorMessage = null;
         this.validationError = null;
 
-        const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        const control = this.getLendingConcessionItemRows();
         let term = control.controls[rowIndex].get('term').value;
 
         if (term < MOnthEnum.ThreeMonths) {
@@ -565,7 +569,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     }
 
     productTypeChanged(rowIndex: number) {
-        const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        const control = this.getLendingConcessionItemRows();
 
         let currentRow = control.controls[rowIndex];
         var productType = currentRow.get('productType').value;
@@ -662,11 +666,12 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         if (this.riskGroup)
             lendingConcession.concession.riskGroupId = this.riskGroup.id;
 
-        const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getLendingConcessionItemRows();
 
         let hasProductType: boolean = false;
         let hasLegalEntityId: boolean = false;
         let hasLegalEntityAccountId: boolean = false;
+        let hasValidTerm: boolean = false;
 
         for (let concessionFormItem of concessions.controls) {
             if (!lendingConcession.lendingConcessionDetails)
@@ -684,8 +689,11 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                 lendingConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;
                 hasProductType = true;
             }
-            else
+            else {
                 this.addValidationError("Product type not selected");
+                hasProductType = false;
+            }
+
 
             if (concessionFormItem.get('accountNumber').value) {
                 lendingConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
@@ -694,6 +702,8 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                 hasLegalEntityAccountId = true;
             } else {
                 this.addValidationError("Client account not selected");
+                hasLegalEntityId = false;
+                hasLegalEntityAccountId = false;
             }
 
             if (concessionFormItem.get('limit').value)
@@ -702,8 +712,10 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             if (concessionFormItem.get('term').value) {
                 if (concessionFormItem.get('term').value < MOnthEnum.ThreeMonths) {
                     this.addValidationError("Minimum term captured should be 3 months");
+                    hasValidTerm = false;
                 } else {
                     lendingConcessionDetail.term = concessionFormItem.get('term').value;
+                    hasValidTerm = true;
                 }
             }
 
@@ -775,7 +787,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     }
 
     getBackgroundColour(rowIndex: number) {
-        const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        const control = this.getLendingConcessionItemRows();
 
         if (String(control.controls[rowIndex].get('isExpired').value) == "true") {
             return "#EC7063";
@@ -929,7 +941,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         let changedProperties = [];
         let rowIndex = 0;
 
-        const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getLendingConcessionItemRows();
 
         //this is detailed line items,  but not yet the controls
         for (let concessionFormItem of concessions.controls) {
@@ -1029,7 +1041,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
     disableRows() {
 
-        const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getLendingConcessionItemRows();
         for (let concessionFormItem of concessions.controls) {
 
             concessionFormItem.disable();
@@ -1037,7 +1049,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     }
 
     loopRows() {
-        const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getLendingConcessionItemRows();
         let rowIndex = 0;
         for (let concessionFormItem of concessions.controls) {
 
@@ -1063,6 +1075,9 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         this.canUpdate = false;
         this.canArchive = false;
 
+        if (editType == EditTypeEnum.Renew || editType == EditTypeEnum.UpdateApproved) {
+            this.setExpiryDateOnRenewOrUpdate();
+        }
         if (editType == EditTypeEnum.Renew) {
             this.baseComponentService.isRenewing = true;
         }
@@ -1293,6 +1308,18 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                 this.errorMessage = <any>error;
                 this.isLoading = false;
             });
+        }
+    }
+
+    setExpiryDateOnRenewOrUpdate() {
+        const concessions = this.getLendingConcessionItemRows();
+        for (let concessionFormItem of concessions.controls) {
+            // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
+            if (concessionFormItem.get('expiryDate').value) {
+                let expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+                expiryDate = new Date(expiryDate.setFullYear(expiryDate.getFullYear() + 1));
+                concessionFormItem.get('expiryDate').setValue(this.datepipe.transform(expiryDate, 'yyyy-MM-dd'));
+            }
         }
     }
 

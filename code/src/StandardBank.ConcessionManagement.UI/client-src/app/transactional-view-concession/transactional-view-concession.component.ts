@@ -29,6 +29,7 @@ import { LegalEntity } from "../models/legal-entity";
 import { ConcessionConditionReturnObject } from '../models/concession-condition-return-object';
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
+import { EditTypeEnum } from '../models/edit-type-enum';
 import { TransactionalBaseService } from '../services/transactional-base.service';
 import { FileService } from '../services/file.service';
 
@@ -151,6 +152,10 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
                 this.capturedComments = value.comments;
             }
         });
+    }
+
+    getTransactionalConcessionItemRows(): FormArray {
+        return <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
     }
 
     getInitialData() {
@@ -283,7 +288,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
                         this.addNewConcessionRow(false);
                     }
 
-                    const concessions = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+                    const concessions = this.getTransactionalConcessionItemRows();
                     let currentConcession = concessions.controls[concessions.length - 1];
 
                     currentConcession.get('transactionalConcessionDetailId').setValue(transactionalConcessionDetail.transactionalConcessionDetailId);
@@ -401,7 +406,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
 
     deleteConcessionRow(index: number) {
         if (confirm("Are you sure you want to remove this row?")) {
-            const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+            const control = this.getTransactionalConcessionItemRows();
             control.removeAt(index);
 
             this.selectedTransactionTypes.splice(index, 1);
@@ -428,7 +433,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
     }
 
     transactionTypeChanged(rowIndex) {
-        const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+        const control = this.getTransactionalConcessionItemRows();
         this.selectedTransactionTypes[rowIndex] = control.controls[rowIndex].get('transactionType').value;
 
         let currentTransactionType = control.controls[rowIndex];
@@ -463,7 +468,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
         if (this.transactionalConcessionForm.controls['comments'].value)
             transactionalConcession.concession.comments = this.transactionalConcessionForm.controls['comments'].value;
 
-        const concessions = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getTransactionalConcessionItemRows();
 
         let hasTypeId: boolean = false;
         let hasLegalEntityId: boolean = false;
@@ -548,7 +553,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
     }
 
     getBackgroundColour(rowIndex: number) {
-        const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+        const control = this.getTransactionalConcessionItemRows();
 
         if (String(control.controls[rowIndex].get('isExpired').value) == "true") {
             return "#EC7063";
@@ -702,7 +707,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
         let changedProperties = [];
         let rowIndex = 0;
 
-        const concessions = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getTransactionalConcessionItemRows();
 
         //this is detailed line items,  but not yet the controls
         for (let concessionFormItem of concessions.controls) {
@@ -817,6 +822,18 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
         this.canArchive = false;
 
         this.transactionalConcessionForm.controls['motivation'].setValue('');
+
+        if (editType == EditTypeEnum.Renew || editType == EditTypeEnum.UpdateApproved) {
+            const concessions = this.getTransactionalConcessionItemRows();
+            for (let concessionFormItem of concessions.controls) {
+                // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
+                if (concessionFormItem.get('expiryDate').value) {
+                    let expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+                    expiryDate = new Date(expiryDate.setFullYear(expiryDate.getFullYear() + 1));
+                    concessionFormItem.get('expiryDate').setValue(this.datepipe.transform(expiryDate, 'yyyy-MM-dd'));
+                }
+            }
+        }
     }
 
     saveConcession() {

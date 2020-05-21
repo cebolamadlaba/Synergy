@@ -35,6 +35,7 @@ import { BolChargeCode } from "../models/bol-chargecode";
 import { BolChargeCodeRelationship } from "../models/bol-chargeCodeRelationship";
 import { LegalEntityBOLUser } from "../models/legal-entity-bol-user";
 import { LegalEntity } from "../models/legal-entity";
+import { EditTypeEnum } from '../models/edit-type-enum';
 
 import { BaseComponentService } from '../services/base-component.service';
 import * as moment from 'moment';
@@ -185,6 +186,10 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
         });
     }
 
+    getBolConcessionItemRows(): FormArray {
+        return <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+    }
+
     getInitialData() {
         if (this.riskGroupNumber !== 0) {
             Observable.forkJoin([
@@ -304,7 +309,7 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
                         this.addNewConcessionRow();
                     }
 
-                    const concessions = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+                    const concessions = this.getBolConcessionItemRows();
                     let currentConcession = concessions.controls[concessions.length - 1];
 
                     currentConcession.get('bolConcessionDetailId').setValue(bolConcessionDetail.bolConcessionDetailId);
@@ -442,7 +447,7 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
 
     addNewConcessionRow() {
 
-        const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+        const control = this.getBolConcessionItemRows();
         var newRow = this.initConcessionItemRows();
 
         var length = control.controls.length;
@@ -475,7 +480,7 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
             this.selectedProducts.splice(index, 1);
 
 
-            const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+            const control = this.getBolConcessionItemRows();
             control.removeAt(index);
         }
     }
@@ -513,7 +518,7 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
 
     productTypeChanged(rowIndex) {
 
-        const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+        const control = this.getBolConcessionItemRows();
 
         let currentProduct = control.controls[rowIndex];
         var selectedproduct = currentProduct.get('product').value;
@@ -551,7 +556,7 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
             bolConcession.concession.comments = this.bolConcessionForm.controls['comments'].value;
 
 
-        const concessions = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getBolConcessionItemRows();
 
         let hasTypeId: boolean = false;
         let hasLegalEntityId: boolean = false;
@@ -627,7 +632,7 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
     }
 
     getBackgroundColour(rowIndex: number) {
-        const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+        const control = this.getBolConcessionItemRows();
 
         if (String(control.controls[rowIndex].get('isExpired').value) == "true") {
             return "#EC7063";
@@ -794,7 +799,7 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
         let changedProperties = [];
         let rowIndex = 0;
 
-        const concessions = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getBolConcessionItemRows();
 
         //this is detailed line items,  but not yet the controls
         for (let concessionFormItem of concessions.controls) {
@@ -912,6 +917,18 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
         this.canArchive = false;
 
         this.bolConcessionForm.controls['motivation'].setValue('');
+
+        if (editType == EditTypeEnum.UpdateApproved) {
+            const concessions = this.getBolConcessionItemRows();
+            for (let concessionFormItem of concessions.controls) {
+                // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
+                if (concessionFormItem.get('expiryDate').value) {
+                    let expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+                    expiryDate = new Date(expiryDate.setFullYear(expiryDate.getFullYear() + 1));
+                    concessionFormItem.get('expiryDate').setValue(this.datepipe.transform(expiryDate, 'yyyy-MM-dd'));
+                }
+            }
+        }
     }
 
     saveConcession() {
