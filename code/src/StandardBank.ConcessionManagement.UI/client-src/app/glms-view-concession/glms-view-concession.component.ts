@@ -1325,7 +1325,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         this.errorMessage = null;
         this.validationError = null;
 
-        var glmsConcession = this.getGlmsConcession(true);
+        var glmsConcession = this.getGlmsConcession(false);
 
         glmsConcession.concession.status = ConcessionStatus.Pending;
         glmsConcession.concession.subStatus = ConcessionSubStatus.BCMPending;

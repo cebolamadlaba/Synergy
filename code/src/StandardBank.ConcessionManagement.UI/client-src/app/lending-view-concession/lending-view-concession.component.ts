@@ -1166,7 +1166,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         this.errorMessage = null;
         this.validationError = null;
 
-        var lendingConcession = this.getLendingConcession(true);
+        var lendingConcession = this.getLendingConcession(false);
 
         lendingConcession.concession.status = ConcessionStatus.Pending;
         lendingConcession.concession.subStatus = ConcessionSubStatus.BCMPending;

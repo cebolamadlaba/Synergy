@@ -12,7 +12,7 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
 
         ConcessionLendingTieredRate ReadById(int id);
 
-        IEnumerable<ConcessionLendingTieredRate> ReadByConcessionId(int concessionLendingId);
+        IEnumerable<ConcessionLendingTieredRate> ReadByConcessionLendingId(int concessionLendingId);
 
         IEnumerable<ConcessionLendingTieredRate> ReadAll();
 

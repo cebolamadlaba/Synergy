@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace StandardBank.ConcessionManagement.Model.Repository
 {
     /// <summary>
@@ -107,6 +109,8 @@ namespace StandardBank.ConcessionManagement.Model.Repository
 
         public int MRS_ERI { get; set; }
 
+        public IEnumerable<ConcessionLendingTieredRate> ConcessionLendingTieredRates { get; set; }
+
         /// <summary>
         /// Gets or the name of the table.
         /// </summary>
@@ -130,5 +134,6 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// The primary key value.
         /// </value>
         public object PrimaryKeyValue => Id;
+
     }
 }

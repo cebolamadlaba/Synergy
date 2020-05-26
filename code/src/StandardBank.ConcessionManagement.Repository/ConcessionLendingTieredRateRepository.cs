@@ -52,7 +52,7 @@ namespace StandardBank.ConcessionManagement.Repository
             }
         }
 
-        public IEnumerable<ConcessionLendingTieredRate> ReadByConcessionId(int concessionLendingId)
+        public IEnumerable<ConcessionLendingTieredRate> ReadByConcessionLendingId(int concessionLendingId)
         {
             using (var db = _dbConnectionFactory.Connection())
             {

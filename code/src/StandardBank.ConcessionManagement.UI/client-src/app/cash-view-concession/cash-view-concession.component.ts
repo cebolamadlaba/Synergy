@@ -919,7 +919,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
         this.errorMessage = null;
         this.validationError = null;
 
-        var cashConcession = this.getCashConcession(true);
+        var cashConcession = this.getCashConcession(false);
 
         cashConcession.concession.status = ConcessionStatus.Pending;
         cashConcession.concession.subStatus = ConcessionSubStatus.BCMPending;

@@ -33,6 +33,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// </summary>
         private readonly IConcessionLendingRepository _concessionLendingRepository;
 
+        private readonly IConcessionLendingTieredRateRepository _concessionLendingTieredRateRepository;
+
         /// <summary>
         /// The mapper
         /// </summary>
@@ -82,7 +84,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IConcessionLendingRepository concessionLendingRepository, IMapper mapper,
             IFinancialLendingRepository financialLendingRepository, ILookupTableManager lookupTableManager,
             ILoadedPriceLendingRepository loadedPriceLendingRepository, IRuleManager ruleManager,
-            IMiscPerformanceRepository miscPerformanceRepository, IPrimeRateRepository primeRateRepository, IMediator mediator)
+            IMiscPerformanceRepository miscPerformanceRepository, IPrimeRateRepository primeRateRepository,
+            IMediator mediator, IConcessionLendingTieredRateRepository concessionLendingTieredRateRepository)
         {
             _concessionManager = concessionManager;
             _concessionLendingRepository = concessionLendingRepository;
@@ -94,6 +97,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _miscPerformanceRepository = miscPerformanceRepository;
             _primeRateRepository = primeRateRepository;
             _mediator = mediator;
+            _concessionLendingTieredRateRepository = concessionLendingTieredRateRepository;
         }
 
         /// <summary>
@@ -122,6 +126,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             var concession = _concessionManager.GetConcessionForConcessionReferenceId(concessionReferenceId, currentUser);
             var lendingConcessionDetails = _miscPerformanceRepository.GetLendingConcessionDetails(concession.Id);
+
+            this.GetRelatedLendingConcessionTieredRates(lendingConcessionDetails);
 
             var primerate = _primeRateRepository.PrimeRate(concession.DateOpened);
 
@@ -281,12 +287,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var lendingConcessions = new List<LendingConcession>();
             var concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.Lending, currentUser);
 
+            IEnumerable<LendingConcessionDetail> lendingConcessionDetail = null;
             foreach (var concession in concessions)
             {
+                lendingConcessionDetail = _miscPerformanceRepository.GetLendingConcessionDetails(concession.Id);
+                this.GetRelatedLendingConcessionTieredRates(lendingConcessionDetail);
                 lendingConcessions.Add(new LendingConcession
                 {
                     Concession = concession,
-                    LendingConcessionDetails = _miscPerformanceRepository.GetLendingConcessionDetails(concession.Id)
+                    LendingConcessionDetails = lendingConcessionDetail
                 });
             }
 
@@ -351,12 +360,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var lendingConcessions = new List<LendingConcession>();
             var concessions = _concessionManager.GetApprovedConcessionsForLegalEntityId(legalEntity.Id, Constants.ConcessionType.Lending, currentUser);
 
+            IEnumerable<LendingConcessionDetail> lendingConcessionDetail = null;
             foreach (var concession in concessions)
             {
+                lendingConcessionDetail = _miscPerformanceRepository.GetLendingConcessionDetails(concession.Id);
+                this.GetRelatedLendingConcessionTieredRates(lendingConcessionDetail);
                 lendingConcessions.Add(new LendingConcession
                 {
                     Concession = concession,
-                    LendingConcessionDetails = _miscPerformanceRepository.GetLendingConcessionDetails(concession.Id)
+                    LendingConcessionDetails = lendingConcessionDetail
                 });
             }
 
@@ -508,5 +520,58 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             //send the notification email
             await _mediator.Send(new ForwardConcession(lendingConcession.Concession, user));
         }
+
+        #region Concession Lending Tiered Rate
+        private IEnumerable<LendingConcessionDetailTieredRate> GetLendingConcessionTieredRates(int concessionLendingId)
+        {
+            var concessionLendingTieredRates = this._concessionLendingTieredRateRepository.ReadByConcessionLendingId(concessionLendingId);
+            return this._mapper.Map<IEnumerable<LendingConcessionDetailTieredRate>>(concessionLendingTieredRates);
+        }
+
+        private IEnumerable<LendingConcessionDetail> GetRelatedLendingConcessionTieredRates(IEnumerable<LendingConcessionDetail> lendingConcessionDetails)
+        {
+            foreach (var lendingConcessionDetail in lendingConcessionDetails)
+                lendingConcessionDetail.LendingConcessionDetailTieredRates = this.GetLendingConcessionTieredRates(lendingConcessionDetail.LendingConcessionDetailId);
+
+            return lendingConcessionDetails;
+        }
+
+        private void CreateConcessionLendingTieredRates(IEnumerable<LendingConcessionDetail> lendingConcessionDetails)
+        {
+            IEnumerable<ConcessionLendingTieredRate> concessionLendingTieredRates = null;
+            foreach (var lendingConcessionDetail in lendingConcessionDetails)
+            {
+                concessionLendingTieredRates = this._mapper.Map<IEnumerable<ConcessionLendingTieredRate>>(lendingConcessionDetail.LendingConcessionDetailTieredRates);
+                foreach (var concessionLendingTieredRate in concessionLendingTieredRates)
+                {
+                    this._concessionLendingTieredRateRepository.Create(concessionLendingTieredRate);
+                }
+            }
+        }
+
+        private void UpdateConcessionLendingTieredRates(IEnumerable<LendingConcessionDetail> lendingConcessionDetails)
+        {
+            IEnumerable<ConcessionLendingTieredRate> concessionLendingTieredRates = null;
+            foreach (var lendingConcessionDetail in lendingConcessionDetails)
+            {
+                concessionLendingTieredRates = this._mapper.Map<IEnumerable<ConcessionLendingTieredRate>>(lendingConcessionDetail.LendingConcessionDetailTieredRates);
+                foreach (var concessionLendingTieredRate in concessionLendingTieredRates)
+                {
+                    this._concessionLendingTieredRateRepository.Update(concessionLendingTieredRate);
+                }
+            }
+        }
+
+        private void DeleteConcessionLendingTieredRate(ConcessionLendingTieredRate concessionLendingTieredRate)
+        {
+            this._concessionLendingTieredRateRepository.Delete(concessionLendingTieredRate);
+        }
+
+        private void DeleteConcessionLendingTieredRates(IEnumerable<ConcessionLendingTieredRate> concessionLendingTieredRates)
+        {
+            foreach (var concessionLendingTieredRate in concessionLendingTieredRates)
+                this._concessionLendingTieredRateRepository.Delete(concessionLendingTieredRate);
+        }
+        #endregion
     }
 }

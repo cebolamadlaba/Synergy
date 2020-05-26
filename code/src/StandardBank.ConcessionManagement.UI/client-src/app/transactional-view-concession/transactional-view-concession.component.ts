@@ -916,7 +916,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
         this.errorMessage = null;
         this.validationError = null;
 
-        var transactionalConcession = this.getTransactionalConcession(true);
+        var transactionalConcession = this.getTransactionalConcession(false);
 
         transactionalConcession.concession.status = ConcessionStatus.Pending;
         transactionalConcession.concession.subStatus = ConcessionSubStatus.BCMPending;
