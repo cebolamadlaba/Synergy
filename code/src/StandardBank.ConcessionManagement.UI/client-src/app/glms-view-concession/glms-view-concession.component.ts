@@ -727,7 +727,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
         this.glmsConcessionForm.controls['motivation'].setValue('');
 
-        if (editType == EditTypeEnum.Renew || editType == EditTypeEnum.UpdateApproved) {
+        if (editType == EditTypeEnum.Renew) { // || editType == EditTypeEnum.UpdateApproved) {
             const concessions = this.getGlmsConcessionItemRows();
             for (let concessionFormItem of concessions.controls) {
                 // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.

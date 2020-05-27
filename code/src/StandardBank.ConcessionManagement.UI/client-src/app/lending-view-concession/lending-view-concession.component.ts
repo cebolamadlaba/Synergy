@@ -1075,8 +1075,16 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         this.canUpdate = false;
         this.canArchive = false;
 
-        if (editType == EditTypeEnum.Renew || editType == EditTypeEnum.UpdateApproved) {
-            this.setExpiryDateOnRenewOrUpdate();
+        if (editType == EditTypeEnum.Renew) { // || editType == EditTypeEnum.UpdateApproved) {
+            const concessions = this.getLendingConcessionItemRows();
+            for (let concessionFormItem of concessions.controls) {
+                // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
+                if (concessionFormItem.get('expiryDate').value) {
+                    let expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+                    expiryDate = new Date(expiryDate.setFullYear(expiryDate.getFullYear() + 1));
+                    concessionFormItem.get('expiryDate').setValue(this.datepipe.transform(expiryDate, 'yyyy-MM-dd'));
+                }
+            }
         }
         if (editType == EditTypeEnum.Renew) {
             this.baseComponentService.isRenewing = true;
@@ -1308,18 +1316,6 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                 this.errorMessage = <any>error;
                 this.isLoading = false;
             });
-        }
-    }
-
-    setExpiryDateOnRenewOrUpdate() {
-        const concessions = this.getLendingConcessionItemRows();
-        for (let concessionFormItem of concessions.controls) {
-            // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
-            if (concessionFormItem.get('expiryDate').value) {
-                let expiryDate = new Date(concessionFormItem.get('expiryDate').value);
-                expiryDate = new Date(expiryDate.setFullYear(expiryDate.getFullYear() + 1));
-                concessionFormItem.get('expiryDate').setValue(this.datepipe.transform(expiryDate, 'yyyy-MM-dd'));
-            }
         }
     }
 

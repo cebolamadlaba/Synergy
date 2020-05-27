@@ -918,17 +918,17 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
 
         this.bolConcessionForm.controls['motivation'].setValue('');
 
-        if (editType == EditTypeEnum.UpdateApproved) {
-            const concessions = this.getBolConcessionItemRows();
-            for (let concessionFormItem of concessions.controls) {
-                // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
-                if (concessionFormItem.get('expiryDate').value) {
-                    let expiryDate = new Date(concessionFormItem.get('expiryDate').value);
-                    expiryDate = new Date(expiryDate.setFullYear(expiryDate.getFullYear() + 1));
-                    concessionFormItem.get('expiryDate').setValue(this.datepipe.transform(expiryDate, 'yyyy-MM-dd'));
-                }
-            }
-        }
+        //if (editType == EditTypeEnum.UpdateApproved) {
+        //    const concessions = this.getBolConcessionItemRows();
+        //    for (let concessionFormItem of concessions.controls) {
+        //        // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
+        //        if (concessionFormItem.get('expiryDate').value) {
+        //            let expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+        //            expiryDate = new Date(expiryDate.setFullYear(expiryDate.getFullYear() + 1));
+        //            concessionFormItem.get('expiryDate').setValue(this.datepipe.transform(expiryDate, 'yyyy-MM-dd'));
+        //        }
+        //    }
+        //}
     }
 
     saveConcession() {

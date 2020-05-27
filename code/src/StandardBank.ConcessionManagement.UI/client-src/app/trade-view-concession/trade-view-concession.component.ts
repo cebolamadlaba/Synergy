@@ -54,7 +54,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
 
     concessionReferenceId: string;
     private sub: any;
-    errorMessage: String;    
+    errorMessage: String;
     saveMessage: String;
     warningMessage: String;
     notificationMessage: string;
@@ -1242,7 +1242,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
 
         this.tradeConcessionForm.controls['motivation'].setValue('');
 
-        if (editType == EditTypeEnum.Renew || editType == EditTypeEnum.UpdateApproved) {
+        if (editType == EditTypeEnum.Renew) { // || editType == EditTypeEnum.UpdateApproved) {
             const concessions = this.getTradeConcessionItemRows();
             for (let concessionFormItem of concessions.controls) {
                 // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.

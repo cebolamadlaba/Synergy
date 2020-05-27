@@ -824,7 +824,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
 
         this.cashConcessionForm.controls['motivation'].setValue('');
 
-        if (editType == EditTypeEnum.Renew || editType == EditTypeEnum.UpdateApproved) {
+        if (editType == EditTypeEnum.Renew) { //|| editType == EditTypeEnum.UpdateApproved) {
             const concessions = this.getCashConcessionItemRows();
             for (let concessionFormItem of concessions.controls) {
                 // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
