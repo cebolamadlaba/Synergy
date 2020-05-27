@@ -361,7 +361,7 @@ export class CashAddConcessionComponent extends CashBaseService implements OnIni
         cashConcession.concessionConditions = concessionConditionReturnObject.concessionConditions;
         this.validationError = concessionConditionReturnObject.validationError;
 
-        this.checkConcessionExpiryDate(cashConcession);
+        super.checkConcessionExpiryDate(cashConcession);
 
         return cashConcession;
     }

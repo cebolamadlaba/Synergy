@@ -541,7 +541,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
         cashConcession.concessionConditions = concessionConditionReturnObject.concessionConditions;
         this.validationError = concessionConditionReturnObject.validationError;
 
-        this.checkConcessionExpiryDate(cashConcession);
+        super.checkConcessionExpiryDate(cashConcession);
 
         return cashConcession;
     }
