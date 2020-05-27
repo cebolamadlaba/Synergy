@@ -18,6 +18,6 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
 
         void Update(ConcessionLendingTieredRate model);
 
-        void Delete(ConcessionLendingTieredRate model);
+        void Delete(int concessionLendingTieredRateId);
     }
 }

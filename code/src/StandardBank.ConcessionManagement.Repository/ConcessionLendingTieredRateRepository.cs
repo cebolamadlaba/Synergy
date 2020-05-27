@@ -42,8 +42,8 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionLendingTieredRate>(
-                    @"SELECT [pkConcessionLendingTieredRateId]
-                            ,[fkConcessionLendingId]
+                    @"SELECT [pkConcessionLendingTieredRateId] [Id]
+                            ,[fkConcessionLendingId] [ConcessionLendingId]
                             ,[Limit]
                             ,[MarginToPrime]
                         FROM [tblConcessionLendingTieredRate]
@@ -57,8 +57,8 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionLendingTieredRate>(
-                    @"SELECT [pkConcessionLendingTieredRateId]
-                            ,[fkConcessionLendingId]
+                    @"SELECT [pkConcessionLendingTieredRateId] [Id]
+                            ,[fkConcessionLendingId] [ConcessionLendingId]
                             ,[Limit]
                             ,[MarginToPrime]
                         FROM [tblConcessionLendingTieredRate]
@@ -72,8 +72,8 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionLendingTieredRate>(
-                    @"SELECT [pkConcessionLendingTieredRateId]
-                            ,[fkConcessionLendingId]
+                    @"SELECT [pkConcessionLendingTieredRateId] [Id]
+                            ,[fkConcessionLendingId] [ConcessionLendingId]
                             ,[Limit]
                             ,[MarginToPrime]
                         FROM [tblConcessionLendingTieredRate]");
@@ -100,13 +100,13 @@ namespace StandardBank.ConcessionManagement.Repository
             }
         }
 
-        public void Delete(ConcessionLendingTieredRate model)
+        public void Delete(int concessionLendingTieredRateId)
         {
             using (var db = _dbConnectionFactory.Connection())
             {
                 db.Execute(@"DELETE [dbo].[tblConcessionLendingTieredRate] 
                             WHERE [pkConcessionLendingTieredRateId] = @Id",
-                    new { model.Id });
+                    new { Id = concessionLendingTieredRateId });
             }
         }
     }

@@ -163,6 +163,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public ConcessionLending DeleteConcessionLending(LendingConcessionDetail lendingConcessionDetail)
         {
+            if (lendingConcessionDetail.LendingConcessionDetailTieredRates != null && lendingConcessionDetail.LendingConcessionDetailTieredRates.Count() > 0)
+            {
+                var concessionLendingTieredRates = this._mapper.Map<IEnumerable<ConcessionLendingTieredRate>>(lendingConcessionDetail.LendingConcessionDetailTieredRates);
+                this.DeleteConcessionLendingTieredRates(concessionLendingTieredRates);
+            }
+
             var concessionLending =
                 _concessionLendingRepository.ReadById(lendingConcessionDetail.LendingConcessionDetailId);
 
@@ -180,6 +186,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public ConcessionLending UpdateConcessionLending(LendingConcessionDetail lendingConcessionDetail,
             Concession concession)
         {
+            this.UpdateConcessionLendingTieredRates(lendingConcessionDetail);
+
             var concessionLending = _mapper.Map<ConcessionLending>(lendingConcessionDetail);
 
             concessionLending.ConcessionId = concession.Id;
@@ -536,41 +544,71 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             return lendingConcessionDetails;
         }
 
-        private void CreateConcessionLendingTieredRates(IEnumerable<LendingConcessionDetail> lendingConcessionDetails)
+        public void CreateConcessionLendingTieredRates(IEnumerable<LendingConcessionDetailTieredRate> lendingConcessionDetailTieredRates)
         {
-            IEnumerable<ConcessionLendingTieredRate> concessionLendingTieredRates = null;
-            foreach (var lendingConcessionDetail in lendingConcessionDetails)
+            if (lendingConcessionDetailTieredRates == null || lendingConcessionDetailTieredRates.Count() == 0)
+                return;
+
+            var concessionLendingTieredRates = this._mapper.Map<IEnumerable<ConcessionLendingTieredRate>>(lendingConcessionDetailTieredRates);
+            foreach (var concessionLendingTieredRate in concessionLendingTieredRates)
             {
-                concessionLendingTieredRates = this._mapper.Map<IEnumerable<ConcessionLendingTieredRate>>(lendingConcessionDetail.LendingConcessionDetailTieredRates);
-                foreach (var concessionLendingTieredRate in concessionLendingTieredRates)
-                {
-                    this._concessionLendingTieredRateRepository.Create(concessionLendingTieredRate);
-                }
+                this._concessionLendingTieredRateRepository.Create(concessionLendingTieredRate);
             }
         }
 
-        private void UpdateConcessionLendingTieredRates(IEnumerable<LendingConcessionDetail> lendingConcessionDetails)
+        public void CreateConcessionLendingTieredRates(IEnumerable<LendingConcessionDetail> lendingConcessionDetails)
         {
-            IEnumerable<ConcessionLendingTieredRate> concessionLendingTieredRates = null;
+            if (lendingConcessionDetails == null || lendingConcessionDetails.Count() == 0)
+                return;
+
             foreach (var lendingConcessionDetail in lendingConcessionDetails)
             {
-                concessionLendingTieredRates = this._mapper.Map<IEnumerable<ConcessionLendingTieredRate>>(lendingConcessionDetail.LendingConcessionDetailTieredRates);
-                foreach (var concessionLendingTieredRate in concessionLendingTieredRates)
-                {
-                    this._concessionLendingTieredRateRepository.Update(concessionLendingTieredRate);
-                }
+                this.CreateConcessionLendingTieredRates(lendingConcessionDetail.LendingConcessionDetailTieredRates);
             }
         }
 
-        private void DeleteConcessionLendingTieredRate(ConcessionLendingTieredRate concessionLendingTieredRate)
+        public void UpdateConcessionLendingTieredRates(LendingConcessionDetail lendingConcessionDetail)
         {
-            this._concessionLendingTieredRateRepository.Delete(concessionLendingTieredRate);
+            if (lendingConcessionDetail == null)
+                return;
+            if (lendingConcessionDetail.LendingConcessionDetailTieredRates == null || lendingConcessionDetail.LendingConcessionDetailTieredRates.Count() == 0)
+                return;
+
+            var concessionLendingTieredRates = this._mapper.Map<IEnumerable<ConcessionLendingTieredRate>>(lendingConcessionDetail.LendingConcessionDetailTieredRates);
+            foreach (var concessionLendingTieredRate in concessionLendingTieredRates)
+            {
+                this._concessionLendingTieredRateRepository.Update(concessionLendingTieredRate);
+            }
+
+            // remove tiered rates no longer present.
+            var dbLendingConcessionTieredRates = this.GetLendingConcessionTieredRates(lendingConcessionDetail.LendingConcessionDetailId);
+            foreach (var dbLendingConcessionTieredRate in dbLendingConcessionTieredRates)
+            {
+                if (concessionLendingTieredRates.Any(a => a.Id != dbLendingConcessionTieredRate.Id))
+                    this.DeleteConcessionLendingTieredRate(dbLendingConcessionTieredRate.Id);
+            }
         }
 
-        private void DeleteConcessionLendingTieredRates(IEnumerable<ConcessionLendingTieredRate> concessionLendingTieredRates)
+        public void UpdateConcessionLendingTieredRates(IEnumerable<LendingConcessionDetail> lendingConcessionDetails)
+        {
+            if (lendingConcessionDetails == null || lendingConcessionDetails.Count() == 0)
+                return;
+
+            foreach (var lendingConcessionDetail in lendingConcessionDetails)
+            {
+                this.UpdateConcessionLendingTieredRates(lendingConcessionDetail);
+            }
+        }
+
+        public void DeleteConcessionLendingTieredRate(int concessionLendingTieredRateId)
+        {
+            this._concessionLendingTieredRateRepository.Delete(concessionLendingTieredRateId);
+        }
+
+        public void DeleteConcessionLendingTieredRates(IEnumerable<ConcessionLendingTieredRate> concessionLendingTieredRates)
         {
             foreach (var concessionLendingTieredRate in concessionLendingTieredRates)
-                this._concessionLendingTieredRateRepository.Delete(concessionLendingTieredRate);
+                this.DeleteConcessionLendingTieredRate(concessionLendingTieredRate.Id);
         }
         #endregion
     }
