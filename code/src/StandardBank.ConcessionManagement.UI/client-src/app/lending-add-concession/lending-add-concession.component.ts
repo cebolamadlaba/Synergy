@@ -314,6 +314,11 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
         let currentRow = control.controls[rowIndex];
         var productType = currentRow.get('productType').value;
 
+        // Is the product Overdraft or Temporary Overdraft?
+        {
+
+        }
+
         this.selectedProductTypes[rowIndex] = productType;
 
         if (this.clientAccounts && this.clientAccounts.length > 0) {
