@@ -541,6 +541,8 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
         transactionalConcession.concessionConditions = concessionConditionReturnObject.concessionConditions;
         this.validationError = concessionConditionReturnObject.validationError;
 
+        super.checkConcessionExpiryDate(transactionalConcession);
+
         return transactionalConcession;
     }
 
@@ -823,7 +825,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
 
         this.transactionalConcessionForm.controls['motivation'].setValue('');
 
-        if (editType == EditTypeEnum.Renew || editType == EditTypeEnum.UpdateApproved) {
+        if (editType == EditTypeEnum.Renew) { // || editType == EditTypeEnum.UpdateApproved) {
             const concessions = this.getTransactionalConcessionItemRows();
             for (let concessionFormItem of concessions.controls) {
                 // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
@@ -916,7 +918,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
         this.errorMessage = null;
         this.validationError = null;
 
-        var transactionalConcession = this.getTransactionalConcession(true);
+        var transactionalConcession = this.getTransactionalConcession(false);
 
         transactionalConcession.concession.status = ConcessionStatus.Pending;
         transactionalConcession.concession.subStatus = ConcessionSubStatus.BCMPending;

@@ -1,4 +1,7 @@
-﻿namespace StandardBank.ConcessionManagement.Model.UserInterface.Lending
+﻿using System.Collections;
+using System.Collections.Generic;
+
+namespace StandardBank.ConcessionManagement.Model.UserInterface.Lending
 {
     /// <summary>
     /// Lending concession detail
@@ -104,5 +107,7 @@
         public string Frequency { get; set; }
 
         public int MrsEri { get; set; }
+
+        public IEnumerable<LendingConcessionDetailTieredRate> LendingConcessionDetailTieredRates { get; set; }
     }
 }

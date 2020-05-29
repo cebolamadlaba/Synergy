@@ -541,7 +541,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
         cashConcession.concessionConditions = concessionConditionReturnObject.concessionConditions;
         this.validationError = concessionConditionReturnObject.validationError;
 
-        this.checkConcessionExpiryDate(cashConcession);
+        super.checkConcessionExpiryDate(cashConcession);
 
         return cashConcession;
     }
@@ -824,7 +824,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
 
         this.cashConcessionForm.controls['motivation'].setValue('');
 
-        if (editType == EditTypeEnum.Renew || editType == EditTypeEnum.UpdateApproved) {
+        if (editType == EditTypeEnum.Renew) { //|| editType == EditTypeEnum.UpdateApproved) {
             const concessions = this.getCashConcessionItemRows();
             for (let concessionFormItem of concessions.controls) {
                 // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
@@ -919,7 +919,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
         this.errorMessage = null;
         this.validationError = null;
 
-        var cashConcession = this.getCashConcession(true);
+        var cashConcession = this.getCashConcession(false);
 
         cashConcession.concession.status = ConcessionStatus.Pending;
         cashConcession.concession.subStatus = ConcessionSubStatus.BCMPending;

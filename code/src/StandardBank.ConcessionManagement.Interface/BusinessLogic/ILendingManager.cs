@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
@@ -65,5 +66,19 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         LendingFinancial GetLendingFinancialForRiskGroupNumber(int riskGroupNumber);
 
         Task ForwardLendingConcession(LendingConcession lendingConcession, User user);
+
+        #region Concession Lending Tiered Rate
+        void CreateConcessionLendingTieredRates(IEnumerable<LendingConcessionDetailTieredRate> lendingConcessionDetailTieredRates);
+
+        void CreateConcessionLendingTieredRates(IEnumerable<LendingConcessionDetail> lendingConcessionDetails);
+
+        void UpdateConcessionLendingTieredRates(LendingConcessionDetail lendingConcessionDetail);
+
+        void UpdateConcessionLendingTieredRates(IEnumerable<LendingConcessionDetail> lendingConcessionDetails);
+
+        void DeleteConcessionLendingTieredRate(int concessionLendingTieredRateId);
+
+        void DeleteConcessionLendingTieredRates(IEnumerable<StandardBank.ConcessionManagement.Model.Repository.ConcessionLendingTieredRate> concessionLendingTieredRates);
+        #endregion
     }
 }

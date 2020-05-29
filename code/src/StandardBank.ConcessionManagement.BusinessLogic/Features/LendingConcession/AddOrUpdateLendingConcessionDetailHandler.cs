@@ -41,6 +41,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.LendingConces
 
                 message.AuditRecord = new AuditRecord(result, message.User, AuditType.Insert);
                 message.LendingConcessionDetail.LendingConcessionDetailId = result.Id;
+
+                if (result.Id > 0)
+                {
+                    _lendingManager.CreateConcessionLendingTieredRates(message.LendingConcessionDetail.LendingConcessionDetailTieredRates);
+                }
             }
             else
             {

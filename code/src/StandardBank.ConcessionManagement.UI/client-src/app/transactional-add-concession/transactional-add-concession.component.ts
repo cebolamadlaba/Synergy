@@ -350,7 +350,7 @@ export class TransactionalAddConcessionComponent extends TransactionalBaseServic
         transactionalConcession.concessionConditions = concessionConditionReturnObject.concessionConditions;
         this.validationError = concessionConditionReturnObject.validationError;
 
-        this.checkConcessionExpiryDate(transactionalConcession);
+        super.checkConcessionExpiryDate(transactionalConcession);
 
         return transactionalConcession;
     }

@@ -109,6 +109,9 @@ namespace StandardBank.ConcessionManagement.UI.Extension
                 .ForMember(target => target.LoadedMarginToPrime, _ => _.MapFrom(source => source.LoadedMap))
                 .ForMember(target => target.MRS_ERI, _ => _.MapFrom(source => source.MrsEri));
 
+            //ConcessionLendingTieredRate
+            CreateMap<Model.Repository.ConcessionLendingTieredRate, Model.UserInterface.Lending.LendingConcessionDetailTieredRate>().ReverseMap();
+
             //ConcessionRelationship
             CreateMap<Model.Repository.ConcessionRelationship, Model.UserInterface.ConcessionRelationship>()
                 .ReverseMap();
@@ -155,7 +158,7 @@ namespace StandardBank.ConcessionManagement.UI.Extension
 
             //Period
             CreateMap<Model.Repository.Period, Model.UserInterface.Period>().ReverseMap();
-     
+
             //GlmsGroup
             CreateMap<Model.Repository.GlmsGroup, Model.UserInterface.GlmsGroup>().ReverseMap();
 

@@ -553,7 +553,7 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
         let currentRow = control.controls[rowIndex];
         var productType = currentRow.get('productType').value;
 
-        if (productType.description == 'Notice deposit (BND)') {           
+        if (productType.description == 'Notice deposit (BND)') {
             return false;
         }
         else {
@@ -608,7 +608,7 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
         investmentConcession.concession.referenceNumber = this.concessionReferenceId;
         investmentConcession.concession.concessionType = ConcessionTypes.Investment;
 
-       
+
 
         if (this.investmentConcessionForm.controls['smtDealNumber'].value) {
             investmentConcession.concession.smtDealNumber = this.investmentConcessionForm.controls['smtDealNumber'].value;
@@ -1017,7 +1017,7 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
 
         this.investmentConcessionForm.controls['motivation'].setValue('');
 
-        if (editType == EditTypeEnum.Renew || editType == EditTypeEnum.UpdateApproved) {
+        if (editType == EditTypeEnum.Renew) { // || editType == EditTypeEnum.UpdateApproved) {
             const concessions = this.getInvestmentConcessionItemRows();
             for (let concessionFormItem of concessions.controls) {
                 // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.

@@ -125,7 +125,7 @@
     <Build Include="dbo\Tables\tblProductInvestment.sql" />
     <Build Include="dbo\Tables\tblFinancialInvestment.sql" />
     <Build Include="dbo\Tables\rtblRegion.sql" />
-    <Build Include="dbo\Views\ConcessionInboxView.sql" />
+    <None Include="dbo\Views\ConcessionInboxView.sql" />
     <Build Include="dbo\Stored Procedures\UpdateUser.sql" />
     <Build Include="dbo\Stored Procedures\CreateUser.sql" />
     <Build Include="dbo\Views\ConcessionConditionView.sql" />
