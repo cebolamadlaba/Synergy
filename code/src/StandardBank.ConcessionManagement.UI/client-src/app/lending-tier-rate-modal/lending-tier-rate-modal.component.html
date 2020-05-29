@@ -1,0 +1,39 @@
+
+<div class="col-md-12 modal-header">
+    <h4>Tiered Rates</h4>
+</div>
+<div class="col-md-12 modal-body">
+    <div class="row">
+        <div class="col-md-12 modal-title">
+            <button type="button" class="btn btn-primary" (click)="addNewTieredRateRow()">Add Tiered Rate</button>
+        </div>
+    </div>
+    <table class="form-concessions-table" style="width:100%">
+        <thead class="form-concessions-table-headings">
+            <tr *ngIf="selectedLineItemTieredRates.length > 0">
+                <th>Limit</th>
+                <th>Prime(-/+) / Fixed rate</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody class="form-concessions-table-content">
+            <tr *ngIf="selectedLineItemTieredRates.length == 0">
+                <td colspan="3" class="searchEmptyState">
+                    No tiered rates added
+                </td>
+            </tr>
+            <tr *ngFor="let lendingTieredRate of selectedLineItemTieredRates; let i=index">
+                <!-- Limit -->
+                <td style="width:40%"><input type="text" numbersOnly="true" class="form-control" [(ngModel)]="lendingTieredRate.limit" (change)="setTwoNumberDecimal($event)" /></td>
+                <!-- Prime -->
+                <td style="width:40%"><input type="text" class="form-control" [(ngModel)]="lendingTieredRate.marginToPrime" (change)="setTwoNumberDecimalMAP($event)" /></td>
+                <!-- Remove Row-->
+                <td style="width:10%"><button class="btn-delete" type="button" (click)="deleteTieredRateRow(i)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="saveTieredRates()">Save</button>
+</div>

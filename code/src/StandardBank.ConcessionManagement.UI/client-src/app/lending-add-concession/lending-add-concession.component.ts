@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy, ViewChild } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
@@ -21,7 +21,9 @@ import { LegalEntity } from '../models/legal-entity';
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
 import { MrsEriEnum } from '../models/mrs-eri-enum';
-import { ConcessionConditionReturnObject } from '../models/concession-condition-return-object';	
+import { ConcessionConditionReturnObject } from '../models/concession-condition-return-object';
+import { ProductTypeEnum } from '../models/product-type-enum';
+import { LendingConcessionTieredRate } from '../models/lending-concession-tiered-rate';
 
 import { Location } from '@angular/common';
 import { LookupDataService } from "../services/lookup-data.service";
@@ -39,6 +41,9 @@ import { LendingBaseService } from '../services/lending-base.service';
     providers: [LendingBaseService]
 })
 export class LendingAddConcessionComponent extends LendingBaseService implements OnInit, OnDestroy {
+
+    @ViewChild('tieredRateModal') tieredRateModal: any;
+
     public lendingConcessionForm: FormGroup;
     private sub: any;
     showHide = false;
@@ -56,10 +61,14 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
     selectedProductTypes: ProductType[];
     selectedAccountNumbers: ClientAccountArray[];
 
+    selectedRowIndex: number;
+    selectedLineItemTieredRates: any[];
+
     entityName: string;
     entityNumber: string;
 
     isLoading = true;
+    isOverdraftProductType = false;
 
     primeRate = "0.00";
     today: string;
@@ -140,6 +149,7 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
             frequency: [{ value: '', disabled: true }],
             serviceFee: [{ value: '', disabled: true }],
             mrsEri: [''],
+            lendingTieredRates: [[]]
         });
     }
 
@@ -315,8 +325,11 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
         var productType = currentRow.get('productType').value;
 
         // Is the product Overdraft or Temporary Overdraft?
-        {
-
+        if (productType.description == ProductTypeEnum.Overdraft || productType.description == ProductTypeEnum.TemporaryOverdraft) {
+            this.isOverdraftProductType = true;
+        }
+        else {
+            this.isOverdraftProductType = false;
         }
 
         this.selectedProductTypes[rowIndex] = productType;
@@ -382,6 +395,19 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
             currentRow.get('frequency').disable();
             currentRow.get('serviceFee').disable();
         }
+    }
+
+    openTieredRateModal(rowIndex) {
+        this.selectedRowIndex = rowIndex;
+        const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        this.selectedLineItemTieredRates = concessions.controls[rowIndex].get('lendingTieredRates').value;
+    }
+
+    saveTieredRates(lendingConcessionTieredRates: LendingConcessionTieredRate[]) {
+        const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        concessions.controls[this.selectedRowIndex].get('lendingTieredRates').setValue(lendingConcessionTieredRates);
+        this.selectedRowIndex = 0;
+        this.selectedLineItemTieredRates = [];
     }
 
     onSubmit() {

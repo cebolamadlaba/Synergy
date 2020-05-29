@@ -129,6 +129,7 @@
                 <th>UFF Fee (%)</th>
                 <th>MRS/ERI</th>
                 <th></th>
+                <th></th>
             </tr>
         </thead>
         <tbody class="form-concessions-table-content">
@@ -184,6 +185,10 @@
                 <!-- MRS/BRI -->
                 <td class="length-short"><input type="text" numbersOnly="true" maxlength="2" class="form-control" formControlName="mrsEri" /></td>
                 <td><button *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                <td>
+                    <input type="button" class="btn btn-primary line-item-button" value="Tiered Rate" *ngIf="isOverdraftProductType"
+                           data-toggle="modal" data-target="#tieredRateModal" (click)="openTieredRateModal(i)" />
+                </td>
             </tr>
         </tbody>
     </table>
@@ -247,6 +252,16 @@
                         <button type="button" class="btn btn-primary" (click)="manageConditionsModal.hide()">Done</button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="tieredRateModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <app-lending-tier-rate-modal (selectedLineItemTieredRates)="selectedLineItemTieredRates" (newItemEvent)="saveTieredRates($event)"></app-lending-tier-rate-modal>
             </div>
         </div>
     </div>

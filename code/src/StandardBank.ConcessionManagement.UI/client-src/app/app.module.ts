@@ -107,6 +107,7 @@ import { PricingGlmsComponent } from './pricing-glms/pricing-glms.component';
 import { GlmsAddConcessionComponent } from './glms-add-concession/glms-add-concession.component';
 import { GlmsViewConcessionComponent } from './glms-view-concession/glms-view-concession.component';
 import { ConcessionConditionModalComponent } from './concession-condition-modal/concession-condition-modal.component';
+import { LendingTierRateModalComponent } from './lending-tier-rate-modal/lending-tier-rate-modal.component';
 
 
 @NgModule({
@@ -171,7 +172,8 @@ import { ConcessionConditionModalComponent } from './concession-condition-modal/
         PricingGlmsComponent,
         GlmsAddConcessionComponent,
         GlmsViewConcessionComponent,
-        ConcessionConditionModalComponent
+        ConcessionConditionModalComponent,
+        LendingTierRateModalComponent
 
     ],
     imports: [
