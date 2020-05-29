@@ -541,6 +541,8 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
         transactionalConcession.concessionConditions = concessionConditionReturnObject.concessionConditions;
         this.validationError = concessionConditionReturnObject.validationError;
 
+        super.checkConcessionExpiryDate(transactionalConcession);
+
         return transactionalConcession;
     }
 

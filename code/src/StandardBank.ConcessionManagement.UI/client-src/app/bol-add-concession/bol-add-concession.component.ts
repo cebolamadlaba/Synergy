@@ -322,7 +322,7 @@ export class BolAddConcessionComponent extends BolConcessionBaseService implemen
         var oldSelectedProduct = this.selectedProducts[rowIndex];
         if (oldSelectedProduct.description.toUpperCase() == BolChargeCodeTypes.BolSalaryPayments) {
             this.deleteBolSalaryPaymentsLineItems();
-        }        
+        }
 
         const control = <FormArray>this.bolConcessionForm.controls['concessionItemRows'];
 
@@ -339,13 +339,13 @@ export class BolAddConcessionComponent extends BolConcessionBaseService implemen
             return;
         }
 
-        this.selectedProducts[rowIndex] = control.controls[rowIndex].get('product').value;        
+        this.selectedProducts[rowIndex] = control.controls[rowIndex].get('product').value;
 
         var selectedProductRelationships = this.bolChargeCodeRelationships.filter(cr => cr.fkChargeCodeTypeId == selectedproduct.pkChargeCodeTypeId);
 
         this.selectedProducts[rowIndex].bolchargecodes = this.bolchargecodes.filter(re =>
             selectedProductRelationships.find(({ fkChargeCodeId }) => re.pkChargeCodeId == fkChargeCodeId));
-        currentProduct.get('chargecode').setValue(this.selectedProducts[rowIndex].bolchargecodes[0]);     
+        currentProduct.get('chargecode').setValue(this.selectedProducts[rowIndex].bolchargecodes[0]);
 
         currentProduct.get('rate').setValue(this.selectedProducts[rowIndex].bolchargecodes[0].rate);
 
@@ -493,7 +493,7 @@ export class BolAddConcessionComponent extends BolConcessionBaseService implemen
             } else {
                 this.addValidationError("User ID not selected");
             }
-            
+
             if (concessionFormItem.get('parent').value == BolChargeCodeTypes.BolSalaryPayments) {
                 var bolSalaryPaymentsParent = concessions.controls.filter(c => c.get('parent').value == "" &&
                     c.get('product').value.description.toUpperCase() == BolChargeCodeTypes.BolSalaryPayments);
@@ -531,6 +531,8 @@ export class BolAddConcessionComponent extends BolConcessionBaseService implemen
         let concessionConditionReturnObject = this.baseComponentService.getConsessionConditionData(conditions, bolConcession.concessionConditions, this.validationError);
         bolConcession.concessionConditions = concessionConditionReturnObject.concessionConditions;
         this.validationError = concessionConditionReturnObject.validationError;
+
+        super.checkConcessionExpiryDate(bolConcession);
 
         return bolConcession;
     }

@@ -628,6 +628,8 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
         bolConcession.concessionConditions = concessionConditionReturnObject.concessionConditions;
         this.validationError = concessionConditionReturnObject.validationError;
 
+        super.checkConcessionExpiryDate(bolConcession);
+
         return bolConcession;
     }
 

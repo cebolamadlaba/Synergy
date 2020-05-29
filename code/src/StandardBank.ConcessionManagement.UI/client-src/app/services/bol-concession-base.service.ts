@@ -1,4 +1,5 @@
 import { ConditionType } from "../models/condition-type";
+import { BolConcession } from "../models/bol-concession";
 
 export class BolConcessionBaseService {
 
@@ -42,6 +43,19 @@ export class BolConcessionBaseService {
             this.validationError = [];
 
         this.validationError.push(validationDetail);
+    }
+
+    checkConcessionExpiryDate(bolConcession: BolConcession) {
+        if (bolConcession.bolConcessionDetails.length > 1) {
+            var firstDate;
+            bolConcession.bolConcessionDetails.forEach(concession => {
+                if (!firstDate) {
+                    firstDate = concession.expiryDate;
+                } else if (firstDate.getTime() != concession.expiryDate.getTime()) {
+                    this.addValidationError("All concessions must have the same expiry date.");
+                }
+            });
+        }
     }
 }
 
