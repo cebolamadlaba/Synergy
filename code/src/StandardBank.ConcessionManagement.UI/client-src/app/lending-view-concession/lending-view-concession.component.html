@@ -195,6 +195,7 @@
                 <th *ngIf="isApproved">Date Approved</th>
                 <th></th>
                 <th *ngIf="canArchive"></th>
+                <th></th>
             </tr>
         </thead>
 
@@ -218,13 +219,20 @@
                     </select>
                 </td>
                 <!-- Limit -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="limit" class="form-control" [attr.disabled]="disableField(i,'limit')" (change)="setTwoNumberDecimal($event)" [class.markred]="bcmhochanged(i,'limit')" /></td>
+                <td class="length-short">
+                    <input type="text" numbersOnly="true" formControlName="limit" class="form-control" [attr.disabled]="disableField(i,'limit')"
+                           (change)="setTwoNumberDecimal($event)" [class.markred]="bcmhochanged(i,'limit')" (click)="openTieredRateModal(i)" />
+                </td>
                 <!-- Term -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="term" class="form-control" [attr.disabled]="disableField(i,'term')" [class.markred]="bcmhochanged(i,'term')" (keyup)="onTermValueChange(i)" /></td>
+                <td class="length-short">
+                    <input type="text" numbersOnly="true" formControlName="term" class="form-control" [attr.disabled]="disableField(i,'term')"
+                           [class.markred]="bcmhochanged(i,'term')" (keyup)="onTermValueChange(i)" />
+                </td>
                 <!-- MAP -->
                 <td class="length-short">
 
-                    <input type="text" formControlName="marginAgainstPrime" [attr.disabled]="disableField(i,'marginAgainstPrime')" (change)="setTwoNumberDecimalMAP($event)" class="form-control" [class.markred]="bcmhochanged(i,'marginAgainstPrime')" />
+                    <input type="text" formControlName="marginAgainstPrime" [attr.disabled]="disableField(i,'marginAgainstPrime')" (change)="setTwoNumberDecimalMAP($event)"
+                           class="form-control" [class.markred]="bcmhochanged(i,'marginAgainstPrime')" (click)="openTieredRateModal(i)" />
 
                 </td>
                 <td class="length-short" *ngIf="isApproved"><input type="text" numbersOnly="true" formControlName="approvedMarginAgainstPrime" class="form-control" /></td>
@@ -267,6 +275,10 @@
                     <button *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="archiveConcessiondetail(itemrow.get('concessionDetailId').value)" class="btn-delete" title="Remove"><i class="fa fa-trash" aria-hidden="true" style="color:#920000"></i></button>
                 </td>
                 <td *ngIf="canBcmApprove || canPcmApprove || isEditing || isRecalling"><button type="button" *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                <td>
+                    <input type="button" class="btn btn-primary line-item-button" value="Tiered Rate" *ngIf="showTieredRateButton(i)"
+                           data-toggle="modal" data-target="#tieredRateModal" (click)="openTieredRateModal(i)" />
+                </td>
             </tr>
         </tbody>
     </table>
@@ -431,5 +443,56 @@
     </div>
 </form>
 
+<!-- Modal -->
+<div bsModal #tieredRateModal="bs-modal" class="modal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="col-md-12 modal-header">
+                <h4>Tiered Rates</h4>
+            </div>
+            <div class="col-md-12 modal-body">
+                <div class="row" *ngIf="this.tieredRateMessage.length > 0">
+                    <div class="alert alert-danger" role="alert">
+                        {{tieredRateMessage}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 modal-title">
+                        <button type="button" class="btn btn-primary" (click)="addNewTieredRateRow()" *ngIf="canEdit">Add Tiered Rate</button>
+                    </div>
+                </div>
+                <table class="form-concessions-table" style="width:100%">
+                    <thead class="form-concessions-table-headings">
+                        <tr *ngIf="selectedLineItemTieredRates.length > 0">
+                            <th>Limit</th>
+                            <th>Prime(-/+) / Fixed rate</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="form-concessions-table-content">
+                        <tr *ngIf="selectedLineItemTieredRates.length == 0">
+                            <td colspan="3" class="searchEmptyState">
+                                No tiered rates added
+                            </td>
+                        </tr>
+                        <tr *ngFor="let lendingTieredRate of selectedLineItemTieredRates; let i=index">
+                            <!-- Limit -->
+                            <td style="width:40%"><input type="text" numbersOnly="true" class="form-control" [(ngModel)]="lendingTieredRate.limit" (change)="setTwoNumberDecimal($event)" [disabled]="!canEdit" /></td>
+                            <!-- Prime -->
+                            <td style="width:40%"><input type="text" class="form-control" [(ngModel)]="lendingTieredRate.marginToPrime" (change)="setTwoNumberDecimalMAP($event)" [disabled]="!canEdit" /></td>
+                            <!-- Remove Row-->
+                            <td style="width:10%"><button class="btn-delete" type="button" (click)="deleteTieredRateRow(i)" *ngIf="canEdit"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" (click)="tieredRateModal.hide()">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="saveTieredRates()" *ngIf="canEdit">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <p>&nbsp;</p>
