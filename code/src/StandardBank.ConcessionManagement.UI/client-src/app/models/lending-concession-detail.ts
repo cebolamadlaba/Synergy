@@ -23,7 +23,7 @@ export class LendingConcessionDetail extends BaseConcessionDetail {
 
     mrsEri: number;
 
-    lendingTieredRates: LendingConcessionTieredRate[];
+    lendingConcessionDetailTieredRates: LendingConcessionTieredRate[];
 
     show_term: boolean;
     show_reviewFeeType: boolean;
