@@ -1,8 +1,8 @@
 
 export class LendingConcessionTieredRate{
 
-    pkConcessionLendingTieredRateId: number;
-    fkConcessionLendingId: number;
+    id: number;
+    concessionLendingId: number;
     limit: number;
     marginToPrime: number;
 }

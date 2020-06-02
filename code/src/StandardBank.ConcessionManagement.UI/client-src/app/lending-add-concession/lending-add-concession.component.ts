@@ -317,25 +317,6 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
         }
     }
 
-    showTieredRateButton(rowIndex: number) {
-        const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
-        let currentRow = control.controls[rowIndex];
-        var productType = currentRow.get('productType').value;
-        // Is the product Overdraft or Temporary Overdraft?
-        if (productType.description == ProductTypeEnum.Overdraft || productType.description == ProductTypeEnum.TemporaryOverdraft) {
-            //currentRow.get('limit').disable();
-            //currentRow.get('marginAgainstPrime').disable();
-            return true;
-        }
-        else {
-            //currentRow.get('limit').enable();
-            //currentRow.get('marginAgainstPrime').enable();
-            return false;
-        }
-
-
-    }
-
     productTypeChanged(rowIndex: number) {
 
         //console.log('Row:' + rowIndex);
@@ -417,6 +398,19 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
         }
     }
 
+    showTieredRateButton(rowIndex: number) {
+        const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        let currentRow = control.controls[rowIndex];
+        var productType = currentRow.get('productType').value;
+        // Is the product Overdraft or Temporary Overdraft?
+        if (productType.description == ProductTypeEnum.Overdraft || productType.description == ProductTypeEnum.TemporaryOverdraft) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     openTieredRateModal(rowIndex) {
         if (this.showTieredRateButton(rowIndex)) {
             this.tieredRateModal.show();
@@ -437,8 +431,8 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
         this.tieredRateMessage = "";
         if (this.selectedLineItemTieredRates.length < 3) {
             let tieredRate = new LendingConcessionTieredRate();
-            tieredRate.pkConcessionLendingTieredRateId = 0;
-            tieredRate.fkConcessionLendingId = 0;
+            tieredRate.id = 0;
+            tieredRate.concessionLendingId = 0;
             tieredRate.limit = 0;
             tieredRate.marginToPrime = 0;
 
@@ -524,8 +518,10 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
                     isOverdraftOrTempOverdraft = false;
                 }
             }
-            else
+            else {
                 this.addValidationError("Product type not selected");
+                hasProductType = true;
+            }
 
             if (concessionFormItem.get('accountNumber').value) {
                 lendingConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
@@ -640,8 +636,8 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
                 }
 
                 let tieredRate = new LendingConcessionTieredRate();
-                tieredRate.pkConcessionLendingTieredRateId = 0;
-                tieredRate.fkConcessionLendingId = 0;
+                tieredRate.id = 0;
+                tieredRate.concessionLendingId = 0;
 
                 if (concessionFormItem.get('limit').value)
                     tieredRate.limit = concessionFormItem.get('limit').value;
