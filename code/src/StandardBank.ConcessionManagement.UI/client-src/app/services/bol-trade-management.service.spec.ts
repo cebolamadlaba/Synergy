@@ -1,15 +1,15 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { BolTradeManagementServiceService } from './bol-trade-management-service.service';
+import { BolTradeManagementService } from './bol-trade-management.service';
 
 describe('BolTradeManagementServiceService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [BolTradeManagementServiceService]
+        providers: [BolTradeManagementService]
     });
   });
 
-  it('should be created', inject([BolTradeManagementServiceService], (service: BolTradeManagementServiceService) => {
+  it('should be created', inject([BolTradeManagementService], (service: BolTradeManagementService) => {
     expect(service).toBeTruthy();
   }));
 });

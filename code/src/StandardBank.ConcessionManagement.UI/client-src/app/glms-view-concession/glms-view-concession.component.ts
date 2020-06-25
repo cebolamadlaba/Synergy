@@ -583,8 +583,8 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
         const concessions = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
 
-        let hasTypeId: boolean = false;
-        let hasLegalEntityId: boolean = false;
+        let hasInterestPricingCategory: boolean = false;
+        let hasInterestType: boolean = false;
 
         for (let concessionFormItem of concessions.controls) {
             if (!glmsConcession.glmsConcessionDetails)
@@ -605,9 +605,10 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
             if (concessionFormItem.get('interestPricingCategory').value) {
                 glmsConcessionDetail.interestPricingCategoryId = concessionFormItem.get('interestPricingCategory').value.id;
+                hasInterestPricingCategory = true;
             } else {
-
                 this.addValidationError("Interest Pricing Category not selected");
+                hasInterestPricingCategory = false;
             }
 
             if (concessionFormItem.get('slabType').value) {
@@ -619,9 +620,10 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
             if (concessionFormItem.get('interestType').value) {
                 glmsConcessionDetail.interestTypeId = concessionFormItem.get('interestType').value.id;
+                hasInterestType = true;
             } else {
-
                 this.addValidationError("Interest Type not selected");
+                hasInterestType = false;
             }
 
             if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
@@ -650,6 +652,17 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
             }
 
             glmsConcession.glmsConcessionDetails.push(glmsConcessionDetail);
+
+            if (hasInterestPricingCategory && hasInterestType) {
+                let hasDuplicates = this.baseComponentService.HasDuplicateInterestProfile(
+                    glmsConcession.glmsConcessionDetails,
+                    concessionFormItem.get('interestPricingCategory').value.id,
+                    concessionFormItem.get('interestType').value.id);
+                if (hasDuplicates) {
+                    this.addValidationError("Duplicate Interest Pricing Category / Interest Type selection found. Please verify and update.");
+                    break;
+                }
+            }
         }
 
         const conditions = <FormArray>this.glmsConcessionForm.controls['conditionItemsRows'];
@@ -807,56 +820,70 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         const tierForm = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
 
         var lastRow = tierForm.length - 1;
+
         if (tierForm.length > 0) {
+
             tierForm.controls[lastRow].get('tieredTo').setValue(0);
-        }
 
-        for (let glmsTierFormItem of tierForm.value) {
+            if (tierForm.length == 1) {
 
-            let tierItem = new GlmsTierData();
-
-            if (glmsTierFormItem.tieredFrom) {
-                tierItem.tierFrom = glmsTierFormItem.tieredFrom;
-            } else {
-                tierItem.tierFrom = 0;
+                this.addValidationError("Minimum of 2 tiers must be added ");
             }
 
-            if (glmsTierFormItem.tieredTo) {
-                tierItem.tierTo = glmsTierFormItem.tieredTo;
-            } else {
-                tierItem.tierTo = 0;
-            }
+            let rowIndex = 0;
 
-            if (glmsTierFormItem.rateType.description === "F") {
-                if (glmsTierFormItem.value) {
-                    tierItem.value = glmsTierFormItem.value;
-                } else {
-                    this.addValidationError("Value not selected");
-                }
-            }
+            for (let glmsTierFormItem of tierForm.value) {
 
-            if (glmsTierFormItem.rateType.description === "V") {
+                let tierItem = new GlmsTierData();
 
-                if (glmsTierFormItem.baseRate) {
-                    tierItem.baseRateId = glmsTierFormItem.baseRate.id;
-                } else {
-                    this.addValidationError("BaseRate not selected");
+                if (rowIndex > 0) {
+                   glmsTierFormItem.tieredFrom = Number(tierForm.controls[rowIndex - 1].get('tieredTo').value) + 1;
                 }
 
-                if (glmsTierFormItem.spread) {
-                    tierItem.spread = glmsTierFormItem.spread;
+                if (glmsTierFormItem.tieredFrom) {
+                    tierItem.tierFrom = glmsTierFormItem.tieredFrom;
                 } else {
-                    this.addValidationError("Spread not selected");
+                    tierItem.tierFrom = 0;
                 }
-            }
 
-            if (glmsTierFormItem.rateType) {
-                tierItem.rateTypeId = glmsTierFormItem.rateType.id;
-            } else {
-                this.addValidationError("RateType not selected");
-            }
+                if (glmsTierFormItem.tieredTo) {
+                    tierItem.tierTo = glmsTierFormItem.tieredTo;
+                } else {
+                    tierItem.tierTo = 0;
+                }
 
-            tierItemsList.push(tierItem);
+                if (glmsTierFormItem.rateType.description === "F") {
+                    if (glmsTierFormItem.value) {
+                        tierItem.value = glmsTierFormItem.value;
+                    } else {
+                        this.addValidationError("Value not selected");
+                    }
+                }
+
+                if (glmsTierFormItem.rateType.description === "V") {
+
+                    if (glmsTierFormItem.baseRate) {
+                        tierItem.baseRateId = glmsTierFormItem.baseRate.id;
+                    } else {
+                        this.addValidationError("BaseRate not selected");
+                    }
+
+                    if (glmsTierFormItem.spread) {
+                        tierItem.spread = glmsTierFormItem.spread;
+                    } else {
+                        this.addValidationError("Spread not selected");
+                    }
+                }
+
+                if (glmsTierFormItem.rateType) {
+                    tierItem.rateTypeId = glmsTierFormItem.rateType.id;
+                } else {
+                    this.addValidationError("RateType not selected");
+                }
+
+                tierItemsList.push(tierItem);
+                rowIndex++;
+          }
         }
 
         tierItemsList.splice(0, 1);
