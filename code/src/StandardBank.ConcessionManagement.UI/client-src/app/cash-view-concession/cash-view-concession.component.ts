@@ -210,7 +210,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
                 for (let cashConcessionDetail of this.cashConcession.cashConcessionDetails) {
 
                     if (rowIndex != 0) {
-                        this.addNewConcessionRow();
+                        this.addNewConcessionRow(false);
                     }
 
                     const concessions = this.getCashConcessionItemRows();
@@ -377,10 +377,18 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
         });
     }
 
-    addNewConcessionRow() {
+    addNewConcessionRow(isClickEvent: boolean) {
         const control = this.getCashConcessionItemRows();
         var newRow = this.initConcessionItemRowsUpdate();
         newRow.controls['accrualType'].setValue(this.accrualTypes[0]);
+        if (isClickEvent) {
+            if (control != null && control.length > 0) {
+                let expiryDate = control.controls[0].get('expiryDate').value;
+                if (expiryDate != null) {
+                    newRow.controls['expiryDate'].setValue(expiryDate);
+                }
+            }
+        }
         control.push(newRow);
     }
 
@@ -1073,10 +1081,19 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
     }
 
     disableField(index: number, fieldname: string) {
+        let canUpdateExpiryDate: boolean = true;
+
+        if (fieldname == "expiryDate" && this.editType != null &&
+            (this.editType == EditTypeEnum.Renew || this.editType == EditTypeEnum.UpdateApproved)) {
+            {
+                canUpdateExpiryDate = false;
+            }
+        }
+
         return this.disableFieldBase(
             this.selectedConditionTypes[index],
             fieldname,
-            this.canEdit,
+            this.canEdit && canUpdateExpiryDate,
             this.canEdit != null
         );
     }
