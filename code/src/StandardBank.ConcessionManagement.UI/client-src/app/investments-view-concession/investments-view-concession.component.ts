@@ -350,7 +350,7 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
                 for (let investmentConcessionDetail of this.investmentConcession.investmentConcessionDetails) {
 
                     if (rowIndex != 0) {
-                        this.addNewConcessionRow();
+                        this.addNewConcessionRow(false);
                     }
 
                     const concessions = this.getInvestmentConcessionItemRows();
@@ -498,9 +498,17 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
         });
     }
 
-    addNewConcessionRow() {
+    addNewConcessionRow(isClickEvent: boolean) {
         const control = this.getInvestmentConcessionItemRows();
         var newRow = this.initConcessionItemRows();
+        if (isClickEvent) {
+            if (control != null && control.length > 0) {
+                let expiryDate = control.controls[0].get('expiryDate').value;
+                if (expiryDate != null) {
+                    newRow.controls['expiryDate'].setValue(expiryDate);
+                }
+            }
+        }
         control.push(newRow);
     }
 

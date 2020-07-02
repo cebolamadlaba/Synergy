@@ -314,7 +314,7 @@ export class InvestmentAddConcessionComponent extends InvestmentBaseService impl
         var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
         if (validationErrorMessage != null) {
             this.addValidationError(validationErrorMessage);
-        }   
+        }
     }
 
     conditionTypeChanged(rowIndex) {
@@ -373,7 +373,7 @@ export class InvestmentAddConcessionComponent extends InvestmentBaseService impl
         if (this.legalEntity)
             investmentConcession.concession.legalEntityId = this.legalEntity.id;
 
-        
+
         if (this.investmentConcessionForm.controls['smtDealNumber'].value) {
             investmentConcession.concession.smtDealNumber = this.investmentConcessionForm.controls['smtDealNumber'].value;
         }
