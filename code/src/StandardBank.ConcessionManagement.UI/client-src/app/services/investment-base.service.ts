@@ -11,7 +11,7 @@ export class InvestmentBaseService {
         selectedConditionType: ConditionType,
         fieldName: string,
         canEdit: boolean,
-        canSaveMessage: boolean,
+        isSavedSubmitted: boolean,
         isEnabledExpiryDate: boolean,
         selectedInvestmentConcession: boolean
     ) {
@@ -21,11 +21,11 @@ export class InvestmentBaseService {
             case 'balance':
             case 'loadedRate':
             case 'approvedRate':
-                return (!canSaveMessage || canEdit) ? null : '';
+                return (!isSavedSubmitted || canEdit) ? null : '';
             case 'noticeperiod':
-                return (selectedInvestmentConcession && canEdit) || !(selectedInvestmentConcession || canSaveMessage) ? null : '';
+                return !(!selectedInvestmentConcession && canEdit) || (selectedInvestmentConcession && !isSavedSubmitted) ? '' : null;
             case 'expiryDate':
-                return (isEnabledExpiryDate && canEdit) || !canSaveMessage ? null : '';
+                return (isEnabledExpiryDate && canEdit) || !isSavedSubmitted ? null : '';
             case 'interestRate':
                 return selectedConditionType != null && selectedConditionType.enableInterestRate ? null : '';
             case 'volume':
