@@ -1489,6 +1489,12 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
     }
 
     disableField(fieldname: string, index: number = null) {
-        return this.disableFieldBase(fieldname, this.canEdit, index, this.selectedConditionTypes, this.isRecalling, this.motivationEnabled)
+        return this.disableFieldBase(
+            fieldname,
+            this.canEdit,
+            index,
+            this.selectedConditionTypes,
+            this.isRecalling,
+            this.motivationEnabled)
     }
 }
