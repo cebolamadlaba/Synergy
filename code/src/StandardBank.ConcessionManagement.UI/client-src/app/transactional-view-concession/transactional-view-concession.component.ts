@@ -264,8 +264,9 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
                 this.canRenew = transactionalConcession.concession.canRenew && transactionalConcession.currentUser.canRequest;
 
                 //set the resubmit and update permissions
+                //can only update when concession is not "due for expiry"
                 this.canResubmit = transactionalConcession.concession.canResubmit && transactionalConcession.currentUser.canRequest;
-                this.canUpdate = transactionalConcession.concession.canUpdate && transactionalConcession.currentUser.canRequest;
+                this.canUpdate = !this.canRenew && transactionalConcession.concession.canUpdate && transactionalConcession.currentUser.canRequest;
 
                 this.canArchive = transactionalConcession.concession.canArchive && transactionalConcession.currentUser.canRequest;
                 this.isInProgressExtension = transactionalConcession.concession.isInProgressExtension;

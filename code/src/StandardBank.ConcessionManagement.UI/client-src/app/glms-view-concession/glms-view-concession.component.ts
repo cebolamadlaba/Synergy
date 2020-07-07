@@ -268,8 +268,9 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
                 this.canRenew = glmsConcession.concession.canRenew && glmsConcession.currentUser.canRequest;
 
                 //set the resubmit and update permissions
+                //can only update when concession is not "due for expiry"
                 this.canResubmit = glmsConcession.concession.canResubmit && glmsConcession.currentUser.canRequest;
-                this.canUpdate = glmsConcession.concession.canUpdate && glmsConcession.currentUser.canRequest;
+                this.canUpdate = !this.canRenew && glmsConcession.concession.canUpdate && glmsConcession.currentUser.canRequest;
 
                 this.canArchive = glmsConcession.concession.canArchive && glmsConcession.currentUser.canRequest;
                 this.isInProgressExtension = glmsConcession.concession.isInProgressExtension;

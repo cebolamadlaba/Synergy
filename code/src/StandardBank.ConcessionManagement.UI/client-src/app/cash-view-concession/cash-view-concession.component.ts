@@ -195,8 +195,9 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
                 this.canRenew = cashConcession.concession.canRenew && cashConcession.currentUser.canRequest;
 
                 //set the resubmit and update permissions
+                //can only update when concession is not "due for expiry"
                 this.canResubmit = cashConcession.concession.canResubmit && cashConcession.currentUser.canRequest;
-                this.canUpdate = cashConcession.concession.canUpdate && cashConcession.currentUser.canRequest;
+                this.canUpdate = !this.canRenew && cashConcession.concession.canUpdate && cashConcession.currentUser.canRequest;
 
                 this.canArchive = cashConcession.concession.canArchive && cashConcession.currentUser.canRequest;
                 this.isInProgressExtension = cashConcession.concession.isInProgressExtension;
