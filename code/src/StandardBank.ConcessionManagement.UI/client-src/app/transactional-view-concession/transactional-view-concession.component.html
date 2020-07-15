@@ -175,7 +175,7 @@
         <div class="row">
             <h3 class="table-title">Concessions</h3>
             <button type="button" class="btn btn-primary btn-concession" (click)="manageBulkUploadModal.show()" style="margin-top: 15px;" *ngIf="canPcmApprove || isEditing || isRecalling">Bulk Upload</button>
-            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" style="margin-top: 15px;" *ngIf="canPcmApprove || isEditing || isRecalling">New Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow(false,true)" style="margin-top: 15px;" *ngIf="canPcmApprove || isEditing || isRecalling">New Concession</button>
         </div>
     </div>
 

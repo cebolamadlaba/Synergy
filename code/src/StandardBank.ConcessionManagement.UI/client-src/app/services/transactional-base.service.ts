@@ -141,7 +141,7 @@ export class TransactionalBaseService {
             () => console.info('File downloaded successfully');
     }
 
-    onFileSelected(event, add) {
+    onFileSelected(event, isNewConcession: boolean) {
 
         var file: File = event.target.files[0];
         var fileReader: FileReader = new FileReader();
@@ -156,21 +156,21 @@ export class TransactionalBaseService {
             self.xlsxModel.selectedFileName = file.name;
 
             self.transactionalConcessionDetail = self.processFileContent(self.xlsxModel);
-            self.populateTransactionalConcessionByFile(add);
+            self.populateTransactionalConcessionByFile(isNewConcession);
         }
 
         // execute reading of the file
         fileReader.readAsBinaryString(file);
     }
 
-    populateTransactionalConcessionByFile(add) {
+    populateTransactionalConcessionByFile(isNewConcession: boolean) {
 
         let rowIndex = 0;
 
         for (let transactionalConcessionDetail of this.transactionalConcessionDetail) {
 
             if (rowIndex != 0) {
-                this.addNewConcessionRow(add);
+                this.addNewConcessionRow(isNewConcession, false);
             }
 
             const concessions = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
@@ -224,12 +224,11 @@ export class TransactionalBaseService {
         }
     }
 
-    addNewConcessionRow(add) {
-        debugger
+    addNewConcessionRow(isNewConcession: boolean, isClickEvent: boolean = false) {
         const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
         var newRow;
 
-        if (add) {
+        if (isNewConcession) {
             newRow = this.initConcessionItemRowsAdd();
         } else {
             newRow = this.initConcessionItemRowsUpdate();
@@ -247,6 +246,15 @@ export class TransactionalBaseService {
 
         if (this.transactionTypes && this.transactionTypes[0].transactionTableNumbers)
             newRow.controls['transactionTableNumber'].setValue(this.transactionTypes[0].transactionTableNumbers[0]);
+
+        if (isClickEvent) {
+            if (control != null && control.length > 0) {
+                let expiryDate = control.controls[0].get('expiryDate').value;
+                if (expiryDate != null) {
+                    newRow.controls['expiryDate'].setValue(expiryDate);
+                }
+            }
+        }
 
         control.push(newRow);
 

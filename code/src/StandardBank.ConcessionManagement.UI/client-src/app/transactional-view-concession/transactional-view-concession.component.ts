@@ -286,7 +286,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
                 for (let transactionalConcessionDetail of this.transactionalConcession.transactionalConcessionDetails) {
 
                     if (rowIndex != 0) {
-                        this.addNewConcessionRow(false);
+                        this.addNewConcessionRow(false, false);
                     }
 
                     const concessions = this.getTransactionalConcessionItemRows();
@@ -1065,6 +1065,21 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
     }
 
     disableField(fieldname: string, index: number = null) {
-        return this.disableFieldBase(fieldname, this.canEdit, index, this.selectedConditionTypes, this.isRecalling, this.motivationEnabled)
+        let canUpdateExpiryDate: boolean = true;
+
+        if (fieldname == "expiryDate" && this.editType != null &&
+            (this.editType == EditTypeEnum.Renew || this.editType == EditTypeEnum.UpdateApproved)) {
+            {
+                canUpdateExpiryDate = false;
+            }
+        }
+
+        return this.disableFieldBase(
+            fieldname,
+            this.canEdit && canUpdateExpiryDate,
+            index,
+            this.selectedConditionTypes,
+            this.isRecalling,
+            this.motivationEnabled)
     }
 }
