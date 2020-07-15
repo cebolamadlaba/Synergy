@@ -289,7 +289,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
                 for (let glmsConcessionDetail of this.glmsConcession.glmsConcessionDetails) {
 
                     if (rowIndex != 0) {
-                        this.addNewConcessionRow();
+                        this.addNewConcessionRow(false);
                     }
 
                     const concessions = this.getGlmsConcessionItemRows();
@@ -881,7 +881,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         concessions.controls[this.glmsConcessionItemIndex].get('concessionItemTier').setValue(tierItemsList);
     }
 
-    addNewConcessionRow() {
+    addNewConcessionRow(isClickEvent: boolean) {
 
         const control = this.getGlmsConcessionItemRows();
 
@@ -890,7 +890,14 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         if (this.productTypes) {
             newRow.controls['productType'].setValue(this.productTypes[0]);
         }
-
+        if (isClickEvent) {
+            if (control != null && control.length > 0) {
+                let expiryDate = control.controls[0].get('expiryDate').value;
+                if (expiryDate != null) {
+                    newRow.controls['expiryDate'].setValue(expiryDate);
+                }
+            }
+        }
         control.push(newRow);
     }
 
@@ -1490,9 +1497,18 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
     }
 
     disableField(fieldname: string, index: number = null) {
+        let canUpdateExpiryDate: boolean = true;
+
+        if (fieldname == "expiryDate" && this.editType != null &&
+            (this.editType == EditTypeEnum.Renew || this.editType == EditTypeEnum.UpdateApproved)) {
+            {
+                canUpdateExpiryDate = false;
+            }
+        }
+
         return this.disableFieldBase(
             fieldname,
-            this.canEdit,
+            this.canEdit && canUpdateExpiryDate,
             index,
             this.selectedConditionTypes,
             this.isRecalling,
