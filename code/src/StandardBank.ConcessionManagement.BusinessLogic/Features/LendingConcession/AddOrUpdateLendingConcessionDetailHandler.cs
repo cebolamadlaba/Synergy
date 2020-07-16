@@ -44,6 +44,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.LendingConces
 
                 if (result.Id > 0)
                 {
+                    foreach (var lendingConcessionDetailTieredRate in message.LendingConcessionDetail.LendingConcessionDetailTieredRates)
+                        lendingConcessionDetailTieredRate.ConcessionLendingId = result.Id;
+
                     _lendingManager.CreateConcessionLendingTieredRates(message.LendingConcessionDetail.LendingConcessionDetailTieredRates);
                 }
             }

@@ -579,17 +579,21 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 return;
 
             var concessionLendingTieredRates = this._mapper.Map<IEnumerable<ConcessionLendingTieredRate>>(lendingConcessionDetail.LendingConcessionDetailTieredRates);
-            foreach (var concessionLendingTieredRate in concessionLendingTieredRates)
-            {
-                this._concessionLendingTieredRateRepository.Update(concessionLendingTieredRate);
-            }
 
             // remove tiered rates no longer present.
             var dbLendingConcessionTieredRates = this.GetLendingConcessionTieredRates(lendingConcessionDetail.LendingConcessionDetailId);
             foreach (var dbLendingConcessionTieredRate in dbLendingConcessionTieredRates)
             {
-                if (concessionLendingTieredRates.Any(a => a.Id != dbLendingConcessionTieredRate.Id))
+                if (!concessionLendingTieredRates.Any(a => a.Id == dbLendingConcessionTieredRate.Id))
                     this.DeleteConcessionLendingTieredRate(dbLendingConcessionTieredRate.Id);
+            }
+
+            foreach (var concessionLendingTieredRate in concessionLendingTieredRates)
+            {
+                if (concessionLendingTieredRate.Id == 0)
+                    this._concessionLendingTieredRateRepository.Create(concessionLendingTieredRate);
+                else
+                    this._concessionLendingTieredRateRepository.Update(concessionLendingTieredRate);
             }
         }
 

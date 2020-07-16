@@ -1,5 +1,7 @@
 import { BaseConcessionDetail } from "./base-concession-detail";
 
+import { LendingConcessionTieredRate } from './lending-concession-tiered-rate';
+
 export class LendingConcessionDetail extends BaseConcessionDetail {
     lendingConcessionDetailId: number;
     productType: string;
@@ -21,6 +23,8 @@ export class LendingConcessionDetail extends BaseConcessionDetail {
 
     mrsEri: number;
     extensionFee: number;
+
+    lendingConcessionDetailTieredRates: LendingConcessionTieredRate[];
 
     show_term: boolean;
     show_reviewFeeType: boolean;
