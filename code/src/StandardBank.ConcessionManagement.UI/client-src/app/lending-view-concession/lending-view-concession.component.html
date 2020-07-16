@@ -190,6 +190,7 @@
                 <th>Review Fee Type</th>
                 <th>Review Fee (%)</th>
                 <th>UFF Fee (%)</th>
+                <th>Extension Fee (%)</th>
                 <th>MRS/ERI</th>
                 <th *ngIf="isApproved">Expiry Date</th>
                 <th *ngIf="isApproved">Date Approved</th>
@@ -258,6 +259,8 @@
                 <td class="length-short"><input type="text" numbersOnly="true" formControlName="reviewFee" class="form-control" [attr.disabled]="disableField(i,'reviewFee')" (change)="setThreeNumberDecimal($event)" [class.markred]="bcmhochanged(i,'reviewFee')" /></td>
                 <!-- uffFee -->
                 <td class="length-short"><input type="text" numbersOnly="true" formControlName="uffFee" class="form-control" [attr.disabled]="disableField(i,'uffFee')" (change)="setThreeNumberDecimal($event)" [class.markred]="bcmhochanged(i,'uffFee')" /></td>
+                <!-- Extension Fee -->
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="extensionFee" class="form-control" [attr.disabled]="disableField(i,'extensionFee')" (change)="setThreeNumberDecimal($event)" [class.markred]="bcmhochanged(i,'extensionFee')" /></td>
                 <!-- MRS/BRI -->
                 <td class="length-short"><input type="text" numbersOnly="true" formControlName="mrsEri" class="form-control" maxlength="2" [attr.disabled]="disableField(i,'mrsEri')" /></td>
 
@@ -413,7 +416,7 @@
             <button type="button" class="btn btn-success" (click)="bcmApproveConcession()" *ngIf="canBcmApprove">Forward</button>
             <button type="button" class="btn btn-danger" (click)="pcmDeclineConcession()" *ngIf="canPcmApprove">Decline</button>
             <button type="button" class="btn btn-success" (click)="pcmApproveConcession()" *ngIf="canPcmApprove">Approve</button>
-            <button type="button" class="btn btn-success" (click)="extendConcession()" *ngIf="canExtend">Extend</button>
+            <button type="button" class="btn btn-success" (click)="extensionDisclamer()" *ngIf="canExtend">Extend</button>
 
             <button type="button" class="btn btn-success" (click)="editConcession('Renew')" *ngIf="canRenew">Renew</button>
             <button type="button" class="btn btn-success" (click)="editConcession('Resubmit')" *ngIf="canResubmit">Resubmit</button>
@@ -427,6 +430,26 @@
             <button type="button" class="btn btn-danger" (click)="requestorDeclineConcession()" *ngIf="canApproveChanges">Decline</button>
             <button type="button" class="btn btn-success" (click)="requestorApproveConcession()" *ngIf="canApproveChanges">Accept</button>
 
+        </div>
+    </div>
+
+    <div bsModal #extendDisclamerModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addAAModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="col-md-12 modal-header">
+                    <h4>
+                        Extension Disclaimer
+                    </h4>
+                </div>
+
+                <div class="modal-body">
+                    An extension Fee (as displayed on the concession) will be applied. Click submit to proceed.
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn-primary btn" (click)="extendConcession()">Submit</button><button class="btn-primary btn">Cancel</button>
+                </div>
+            </div>
         </div>
     </div>
 </form>

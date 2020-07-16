@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy, ViewChild } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
@@ -119,6 +119,8 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     lendingFinancial: LendingFinancial;
 
     legalEntity: LegalEntity;
+
+    @ViewChild('extendDisclamerModal') extendDisclamerModal;
 
     constructor(
         private router: Router,
@@ -1013,6 +1015,14 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         } else {
             this.isLoading = false;
         }
+    }
+
+    extensionDisclamer() {
+        this.extendDisclamerModal.show();
+    }
+
+    extensionDisclamerClose() {
+        this.extendDisclamerModal.hide();
     }
 
     extendConcession() {

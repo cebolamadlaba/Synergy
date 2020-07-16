@@ -109,6 +109,8 @@ namespace StandardBank.ConcessionManagement.Model.Repository
 
         public int MRS_ERI { get; set; }
 
+        public decimal? ExtensionFee { get; set; }
+
         public IEnumerable<ConcessionLendingTieredRate> ConcessionLendingTieredRates { get; set; }
 
         /// <summary>

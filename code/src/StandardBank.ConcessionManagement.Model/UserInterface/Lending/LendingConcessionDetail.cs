@@ -108,6 +108,8 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Lending
 
         public int MrsEri { get; set; }
 
+        public decimal ExtensionFee { get; set; }
+
         public IEnumerable<LendingConcessionDetailTieredRate> LendingConcessionDetailTieredRates { get; set; }
     }
 }

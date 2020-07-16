@@ -268,6 +268,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             lendingConcession.Concession = concession;
 
+            decimal extensionFee = _lendingManager.GetExtensionFee();
+
             //add all the new conditions and lending details
             foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
             {
@@ -276,6 +278,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 if (relationshipType != Constants.RelationshipType.Extension)
                 {
                     lendingConcessionDetail.ExpiryDate = null;
+                    lendingConcessionDetail.ExtensionFee = extensionFee;
                 }
 
                 lendingConcessionDetail.LendingConcessionDetailId = 0;
