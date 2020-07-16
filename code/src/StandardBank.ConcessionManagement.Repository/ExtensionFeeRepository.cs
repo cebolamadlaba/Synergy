@@ -9,7 +9,7 @@ using StandardBank.ConcessionManagement.Model.Common;
 
 namespace StandardBank.ConcessionManagement.Repository
 {
-    class ExtensionFeeRepository : IExtensionFeeRepository
+    public class ExtensionFeeRepository : IExtensionFeeRepository
     {
         /// <summary>
         /// The db connection factory

@@ -13,6 +13,7 @@ using StandardBank.ConcessionManagement.Model.UserInterface;
 using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
 using StandardBank.ConcessionManagement.UI.Helpers.Interface;
 using StandardBank.ConcessionManagement.UI.Validation;
+using static StandardBank.ConcessionManagement.Model.BusinessLogic.Constants;
 
 namespace StandardBank.ConcessionManagement.UI.Controllers
 {
@@ -278,6 +279,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 if (relationshipType != Constants.RelationshipType.Extension)
                 {
                     lendingConcessionDetail.ExpiryDate = null;
+                }else if (relationshipType == Constants.RelationshipType.Extension && lendingConcessionDetail.ProductType == Lending.ProductType.Overdraft)
+                {
                     lendingConcessionDetail.ExtensionFee = extensionFee;
                 }
 

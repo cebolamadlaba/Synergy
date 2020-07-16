@@ -1114,7 +1114,8 @@ namespace StandardBank.ConcessionManagement.Repository
                             [UffFee],
                             [Frequency],
                             [ServiceFee],
-                            [MRS_ERI] [MrsEri]
+                            [MRS_ERI] [MrsEri],
+                            cl.[ExtensionFee]
                         FROM [dbo].[tblConcessionDetail] cd
                             JOIN [dbo].[tblConcessionLending] cl on cl.[fkConcessionDetailId] = cd.[pkConcessionDetailId]
                             JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = cd.[fkLegalEntityId]
