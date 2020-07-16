@@ -258,7 +258,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                 for (let lendingConcessionDetail of this.lendingConcession.lendingConcessionDetails) {
 
                     if (rowIndex != 0) {
-                        this.addNewConcessionRow();
+                        this.addNewConcessionRow(false);
                     }
 
                     if (lendingConcessionDetail.productType == 'Overdraft') {
@@ -501,9 +501,18 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         this.clientAccountsCopy = <any>results[6]
     }
 
-    addNewConcessionRow() {
+    addNewConcessionRow(isClickEvent: boolean) {
         const control = this.getLendingConcessionItemRows();
-        control.push(this.initConcessionItemRows());
+        var newRow = this.initConcessionItemRows();
+        if (isClickEvent) {
+            if (control != null && control.length > 0) {
+                let expiryDate = control.controls[0].get('expiryDate').value;
+                if (expiryDate != null) {
+                    newRow.controls['expiryDate'].setValue(expiryDate);
+                }
+            }
+        }
+        control.push(newRow);
     }
 
     addNewConditionRow() {
@@ -1385,11 +1394,20 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     }
 
     disableField(index: number, fieldname: string) {
+        let canUpdateExpiryDate: boolean = true;
+
+        if (fieldname == "expiryDate" && this.editType != null &&
+            (this.editType == EditTypeEnum.Renew || this.editType == EditTypeEnum.UpdateApproved)) {
+            {
+                canUpdateExpiryDate = false;
+            }
+        }
+
         return this.disableFieldBase(
             this.selectedConditionTypes[index],
             this.lendingConcession.lendingConcessionDetails[index],
             fieldname,
-            this.canEdit,
+            this.canEdit && canUpdateExpiryDate,
             this.canEdit != null
         );
     }
