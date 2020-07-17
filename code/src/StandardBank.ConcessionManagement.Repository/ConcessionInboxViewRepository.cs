@@ -792,7 +792,9 @@ namespace StandardBank.ConcessionManagement.Repository
 							[IsActive],
 							[IsCurrent],
 							[PriceExported],
-							[PriceExportedDate]
+							[PriceExportedDate],
+							[AAUserFullName],
+							[AEUserFullName]
 					FROM [dbo].[ConcessionInboxView]
 					WHERE [StatusId] IN (2, 3)
 						AND [IsActive] = 1
