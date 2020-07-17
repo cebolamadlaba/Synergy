@@ -93,7 +93,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                     RiskGroupNumber = Convert.ToString(concession.RiskGroupNumber),
                     RiskGroupName = concession.RiskGroupName,
                     DateApproved = concession.DateApproved.Value.ToString("yyyy-MM-dd"),
-                    ResponsibleAA = concession.AAUserFullName ?? "-",
+                    ResponsibleAA = concession.AAUserFullName ?? "(-) NULL",
                     ResponsibleAE = concession.AEUserFullName
                 };
 
