@@ -72,6 +72,8 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
     entityName: string;
     entityNumber: string;
 
+    expiryDateFirstRow: string;
+
     public tradeConcessionForm: FormGroup;
 
     isLoading = true;
@@ -418,6 +420,9 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
                     if (tradeConcessionDetail.expiryDate) {
                         var formattedExpiryDate = this.datepipe.transform(tradeConcessionDetail.expiryDate, 'yyyy-MM-dd');
                         currentConcession.get('expiryDate').setValue(formattedExpiryDate);
+                        if (this.expiryDateFirstRow == null) {
+                            this.expiryDateFirstRow = formattedExpiryDate;
+                        }
                     }
 
                     if (tradeConcessionDetail.dateApproved) {
@@ -521,12 +526,13 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
         });
     }
 
-    addNewConcessionRow(add: boolean) {
+    addNewConcessionRow(isClickEvent: boolean) {
         const control = this.getTradeConcessionItemRows();
         var newRow = this.initConcessionItemRows();
-        control.push(newRow);
-
-        if (add == true) {
+        if (isClickEvent) {
+            if (control != null && control.length > 0) {
+                newRow.controls['expiryDate'].setValue(this.expiryDateFirstRow);
+            }
 
             let newconcession = new TradeConcessionDetail();
             newconcession.show_advalorem = true;
@@ -538,6 +544,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
 
             this.tradeConcession.tradeConcessionDetails.push(newconcession);
         }
+        control.push(newRow);
     }
 
     addNewConditionRow() {
@@ -653,6 +660,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
                 currentProduct.get('estfee').setValue(null);
                 currentProduct.get('rate').setValue(null);
 
+                currentProduct.get('expiryDate').setValue(this.expiryDateFirstRow);
 
                 this.tradeConcession.tradeConcessionDetails[rowIndex].show_advalorem = true;
                 this.tradeConcession.tradeConcessionDetails[rowIndex].show_min = true;
@@ -684,6 +692,14 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
     }
 
     disableField(rowIndex, fieldname) {
+        let canUpdateExpiryDate: boolean = true;
+
+        if (fieldname == "expiryDate" && this.editType != null &&
+            (this.editType == EditTypeEnum.Renew || this.editType == EditTypeEnum.UpdateApproved)) {
+            {
+                canUpdateExpiryDate = false;
+            }
+        }
 
         return super.disableFieldBase(
             this.selectedTradeConcession[rowIndex],
@@ -691,7 +707,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
             this.tradeConcessionForm,
             rowIndex,
             fieldname,
-            this.canEdit,
+            this.canEdit && canUpdateExpiryDate,
             this.saveMessage != null);
     }
 

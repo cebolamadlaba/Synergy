@@ -49,6 +49,7 @@ export class InvestmentAddConcessionComponent extends InvestmentBaseService impl
     private sub: any;
 
     errorMessage: String;
+    // Specifies whether the concession was Saved[hasValue]:NotSaved[Null]
     saveMessage: String;
     showHide = false;
     observableRiskGroup: Observable<RiskGroup>;
@@ -86,6 +87,7 @@ export class InvestmentAddConcessionComponent extends InvestmentBaseService impl
     observableProductTypes: Observable<ProductType[]>;
     productTypes: ProductType[];
 
+    // Specifies whether Field:NoticePeriod must be disabled[true]:NotDisabled[false]
     selectedInvestmentConcession: boolean[];
 
     observableConditionTypes: Observable<ConditionType[]>;
@@ -314,7 +316,7 @@ export class InvestmentAddConcessionComponent extends InvestmentBaseService impl
         var validationErrorMessage = this.baseComponentService.expiringDateDifferenceValidation(itemrow.controls['expiryDate'].value);
         if (validationErrorMessage != null) {
             this.addValidationError(validationErrorMessage);
-        }   
+        }
     }
 
     conditionTypeChanged(rowIndex) {
@@ -373,7 +375,7 @@ export class InvestmentAddConcessionComponent extends InvestmentBaseService impl
         if (this.legalEntity)
             investmentConcession.concession.legalEntityId = this.legalEntity.id;
 
-        
+
         if (this.investmentConcessionForm.controls['smtDealNumber'].value) {
             investmentConcession.concession.smtDealNumber = this.investmentConcessionForm.controls['smtDealNumber'].value;
         }

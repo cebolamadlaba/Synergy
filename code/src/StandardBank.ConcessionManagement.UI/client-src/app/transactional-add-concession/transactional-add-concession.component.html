@@ -120,7 +120,7 @@
         <div class="row">
             <h3 class="table-title">Concessions</h3>
             <button type="button" class="btn btn-primary btn-concession" (click)="manageBulkUploadModal.show()" style="margin-top: 15px;" *ngIf="!saveMessage">Bulk Upload</button>
-            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" style="margin-top: 15px;margin-right: 10px;" *ngIf="!saveMessage">New Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow(true,true)" style="margin-top: 15px;margin-right: 10px;" *ngIf="!saveMessage">New Concession</button>
         </div>
     </div>
 

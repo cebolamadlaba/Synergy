@@ -306,7 +306,7 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
                 for (let bolConcessionDetail of this.bolConcession.bolConcessionDetails) {
 
                     if (rowIndex != 0) {
-                        this.addNewConcessionRow();
+                        this.addNewConcessionRow(false);
                     }
 
                     const concessions = this.getBolConcessionItemRows();
@@ -445,7 +445,7 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
         });
     }
 
-    addNewConcessionRow() {
+    addNewConcessionRow(isClickEvent: boolean) {
 
         const control = this.getBolConcessionItemRows();
         var newRow = this.initConcessionItemRows();
@@ -457,6 +457,15 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
 
         if (this.legalentitybolusers)
             newRow.controls['userid'].setValue(this.legalentitybolusers[0]);
+
+        if (isClickEvent) {
+            if (control != null && control.length > 0) {
+                let expiryDate = control.controls[0].get('expiryDate').value;
+                if (expiryDate != null) {
+                    newRow.controls['expiryDate'].setValue(expiryDate);
+                }
+            }
+        }
 
         control.push(newRow);
         this.productTypeChanged(length);
@@ -1159,6 +1168,21 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
     }
 
     disableField(fieldname: string, index: number = null) {
-        return this.disableFieldBase(fieldname, this.canEdit, index, this.selectedConditionTypes, this.isRecalling, this.motivationEnabled)
+        let canUpdateExpiryDate: boolean = true;
+
+        if (fieldname == "expiryDate" && this.editType != null &&
+            (this.editType == EditTypeEnum.Renew || this.editType == EditTypeEnum.UpdateApproved)) {
+            {
+                canUpdateExpiryDate = false;
+            }
+        }
+
+        return this.disableFieldBase(
+            fieldname,
+            this.canEdit && canUpdateExpiryDate,
+            index,
+            this.selectedConditionTypes,
+            this.isRecalling,
+            this.motivationEnabled)
     }
 }

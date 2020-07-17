@@ -264,8 +264,9 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
                 this.canRenew = transactionalConcession.concession.canRenew && transactionalConcession.currentUser.canRequest;
 
                 //set the resubmit and update permissions
+                //can only update when concession is not "due for expiry"
                 this.canResubmit = transactionalConcession.concession.canResubmit && transactionalConcession.currentUser.canRequest;
-                this.canUpdate = transactionalConcession.concession.canUpdate && transactionalConcession.currentUser.canRequest;
+                this.canUpdate = !this.canRenew && transactionalConcession.concession.canUpdate && transactionalConcession.currentUser.canRequest;
 
                 this.canArchive = transactionalConcession.concession.canArchive && transactionalConcession.currentUser.canRequest;
                 this.isInProgressExtension = transactionalConcession.concession.isInProgressExtension;
@@ -285,7 +286,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
                 for (let transactionalConcessionDetail of this.transactionalConcession.transactionalConcessionDetails) {
 
                     if (rowIndex != 0) {
-                        this.addNewConcessionRow(false);
+                        this.addNewConcessionRow(false, false);
                     }
 
                     const concessions = this.getTransactionalConcessionItemRows();
@@ -1064,6 +1065,21 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
     }
 
     disableField(fieldname: string, index: number = null) {
-        return this.disableFieldBase(fieldname, this.canEdit, index, this.selectedConditionTypes, this.isRecalling, this.motivationEnabled)
+        let canUpdateExpiryDate: boolean = true;
+
+        if (fieldname == "expiryDate" && this.editType != null &&
+            (this.editType == EditTypeEnum.Renew || this.editType == EditTypeEnum.UpdateApproved)) {
+            {
+                canUpdateExpiryDate = false;
+            }
+        }
+
+        return this.disableFieldBase(
+            fieldname,
+            this.canEdit && canUpdateExpiryDate,
+            index,
+            this.selectedConditionTypes,
+            this.isRecalling,
+            this.motivationEnabled)
     }
 }

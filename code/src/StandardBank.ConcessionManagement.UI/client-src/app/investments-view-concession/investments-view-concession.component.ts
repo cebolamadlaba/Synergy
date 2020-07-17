@@ -114,6 +114,7 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
     legalentitygbbnumbers: LegalEntityGBBNumber[];
 
     selectedConditionTypes: ConditionType[];
+    // Specifies whether Field:NoticePeriod must be disabled[true]:NotDisabled[false]
     selectedInvestmentConcession: boolean[];
 
     observableConditionTypes: Observable<ConditionType[]>;
@@ -350,7 +351,7 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
                 for (let investmentConcessionDetail of this.investmentConcession.investmentConcessionDetails) {
 
                     if (rowIndex != 0) {
-                        this.addNewConcessionRow();
+                        this.addNewConcessionRow(false);
                     }
 
                     const concessions = this.getInvestmentConcessionItemRows();
@@ -498,9 +499,17 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
         });
     }
 
-    addNewConcessionRow() {
+    addNewConcessionRow(isClickEvent: boolean) {
         const control = this.getInvestmentConcessionItemRows();
         var newRow = this.initConcessionItemRows();
+        if (isClickEvent) {
+            if (control != null && control.length > 0) {
+                let expiryDate = control.controls[0].get('expiryDate').value;
+                if (expiryDate != null) {
+                    newRow.controls['expiryDate'].setValue(expiryDate);
+                }
+            }
+        }
         control.push(newRow);
     }
 
@@ -557,7 +566,12 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
             return false;
         }
         else {
-            return true;
+            if (this.editType == EditTypeEnum.Renew || this.editType == EditTypeEnum.UpdateApproved) {
+                return false;
+            }
+            else {
+                return true;
+            }
         }
     }
 
@@ -586,11 +600,8 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
 
             this.selectedInvestmentConcession[rowIndex] = false;
             currentRow.get('noticeperiod').setValue(null);
-            currentRow.get('expiryDate').setValue('');
-            currentRow.get('expiryDate').disable();
         }
         else {
-            currentRow.get('expiryDate').enable();
             this.selectedInvestmentConcession[rowIndex] = true;
 
         }
@@ -645,12 +656,12 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
                 investmentConcessionDetail.concessionDetailId = concessionFormItem.get('concessionDetailId').value;
 
 
-            let applyexpirydate = false;
+            let applyexpirydate = true;
 
             if (concessionFormItem.get('productType').value) {
 
                 if (concessionFormItem.get('productType').value.description == 'Notice deposit (BND)') {
-                    applyexpirydate = true;
+                    applyexpirydate = false;
                 }
                 investmentConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;
                 hasTypeId = true;
@@ -682,7 +693,7 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
                 investmentConcessionDetail.term = concessionFormItem.get('noticeperiod').value;
             } else {
 
-                if (applyexpirydate) {
+                if (!applyexpirydate) {
 
                     this.addValidationError("Notice period value not entered");
                 }
@@ -704,7 +715,7 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
                 investmentConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
             else {
-                if (!applyexpirydate) {
+                if (applyexpirydate) {
                     this.addValidationError("Expiry date not selected");
                 }
             }
@@ -1298,7 +1309,7 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
     }
 
     disableField(index, fieldName) {
-        return this.disableFieldBase(
+        return super.disableFieldBase(
             this.selectedConditionTypes[index],
             fieldName,
             this.canEdit,
