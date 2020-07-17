@@ -621,7 +621,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         public decimal GetExtensionFee()
         {
-            return _extensionFeeRepository.GetActiveFee();
+            return _extensionFeeRepository.GetActiveExtensionFee();
         }
         #endregion
     }

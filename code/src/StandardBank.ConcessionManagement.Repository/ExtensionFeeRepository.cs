@@ -36,7 +36,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// Gets active fee value.
         /// </summary>
         /// <returns></returns>
-        public decimal GetActiveFee()
+        public decimal GetActiveExtensionFee()
         {
             Func<IEnumerable<ExtensionFee>> function = () =>
             {

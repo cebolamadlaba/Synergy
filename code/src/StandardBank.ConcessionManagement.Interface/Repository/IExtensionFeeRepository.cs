@@ -10,6 +10,6 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// Gets active fee value.
         /// </summary>
         /// <returns></returns>
-        decimal GetActiveFee();
+        decimal GetActiveExtensionFee();
     }
 }
