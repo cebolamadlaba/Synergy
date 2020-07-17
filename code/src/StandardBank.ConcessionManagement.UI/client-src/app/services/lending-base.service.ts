@@ -40,6 +40,8 @@ export class LendingBaseService {
                 return selectedConditionType != null && selectedConditionType.enableConditionVolume ? null : '';
             case 'value':
                 return selectedConditionType != null && selectedConditionType.enableConditionValue ? null : '';
+            case 'extensionFee':
+                return '';
         }
     }
 

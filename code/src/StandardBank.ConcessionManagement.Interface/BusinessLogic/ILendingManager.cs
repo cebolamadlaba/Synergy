@@ -79,6 +79,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         void DeleteConcessionLendingTieredRate(int concessionLendingTieredRateId);
 
         void DeleteConcessionLendingTieredRates(IEnumerable<StandardBank.ConcessionManagement.Model.Repository.ConcessionLendingTieredRate> concessionLendingTieredRates);
+        decimal GetExtensionFee();
         #endregion
     }
 }

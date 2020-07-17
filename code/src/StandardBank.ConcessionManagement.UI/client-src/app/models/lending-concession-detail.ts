@@ -22,6 +22,7 @@ export class LendingConcessionDetail extends BaseConcessionDetail {
     serviceFee: number;
 
     mrsEri: number;
+    extensionFee: number;
 
     lendingConcessionDetailTieredRates: LendingConcessionTieredRate[];
 

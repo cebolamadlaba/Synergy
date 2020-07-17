@@ -129,6 +129,8 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
     legalEntity: LegalEntity;
 
+    @ViewChild('extendDisclamerModal') extendDisclamerModal;
+
     constructor(
         private router: Router,
         private route: ActivatedRoute,
@@ -349,6 +351,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                     currentConcession.get('reviewFeeType').setValue(selectedReviewFeeType[0]);
                     currentConcession.get('reviewFee').setValue(this.formatDecimal3(lendingConcessionDetail.reviewFee));
                     currentConcession.get('uffFee').setValue(this.formatDecimal3(lendingConcessionDetail.uffFee));
+                    currentConcession.get('extensionFee').setValue(this.formatDecimal3(lendingConcessionDetail.extensionFee));
 
                     currentConcession.get('mrsEri').setValue(lendingConcessionDetail.mrsEri);
 
@@ -436,6 +439,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             frequency: [{ value: '', disabled: true }],
             serviceFee: [{ value: '', disabled: true }],
             mrsEri: [''],
+            extensionFee: [''],
             lendingTieredRates: [[]]
         });
     }
@@ -1096,6 +1100,25 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         } else {
             this.isLoading = false;
         }
+    }
+
+    extensionDisclamer() {
+        debugger
+        var isOverdraft = this.lendingConcession.lendingConcessionDetails.find(item => {
+            if (item.productType === "Overdraft") {
+                return true
+            }
+        });
+
+        if (isOverdraft) {
+            this.extendDisclamerModal.show();
+        } else {
+            this.extendConcession();
+        }
+    }
+
+    extensionDisclamerClose() {
+        this.extendDisclamerModal.hide();
     }
 
     extendConcession() {

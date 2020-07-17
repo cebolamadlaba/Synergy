@@ -69,6 +69,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         private readonly IPrimeRateRepository _primeRateRepository;
 
+        private readonly IExtensionFeeRepository _extensionFeeRepository;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LendingManager"/> class.
         /// </summary>
@@ -85,7 +87,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             IFinancialLendingRepository financialLendingRepository, ILookupTableManager lookupTableManager,
             ILoadedPriceLendingRepository loadedPriceLendingRepository, IRuleManager ruleManager,
             IMiscPerformanceRepository miscPerformanceRepository, IPrimeRateRepository primeRateRepository,
-            IMediator mediator, IConcessionLendingTieredRateRepository concessionLendingTieredRateRepository)
+            IMediator mediator, IConcessionLendingTieredRateRepository concessionLendingTieredRateRepository,
+            IExtensionFeeRepository extensionFeeRepository)
         {
             _concessionManager = concessionManager;
             _concessionLendingRepository = concessionLendingRepository;
@@ -98,6 +101,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _primeRateRepository = primeRateRepository;
             _mediator = mediator;
             _concessionLendingTieredRateRepository = concessionLendingTieredRateRepository;
+            _extensionFeeRepository = extensionFeeRepository;
         }
 
         /// <summary>
@@ -613,6 +617,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             foreach (var concessionLendingTieredRate in concessionLendingTieredRates)
                 this.DeleteConcessionLendingTieredRate(concessionLendingTieredRate.Id);
+        }
+
+        public decimal GetExtensionFee()
+        {
+            return _extensionFeeRepository.GetActiveExtensionFee();
         }
         #endregion
     }
