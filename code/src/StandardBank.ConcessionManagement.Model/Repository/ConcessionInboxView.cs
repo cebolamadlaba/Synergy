@@ -298,5 +298,9 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public DateTime? PriceExportedDate { get; set; }
 
         public string ConcessionLetterURL { get; set; }
+
+        public string AAUserFullName { get; set; }
+
+        public string AEUserFullName { get; set; }
     }
 }

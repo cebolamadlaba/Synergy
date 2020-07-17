@@ -22,6 +22,8 @@
                 <th style="border: 1px solid #7a7a7a;">Customer Name</th>
                 <th style="border: 1px solid #7a7a7a;">Expiry Date</th>
                 <th style="border: 1px solid #7a7a7a;">Date Approved</th>
+                <th style="border: 1px solid #7a7a7a;">Responsible AE/RM/BM</th>
+                <th style="border: 1px solid #7a7a7a;">Responsible AA</th>
             </tr>
 
             @foreach (var item in Model.ExpiringConcessionDetails)
@@ -34,6 +36,8 @@
                     <td style="border: 1px solid #7a7a7a;">@item.CustomerName</td>
                     <td style="border: 1px solid #7a7a7a;">@item.ExpiryDate</td>
                     <td style="border: 1px solid #7a7a7a;">@item.DateApproved</td>
+                    <td style="border: 1px solid #7a7a7a;">@item.ResponsibleAE</td>
+                    <td style="border: 1px solid #7a7a7a;">@item.ResponsibleAA</td>
                 </tr>
             }
 

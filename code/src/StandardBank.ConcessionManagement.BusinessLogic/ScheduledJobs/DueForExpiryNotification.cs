@@ -92,7 +92,9 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                     ExpiryDate = concession.ExpiryDate.Value.ToString("yyyy-MM-dd"),
                     RiskGroupNumber = Convert.ToString(concession.RiskGroupNumber),
                     RiskGroupName = concession.RiskGroupName,
-                    DateApproved = concession.DateApproved.Value.ToString("yyyy-MM-dd")
+                    DateApproved = concession.DateApproved.Value.ToString("yyyy-MM-dd"),
+                    ResponsibleAA = concession.AAUserFullName ?? "-",
+                    ResponsibleAE = concession.AEUserFullName
                 };
 
                 //Send notification to requestor
