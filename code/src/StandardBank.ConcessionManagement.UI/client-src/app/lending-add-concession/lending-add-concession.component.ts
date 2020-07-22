@@ -420,6 +420,10 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
             if (this.selectedLineItemTieredRates == null || this.selectedLineItemTieredRates.length == 0) {
                 this.addNewTieredRateRow();
             }
+            this.selectedLineItemTieredRates.forEach((item) => {
+                item.limitString = this.baseComponentService.formatDecimal(item.limit).toString();
+                item.marginToPrimeString = this.baseComponentService.formatDecimal(item.marginToPrime).toString();
+            });
         }
     }
 
@@ -452,6 +456,10 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
     }
 
     saveTieredRates() {
+        this.selectedLineItemTieredRates.forEach((item) => {
+            item.limit = this.baseComponentService.unformat(<any>item.limitString);
+            item.marginToPrime = this.baseComponentService.unformat(<any>item.marginToPrimeString);
+        });
         this.tieredRateMessage = "";
         const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
         concessions.controls[this.selectedRowIndex].get('lendingTieredRates').setValue(this.selectedLineItemTieredRates);
@@ -733,27 +741,11 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
     }
 
     setTwoNumberDecimalMAP($event) {
-
-        //check that it is a valid number
-        if (((isNaN($event.target.value)).valueOf()) == true) {
-
-            alert("Not a valid number for 'Prime -/+'");
-            $event.target.value = 0;
-        }
-        else {
-
-            $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
-        }
+        $event.target.value = this.baseComponentService.formatDecimalThree($event.target.value);
     }
 
     setThreeNumberDecimal($event) {
-        if ($event.target.value) {
-            $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
-        }
-        else {
-
-            $event.target.value = null;
-        }
+        $event.target.value = this.baseComponentService.formatDecimalThree($event.target.value);
     }
 
     canSaveMessage() {

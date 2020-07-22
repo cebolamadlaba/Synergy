@@ -232,7 +232,7 @@
                 <!-- MAP -->
                 <td class="length-short">
 
-                    <input type="text" formControlName="marginAgainstPrime" [attr.disabled]="disableField(i,'marginAgainstPrime')" (change)="setTwoNumberDecimalMAP($event)"
+                    <input type="text" formControlName="marginAgainstPrime" [attr.disabled]="disableField(i,'marginAgainstPrime')" (change)="setThreeNumberDecimal($event)"
                            class="form-control" [class.markred]="bcmhochanged(i,'marginAgainstPrime')" (click)="openTieredRateModal(i)" />
 
                 </td>
@@ -501,9 +501,9 @@
                         </tr>
                         <tr *ngFor="let lendingTieredRate of selectedLineItemTieredRates; let i=index">
                             <!-- Limit -->
-                            <td style="width:40%"><input type="text" numbersOnly="true" class="form-control" [(ngModel)]="lendingTieredRate.limit" (change)="setTwoNumberDecimal($event)" [disabled]="!canEdit" /></td>
+                            <td style="width:40%"><input type="text" class="form-control" [(ngModel)]="lendingTieredRate.limitString" (change)="setTwoNumberDecimal($event)" [disabled]="!canEdit" /></td>
                             <!-- Prime -->
-                            <td style="width:40%"><input type="text" class="form-control" [(ngModel)]="lendingTieredRate.marginToPrime" (change)="setTwoNumberDecimalMAP($event)" [disabled]="!canEdit" /></td>
+                            <td style="width:40%"><input type="text" class="form-control" [(ngModel)]="lendingTieredRate.marginToPrimeString" (change)="setThreeNumberDecimal($event)" [disabled]="!canEdit" /></td>
                             <!-- Remove Row-->
                             <td style="width:10%"><button class="btn-delete" type="button" (click)="deleteTieredRateRow(i)" *ngIf="canEdit"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
                         </tr>

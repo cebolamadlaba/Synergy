@@ -344,8 +344,8 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                     }
 
                     currentConcession.get('term').setValue(lendingConcessionDetail.term);
-                    currentConcession.get('approvedMarginAgainstPrime').setValue(this.formatDecimal4(lendingConcessionDetail.approvedMap));
-                    currentConcession.get('initiationFee').setValue(this.formatDecimal4(lendingConcessionDetail.initiationFee));
+                    currentConcession.get('approvedMarginAgainstPrime').setValue(this.formatDecimal3(lendingConcessionDetail.approvedMap));
+                    currentConcession.get('initiationFee').setValue(this.formatDecimal3(lendingConcessionDetail.initiationFee));
 
                     let selectedReviewFeeType = this.reviewFeeTypes.filter(_ => _.id == lendingConcessionDetail.reviewFeeTypeId);
                     currentConcession.get('reviewFeeType').setValue(selectedReviewFeeType[0]);
@@ -1183,6 +1183,10 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             if (this.selectedLineItemTieredRates == null || this.selectedLineItemTieredRates.length == 0) {
                 this.addNewTieredRateRow();
             }
+            this.selectedLineItemTieredRates.forEach((item) => {
+                item.limitString = this.baseComponentService.formatDecimal(item.limit).toString();
+                item.marginToPrimeString = this.baseComponentService.formatDecimal(item.marginToPrime).toString();
+            });
         }
     }
 
@@ -1215,6 +1219,10 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     }
 
     saveTieredRates() {
+        this.selectedLineItemTieredRates.forEach((item) => {
+            item.limit = this.baseComponentService.unformat(<any>item.limitString);
+            item.marginToPrime = this.baseComponentService.unformat(<any>item.marginToPrimeString);
+        });
         this.tieredRateMessage = "";
         const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
         concessions.controls[this.selectedRowIndex].get('lendingTieredRates').setValue(this.selectedLineItemTieredRates);
@@ -1502,56 +1510,16 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
     }
 
-    setTwoNumberDecimalMAP($event) {
-
-        //check that it is a valid number
-        if (((isNaN($event.target.value)).valueOf()) == true) {
-
-            alert("Not a valid number for 'Prime -/+'");
-            $event.target.value = 0;
-        }
-        else {
-
-            $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
-        }
-    }
-
     setThreeNumberDecimal($event) {
-        if ($event.target.value) {
-            $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
-        }
-        else {
-
-            $event.target.value = 0;
-        }
+        $event.target.value = this.baseComponentService.formatDecimalThree($event.target.value);
     }
 
     formatDecimal(itemValue: number) {
-        if (itemValue) {
-
-            return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-        }
-
-        return 0;
+        return this.baseComponentService.formatDecimal(itemValue);
     }
 
     formatDecimal3(itemValue: number) {
-        if (itemValue) {
-
-            return new DecimalPipe('en-US').transform(itemValue, '1.3-4');
-        }
-
-        return 0;
-    }
-
-
-    formatDecimal4(itemValue: number) {
-        if (itemValue) {
-
-            return new DecimalPipe('en-US').transform(itemValue, '1.3-4');
-        }
-
-        return 0.00;
+        return this.baseComponentService.formatDecimalThree(itemValue);
     }
 
     canEditSmtDealNumber() {
