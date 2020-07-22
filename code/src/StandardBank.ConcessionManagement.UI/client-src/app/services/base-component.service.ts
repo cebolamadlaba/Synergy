@@ -128,10 +128,6 @@ export class BaseComponentService {
         return 0.00;
     }
 
-    public GetTodayDate() {
-        return new Date().toISOString().split('T')[0];
-    }
-
     public formatDecimalThree(itemValue: number) {
 
         if (itemValue != null) {
@@ -139,7 +135,11 @@ export class BaseComponentService {
             return new DecimalPipe('en-US').transform(itemValue, '1.3-3');
         }
 
-        return null;
+        return 0.00;
+    }
+
+    public GetTodayDate() {
+        return new Date().toISOString().split('T')[0];
     }
 
     public expiringDateDifferenceValidation(selectedExpiryDate: string) {
