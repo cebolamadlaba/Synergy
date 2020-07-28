@@ -36,13 +36,15 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <returns></returns>
         IEnumerable<ConcessionRelationship> ReadByParentConcessionId(int parentConcessionId);
 
+        IEnumerable<ConcessionRelationshipDetail> GetParentDetails(int concessionId);
+
         /// <summary>
         /// Reads the details by concession identifier.
         /// </summary>
         /// <param name="concessionId">The concession identifier.</param>
         /// <returns></returns>
         IEnumerable<ConcessionRelationshipDetail> ReadDetailsByConcessionId(int concessionId);
-        
+
         /// <summary>
         /// Reads all.
         /// </summary>

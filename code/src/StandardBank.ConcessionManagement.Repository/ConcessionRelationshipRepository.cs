@@ -141,7 +141,7 @@ namespace StandardBank.ConcessionManagement.Repository
         /// </summary>
         /// <param name="concessionId">The concession identifier.</param>
         /// <returns></returns>
-        private IEnumerable<ConcessionRelationshipDetail> GetParentDetails(int concessionId)
+        public IEnumerable<ConcessionRelationshipDetail> GetParentDetails(int concessionId)
         {
             using (var db = _dbConnectionFactory.Connection())
             {
