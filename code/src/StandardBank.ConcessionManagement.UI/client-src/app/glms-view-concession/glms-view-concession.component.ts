@@ -345,7 +345,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
             rowIndex++;
         }
 
-        this.changearray = this.lookupDataService.checkforLC(this.glmsConcession.concession.status, this.glmsConcession.concession.subStatus, glmsConcession.concession.concessionComments);
+        this.changearray = this.lookupDataService.checkforLC(this.glmsConcession.concession.status, this.glmsConcession.concession.subStatus, this.glmsConcession.concession.concessionComments);
 
         rowIndex = 0;
 
@@ -1120,7 +1120,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
                 this.glmsConcession = entity;
 
-                this.populateFormWithGlmsConcession(this.glmsConcession);
+                this.populateFormWithGlmsConcession();
 
                 console.log("data saved");
                 this.canPcmApprove = false;
