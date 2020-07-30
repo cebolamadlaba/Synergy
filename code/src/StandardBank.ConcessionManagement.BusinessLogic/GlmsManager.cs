@@ -39,9 +39,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         private readonly IGlmsTierDataRepository _glmsTierDataRepository;
 
+        private readonly IRuleManager _ruleManager;
+
         public GlmsManager(IConcessionManager concessionManager, IConcessionGlmsRepository concessionGlmsRepository,
             IMapper mapper, ILookupTableManager lookupTableManager, IMiscPerformanceRepository miscPerformanceRepository,
-            IMediator mediator, IGlmsTierDataRepository glmsTierDataRepository)
+            IMediator mediator, IGlmsTierDataRepository glmsTierDataRepository, IRuleManager ruleManager)
         {
             _concessionManager = concessionManager;
             _concessionGlmsRepository = concessionGlmsRepository;
@@ -50,6 +52,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _miscPerformanceRepository = miscPerformanceRepository;
             _mediator = mediator;
             _glmsTierDataRepository = glmsTierDataRepository;
+            _ruleManager = ruleManager;
         }
 
         public ConcessionGlms CreateConcessionGlms(GlmsConcessionDetail glmsConcessionDetail, Concession concession)
@@ -64,8 +67,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var concessionGlms = MapGlms(glmsConcessionDetail);
 
             concessionGlms.ConcessionId = concession.Id;
-            concessionGlms.ArchiveTypeId = archiveType ?? null;
-            concessionGlms.Archived = DateTime.Now;
+
+            if (archiveType.HasValue)
+            {
+                concessionGlms.ArchiveTypeId = archiveType;
+                concessionGlms.Archived = DateTime.Now;
+            }
+
+
+            if (concession.Status == Constants.ConcessionStatus.Approved ||
+                concession.Status == Constants.ConcessionStatus.ApprovedWithChanges)
+            {
+                _ruleManager.UpdateBaseFieldsOnApproval(concessionGlms);
+            }
 
             _concessionGlmsRepository.Update(concessionGlms);
 
