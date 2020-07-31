@@ -447,19 +447,30 @@
 
     <div bsModal #extendDisclamerModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addAAModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content">
+            <div class="modal-content modal-width-position">
                 <div class="col-md-12 modal-header">
                     <h4>
                         Extension Disclaimer
                     </h4>
                 </div>
 
-                <div class="modal-body">
-                    An extension Fee (as displayed on the concession) will be applied. Click submit to proceed.
+                <div class="modal-body modal-content-style">
+                    <div class="row extend-disclaimer-row">
+                        An extension Fee (as displayed on the concession) will be applied. Click submit to proceed.
+                    </div>
+                    <div class="row extend-disclaimer-row">
+                        Please select an Extension Fee %
+                    </div>
+                    <div class="row extend-disclaimer-row">
+                        <input type="radio" name="extensionFee" value="0" (click)="onSelectedExtensionFee(0)" /><span> 0.00%</span>
+                    </div>
+                    <div class="row extend-disclaimer-row">
+                        <input type="radio" name="extensionFee" value="0.63" (click)="onSelectedExtensionFee(0.63)" /><span> 0.63%</span>
+                    </div>
                 </div>
 
                 <div class="modal-footer">
-                    <button class="btn-primary btn" (click)="extendConcession()">Submit</button><button (click)="extensionDisclamerClose()" class="btn-primary btn">Cancel</button>
+                    <button class="btn-primary btn" (click)="extendConcession()" [disabled]="selectedExtensionFee === null">Submit</button><button (click)="extensionDisclamerClose()" class="btn-primary btn">Cancel</button>
                 </div>
             </div>
         </div>

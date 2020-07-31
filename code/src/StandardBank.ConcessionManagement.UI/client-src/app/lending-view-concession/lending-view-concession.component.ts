@@ -49,6 +49,7 @@ import { LendingConcessionTieredRate } from '../models/lending-concession-tiered
 export class LendingViewConcessionComponent extends LendingBaseService implements OnInit, OnDestroy {
 
     @ViewChild('tieredRateModal') tieredRateModal: ModalDirective;
+    @ViewChild('extendDisclamerModal') extendDisclamerModal;
 
     myDecimal: number;
 
@@ -129,7 +130,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
     legalEntity: LegalEntity;
 
-    @ViewChild('extendDisclamerModal') extendDisclamerModal;
+    selectedExtensionFee: number = null;
 
     constructor(
         private router: Router,
@@ -1106,6 +1107,10 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         }
     }
 
+    onSelectedExtensionFee(extensionFee: number) {
+        this.selectedExtensionFee = extensionFee;
+    }
+
     extensionDisclamer() {
         debugger
         var isOverdraft = this.lendingConcession.lendingConcessionDetails.find(item => {
@@ -1126,12 +1131,15 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     }
 
     extendConcession() {
+        if (this.selectedExtensionFee == null) {
+            return;
+        }
         if (confirm("Are you sure you want to extend this concession?")) {
             this.isLoading = true;
             this.errorMessage = null;
             this.validationError = null;
 
-            this.lendingService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
+            this.lendingService.postExtendConcession(this.concessionReferenceId, this.selectedExtensionFee).subscribe(entity => {
                 this.lendingConcession = entity;
                 this.populateFormFromLendingConcession();
                 console.log("data saved");
