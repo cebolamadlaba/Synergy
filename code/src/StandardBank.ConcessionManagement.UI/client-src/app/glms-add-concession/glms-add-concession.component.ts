@@ -416,6 +416,22 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
             }
 
             glmsConcession.glmsConcessionDetails.push(glmsConcessionDetail);
+
+            if (glmsConcessionDetail.interestPricingCategoryId != null &&
+                glmsConcessionDetail.interestPricingCategoryId > 0 &&
+                glmsConcessionDetail.interestTypeId != null &&
+                glmsConcessionDetail.interestTypeId) {
+                let hasDuplicates = this.baseComponentService.HasDuplicateConcessionInterestPricingCategoryAndInterestType(
+                    glmsConcession.glmsConcessionDetails,
+                    glmsConcessionDetail.interestPricingCategoryId,
+                    glmsConcessionDetail.interestTypeId);
+
+                if (hasDuplicates) {
+                    this.addValidationError("Duplicate 'Interest Pricing Category' and 'Interest Type' combination found. Please select different combination.");
+
+                    break;
+                }
+            }
         }
 
         const conditions = <FormArray>this.glmsConcessionForm.controls['conditionItemsRows'];

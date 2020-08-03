@@ -9,6 +9,7 @@ import { User } from '../models/user';
 import { FormArray } from '@angular/forms';
 import { ConcessionCondition } from '../models/concession-condition';
 import { ConcessionConditionReturnObject } from '../models/concession-condition-return-object';
+import { GlmsConcessionDetail } from '../models/glms-concession-detail';
 
 declare var accounting: any;
 
@@ -75,6 +76,19 @@ export class BaseComponentService {
         return duplicates.length > 1;
     }
 
+    // GLMS
+    public HasDuplicateConcessionInterestPricingCategoryAndInterestType(glmsConcessionDetails: GlmsConcessionDetail[], interstPricingCategoryId: number, interestTypeId: number): boolean {
+
+        let duplicates = glmsConcessionDetails.filter(item => {
+            return item.interestPricingCategoryId == interstPricingCategoryId &&
+                item.interestTypeId == interestTypeId;
+        });
+
+        return duplicates.length > 1;
+    }
+
+
+
     public unformat(itemValue: number) {
         return accounting.unformat(itemValue);
     }
@@ -101,9 +115,9 @@ export class BaseComponentService {
         //    }
 
         //} else {
-            if (this.validationError == undefined) {
-                this.router.navigate([url, riskGroupNumber, sapbpid]);
-            }
+        if (this.validationError == undefined) {
+            this.router.navigate([url, riskGroupNumber, sapbpid]);
+        }
         //}
     }
 
