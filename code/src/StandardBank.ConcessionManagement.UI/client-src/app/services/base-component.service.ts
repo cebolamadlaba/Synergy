@@ -125,7 +125,7 @@ export class BaseComponentService {
             return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
         }
 
-        return 0.00;
+        return "0.00";
     }
 
     public formatDecimalThree(itemValue: number) {
@@ -135,7 +135,7 @@ export class BaseComponentService {
             return new DecimalPipe('en-US').transform(itemValue, '1.3-3');
         }
 
-        return 0.00;
+        return "0.00";
     }
 
     public GetTodayDate() {
