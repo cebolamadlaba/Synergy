@@ -327,8 +327,6 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
             let selectedInterestPricingCategory = this.interestPricingCategory.filter(_ => _.id === glmsConcessionDetail.interestPricingCategoryId);
             currentConcession.get('interestPricingCategory').setValue(selectedInterestPricingCategory[0]);
 
-            this.interestPricingCategory[rowIndex] = selectedInterestPricingCategory[0];
-
             if (glmsConcessionDetail.expiryDate) {
                 var formattedExpiryDate = this.datepipe.transform(glmsConcessionDetail.expiryDate, 'yyyy-MM-dd');
                 currentConcession.get('expiryDate').setValue(formattedExpiryDate);
@@ -422,12 +420,12 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
                 this.lookupDataService.getPeriodTypes(),
                 this.lookupDataService.getConditionTypes(),
                 this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-                this.getGlmsGroup(this.riskGroupNumber, this.sapbpid),
-                this.getInterestType(),
-                this.getSlabType(),
-                this.getRateType(),
-                this.getBaseRateCode(),
-                this.getInterestPricingCategory(),
+                super.getGlmsGroup(this.riskGroupNumber, this.sapbpid),
+                super.getInterestType(),
+                super.getSlabType(),
+                super.getRateType(),
+                super.getBaseRateCode(),
+                super.getInterestPricingCategory(),
             ]).subscribe(results => {
                 this.setInitialData(results, true);
                 this.populateForm();
@@ -443,12 +441,12 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
                 this.lookupDataService.getPeriodTypes(),
                 this.lookupDataService.getConditionTypes(),
                 this.lookupDataService.getLegalEntity(this.sapbpid),
-                this.getGlmsGroup(this.riskGroupNumber, this.sapbpid),
-                this.getInterestType(),
-                this.getSlabType(),
-                this.getRateType(),
-                this.getBaseRateCode(),
-                this.getInterestPricingCategory(),
+                super.getGlmsGroup(this.riskGroupNumber, this.sapbpid),
+                super.getInterestType(),
+                super.getSlabType(),
+                super.getRateType(),
+                super.getBaseRateCode(),
+                super.getInterestPricingCategory(),
 
             ]).subscribe(results => {
                 this.setInitialData(results, false);
@@ -663,6 +661,22 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
             }
 
             glmsConcession.glmsConcessionDetails.push(glmsConcessionDetail);
+
+            if (glmsConcessionDetail.interestPricingCategoryId != null &&
+                glmsConcessionDetail.interestPricingCategoryId > 0 &&
+                glmsConcessionDetail.interestTypeId != null &&
+                glmsConcessionDetail.interestTypeId) {
+                let hasDuplicates = this.baseComponentService.HasDuplicateConcessionInterestPricingCategoryAndInterestType(
+                    glmsConcession.glmsConcessionDetails,
+                    glmsConcessionDetail.interestPricingCategoryId,
+                    glmsConcessionDetail.interestTypeId);
+
+                if (hasDuplicates) {
+                    this.addValidationError("Duplicate 'Interest Pricing Category' and 'Interest Type' combination found. Please select different combination.");
+
+                    break;
+                }
+            }
         }
 
         const conditions = <FormArray>this.glmsConcessionForm.controls['conditionItemsRows'];

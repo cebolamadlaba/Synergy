@@ -10,7 +10,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Glms
         public int GlmsConcessionDetailId { get; set; }
         public string LegalEntity { get; set; }
         public string GlmsProduct { get; set; }
-        public int interestPricingCategoryId { get; set; }
+        public int InterestPricingCategoryId { get; set; }
         public int? GroupNumber { get; set; }
         public int? fkGlmsProductId { get; set; }    
         public int? fkLegalEntityAccountId { get; set; }

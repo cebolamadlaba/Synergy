@@ -229,12 +229,12 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
                 this.lookupDataService.getPeriodTypes(),
                 this.lookupDataService.getConditionTypes(),
                 this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-                this.getGlmsGroup(this.riskGroupNumber, this.sapbpid),
-                this.getInterestType(),
-                this.getSlabType(),
-                this.getRateType(),
-                this.getBaseRateCode(),
-                this.getInterestPricingCategory(),
+                super.getGlmsGroup(this.riskGroupNumber, this.sapbpid),
+                super.getInterestType(),
+                super.getSlabType(),
+                super.getRateType(),
+                super.getBaseRateCode(),
+                super.getInterestPricingCategory(),
             ]).subscribe(results => {
                 this.setInitialData(results, true);
             }, error => {
@@ -249,12 +249,12 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
                 this.lookupDataService.getPeriodTypes(),
                 this.lookupDataService.getConditionTypes(),
                 this.lookupDataService.getLegalEntity(this.sapbpid),
-                this.getGlmsGroup(this.riskGroupNumber, this.sapbpid),
-                this.getInterestType(),
-                this.getSlabType(),
-                this.getRateType(),
-                this.getBaseRateCode(),
-                this.getInterestPricingCategory(),
+                super.getGlmsGroup(this.riskGroupNumber, this.sapbpid),
+                super.getInterestType(),
+                super.getSlabType(),
+                super.getRateType(),
+                super.getBaseRateCode(),
+                super.getInterestPricingCategory(),
 
             ]).subscribe(results => {
                 this.setInitialData(results, false);
