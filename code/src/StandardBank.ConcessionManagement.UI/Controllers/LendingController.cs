@@ -283,6 +283,11 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 else if (relationshipType == Constants.RelationshipType.Extension && lendingConcessionDetail.ProductType == Lending.ProductType.Overdraft)
                 {
                     lendingConcessionDetail.ExtensionFee = extensionFee.Value;
+                    if (lendingConcessionDetail.ExtensionFee > 0)
+                    {
+                        lendingConcessionDetail.InitiationFee = 0;
+                        lendingConcessionDetail.ReviewFee = 0;
+                    }
                 }
 
                 lendingConcessionDetail.LendingConcessionDetailId = 0;

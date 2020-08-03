@@ -11,3 +11,7 @@
 .extend-disclaimer-row {
     padding: 10px 0px;
 }
+
+.extend-disclaimer-radio {
+    cursor: pointer;
+}

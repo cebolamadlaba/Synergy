@@ -1112,7 +1112,6 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     }
 
     extensionDisclamer() {
-        debugger
         var isOverdraft = this.lendingConcession.lendingConcessionDetails.find(item => {
             if (item.productType === "Overdraft") {
                 return true
