@@ -122,8 +122,8 @@ namespace StandardBank.ConcessionManagement.Repository
                     SET [fkConcessionId] = @ConcessionId,
                         [fkConcessionDetailId] = @ConcessionDetailId, 
                         [fkGroupId] = @GlmsGroupId,
-                        [fkInterestPricingCategoryId] = @SlabTypeId,
-                        [fkSlabTypeId] = @InterestPricingCategoryId,
+                        [fkInterestPricingCategoryId] = @InterestPricingCategoryId,
+                        [fkSlabTypeId] = @SlabTypeId,
                         [fkInterestTypeId] = @InterestTypeId,
                         [fkArchiveTypeId] = @ArchiveTypeId
                     WHERE [fkConcessionId] = @ConcessionId AND [fkConcessionDetailId] = @ConcessionDetailId",

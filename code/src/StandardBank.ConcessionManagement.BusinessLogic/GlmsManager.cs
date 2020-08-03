@@ -208,7 +208,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             ConcessionGlms glmsConcession = new ConcessionGlms()
             {
-                InterestPricingCategoryId = glmsConcessionDetail.interestPricingCategoryId,
+                InterestPricingCategoryId = glmsConcessionDetail.InterestPricingCategoryId,
                 SlabTypeId = glmsConcessionDetail.SlabTypeId,
                 ConcessionDetailId = glmsConcessionDetail.ConcessionDetailId,
                 GlmsGroupId = glmsConcessionDetail.GlmsGroupId,
