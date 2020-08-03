@@ -99,20 +99,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
 
                 //Send notification to requestor
                 if (concession.RequestorId.HasValue)
-                    AddExpiringConcessionForUser(concession.RequestorId.Value, ref expiringConcessionList, concessionDetail);
-                
-                //Add BCM user if months are less then 3
-                if(month < 3 && concession.BCMUserId.HasValue)
-                    AddExpiringConcessionForUser(concession.BCMUserId.Value, ref expiringConcessionList, concessionDetail);
-                
+                {
+                    AddExpiringConcessionForUser(concession.RequestorId.Value, ref expiringConcessionList, concessionDetail, 3);
+                }
+
+                //Add BCM user if months are equal to 2
+                if (month == 2 && concession.BCMUserId.HasValue)
+                    AddExpiringConcessionForUser(concession.BCMUserId.Value, ref expiringConcessionList, concessionDetail, 2);
+
                 //Add PCM user if there is a month left
                 if (month == 1 && concession.PCMUserId.HasValue)
-                    AddExpiringConcessionForUser(concession.PCMUserId.Value, ref expiringConcessionList, concessionDetail);
+                    AddExpiringConcessionForUser(concession.PCMUserId.Value, ref expiringConcessionList, concessionDetail, 1);
 
 
                 //Add HO user if there is a month left
                 if (month == 1 && concession.HOUserId.HasValue)
-                    AddExpiringConcessionForUser(concession.HOUserId.Value, ref expiringConcessionList, concessionDetail);   
+                    AddExpiringConcessionForUser(concession.HOUserId.Value, ref expiringConcessionList, concessionDetail, 1);
             }
 
             return expiringConcessionList;
@@ -125,7 +127,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
         /// <param name="userId"></param>
         /// <param name="expiringConcessions"></param>
         /// <returns></returns>
-        private void AddExpiringConcessionForUser(int userId ,ref List<ExpiringConcession> expiringConcessions, ExpiringConcessionDetail concessionDetail)
+        private void AddExpiringConcessionForUser(int userId, ref List<ExpiringConcession> expiringConcessions, ExpiringConcessionDetail concessionDetail, int monthBeforeExpiry)
         {
             //checks if there currently is a recipient that matches the userid
             var expiringConcession =
@@ -143,14 +145,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                         ExpiringConcessionDetails = new List<ExpiringConcessionDetail>(),
                         RecipientEmail = recipient.EmailAddress,
                         RecipientName = $"{recipient.FirstName} {recipient.Surname}",
-                        RecipientId = recipient.Id
+                        RecipientId = recipient.Id,
+                        MonthBeforeExpiry = monthBeforeExpiry
                     };
 
                 expiringConcessions.Add(expiringConcession);
             }
 
             //Only add the concession if it has not already been added to the notification list
-            if (!expiringConcession.ExpiringConcessionDetails.Any(x=> x.ConcessionRef == concessionDetail.ConcessionRef))
+            if (!expiringConcession.ExpiringConcessionDetails.Any(x => x.ConcessionRef == concessionDetail.ConcessionRef))
                 expiringConcession.ExpiringConcessionDetails.Add(concessionDetail);
         }
 

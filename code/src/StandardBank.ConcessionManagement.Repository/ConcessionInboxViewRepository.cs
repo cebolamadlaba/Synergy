@@ -758,7 +758,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionInboxView>(
-					@"SELECT [ConcessionId],
+                    @"SELECT [ConcessionId],
 							[RiskGroupId],
 							[RiskGroupNumber],
 							[RiskGroupName],
@@ -795,8 +795,10 @@ namespace StandardBank.ConcessionManagement.Repository
 							[IsCurrent],
 							[PriceExported],
 							[PriceExportedDate],
-							[AAUserFullName],
-							[AEUserFullName]
+		                    [CurrentAEUserId],
+		                    [CurrentAAUserId]
+							[AEUserFullName],
+							[AAUserFullName]
 					FROM [dbo].[ConcessionInboxView]
 					WHERE [StatusId] IN (2, 3)
 						AND [IsActive] = 1
