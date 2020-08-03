@@ -229,10 +229,10 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// </summary>
         /// <param name="concessionReferenceId">The concession reference identifier.</param>
         /// <returns></returns>
-        [Route("ExtendConcession/{concessionReferenceId}")]
-        public async Task<IActionResult> ExtendConcession(string concessionReferenceId)
+        [Route("ExtendConcession/{concessionReferenceId}/{extensionFee:decimal}")]
+        public async Task<IActionResult> ExtendConcession(string concessionReferenceId, decimal extensionFee)
         {
-            var lendingConcession = await CreateChildConcession(concessionReferenceId, Constants.RelationshipType.Extension);
+            var lendingConcession = await CreateChildConcession(concessionReferenceId, Constants.RelationshipType.Extension, extensionFee);
 
             return Ok(lendingConcession);
         }
@@ -243,7 +243,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <param name="concessionReferenceId">The concession reference identifier.</param>
         /// <param name="relationshipType">Type of the relationship.</param>
         /// <returns></returns>
-        private async Task<LendingConcession> CreateChildConcession(string concessionReferenceId, string relationshipType)
+        private async Task<LendingConcession> CreateChildConcession(string concessionReferenceId, string relationshipType, decimal? extensionFee = null)
         {
             var user = _siteHelper.LoggedInUser(this);
 
@@ -269,7 +269,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             lendingConcession.Concession = concession;
 
-            decimal extensionFee = _lendingManager.GetExtensionFee();
+            //decimal extensionFee = _lendingManager.GetExtensionFee();
 
             //add all the new conditions and lending details
             foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
@@ -279,9 +279,10 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 if (relationshipType != Constants.RelationshipType.Extension)
                 {
                     lendingConcessionDetail.ExpiryDate = null;
-                }else if (relationshipType == Constants.RelationshipType.Extension && lendingConcessionDetail.ProductType == Lending.ProductType.Overdraft)
+                }
+                else if (relationshipType == Constants.RelationshipType.Extension && lendingConcessionDetail.ProductType == Lending.ProductType.Overdraft)
                 {
-                    lendingConcessionDetail.ExtensionFee = extensionFee;
+                    lendingConcessionDetail.ExtensionFee = extensionFee.Value;
                 }
 
                 lendingConcessionDetail.LendingConcessionDetailId = 0;
