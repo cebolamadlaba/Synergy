@@ -462,10 +462,12 @@
                         Please select an Extension Fee %
                     </div>
                     <div class="row extend-disclaimer-row">
-                        <input type="radio" name="extensionFee" value="0" (click)="onSelectedExtensionFee(0)" /><span> 0.00%</span>
+                        <input type="radio" id="extensionFeeOptionOne" name="extensionFee" value="0" (click)="onSelectedExtensionFee(0)" class="extend-disclaimer-radio" />
+                        <label for="extensionFeeOptionOne" class="extend-disclaimer-radio">&nbsp; 0.00%</label>
                     </div>
                     <div class="row extend-disclaimer-row">
-                        <input type="radio" name="extensionFee" value="0.63" (click)="onSelectedExtensionFee(0.63)" /><span> 0.63%</span>
+                        <input type="radio" id="extensionFeeOptionTwo" name="extensionFee" value="0.63" (click)="onSelectedExtensionFee(0.63)" class="extend-disclaimer-radio" />
+                        <label for="extensionFeeOptionTwo" class="extend-disclaimer-radio">&nbsp; 0.63%</label>
                     </div>
                 </div>
 
