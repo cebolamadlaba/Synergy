@@ -355,8 +355,8 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             }
 
             currentConcession.get('term').setValue(lendingConcessionDetail.term);
-            currentConcession.get('approvedMarginAgainstPrime').setValue(this.formatDecimal4(lendingConcessionDetail.approvedMap));
-            currentConcession.get('initiationFee').setValue(this.formatDecimal4(lendingConcessionDetail.initiationFee));
+            currentConcession.get('approvedMarginAgainstPrime').setValue(this.formatDecimal3(lendingConcessionDetail.approvedMap));
+            currentConcession.get('initiationFee').setValue(this.formatDecimal3(lendingConcessionDetail.initiationFee));
 
             let selectedReviewFeeType = this.reviewFeeTypes.filter(_ => _.id == lendingConcessionDetail.reviewFeeTypeId);
             currentConcession.get('reviewFeeType').setValue(selectedReviewFeeType[0]);
