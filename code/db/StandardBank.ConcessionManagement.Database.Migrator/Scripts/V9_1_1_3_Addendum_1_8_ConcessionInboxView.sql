@@ -1,5 +1,5 @@
 
-alter VIEW [dbo].[ConcessionInboxView]
+ALTER VIEW [dbo].[ConcessionInboxView]
 as
 SELECT		Distinct 
 			c.pkConcessionId AS ConcessionId, rg.pkRiskGroupId AS RiskGroupId, rg.RiskGroupNumber, rg.RiskGroupName, le.pkLegalEntityId AS LegalEntityId, le.CustomerName, le.CustomerNumber, lea.pkLegalEntityAccountId AS LegalEntityAccountId, 
@@ -9,8 +9,8 @@ SELECT		Distinct
 			r.pkRegionId AS RegionId, r.Description AS Region, cd.IsMismatched, c.IsActive, c.IsCurrent, cd.PriceExported, cd.PriceExportedDate, c.Archived,
 			--anu.pkAENumberUserId, aea.fkAccountExecutiveUserId AS CurrentAEUserId
 			anu.fkUserId As CurrentAEUserId, aea.fkAccountAssistantUserId CurrentAAUserId,
-			aaUser.FirstName + ' ' + aaUser.Surname as AAUserFullName,
-			aeUser.FirstName + ' ' + aeUser.Surname as AEUserFullName
+			aeUser.FirstName + ' ' + aeUser.Surname as AEUserFullName,
+			aaUser.FirstName + ' ' + aaUser.Surname as AAUserFullName
 FROM        dbo.tblConcession AS c 
 LEFT JOIN	dbo.tblRiskGroup AS rg ON rg.pkRiskGroupId = c.fkRiskGroupId 
 INNER JOIN	dbo.rtblConcessionType AS ct ON ct.pkConcessionTypeId = c.fkConcessionTypeId 
@@ -26,6 +26,5 @@ LEFT JOIN	dbo.tblCentre AS ce ON ce.pkCentreId = cu.fkCentreId
 LEFT JOIN	dbo.rtblRegion AS r ON r.pkRegionId = ce.fkRegionId  
 LEFT JOIN	dbo.tblAENumberUser AS anu ON anu.pkAENumberUserId = c.fkAENumberUserId 
 LEFT JOIN	dbo.tblAccountExecutiveAssistant AS aea ON aea.fkAccountExecutiveUserId = anu.fkUserId
-left outer join dbo.tblUser aaUser on c.fkAAUserId = aaUser.pkUserId
-left outer join  dbo.tblUser aeUser on c.fkAENumberUserId = aeUser.pkUserId
-
+Left Join	dbo.tblUser aeUser On aeUser.pkUserId = anu.fkUserId
+Left Join	dbo.tblUser aaUser On aaUser.pkUserId = aea.fkAccountAssistantUserId

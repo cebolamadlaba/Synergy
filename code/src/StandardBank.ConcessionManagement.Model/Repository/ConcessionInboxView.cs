@@ -299,8 +299,14 @@ namespace StandardBank.ConcessionManagement.Model.Repository
 
         public string ConcessionLetterURL { get; set; }
 
-        public string AAUserFullName { get; set; }
+        public int CurrentAEUserId { get; set; }
+
+        public int CurrentAAUserId { get; set; }
 
         public string AEUserFullName { get; set; }
+
+        public string AAUserFullName { get; set; }
+
+        
     }
 }
