@@ -462,7 +462,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         }
 
                         glmsConcessionLetters.Add(PopulateGlmsConcessionLetter(glsmConcessionDetail));
-                        legalEntityConcession.GlmsConcessionLetters = glmsConcessionLetters; 
+                        legalEntityConcession.GlmsConcessionLetters = glmsConcessionLetters;
                     }
                 }
             }
@@ -961,8 +961,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 TierFrom = dataTier.TierFrom.ToString("N2", CultureInfo.InvariantCulture),
                 RateType = _glmsLookupTableManager.GetRateTypes().FirstOrDefault(_ => _.Id == dataTier.RateTypeId).Description,
                 BaseRate = baseRate,
-                Spread = dataTier.Spread.ToString("N2", CultureInfo.InvariantCulture),
-                Value = dataTier.Value.ToString("N2", CultureInfo.InvariantCulture),
+                Spread = dataTier.Spread.HasValue ? dataTier.Spread.Value.ToString("N2", CultureInfo.InvariantCulture) : "",
+                Value = dataTier.Value.HasValue ? dataTier.Value.Value.ToString("N2", CultureInfo.InvariantCulture) : "",
                 ConcessionEndDate = glmsConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy"),
                 ConcessionStartDate = glmsConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy")
             };

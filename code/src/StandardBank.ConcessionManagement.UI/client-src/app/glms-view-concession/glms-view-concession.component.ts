@@ -850,47 +850,47 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
             tierForm.controls[lastRow].get('tieredTo').setValue(0);
         }
 
-        for (let glmsTierFormItem of tierForm.value) {
+        for (let glmsTierFormItem of tierForm.controls) {
 
             let tierItem = new GlmsTierData();
 
-            if (glmsTierFormItem.tieredFrom) {
-                tierItem.tierFrom = glmsTierFormItem.tieredFrom;
+            if (glmsTierFormItem.get('tieredFrom').value) {
+                tierItem.tierFrom = glmsTierFormItem.get('tieredFrom').value;
             } else {
                 tierItem.tierFrom = 0;
             }
 
-            if (glmsTierFormItem.tieredTo) {
-                tierItem.tierTo = glmsTierFormItem.tieredTo;
+            if (glmsTierFormItem.get('tieredTo').value) {
+                tierItem.tierTo = glmsTierFormItem.get('tieredTo').value;
             } else {
                 tierItem.tierTo = 0;
             }
 
-            if (glmsTierFormItem.rateType.description === "F") {
+            if (glmsTierFormItem.get('rateType').value.description === "F") {
                 if (glmsTierFormItem.value) {
-                    tierItem.value = glmsTierFormItem.value;
+                    tierItem.value = glmsTierFormItem.get('value').value;
                 } else {
                     this.addValidationError("Value not selected");
                 }
             }
 
-            if (glmsTierFormItem.rateType.description === "V") {
+            if (glmsTierFormItem.get('rateType').value.description === "V") {
 
-                if (glmsTierFormItem.baseRate) {
-                    tierItem.baseRateId = glmsTierFormItem.baseRate.id;
+                if (glmsTierFormItem.get('baseRate').value) {
+                    tierItem.baseRateId = glmsTierFormItem.get('baseRate').value.id;
                 } else {
                     this.addValidationError("BaseRate not selected");
                 }
 
-                if (glmsTierFormItem.spread) {
-                    tierItem.spread = glmsTierFormItem.spread;
+                if (glmsTierFormItem.get('spread').value) {
+                    tierItem.spread = glmsTierFormItem.get('spread').value;
                 } else {
                     this.addValidationError("Spread not selected");
                 }
             }
 
-            if (glmsTierFormItem.rateType) {
-                tierItem.rateTypeId = glmsTierFormItem.rateType.id;
+            if (glmsTierFormItem.get('rateType').value) {
+                tierItem.rateTypeId = glmsTierFormItem.get('rateType').value.id;
             } else {
                 this.addValidationError("RateType not selected");
             }
