@@ -97,24 +97,26 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.ScheduledJobs
                     ResponsibleAE = concession.AEUserFullName
                 };
 
-                //Send notification to requestor
+                // Email Notification must be sent to AE and AE 3, 2 and 1 month before expiry
                 if (concession.RequestorId.HasValue)
                 {
-                    AddExpiringConcessionForUser(concession.RequestorId.Value, ref expiringConcessionList, concessionDetail, 3);
+                    AddExpiringConcessionForUser(concession.CurrentAEUserId, ref expiringConcessionList, concessionDetail, month);
+                    AddExpiringConcessionForUser(concession.CurrentAAUserId, ref expiringConcessionList, concessionDetail, month);
                 }
 
-                //Add BCM user if months are equal to 2
-                if (month == 2 && concession.BCMUserId.HasValue)
-                    AddExpiringConcessionForUser(concession.BCMUserId.Value, ref expiringConcessionList, concessionDetail, 2);
+                // 2 months before expiry - BCM
+                if (month < 3 && concession.BCMUserId.HasValue)
+                    AddExpiringConcessionForUser(concession.BCMUserId.Value, ref expiringConcessionList, concessionDetail, month);
 
-                //Add PCM user if there is a month left
+                // 1 month before expiry - PCM / HO
                 if (month == 1 && concession.PCMUserId.HasValue)
-                    AddExpiringConcessionForUser(concession.PCMUserId.Value, ref expiringConcessionList, concessionDetail, 1);
+                {
+                    if (concession.PCMUserId.HasValue)
+                        AddExpiringConcessionForUser(concession.PCMUserId.Value, ref expiringConcessionList, concessionDetail, 1);
 
-
-                //Add HO user if there is a month left
-                if (month == 1 && concession.HOUserId.HasValue)
-                    AddExpiringConcessionForUser(concession.HOUserId.Value, ref expiringConcessionList, concessionDetail, 1);
+                    if (concession.HOUserId.HasValue)
+                        AddExpiringConcessionForUser(concession.HOUserId.Value, ref expiringConcessionList, concessionDetail, 1);
+                }
             }
 
             return expiringConcessionList;

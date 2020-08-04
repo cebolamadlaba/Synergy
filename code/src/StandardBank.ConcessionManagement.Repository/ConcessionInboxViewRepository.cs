@@ -796,7 +796,7 @@ namespace StandardBank.ConcessionManagement.Repository
 							[PriceExported],
 							[PriceExportedDate],
 		                    [CurrentAEUserId],
-		                    [CurrentAAUserId]
+		                    [CurrentAAUserId],
 							[AEUserFullName],
 							[AAUserFullName]
 					FROM [dbo].[ConcessionInboxView]
