@@ -15,12 +15,12 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface
 
         public decimal TierTo { get; set; }
 
-        public int RateTypeId { get; set; }
+        public int? RateTypeId { get; set; }
 
-        public int BaseRateId { get; set; }
+        public int? BaseRateId { get; set; }
 
-        public decimal Spread { get; set; }
+        public decimal? Spread { get; set; }
 
-        public decimal Value { get; set; }
+        public decimal? Value { get; set; }
     }
 }

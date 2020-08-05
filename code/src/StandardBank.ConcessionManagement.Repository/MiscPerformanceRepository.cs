@@ -965,11 +965,11 @@ namespace StandardBank.ConcessionManagement.Repository
 	                        pglms.Spread,
 		                    pglms.RateType,
                             @riskGroupName [RiskGroupName],
-	                        lea.[AccountNumber]
+	                        gg.GroupNumber
                         FROM [dbo].tblProductGlms pglms
                             JOIN [dbo].[tblLegalEntity] le on le.[pkLegalEntityId] = pglms.[fkLegalEntityId]
                             JOIN [dbo].tblInterestPricingCategory pricing on pricing.pkInterestPricingCategoryId= pglms.fkInterestPricingCategoryId
-                            JOIN [dbo].[tblLegalEntityAccount] lea On lea.fkLegalEntityId = le.pkLegalEntityId
+                            JOIN [dbo].[tblGlmsGroup] gg On gg.pkGlmsGroupId = pglms.fkGroupId
                         WHERE pglms.[fkRiskGroupId] = @riskGroupId",
                         new { riskGroupId, riskGroupName },
                         commandTimeout: Int32.MaxValue);
@@ -1000,11 +1000,11 @@ namespace StandardBank.ConcessionManagement.Repository
 	                        pricing.Description pricingDescription,
 	                        pglms.Spread,
 	                        pglms.RateType,
-	                        lea.AccountNumber [AccountNumber]
+	                        gg.GroupNumber
                         FROM [dbo].tblProductGlms pglms
                             JOIN [dbo].[tblLegalEntity] le ON le.[pkLegalEntityId] = pglms.[fkLegalEntityId]
                             JOIN [dbo].tblInterestPricingCategory pricing ON pricing.pkInterestPricingCategoryId= pglms.fkInterestPricingCategoryId
-	                        JOIN [dbo].[tblLegalEntityAccount] lea On lea.fkLegalEntityId = le.pkLegalEntityId
+	                        JOIN [dbo].[tblGlmsGroup] gg On gg.pkGlmsGroupId = pglms.fkGroupId
                         WHERE le.[pkLegalEntityId] = @legalEntityId",
                         new { legalEntityId, legalEntityName },
                         commandTimeout: Int32.MaxValue);

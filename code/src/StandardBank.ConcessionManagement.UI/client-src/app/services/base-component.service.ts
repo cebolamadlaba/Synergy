@@ -26,6 +26,7 @@ export class BaseComponentService {
 
     }
 
+    // Lending, Investments
     public HasDuplicateConcessionAccountProduct(concessionDetails: any[], productTypeId: number, legalEntityId: number, legalEntityAccountId: number): boolean {
         let duplicates = concessionDetails.filter((item) => {
             return item.productTypeId == productTypeId
@@ -36,6 +37,7 @@ export class BaseComponentService {
         return duplicates.length > 1;
     }
 
+    // Cash
     public HasDuplicateConcessionAccountChannel(concessionDetails: any[], channelTypeId: number, legalEntityId: number, legalEntityAccountId: number): boolean {
         let duplicates = concessionDetails.filter((item) => {
             return item.channelTypeId == channelTypeId
@@ -46,6 +48,7 @@ export class BaseComponentService {
         return duplicates.length > 1;
     }
 
+    // Transactional
     public HasDuplicateConcessionAccountTransaction(concessionDetails: any[], transactionTypeId: number, legalEntityId: number, legalEntityAccountId: number): boolean {
         let duplicates = concessionDetails.filter((item) => {
             return item.transactionTypeId == transactionTypeId
@@ -66,6 +69,7 @@ export class BaseComponentService {
         return duplicates.length > 1;
     }
 
+    // Trade
     public HasDuplicateConcessionAccountTradeProduct(concessionDetails: any[], tradeProductTypeID: number, legalEntityId: number, legalEntityAccountId: number): boolean {
         let duplicates = concessionDetails.filter((item) => {
             return item.fkTradeProductId == tradeProductTypeID
@@ -105,20 +109,19 @@ export class BaseComponentService {
         await this.getUserData();
         this.checkAEExistOnriskGroupNumber();
 
-        if (concessionListLength > 0) {
+        //// FOR TESTING: comment out the first part of the if-statement.
+        //if (concessionListLength > 0) {
+        //    if (sapbpid == 0) {
+        //        this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Risk group. Please select the concession below and update");
+        //    } else {
+        //        this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Legal Entity. Please select the concession below and update");
+        //    }
 
-            // FOR TESTING: comment out the first part of the if-statement.
-            if (sapbpid == 0) {
-                this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Risk group. Please select the concession below and update");
-            } else {
-                this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Legal Entity. Please select the concession below and update");
-            }
-
-        } else {
+        //} else {
             if (this.validationError == undefined) {
                 this.router.navigate([url, riskGroupNumber, sapbpid]);
             }
-        }
+        //}
     }
 
     public checkAEExistOnriskGroupNumber() {
