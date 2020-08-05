@@ -422,25 +422,19 @@ export class InvestmentAddConcessionComponent extends InvestmentBaseService impl
                 hasLegalEntityId = true;
                 hasLegalEntityAccountId = true;
             } else {
-
                 this.addValidationError("Client account not selected");
-
             }
 
             if (concessionFormItem.get('balance').value) {
                 investmentConcessionDetail.balance = concessionFormItem.get('balance').value;
             } else {
-
                 this.addValidationError("Balance not entered");
-
             }
 
             if (concessionFormItem.get('noticeperiod').value) {
                 investmentConcessionDetail.term = concessionFormItem.get('noticeperiod').value;
             } else {
-
                 if (applyexpirydate) {
-
                     this.addValidationError("Notice period value not entered");
                 }
             }
@@ -448,8 +442,9 @@ export class InvestmentAddConcessionComponent extends InvestmentBaseService impl
             if (concessionFormItem.get('rate').value) {
                 investmentConcessionDetail.loadedRate = concessionFormItem.get('rate').value;
             } else {
-
-                this.addValidationError("Rate value not entered");
+                if (applyexpirydate) {
+                    this.addValidationError("Rate value not entered");
+                }
             }
 
             if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
@@ -539,6 +534,10 @@ export class InvestmentAddConcessionComponent extends InvestmentBaseService impl
 
             $event.target.value = null;
         }
+    }
+
+    getNumberInput(input) {
+        this.investmentConcessionForm.controls['smtDealNumber'].setValue(this.baseComponentService.removeLetters(input.value));
     }
 
     disableNoticePeriod(index) {

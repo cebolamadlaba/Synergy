@@ -853,6 +853,10 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         this.sub.unsubscribe();
     }
 
+    getNumberInput(input) {
+        this.glmsConcessionForm.controls['smtDealNumber'].setValue(this.baseComponentService.removeLetters(input.value));
+    }
+
     disableField(fieldname: string, index: number = null) {
         return this.disableFieldBase(fieldname, this.saveMessage == null, index, this.selectedConditionTypes, null, null)
     }

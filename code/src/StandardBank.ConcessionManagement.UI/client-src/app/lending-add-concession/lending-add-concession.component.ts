@@ -752,6 +752,10 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
         return this.saveMessage ? '' : null;
     }
 
+    getNumberInput(input) {
+        this.lendingConcessionForm.controls['smtDealNumber'].setValue(this.baseComponentService.removeLetters(input.value));
+    }
+
     disableField(index: number, fieldname: string) {
         return this.disableFieldBase(
             this.selectedConditionTypes[index],

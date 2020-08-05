@@ -656,12 +656,12 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
                 investmentConcessionDetail.concessionDetailId = concessionFormItem.get('concessionDetailId').value;
 
 
-            let applyexpirydate = true;
+            let applyExpirydate = false;
 
             if (concessionFormItem.get('productType').value) {
 
                 if (concessionFormItem.get('productType').value.description == 'Notice deposit (BND)') {
-                    applyexpirydate = false;
+                    applyExpirydate = true;
                 }
                 investmentConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;
                 hasTypeId = true;
@@ -692,9 +692,7 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
             if (concessionFormItem.get('noticeperiod').value) {
                 investmentConcessionDetail.term = concessionFormItem.get('noticeperiod').value;
             } else {
-
-                if (!applyexpirydate) {
-
+                if (applyExpirydate) {
                     this.addValidationError("Notice period value not entered");
                 }
             }
@@ -702,9 +700,9 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
             if (concessionFormItem.get('loadedRate').value) {
                 investmentConcessionDetail.loadedRate = concessionFormItem.get('loadedRate').value;
             } else {
-
-                this.addValidationError("Rate value not entered");
-
+                if (applyExpirydate) {
+                    this.addValidationError("Rate value not entered");
+                }
             }
 
             if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
@@ -715,7 +713,7 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
                 investmentConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
             else {
-                if (applyexpirydate) {
+                if (!applyExpirydate) {
                     this.addValidationError("Expiry date not selected");
                 }
             }
@@ -1306,6 +1304,10 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
 
     isMotivationEnabled() {
         return this.motivationEnabled ? null : '';
+    }
+
+    getNumberInput(input) {
+        this.investmentConcessionForm.controls['smtDealNumber'].setValue(this.baseComponentService.removeLetters(input.value));
     }
 
     disableField(index, fieldName) {

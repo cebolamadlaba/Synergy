@@ -1071,6 +1071,10 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
     }
 
+    getNumberInput(input) {
+        this.transactionalConcessionForm.controls['smtDealNumber'].setValue(this.baseComponentService.removeLetters(input.value));
+    }
+
     disableField(fieldname: string, index: number = null) {
         let canUpdateExpiryDate: boolean = true;
 

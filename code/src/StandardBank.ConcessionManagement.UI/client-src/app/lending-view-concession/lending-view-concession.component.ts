@@ -1535,6 +1535,10 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         return this.baseComponentService.formatDecimalThree(itemValue);
     }
 
+    getNumberInput(input) {
+        this.lendingConcessionForm.controls['smtDealNumber'].setValue(this.baseComponentService.removeLetters(input.value));
+    }
+
     canEditSmtDealNumber() {
         return (this.isRecalling || this.canEdit) ? null : '';
     }

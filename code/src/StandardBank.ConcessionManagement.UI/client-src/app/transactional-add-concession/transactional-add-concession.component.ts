@@ -392,6 +392,10 @@ export class TransactionalAddConcessionComponent extends TransactionalBaseServic
         this.sub.unsubscribe();
     }
 
+    getNumberInput(input) {
+        this.transactionalConcessionForm.controls['smtDealNumber'].setValue(this.baseComponentService.removeLetters(input.value));
+    }
+
     disableField(fieldname: string, index: number = null) {
         return this.disableFieldBase(fieldname, this.saveMessage == null, index, this.selectedConditionTypes, null, null)
     }

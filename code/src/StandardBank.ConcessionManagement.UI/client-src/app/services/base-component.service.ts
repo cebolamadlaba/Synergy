@@ -118,9 +118,9 @@ export class BaseComponentService {
         //    }
 
         //} else {
-            if (this.validationError == undefined) {
-                this.router.navigate([url, riskGroupNumber, sapbpid]);
-            }
+        if (this.validationError == undefined) {
+            this.router.navigate([url, riskGroupNumber, sapbpid]);
+        }
         //}
     }
 
@@ -178,6 +178,16 @@ export class BaseComponentService {
         if (expDate <= futureMonth) {
             return "Concession expiry date should be later than " + futureMonth.format('DD-MM-YYYY');
         }
+    }
+
+    public getNumberInput(input) {
+        let value = input.value;
+        let numbers = this.removeLetters(value);
+        input.value = numbers;
+    }
+
+    public removeLetters(value) {
+        return value.replace(/[^0-9]/g, "");
     }
 
     getUserData(): Promise<any> {
