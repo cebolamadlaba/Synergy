@@ -18,7 +18,7 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Glms
 
         public string pricingDescription { get; set; }
 
-        public string AccountNumber { get; set; }
+        public int GroupNumber { get; set; }
 
         public string GlmsProductName { get; set; }
 
