@@ -567,6 +567,10 @@ export class BolAddConcessionComponent extends BolConcessionBaseService implemen
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
     }
 
+    getNumberInput(input) {
+        this.bolConcessionForm.controls['smtDealNumber'].setValue(this.baseComponentService.removeLetters(input.value));
+    }
+
     goBack() {
         this.router.navigate(['/pricing', this.riskGroupNumber]);
     }

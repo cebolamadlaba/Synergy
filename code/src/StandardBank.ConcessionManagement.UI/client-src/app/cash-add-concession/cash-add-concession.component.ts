@@ -397,6 +397,10 @@ export class CashAddConcessionComponent extends CashBaseService implements OnIni
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
     }
 
+    getNumberInput(input) {
+        this.cashConcessionForm.controls['smtDealNumber'].setValue(this.baseComponentService.removeLetters(input.value));
+    }
+
     disableField(index: number, fieldname: string) {
         return this.disableFieldBase(
             this.selectedConditionTypes[index],

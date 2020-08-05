@@ -156,7 +156,8 @@
     <div class="col-md-4">
         <div class="row">
             <label>SMT Deal Number</label>
-            <input type="text" numbersOnly="true" class="form-control" [attr.disabled]="disableField('smtDealNumber')" formControlName="smtDealNumber" maxlength="16" required />
+            <input type="text" class="form-control" [attr.disabled]="disableField('smtDealNumber')" formControlName="smtDealNumber"
+                   maxlength="16" required #refElSmtDealNumber (input)="getNumberInput(refElSmtDealNumber)"/>
         </div>
     </div>
     <div class="col-md-7 col-md-offset-1">

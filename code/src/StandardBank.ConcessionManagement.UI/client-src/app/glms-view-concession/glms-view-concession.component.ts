@@ -1578,6 +1578,10 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         this.sub.unsubscribe();
     }
 
+    getNumberInput(input) {
+        this.glmsConcessionForm.controls['smtDealNumber'].setValue(this.baseComponentService.removeLetters(input.value));
+    }
+
     disableField(fieldname: string, index: number = null) {
         let canUpdateExpiryDate: boolean = true;
 

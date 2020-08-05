@@ -160,137 +160,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
             this.observableCashConcession.subscribe(cashConcession => {
                 this.cashConcession = cashConcession;
 
-                if (cashConcession.concession.status == ConcessionStatus.Pending && cashConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
-                    this.canBcmApprove = cashConcession.currentUser.canBcmApprove;
-                }
-
-                if (cashConcession.concession.status == ConcessionStatus.Pending && cashConcession.concession.subStatus == ConcessionSubStatus.PCMPending) {
-                    if (this.cashConcession.currentUser.isHO) {
-                        this.canPcmApprove = cashConcession.currentUser.canPcmApprove
-                    } else {
-                        this.canPcmApprove = cashConcession.currentUser.canPcmApprove && cashConcession.currentUser.canApprove;
-                    }
-
-                    // Removed as per SBSA.Anthony's request - 2019-07-15
-                    this.canEdit = cashConcession.currentUser.canPcmApprove;
-                }
-
-                //if it's still pending and the user is a requestor then they can recall it
-                if (cashConcession.concession.status == ConcessionStatus.Pending && cashConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
-                    this.canRecall = cashConcession.currentUser.canRequest && cashConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
-                }
-
-                if (cashConcession.concession.status == ConcessionStatus.Pending &&
-                    (cashConcession.concession.subStatus == ConcessionSubStatus.PCMApprovedWithChanges || cashConcession.concession.subStatus == ConcessionSubStatus.HOApprovedWithChanges)) {
-                    this.canApproveChanges = cashConcession.currentUser.canRequest && cashConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
-                }
-
-                if (cashConcession.concession.status === ConcessionStatus.Approved ||
-                    cashConcession.concession.status === ConcessionStatus.ApprovedWithChanges) {
-                    this.isApproved = true;
-                }
-
-                //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
-                this.canExtend = cashConcession.concession.canExtend && cashConcession.currentUser.canRequest;
-                this.canRenew = cashConcession.concession.canRenew && cashConcession.currentUser.canRequest;
-
-                //set the resubmit and update permissions
-                //can only update when concession is not "due for expiry"
-                this.canResubmit = cashConcession.concession.canResubmit && cashConcession.currentUser.canRequest;
-                this.canUpdate = !this.canRenew && cashConcession.concession.canUpdate && cashConcession.currentUser.canRequest;
-
-                this.canArchive = cashConcession.concession.canArchive && cashConcession.currentUser.canRequest;
-                this.isInProgressExtension = cashConcession.concession.isInProgressExtension;
-                this.isInProgressRenewal = cashConcession.concession.isInProgressRenewal;
-
-                this.cashConcessionForm.controls['smtDealNumber'].setValue(this.cashConcession.concession.smtDealNumber);
-                this.cashConcessionForm.controls['motivation'].setValue(this.cashConcession.concession.motivation);
-
-                let rowIndex = 0;
-
-                for (let cashConcessionDetail of this.cashConcession.cashConcessionDetails) {
-
-                    if (rowIndex != 0) {
-                        this.addNewConcessionRow(false);
-                    }
-
-                    const concessions = this.getCashConcessionItemRows();
-                    let currentConcession = concessions.controls[concessions.length - 1];
-
-                    currentConcession.get('cashConcessionDetailId').setValue(cashConcessionDetail.cashConcessionDetailId);
-                    currentConcession.get('concessionDetailId').setValue(cashConcessionDetail.concessionDetailId);
-
-                    let selectedChannelType = this.channelTypes.filter(_ => _.id == cashConcessionDetail.channelTypeId);
-                    currentConcession.get('channelType').setValue(selectedChannelType[0]);
-
-                    if (this.clientAccounts) {
-                        let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == cashConcessionDetail.legalEntityAccountId);
-                        currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
-                    }
-
-                    if (cashConcessionDetail.baseRate)
-                        currentConcession.get('baseRate').setValue(cashConcessionDetail.baseRate.toFixed(2));
-
-                    if (cashConcessionDetail.adValorem)
-                        currentConcession.get('adValorem').setValue(cashConcessionDetail.adValorem.toFixed(3));
-
-                    currentConcession.get('approvedTableNumber').setValue(cashConcessionDetail.approvedTableNumber);
-
-                    let selectedTableNumber = this.tableNumbers.filter(_ => _.id == cashConcessionDetail.tableNumberId);
-                    currentConcession.get('tableNumber').setValue(selectedTableNumber[0]);
-
-                    let selectedAccrualType = this.accrualTypes.filter(_ => _.id == cashConcessionDetail.accrualTypeId);
-                    currentConcession.get('accrualType').setValue(selectedAccrualType[0]);
-
-                    if (cashConcessionDetail.expiryDate) {
-                        var formattedExpiryDate = this.datepipe.transform(cashConcessionDetail.expiryDate, 'yyyy-MM-dd');
-                        currentConcession.get('expiryDate').setValue(formattedExpiryDate);
-                    }
-
-                    if (cashConcessionDetail.dateApproved) {
-                        var formattedDateApproved = this.datepipe.transform(cashConcessionDetail.dateApproved, 'yyyy-MM-dd');
-                        currentConcession.get('dateApproved').setValue(formattedDateApproved);
-                    }
-
-                    currentConcession.get('isExpired').setValue(cashConcessionDetail.isExpired);
-                    currentConcession.get('isExpiring').setValue(cashConcessionDetail.isExpiring);
-
-                    rowIndex++;
-                }
-
-                rowIndex = 0;
-
-                for (let concessionCondition of this.cashConcession.concessionConditions) {
-                    this.addNewConditionRow();
-
-                    const conditions = <FormArray>this.cashConcessionForm.controls['conditionItemsRows'];
-                    let currentCondition = conditions.controls[conditions.length - 1];
-
-                    currentCondition.get('concessionConditionId').setValue(concessionCondition.concessionConditionId);
-
-                    let selectedConditionType = this.conditionTypes.filter(_ => _.id == concessionCondition.conditionTypeId);
-                    currentCondition.get('conditionType').setValue(selectedConditionType[0]);
-
-                    this.selectedConditionTypes[rowIndex] = selectedConditionType[0];
-
-                    let selectedConditionProduct = selectedConditionType[0].conditionProducts.filter(_ => _.id == concessionCondition.conditionProductId);
-                    currentCondition.get('conditionProduct').setValue(selectedConditionProduct[0]);
-
-                    currentCondition.get('interestRate').setValue(this.baseComponentService.formatDecimal(concessionCondition.interestRate));
-                    currentCondition.get('volume').setValue(concessionCondition.conditionVolume);
-                    currentCondition.get('value').setValue(concessionCondition.conditionValue);
-                    currentCondition.get('conditionComment').setValue(concessionCondition.conditionComment);
-
-                    let selectedPeriodType = this.periodTypes.filter(_ => _.id == concessionCondition.periodTypeId);
-                    currentCondition.get('periodType').setValue(selectedPeriodType[0]);
-
-                    let selectedPeriod = this.periods.filter(_ => _.id == concessionCondition.periodId);
-                    currentCondition.get('period').setValue(selectedPeriod[0]);
-
-                    rowIndex++;
-                }
-
-                this.changearray = this.lookupDataService.checkforLC(this.cashConcession.concession.status, this.cashConcession.concession.subStatus, cashConcession.concession.concessionComments);
+                this.populateFormFromConcession(cashConcession);
 
                 this.isLoading = false;
             }, error => {
@@ -298,6 +168,141 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
                 this.errorMessage = <any>error;
             });
         }
+    }
+
+    populateFormFromConcession(cashConcession) {
+        if (cashConcession.concession.status == ConcessionStatus.Pending && cashConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
+            this.canBcmApprove = cashConcession.currentUser.canBcmApprove;
+        }
+
+        if (cashConcession.concession.status == ConcessionStatus.Pending && cashConcession.concession.subStatus == ConcessionSubStatus.PCMPending) {
+            if (this.cashConcession.currentUser.isHO) {
+                this.canPcmApprove = cashConcession.currentUser.canPcmApprove
+            } else {
+                this.canPcmApprove = cashConcession.currentUser.canPcmApprove && cashConcession.currentUser.canApprove;
+            }
+
+            // Removed as per SBSA.Anthony's request - 2019-07-15
+            this.canEdit = cashConcession.currentUser.canPcmApprove;
+        }
+
+        //if it's still pending and the user is a requestor then they can recall it
+        if (cashConcession.concession.status == ConcessionStatus.Pending && cashConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
+            this.canRecall = cashConcession.currentUser.canRequest && cashConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
+        }
+
+        if (cashConcession.concession.status == ConcessionStatus.Pending &&
+            (cashConcession.concession.subStatus == ConcessionSubStatus.PCMApprovedWithChanges || cashConcession.concession.subStatus == ConcessionSubStatus.HOApprovedWithChanges)) {
+            this.canApproveChanges = cashConcession.currentUser.canRequest && cashConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
+        }
+
+        if (cashConcession.concession.status === ConcessionStatus.Approved ||
+            cashConcession.concession.status === ConcessionStatus.ApprovedWithChanges) {
+            this.isApproved = true;
+        }
+
+        //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
+        this.canExtend = cashConcession.concession.canExtend && cashConcession.currentUser.canRequest;
+        this.canRenew = cashConcession.concession.canRenew && cashConcession.currentUser.canRequest;
+
+        //set the resubmit and update permissions
+        //can only update when concession is not "due for expiry"
+        this.canResubmit = cashConcession.concession.canResubmit && cashConcession.currentUser.canRequest;
+        this.canUpdate = !this.canRenew && cashConcession.concession.canUpdate && cashConcession.currentUser.canRequest;
+
+        this.canArchive = cashConcession.concession.canArchive && cashConcession.currentUser.canRequest;
+        this.isInProgressExtension = cashConcession.concession.isInProgressExtension;
+        this.isInProgressRenewal = cashConcession.concession.isInProgressRenewal;
+
+        this.cashConcessionForm.controls['smtDealNumber'].setValue(this.cashConcession.concession.smtDealNumber);
+        this.cashConcessionForm.controls['motivation'].setValue(this.cashConcession.concession.motivation);
+
+        let rowIndex = 0;
+
+        for (let cashConcessionDetail of this.cashConcession.cashConcessionDetails) {
+
+            if (rowIndex != 0) {
+                this.addNewConcessionRow(false);
+            }
+
+            const concessions = this.getCashConcessionItemRows();
+            let currentConcession = concessions.controls[concessions.length - 1];
+
+            currentConcession.get('cashConcessionDetailId').setValue(cashConcessionDetail.cashConcessionDetailId);
+            currentConcession.get('concessionDetailId').setValue(cashConcessionDetail.concessionDetailId);
+
+            let selectedChannelType = this.channelTypes.filter(_ => _.id == cashConcessionDetail.channelTypeId);
+            currentConcession.get('channelType').setValue(selectedChannelType[0]);
+
+            if (this.clientAccounts) {
+                let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == cashConcessionDetail.legalEntityAccountId);
+                currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
+            }
+
+            if (cashConcessionDetail.baseRate)
+                currentConcession.get('baseRate').setValue(cashConcessionDetail.baseRate.toFixed(2));
+
+            if (cashConcessionDetail.adValorem)
+                currentConcession.get('adValorem').setValue(cashConcessionDetail.adValorem.toFixed(3));
+
+            currentConcession.get('approvedTableNumber').setValue(cashConcessionDetail.approvedTableNumber);
+
+            let selectedTableNumber = this.tableNumbers.filter(_ => _.id == cashConcessionDetail.tableNumberId);
+            currentConcession.get('tableNumber').setValue(selectedTableNumber[0]);
+
+            let selectedAccrualType = this.accrualTypes.filter(_ => _.id == cashConcessionDetail.accrualTypeId);
+            currentConcession.get('accrualType').setValue(selectedAccrualType[0]);
+
+            if (cashConcessionDetail.expiryDate) {
+                var formattedExpiryDate = this.datepipe.transform(cashConcessionDetail.expiryDate, 'yyyy-MM-dd');
+                currentConcession.get('expiryDate').setValue(formattedExpiryDate);
+            }
+
+            if (cashConcessionDetail.dateApproved) {
+                var formattedDateApproved = this.datepipe.transform(cashConcessionDetail.dateApproved, 'yyyy-MM-dd');
+                currentConcession.get('dateApproved').setValue(formattedDateApproved);
+            }
+
+            currentConcession.get('isExpired').setValue(cashConcessionDetail.isExpired);
+            currentConcession.get('isExpiring').setValue(cashConcessionDetail.isExpiring);
+
+            rowIndex++;
+        }
+
+        rowIndex = 0;
+
+        for (let concessionCondition of this.cashConcession.concessionConditions) {
+            this.addNewConditionRow();
+
+            const conditions = <FormArray>this.cashConcessionForm.controls['conditionItemsRows'];
+            let currentCondition = conditions.controls[conditions.length - 1];
+
+            currentCondition.get('concessionConditionId').setValue(concessionCondition.concessionConditionId);
+
+            let selectedConditionType = this.conditionTypes.filter(_ => _.id == concessionCondition.conditionTypeId);
+            currentCondition.get('conditionType').setValue(selectedConditionType[0]);
+
+            this.selectedConditionTypes[rowIndex] = selectedConditionType[0];
+
+            let selectedConditionProduct = selectedConditionType[0].conditionProducts.filter(_ => _.id == concessionCondition.conditionProductId);
+            currentCondition.get('conditionProduct').setValue(selectedConditionProduct[0]);
+
+            currentCondition.get('interestRate').setValue(this.baseComponentService.formatDecimal(concessionCondition.interestRate));
+            currentCondition.get('volume').setValue(concessionCondition.conditionVolume);
+            currentCondition.get('value').setValue(concessionCondition.conditionValue);
+            currentCondition.get('conditionComment').setValue(concessionCondition.conditionComment);
+
+            let selectedPeriodType = this.periodTypes.filter(_ => _.id == concessionCondition.periodTypeId);
+            currentCondition.get('periodType').setValue(selectedPeriodType[0]);
+
+            let selectedPeriod = this.periods.filter(_ => _.id == concessionCondition.periodId);
+            currentCondition.get('period').setValue(selectedPeriod[0]);
+
+            rowIndex++;
+        }
+
+        this.changearray = this.lookupDataService.checkforLC(this.cashConcession.concession.status, this.cashConcession.concession.subStatus, cashConcession.concession.concessionComments);
+
     }
 
     getInitialData() {
@@ -936,6 +941,8 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
 
         if (!this.validationError) {
             this.cashConcessionService.postRecallCashData(cashConcession).subscribe(entity => {
+
+                this.populateFormFromConcession(entity);
                 console.log("data saved");
                 this.isRecalling = false;
                 this.saveMessage = entity.concession.referenceNumber;
@@ -1079,6 +1086,10 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
 
     isMotivationEnabled() {
         return this.motivationEnabled ? null : '';
+    }
+
+    getNumberInput(input) {
+        this.cashConcessionForm.controls['smtDealNumber'].setValue(this.baseComponentService.removeLetters(input.value));
     }
 
     disableField(index: number, fieldname: string) {

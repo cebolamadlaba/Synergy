@@ -1167,6 +1167,10 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
     }
 
+    getNumberInput(input) {
+        this.bolConcessionForm.controls['smtDealNumber'].setValue(this.baseComponentService.removeLetters(input.value));
+    }
+
     disableField(fieldname: string, index: number = null) {
         let canUpdateExpiryDate: boolean = true;
 
