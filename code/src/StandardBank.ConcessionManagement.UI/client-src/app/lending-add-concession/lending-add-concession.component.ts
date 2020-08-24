@@ -774,4 +774,13 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
         this.sub.unsubscribe();
     }
 
+    getNgClassForField(rowIndex: number) {
+        if (this.showTieredRateButton(rowIndex)) {
+            return "form-control tiered-rate-field";
+        }
+        else {
+            return "form-control";
+        }
+
+    }
 }

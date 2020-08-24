@@ -93,7 +93,7 @@
         <div class="row">
             <label>SMT Deal Number</label>
             <input type="text" class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="canSaveMessage()"
-                   #refElSmtDealNumber (input)="getNumberInput(refElSmtDealNumber)"/>
+                   #refElSmtDealNumber (input)="getNumberInput(refElSmtDealNumber)" />
         </div>
     </div>
     <div class="col-md-7 col-md-offset-1">
@@ -149,12 +149,12 @@
 
                 </td>
                 <!-- Limit -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="limit" class="form-control" (change)="setTwoNumberDecimal($event)" (click)="openTieredRateModal(i)" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="limit" [ngClass]="getNgClassForField(i)" (change)="setTwoNumberDecimal($event)" (click)="openTieredRateModal(i)" /></td>
                 <!-- Term -->
                 <td class="length-short"><input type="text" numbersOnly="true" formControlName="term" class="form-control" (keyup)="onTermValueChange(i)" /></td>
 
                 <!-- Prime -->
-                <td class="length-short"><input type="text" formControlName="marginAgainstPrime" class="form-control" (change)="setThreeNumberDecimal($event)" (click)="openTieredRateModal(i)" /></td>
+                <td class="length-short"><input type="text" formControlName="marginAgainstPrime" [ngClass]="getNgClassForField(i)" (change)="setThreeNumberDecimal($event)" (click)="openTieredRateModal(i)" /></td>
 
                 <!-- Frequency -->
                 <td class="length-short">
