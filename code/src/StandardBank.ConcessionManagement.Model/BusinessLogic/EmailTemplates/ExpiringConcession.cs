@@ -31,8 +31,6 @@ namespace StandardBank.ConcessionManagement.Model.BusinessLogic.EmailTemplates
         /// </value>
         public int RecipientId { get; set; }
 
-        public int MonthBeforeExpiry { get; set; }
-
         /// <summary>
         /// Gets or sets the expiring concession details.
         /// </summary>

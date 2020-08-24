@@ -9,10 +9,10 @@
 
         <p>Dear @Model.RequestorName,</p>
         <p>
-            Please be advised that the following concessions are expiring in @Model.MonthBeforeExpiry months :
+            Please be advised that the following concessions are expiring:
             <br />
             <br />
-<p><a href="@Model.ServerURL">@Model.ServerURL</a></p>
+        <p><a href="@Model.ServerURL">@Model.ServerURL</a></p>
         <table style=" border-collapse: collapse; border: 1px solid #7a7a7a; padding: 2px;">
             <tr>
                 <th style="border: 1px solid #7a7a7a;">Concession Reference</th>
@@ -24,6 +24,7 @@
                 <th style="border: 1px solid #7a7a7a;">Date Approved</th>
                 <th style="border: 1px solid #7a7a7a;">Responsible AE/RM/BM</th>
                 <th style="border: 1px solid #7a7a7a;">Responsible AA</th>
+                <th style="border: 1px solid #7a7a7a;">Expiring In</th>
             </tr>
 
             @foreach (var item in Model.ExpiringConcessionDetails)
@@ -38,6 +39,18 @@
                     <td style="border: 1px solid #7a7a7a;">@item.DateApproved</td>
                     <td style="border: 1px solid #7a7a7a;">@item.ResponsibleAE</td>
                     <td style="border: 1px solid #7a7a7a;">@item.ResponsibleAA</td>
+                    <td style="border: 1px solid #7a7a7a;">
+                        @item.MonthBeforeExpiry
+                        @{ if (@item.MonthBeforeExpiry == 1)
+                            {
+                                @:month
+                            }
+                            else
+                            {
+                                @:months
+                            }
+                        }
+                    </td>
                 </tr>
             }
 
