@@ -1,10 +1,11 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy, ViewChild } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { DecimalPipe, Location, DatePipe } from '@angular/common';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import { ReviewFeeType } from "../models/review-fee-type";
 import { ProductType } from "../models/product-type";
@@ -21,6 +22,7 @@ import { ConcessionCondition } from "../models/concession-condition";
 import { LendingFinancial } from "../models/lending-financial";
 import { ConcessionComment } from "../models/concession-comment";
 import { LegalEntity } from '../models/legal-entity';
+import { ProductTypeFieldLogic } from '../models/product-type-field-logic';
 
 import { LookupDataService } from "../services/lookup-data.service";
 import { UserConcessionsService } from "../services/user-concessions.service";
@@ -36,6 +38,8 @@ import { MOnthEnum } from '../models/month-enum';
 import { MrsEriEnum } from '../models/mrs-eri-enum';
 import { EditTypeEnum } from '../models/edit-type-enum';
 import { ConcessionConditionReturnObject } from '../models/concession-condition-return-object';
+import { ProductTypeEnum } from '../models/product-type-enum';
+import { LendingConcessionTieredRate } from '../models/lending-concession-tiered-rate';
 
 @Component({
     selector: 'app-lending-view-concession',
@@ -44,6 +48,9 @@ import { ConcessionConditionReturnObject } from '../models/concession-condition-
     providers: [DatePipe, LendingBaseService]
 })
 export class LendingViewConcessionComponent extends LendingBaseService implements OnInit, OnDestroy {
+
+    @ViewChild('tieredRateModal') tieredRateModal: ModalDirective;
+    @ViewChild('extendDisclamerModal') extendDisclamerModal;
 
     myDecimal: number;
 
@@ -65,6 +72,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     sapbpid: number;
     selectedConditionTypes: ConditionType[];
     selectedProductTypes: ProductType[];
+    selectedProductTypeFieldLogics: ProductTypeFieldLogic[] = [];
     isLoading = true;
     canBcmApprove = false;
     canPcmApprove = false;
@@ -76,6 +84,10 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     motivationEnabled = false;
     canEdit = false;
     selectedAccountNumbers: ClientAccountArray[];
+
+    selectedRowIndex: number;
+    selectedLineItemTieredRates: LendingConcessionTieredRate[] = [];
+    tieredRateMessage: string = "";
 
     capturedComments: string;
     canApproveChanges: boolean;
@@ -119,6 +131,8 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     lendingFinancial: LendingFinancial;
 
     legalEntity: LegalEntity;
+
+    selectedExtensionFee: number = null;
 
     constructor(
         private router: Router,
@@ -191,195 +205,17 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         return true;
     }
 
+    getLendingConcessionItemRows(): FormArray {
+        return <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+    }
+
     populateForm() {
         if (this.concessionReferenceId) {
             this.observableLendingConcession = this.lendingService.getLendingConcessionData(this.concessionReferenceId);
             this.observableLendingConcession.subscribe(lendingConcession => {
                 this.lendingConcession = lendingConcession;
 
-
-                if (lendingConcession.concession.status == ConcessionStatus.Pending && lendingConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
-                    this.canBcmApprove = lendingConcession.currentUser.canBcmApprove;
-                }
-
-                if (lendingConcession.concession.status == ConcessionStatus.Pending && lendingConcession.concession.subStatus == ConcessionSubStatus.PCMPending) {
-                    if (this.lendingConcession.currentUser.isHO) {
-                        this.canPcmApprove = lendingConcession.currentUser.canPcmApprove
-                    } else {
-                        this.canPcmApprove = lendingConcession.currentUser.canPcmApprove && lendingConcession.currentUser.canApprove;
-                    }
-
-                    this.canEdit = lendingConcession.currentUser.canPcmApprove;
-                }
-
-                if (lendingConcession.primeRate) {
-
-                    this.primeRate = lendingConcession.primeRate;
-                }
-
-
-                //if it's still pending and the user is a requestor then they can recall it
-                if (lendingConcession.concession.status == ConcessionStatus.Pending && lendingConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
-                    this.canRecall = lendingConcession.currentUser.canRequest && lendingConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
-                }
-
-                if (lendingConcession.concession.status == ConcessionStatus.Pending &&
-                    (lendingConcession.concession.subStatus == ConcessionSubStatus.PCMApprovedWithChanges || lendingConcession.concession.subStatus == ConcessionSubStatus.HOApprovedWithChanges)) {
-                    this.canApproveChanges = lendingConcession.currentUser.canRequest && lendingConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
-                }
-
-                if (lendingConcession.concession.status === ConcessionStatus.Approved ||
-                    lendingConcession.concession.status === ConcessionStatus.ApprovedWithChanges) {
-                    this.isApproved = true;
-                }
-
-                //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
-                this.canExtend = lendingConcession.concession.canExtend && lendingConcession.currentUser.canRequest;
-                this.canRenew = lendingConcession.concession.canRenew && lendingConcession.currentUser.canRequest;
-
-                //set the resubmit and update permissions
-                this.canResubmit = lendingConcession.concession.canResubmit && lendingConcession.currentUser.canRequest;
-                this.canUpdate = lendingConcession.concession.canUpdate && lendingConcession.currentUser.canRequest;
-
-                this.canArchive = lendingConcession.concession.canArchive && lendingConcession.currentUser.canRequest;
-                this.isInProgressExtension = lendingConcession.concession.isInProgressExtension;
-                this.isInProgressRenewal = lendingConcession.concession.isInProgressRenewal;
-
-                this.lendingConcessionForm.controls['smtDealNumber'].setValue(this.lendingConcession.concession.smtDealNumber);
-                this.lendingConcessionForm.controls['motivation'].setValue(this.lendingConcession.concession.motivation);
-
-                let rowIndex = 0;
-
-                for (let lendingConcessionDetail of this.lendingConcession.lendingConcessionDetails) {
-
-                    if (rowIndex != 0) {
-                        this.addNewConcessionRow();
-                    }
-
-                    if (lendingConcessionDetail.productType == 'Overdraft') {
-
-                        lendingConcessionDetail.show_term = false;
-                        lendingConcessionDetail.show_reviewFeeType = true;
-                        lendingConcessionDetail.show_reviewFee = true;
-                        lendingConcessionDetail.show_uffFee = true;
-                        lendingConcessionDetail.show_frequency = false;
-                        lendingConcessionDetail.show_serviceFee = false;
-
-                    }
-                    else if (lendingConcessionDetail.productType === "Temporary Overdraft") {
-
-
-                        lendingConcessionDetail.show_term = true;
-                        lendingConcessionDetail.show_reviewFeeType = true;
-                        lendingConcessionDetail.show_reviewFee = true;
-                        lendingConcessionDetail.show_uffFee = true;
-                        lendingConcessionDetail.show_frequency = false;
-                        lendingConcessionDetail.show_serviceFee = false;
-
-
-                    }
-                    else if (lendingConcessionDetail.productType.indexOf("VAF") == 0) {
-
-                        lendingConcessionDetail.show_term = true;
-                        lendingConcessionDetail.show_reviewFeeType = false;
-                        lendingConcessionDetail.show_reviewFee = false;
-                        lendingConcessionDetail.show_uffFee = false;
-                        lendingConcessionDetail.show_frequency = true;
-                        lendingConcessionDetail.show_serviceFee = true;
-                    }
-                    else {
-
-                        lendingConcessionDetail.show_term = true;
-                        lendingConcessionDetail.show_reviewFeeType = false;
-                        lendingConcessionDetail.show_reviewFee = false;
-                        lendingConcessionDetail.show_uffFee = false;
-                        lendingConcessionDetail.show_frequency = false;
-                        lendingConcessionDetail.show_serviceFee = false;
-                    }
-
-
-                    const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
-                    let currentConcession = concessions.controls[concessions.length - 1];
-
-                    currentConcession.get('lendingConcessionDetailId').setValue(lendingConcessionDetail.lendingConcessionDetailId);
-                    currentConcession.get('concessionDetailId').setValue(lendingConcessionDetail.concessionDetailId);
-
-                    let selectedProductType = this.productTypes.filter(_ => _.id === lendingConcessionDetail.productTypeId);
-                    currentConcession.get('productType').setValue(selectedProductType[0]);
-
-                    this.selectedProductTypes[rowIndex] = selectedProductType[0];
-
-
-                    if (this.clientAccounts) {
-                        let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == lendingConcessionDetail.legalEntityAccountId);
-                        currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
-                    }
-
-                    currentConcession.get('limit').setValue(this.formatDecimal(lendingConcessionDetail.limit));
-                    currentConcession.get('term').setValue(lendingConcessionDetail.term);
-                    currentConcession.get('marginAgainstPrime').setValue(this.formatDecimal4(lendingConcessionDetail.marginAgainstPrime));
-                    currentConcession.get('approvedMarginAgainstPrime').setValue(this.formatDecimal4(lendingConcessionDetail.approvedMap));
-                    currentConcession.get('initiationFee').setValue(this.formatDecimal4(lendingConcessionDetail.initiationFee));
-
-                    let selectedReviewFeeType = this.reviewFeeTypes.filter(_ => _.id == lendingConcessionDetail.reviewFeeTypeId);
-                    currentConcession.get('reviewFeeType').setValue(selectedReviewFeeType[0]);
-                    currentConcession.get('reviewFee').setValue(this.formatDecimal3(lendingConcessionDetail.reviewFee));
-                    currentConcession.get('uffFee').setValue(this.formatDecimal3(lendingConcessionDetail.uffFee));
-
-                    currentConcession.get('mrsEri').setValue(lendingConcessionDetail.mrsEri);
-
-                    currentConcession.get('serviceFee').setValue(this.formatDecimal3(lendingConcessionDetail.serviceFee));
-                    currentConcession.get('frequency').setValue(lendingConcessionDetail.frequency);
-
-                    if (lendingConcessionDetail.expiryDate) {
-                        var formattedExpiryDate = this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd');
-                        currentConcession.get('expiryDate').setValue(formattedExpiryDate);
-                    }
-
-                    if (lendingConcessionDetail.dateApproved) {
-                        var formattedDateApproved = this.datepipe.transform(lendingConcessionDetail.dateApproved, 'yyyy-MM-dd');
-                        currentConcession.get('dateApproved').setValue(formattedDateApproved);
-                    }
-
-                    currentConcession.get('isExpired').setValue(lendingConcessionDetail.isExpired);
-                    currentConcession.get('isExpiring').setValue(lendingConcessionDetail.isExpiring);
-
-                    rowIndex++;
-                }
-
-                rowIndex = 0;
-
-                for (let concessionCondition of this.lendingConcession.concessionConditions) {
-                    this.addNewConditionRow();
-
-                    const conditions = <FormArray>this.lendingConcessionForm.controls['conditionItemsRows'];
-                    let currentCondition = conditions.controls[conditions.length - 1];
-
-                    currentCondition.get('concessionConditionId').setValue(concessionCondition.concessionConditionId);
-
-                    let selectedConditionType = this.conditionTypes.filter(_ => _.id == concessionCondition.conditionTypeId);
-                    currentCondition.get('conditionType').setValue(selectedConditionType[0]);
-
-                    this.selectedConditionTypes[rowIndex] = selectedConditionType[0];
-
-                    let selectedConditionProduct = selectedConditionType[0].conditionProducts.filter(_ => _.id == concessionCondition.conditionProductId);
-                    currentCondition.get('conditionProduct').setValue(selectedConditionProduct[0]);
-
-                    currentCondition.get('interestRate').setValue(concessionCondition.interestRate);
-                    currentCondition.get('volume').setValue(concessionCondition.conditionVolume);
-                    currentCondition.get('value').setValue(concessionCondition.conditionValue);
-                    currentCondition.get('conditionComment').setValue(concessionCondition.conditionComment);
-
-                    let selectedPeriodType = this.periodTypes.filter(_ => _.id == concessionCondition.periodTypeId);
-                    currentCondition.get('periodType').setValue(selectedPeriodType[0]);
-
-                    let selectedPeriod = this.periods.filter(_ => _.id == concessionCondition.periodId);
-                    currentCondition.get('period').setValue(selectedPeriod[0]);
-
-                    rowIndex++;
-                }
-
-                this.changearray = this.lookupDataService.checkforLC(this.lendingConcession.concession.status, this.lendingConcession.concession.subStatus, lendingConcession.concession.concessionComments);
+                this.populateFormFromLendingConcession();
 
                 this.isLoading = false;
             }, error => {
@@ -387,6 +223,166 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                 this.errorMessage = <any>error;
             });
         }
+    }
+
+    populateFormFromLendingConcession() {
+        if (this.lendingConcession.concession.status == ConcessionStatus.Pending && this.lendingConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
+            this.canBcmApprove = this.lendingConcession.currentUser.canBcmApprove;
+        }
+
+        if (this.lendingConcession.concession.status == ConcessionStatus.Pending && this.lendingConcession.concession.subStatus == ConcessionSubStatus.PCMPending) {
+            if (this.lendingConcession.currentUser.isHO) {
+                this.canPcmApprove = this.lendingConcession.currentUser.canPcmApprove
+            } else {
+                this.canPcmApprove = this.lendingConcession.currentUser.canPcmApprove && this.lendingConcession.currentUser.canApprove;
+            }
+
+            this.canEdit = this.lendingConcession.currentUser.canPcmApprove;
+        }
+
+        if (this.lendingConcession.primeRate) {
+
+            this.primeRate = this.lendingConcession.primeRate;
+        }
+
+
+        //if it's still pending and the user is a requestor then they can recall it
+        if (this.lendingConcession.concession.status == ConcessionStatus.Pending && this.lendingConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
+            this.canRecall = this.lendingConcession.currentUser.canRequest && this.lendingConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
+        }
+
+        if (this.lendingConcession.concession.status == ConcessionStatus.Pending &&
+            (this.lendingConcession.concession.subStatus == ConcessionSubStatus.PCMApprovedWithChanges || this.lendingConcession.concession.subStatus == ConcessionSubStatus.HOApprovedWithChanges)) {
+            this.canApproveChanges = this.lendingConcession.currentUser.canRequest && this.lendingConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
+        }
+
+        if (this.lendingConcession.concession.status === ConcessionStatus.Approved ||
+            this.lendingConcession.concession.status === ConcessionStatus.ApprovedWithChanges) {
+            this.isApproved = true;
+        }
+
+        //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
+        this.canExtend = this.lendingConcession.concession.canExtend && this.lendingConcession.currentUser.canRequest;
+        this.canRenew = this.lendingConcession.concession.canRenew && this.lendingConcession.currentUser.canRequest;
+
+        //set the resubmit and update permissions
+        //can only update when concession is not "due for expiry"
+        this.canResubmit = this.lendingConcession.concession.canResubmit && this.lendingConcession.currentUser.canRequest;
+        this.canUpdate = !this.canRenew && this.lendingConcession.concession.canUpdate && this.lendingConcession.currentUser.canRequest;
+
+        this.canArchive = this.lendingConcession.concession.canArchive && this.lendingConcession.currentUser.canRequest;
+        this.isInProgressExtension = this.lendingConcession.concession.isInProgressExtension;
+        this.isInProgressRenewal = this.lendingConcession.concession.isInProgressRenewal;
+
+        this.lendingConcessionForm.controls['smtDealNumber'].setValue(this.lendingConcession.concession.smtDealNumber);
+        this.lendingConcessionForm.controls['motivation'].setValue(this.lendingConcession.concession.motivation);
+
+        let rowIndex = 0;
+
+        for (let lendingConcessionDetail of this.lendingConcession.lendingConcessionDetails) {
+
+            if (rowIndex != 0) {
+                this.addNewConcessionRow(false);
+            }
+
+            let productTypeFieldLogic = new ProductTypeFieldLogic();
+            productTypeFieldLogic = super.setProductTypeFieldLogic(lendingConcessionDetail.productType, productTypeFieldLogic);
+            this.selectedProductTypeFieldLogics.push(productTypeFieldLogic);
+
+            const concessions = this.getLendingConcessionItemRows();
+            let currentConcession = concessions.controls[concessions.length - 1];
+
+            currentConcession.get('lendingConcessionDetailId').setValue(lendingConcessionDetail.lendingConcessionDetailId);
+            currentConcession.get('concessionDetailId').setValue(lendingConcessionDetail.concessionDetailId);
+
+            let selectedProductType = this.productTypes.filter(_ => _.id === lendingConcessionDetail.productTypeId);
+            currentConcession.get('productType').setValue(selectedProductType[0]);
+
+            this.selectedProductTypes[rowIndex] = selectedProductType[0];
+
+
+            if (this.clientAccounts) {
+                let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == lendingConcessionDetail.legalEntityAccountId);
+                currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
+            }
+
+            if (selectedProductType[0] != null &&
+                (selectedProductType[0].description == ProductTypeEnum.Overdraft ||
+                    selectedProductType[0].description == ProductTypeEnum.TemporaryOverdraft)) {
+                currentConcession.get('lendingTieredRates').setValue(lendingConcessionDetail.lendingConcessionDetailTieredRates);
+            }
+            else {
+                if (lendingConcessionDetail.lendingConcessionDetailTieredRates != null && lendingConcessionDetail.lendingConcessionDetailTieredRates.length > 0) {
+                    currentConcession.get('limit').setValue(lendingConcessionDetail.lendingConcessionDetailTieredRates[0].limit);
+                    currentConcession.get('marginAgainstPrime').setValue(lendingConcessionDetail.lendingConcessionDetailTieredRates[0].marginToPrime);
+                }
+            }
+
+            currentConcession.get('term').setValue(lendingConcessionDetail.term);
+            currentConcession.get('approvedMarginAgainstPrime').setValue(this.formatDecimal3(lendingConcessionDetail.approvedMap));
+            currentConcession.get('initiationFee').setValue(this.formatDecimal3(lendingConcessionDetail.initiationFee));
+
+            let selectedReviewFeeType = this.reviewFeeTypes.filter(_ => _.id == lendingConcessionDetail.reviewFeeTypeId);
+            currentConcession.get('reviewFeeType').setValue(selectedReviewFeeType[0]);
+            currentConcession.get('reviewFee').setValue(this.formatDecimal3(lendingConcessionDetail.reviewFee));
+            currentConcession.get('uffFee').setValue(this.formatDecimal3(lendingConcessionDetail.uffFee));
+            currentConcession.get('extensionFee').setValue(this.formatDecimal3(lendingConcessionDetail.extensionFee));
+
+            currentConcession.get('mrsEri').setValue(lendingConcessionDetail.mrsEri);
+
+            currentConcession.get('serviceFee').setValue(this.formatDecimal3(lendingConcessionDetail.serviceFee));
+            currentConcession.get('frequency').setValue(lendingConcessionDetail.frequency);
+
+            if (lendingConcessionDetail.expiryDate) {
+                var formattedExpiryDate = this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd');
+                currentConcession.get('expiryDate').setValue(formattedExpiryDate);
+            }
+
+            if (lendingConcessionDetail.dateApproved) {
+                var formattedDateApproved = this.datepipe.transform(lendingConcessionDetail.dateApproved, 'yyyy-MM-dd');
+                currentConcession.get('dateApproved').setValue(formattedDateApproved);
+            }
+
+            currentConcession.get('isExpired').setValue(lendingConcessionDetail.isExpired);
+            currentConcession.get('isExpiring').setValue(lendingConcessionDetail.isExpiring);
+
+            rowIndex++;
+        }
+
+        rowIndex = 0;
+
+        for (let concessionCondition of this.lendingConcession.concessionConditions) {
+            this.addNewConditionRow();
+
+            const conditions = <FormArray>this.lendingConcessionForm.controls['conditionItemsRows'];
+            let currentCondition = conditions.controls[conditions.length - 1];
+
+            currentCondition.get('concessionConditionId').setValue(concessionCondition.concessionConditionId);
+
+            let selectedConditionType = this.conditionTypes.filter(_ => _.id == concessionCondition.conditionTypeId);
+            currentCondition.get('conditionType').setValue(selectedConditionType[0]);
+
+            this.selectedConditionTypes[rowIndex] = selectedConditionType[0];
+
+            let selectedConditionProduct = selectedConditionType[0].conditionProducts.filter(_ => _.id == concessionCondition.conditionProductId);
+            currentCondition.get('conditionProduct').setValue(selectedConditionProduct[0]);
+
+            currentCondition.get('interestRate').setValue(concessionCondition.interestRate);
+            currentCondition.get('volume').setValue(concessionCondition.conditionVolume);
+            currentCondition.get('value').setValue(concessionCondition.conditionValue);
+            currentCondition.get('conditionComment').setValue(concessionCondition.conditionComment);
+
+            let selectedPeriodType = this.periodTypes.filter(_ => _.id == concessionCondition.periodTypeId);
+            currentCondition.get('periodType').setValue(selectedPeriodType[0]);
+
+            let selectedPeriod = this.periods.filter(_ => _.id == concessionCondition.periodId);
+            currentCondition.get('period').setValue(selectedPeriod[0]);
+
+            rowIndex++;
+        }
+
+        this.changearray = this.lookupDataService.checkforLC(this.lendingConcession.concession.status, this.lendingConcession.concession.subStatus, this.lendingConcession.concession.concessionComments);
+
     }
 
     initConcessionItemRows() {
@@ -412,6 +408,8 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             frequency: [{ value: '', disabled: true }],
             serviceFee: [{ value: '', disabled: true }],
             mrsEri: [''],
+            extensionFee: [''],
+            lendingTieredRates: [[]]
         });
     }
 
@@ -496,9 +494,19 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         this.clientAccountsCopy = <any>results[6]
     }
 
-    addNewConcessionRow() {
-        const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
-        control.push(this.initConcessionItemRows());
+    addNewConcessionRow(isClickEvent: boolean) {
+        const control = this.getLendingConcessionItemRows();
+        var newRow = this.initConcessionItemRows();
+        if (isClickEvent) {
+            if (control != null && control.length > 0) {
+                let expiryDate = control.controls[0].get('expiryDate').value;
+                if (expiryDate != null) {
+                    newRow.controls['expiryDate'].setValue(expiryDate);
+                }
+            }
+            this.selectedProductTypeFieldLogics.push(new ProductTypeFieldLogic());
+        }
+        control.push(newRow);
     }
 
     addNewConditionRow() {
@@ -514,10 +522,11 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
     deleteConcessionRow(index: number) {
         if (confirm("Are you sure you want to remove this row?")) {
-            const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+            const control = this.getLendingConcessionItemRows();
             control.removeAt(index);
 
             this.selectedProductTypes.splice(index, 1);
+            this.selectedProductTypeFieldLogics.splice(index, 1);
         }
     }
 
@@ -544,7 +553,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         this.errorMessage = null;
         this.validationError = null;
 
-        const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        const control = this.getLendingConcessionItemRows();
         let term = control.controls[rowIndex].get('term').value;
 
         if (term < MOnthEnum.ThreeMonths) {
@@ -565,7 +574,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     }
 
     productTypeChanged(rowIndex: number) {
-        const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        const control = this.getLendingConcessionItemRows();
 
         let currentRow = control.controls[rowIndex];
         var productType = currentRow.get('productType').value;
@@ -584,52 +593,10 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
         }
 
+        this.selectedProductTypeFieldLogics[rowIndex] = super.setProductTypeFieldLogic(productType.description, this.selectedProductTypeFieldLogics[rowIndex]);
+
         if (productType.description === "Overdraft") {
-
-            currentRow.get('term').enable();
             currentRow.get('term').setValue('12');
-
-            currentRow.get('reviewFeeType').enable();
-            currentRow.get('reviewFee').enable();
-            currentRow.get('uffFee').enable();
-
-            currentRow.get('frequency').disable();
-            currentRow.get('serviceFee').disable();
-
-        }
-        else if (productType.description === "Temporary Overdraft") {
-
-            currentRow.get('term').enable();
-
-            currentRow.get('reviewFeeType').enable();
-            currentRow.get('reviewFee').enable();
-            currentRow.get('uffFee').enable();
-
-            currentRow.get('frequency').disable();
-            currentRow.get('serviceFee').disable();
-
-        }
-        else if (productType.description.indexOf("VAF") == 0) {
-
-            currentRow.get('term').enable();
-
-            currentRow.get('frequency').enable();
-            currentRow.get('serviceFee').enable();
-
-            currentRow.get('reviewFeeType').disable();
-            currentRow.get('reviewFee').disable();
-            currentRow.get('uffFee').disable();
-        }
-        else {
-
-            currentRow.get('term').enable();
-
-            currentRow.get('reviewFeeType').disable();
-            currentRow.get('reviewFee').disable();
-            currentRow.get('uffFee').disable();
-
-            currentRow.get('frequency').disable();
-            currentRow.get('serviceFee').disable();
         }
     }
 
@@ -662,11 +629,13 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         if (this.riskGroup)
             lendingConcession.concession.riskGroupId = this.riskGroup.id;
 
-        const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getLendingConcessionItemRows();
 
         let hasProductType: boolean = false;
         let hasLegalEntityId: boolean = false;
         let hasLegalEntityAccountId: boolean = false;
+        let hasValidTerm: boolean = false;
+        let isOverdraftOrTempOverdraft: boolean = false;
 
         for (let concessionFormItem of concessions.controls) {
             if (!lendingConcession.lendingConcessionDetails)
@@ -683,9 +652,21 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             if (concessionFormItem.get('productType').value) {
                 lendingConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;
                 hasProductType = true;
+
+                // Is the product Overdraft or Temporary Overdraft?
+                if (concessionFormItem.get('productType').value.description == ProductTypeEnum.Overdraft ||
+                    concessionFormItem.get('productType').value.description == ProductTypeEnum.TemporaryOverdraft) {
+                    isOverdraftOrTempOverdraft = true;
+                }
+                else {
+                    isOverdraftOrTempOverdraft = false;
+                }
             }
-            else
+            else {
                 this.addValidationError("Product type not selected");
+                hasProductType = false;
+            }
+
 
             if (concessionFormItem.get('accountNumber').value) {
                 lendingConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
@@ -694,21 +675,69 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                 hasLegalEntityAccountId = true;
             } else {
                 this.addValidationError("Client account not selected");
+                hasLegalEntityId = false;
+                hasLegalEntityAccountId = false;
             }
 
-            if (concessionFormItem.get('limit').value)
-                lendingConcessionDetail.limit = concessionFormItem.get('limit').value;
+            if (lendingConcessionDetail.lendingConcessionDetailTieredRates == null)
+                lendingConcessionDetail.lendingConcessionDetailTieredRates = [];
+
+            lendingConcessionDetail.lendingConcessionDetailTieredRates = concessionFormItem.get('lendingTieredRates').value;
+
+            if (isOverdraftOrTempOverdraft) {
+                lendingConcessionDetail.lendingConcessionDetailTieredRates.forEach(item => {
+                    if (item.concessionLendingId == null || item.concessionLendingId == 0)
+                        item.concessionLendingId = lendingConcessionDetail.lendingConcessionDetailId;
+                });
+
+                if (lendingConcessionDetail.lendingConcessionDetailTieredRates == null ||
+                    lendingConcessionDetail.lendingConcessionDetailTieredRates.length == 0)
+                    this.addValidationError("Tiered Rate cannot be empty for Product Type: Overdraft / Temporary Overdraft");
+            }
+            else {
+                if (concessionFormItem.get('limit').value == "") {
+                    this.addValidationError("Limit cannot be empty");
+                }
+                if (concessionFormItem.get('marginAgainstPrime').value == "") {
+                    this.addValidationError("Prime fixed rate cannot be empty");
+                }
+
+                let tieredRate = new LendingConcessionTieredRate();
+                tieredRate.id = 0;
+                tieredRate.concessionLendingId = lendingConcessionDetail.lendingConcessionDetailId;
+                tieredRate.limit = concessionFormItem.get('limit').value;
+                tieredRate.marginToPrime = concessionFormItem.get('marginAgainstPrime').value;
+
+                lendingConcessionDetail.lendingConcessionDetailTieredRates = [];
+                lendingConcessionDetail.lendingConcessionDetailTieredRates.push(tieredRate);
+                //if (lendingConcessionDetail.lendingConcessionDetailTieredRates[0] != null) {
+                //    lendingConcessionDetail.lendingConcessionDetailTieredRates[0].limit = concessionFormItem.get('limit').value;
+                //    lendingConcessionDetail.lendingConcessionDetailTieredRates[0].marginToPrime = concessionFormItem.get('marginAgainstPrime').value;
+                //}
+                //else {
+                //    let tieredRate = new LendingConcessionTieredRate();
+                //    tieredRate.id = 0;
+                //    tieredRate.concessionLendingId = lendingConcessionDetail.lendingConcessionDetailId;
+
+                //    if (concessionFormItem.get('limit').value)
+                //        tieredRate.limit = concessionFormItem.get('limit').value;
+
+                //    if (concessionFormItem.get('marginAgainstPrime').value)
+                //        tieredRate.marginToPrime = concessionFormItem.get('marginAgainstPrime').value;
+
+                //    lendingConcessionDetail.lendingConcessionDetailTieredRates.push(tieredRate);
+                //}
+            }
 
             if (concessionFormItem.get('term').value) {
                 if (concessionFormItem.get('term').value < MOnthEnum.ThreeMonths) {
                     this.addValidationError("Minimum term captured should be 3 months");
+                    hasValidTerm = false;
                 } else {
                     lendingConcessionDetail.term = concessionFormItem.get('term').value;
+                    hasValidTerm = true;
                 }
             }
-
-            if (concessionFormItem.get('marginAgainstPrime').value)
-                lendingConcessionDetail.marginAgainstPrime = concessionFormItem.get('marginAgainstPrime').value;
 
             if (concessionFormItem.get('initiationFee').value)
                 lendingConcessionDetail.initiationFee = concessionFormItem.get('initiationFee').value;
@@ -775,7 +804,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     }
 
     getBackgroundColour(rowIndex: number) {
-        const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        const control = this.getLendingConcessionItemRows();
 
         if (String(control.controls[rowIndex].get('isExpired').value) == "true") {
             return "#EC7063";
@@ -929,7 +958,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         let changedProperties = [];
         let rowIndex = 0;
 
-        const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getLendingConcessionItemRows();
 
         //this is detailed line items,  but not yet the controls
         for (let concessionFormItem of concessions.controls) {
@@ -1002,13 +1031,40 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         }
     }
 
+    onSelectedExtensionFee(extensionFee: number) {
+        this.selectedExtensionFee = extensionFee;
+    }
+
+    extensionDisclamer() {
+        var isOverdraft = this.lendingConcession.lendingConcessionDetails.find(item => {
+            if (item.productType === "Overdraft") {
+                return true
+            }
+        });
+
+        if (isOverdraft) {
+            this.extendDisclamerModal.show();
+        } else {
+            this.extendConcession();
+        }
+    }
+
+    extensionDisclamerClose() {
+        this.extendDisclamerModal.hide();
+    }
+
     extendConcession() {
+        if (this.selectedExtensionFee == null) {
+            return;
+        }
         if (confirm("Are you sure you want to extend this concession?")) {
             this.isLoading = true;
             this.errorMessage = null;
             this.validationError = null;
 
-            this.lendingService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
+            this.lendingService.postExtendConcession(this.concessionReferenceId, this.selectedExtensionFee).subscribe(entity => {
+                this.lendingConcession = entity;
+                this.populateFormFromLendingConcession();
                 console.log("data saved");
                 this.canBcmApprove = false;
                 this.canBcmApprove = false;
@@ -1029,15 +1085,95 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
     disableRows() {
 
-        const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getLendingConcessionItemRows();
         for (let concessionFormItem of concessions.controls) {
 
             concessionFormItem.disable();
         }
     }
 
-    loopRows() {
+    showTieredRateButton(rowIndex: number) {
+        const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        let currentRow = control.controls[rowIndex];
+        var productType = currentRow.get('productType').value;
+        // Is the product Overdraft or Temporary Overdraft?
+        if (productType.description == ProductTypeEnum.Overdraft || productType.description == ProductTypeEnum.TemporaryOverdraft) {
+            //currentRow.get('limit').disable();
+            //currentRow.get('marginAgainstPrime').disable();
+            return true;
+        }
+        else {
+            //currentRow.get('limit').enable();
+            //currentRow.get('marginAgainstPrime').enable();
+            return false;
+        }
+
+
+    }
+
+    openTieredRateModal(rowIndex) {
+        if (this.showTieredRateButton(rowIndex)) {
+            this.tieredRateModal.show();
+            this.selectedRowIndex = rowIndex;
+            const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+            this.selectedLineItemTieredRates = concessions.controls[rowIndex].get('lendingTieredRates').value;
+            if (this.selectedLineItemTieredRates == null || this.selectedLineItemTieredRates.length == 0) {
+                this.addNewTieredRateRow();
+            }
+            this.selectedLineItemTieredRates.forEach((item) => {
+                item.limitString = this.baseComponentService.formatDecimal(item.limit).toString();
+                item.marginToPrimeString = this.baseComponentService.formatDecimal(item.marginToPrime).toString();
+            });
+        }
+    }
+
+    addNewTieredRateRow() {
+        if (this.selectedLineItemTieredRates == null) {
+            this.selectedLineItemTieredRates = [];
+        }
+
+        this.tieredRateMessage = "";
+        if (this.selectedLineItemTieredRates.length < 3) {
+            let tieredRate = new LendingConcessionTieredRate();
+            tieredRate.id = 0;
+            tieredRate.concessionLendingId = 0;
+            tieredRate.limit = 0;
+            tieredRate.marginToPrime = 0;
+
+            this.selectedLineItemTieredRates.push(tieredRate);
+        }
+        else {
+            this.tieredRateMessage = "Only three Tiered Rates allowed";
+        }
+
+    }
+
+    deleteTieredRateRow(rowIndex: number) {
+        this.tieredRateMessage = "";
+        this.selectedLineItemTieredRates = this.selectedLineItemTieredRates.filter((item) => {
+            return item != this.selectedLineItemTieredRates[rowIndex];
+        });
+    }
+
+    saveTieredRates() {
+        this.selectedLineItemTieredRates.forEach((item) => {
+            item.limit = this.baseComponentService.unformat(<any>item.limitString);
+            item.marginToPrime = this.baseComponentService.unformat(<any>item.marginToPrimeString);
+        });
+        this.tieredRateMessage = "";
         const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        concessions.controls[this.selectedRowIndex].get('lendingTieredRates').setValue(this.selectedLineItemTieredRates);
+        this.selectedRowIndex = 0;
+        this.selectedLineItemTieredRates = [];
+        this.closeTieredRatesModal();
+    }
+
+    closeTieredRatesModal() {
+        this.tieredRateModal.hide();
+    }
+
+    loopRows() {
+        const concessions = this.getLendingConcessionItemRows();
         let rowIndex = 0;
         for (let concessionFormItem of concessions.controls) {
 
@@ -1063,6 +1199,17 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         this.canUpdate = false;
         this.canArchive = false;
 
+        if (editType == EditTypeEnum.Renew) { // || editType == EditTypeEnum.UpdateApproved) {
+            const concessions = this.getLendingConcessionItemRows();
+            for (let concessionFormItem of concessions.controls) {
+                // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
+                if (concessionFormItem.get('expiryDate').value) {
+                    let expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+                    expiryDate = new Date(expiryDate.setFullYear(expiryDate.getFullYear() + 1));
+                    concessionFormItem.get('expiryDate').setValue(this.datepipe.transform(expiryDate, 'yyyy-MM-dd'));
+                }
+            }
+        }
         if (editType == EditTypeEnum.Renew) {
             this.baseComponentService.isRenewing = true;
         }
@@ -1151,7 +1298,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         this.errorMessage = null;
         this.validationError = null;
 
-        var lendingConcession = this.getLendingConcession(true);
+        var lendingConcession = this.getLendingConcession(false);
 
         lendingConcession.concession.status = ConcessionStatus.Pending;
         lendingConcession.concession.subStatus = ConcessionSubStatus.BCMPending;
@@ -1300,56 +1447,20 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
     }
 
-    setTwoNumberDecimalMAP($event) {
-
-        //check that it is a valid number
-        if (((isNaN($event.target.value)).valueOf()) == true) {
-
-            alert("Not a valid number for 'Prime -/+'");
-            $event.target.value = 0;
-        }
-        else {
-
-            $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
-        }
-    }
-
     setThreeNumberDecimal($event) {
-        if ($event.target.value) {
-            $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
-        }
-        else {
-
-            $event.target.value = 0;
-        }
+        $event.target.value = this.baseComponentService.formatDecimalThree($event.target.value);
     }
 
     formatDecimal(itemValue: number) {
-        if (itemValue) {
-
-            return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
-        }
-
-        return 0;
+        return this.baseComponentService.formatDecimal(itemValue);
     }
 
     formatDecimal3(itemValue: number) {
-        if (itemValue) {
-
-            return new DecimalPipe('en-US').transform(itemValue, '1.3-4');
-        }
-
-        return 0;
+        return this.baseComponentService.formatDecimalThree(itemValue);
     }
 
-
-    formatDecimal4(itemValue: number) {
-        if (itemValue) {
-
-            return new DecimalPipe('en-US').transform(itemValue, '1.3-4');
-        }
-
-        return 0.00;
+    getNumberInput(input) {
+        this.lendingConcessionForm.controls['smtDealNumber'].setValue(this.baseComponentService.removeLetters(input.value));
     }
 
     canEditSmtDealNumber() {
@@ -1361,11 +1472,21 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     }
 
     disableField(index: number, fieldname: string) {
-        return this.disableFieldBase(
+        let canUpdateExpiryDate: boolean = true;
+
+        if (fieldname == "expiryDate" && this.editType != null &&
+            (this.editType == EditTypeEnum.Renew || this.editType == EditTypeEnum.UpdateApproved)) {
+            {
+                canUpdateExpiryDate = false;
+            }
+        }
+
+        return super.disableFieldBase(
             this.selectedConditionTypes[index],
             this.lendingConcession.lendingConcessionDetails[index],
+            this.selectedProductTypeFieldLogics[index],
             fieldname,
-            this.canEdit,
+            this.canEdit && canUpdateExpiryDate,
             this.canEdit != null
         );
     }

@@ -9,25 +9,18 @@
         padding-left: 8px;
     }
 
-
-.image-upload > input {
-    display: none;
-
-}
-
-.image-upload img {
-    width: 30px;
-    cursor: pointer;
-}
-
 .image-upload {
     text-align: center;
 }
 
-.image-download img {
-    width: 30px;
-    cursor: pointer;
-}
+    .image-upload > input {
+        display: none;
+    }
+
+    .image-upload img {
+        width: 30px;
+        cursor: pointer;
+    }
 
 .downImage {
     background-color: #2c3e50;

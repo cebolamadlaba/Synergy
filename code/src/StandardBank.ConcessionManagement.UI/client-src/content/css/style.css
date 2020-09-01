@@ -1038,3 +1038,8 @@ label, th {
     background-color: #f9a42b !important;
     color: #fff;
 }
+
+.line-item-button {
+    padding: 3px 5px !important;
+    border-radius: 3px !important;
+}

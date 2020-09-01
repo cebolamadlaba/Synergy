@@ -142,7 +142,9 @@
         <div class="row">
             <!-- SMT deal number -->
             <label>SMT Deal Number</label>
-            <input type="text" numbersOnly="true" class="form-control" [attr.disabled]="disableField('smtDealNumber')" formControlName="smtDealNumber" maxlength="16" required />
+            <input type="text" class="form-control" [attr.disabled]="disableField('smtDealNumber')"
+                   formControlName="smtDealNumber" maxlength="16" required
+                   #refElSmtDealNumber (input)="getNumberInput(refElSmtDealNumber)"/>
         </div>
     </div>
     <div class="col-md-7 col-md-offset-1">
@@ -162,7 +164,7 @@
     <div class="col-md-12" style="border-bottom: 1px solid gray; margin-bottom: 15px;">
         <div class="row">
             <h3 class="table-title">Concessions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" *ngIf="canPcmApprove || isEditing || isRecalling" style="margin-top: 15px;">New Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow(true)" *ngIf="canPcmApprove || isEditing || isRecalling" style="margin-top: 15px;">New Concession</button>
         </div>
     </div>
 

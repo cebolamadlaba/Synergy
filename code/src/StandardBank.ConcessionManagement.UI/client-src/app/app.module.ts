@@ -8,7 +8,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { DataTablesModule } from 'angular-datatables';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { MyDatePickerModule } from 'angular4-datepicker/src/my-date-picker/my-date-picker.module';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { PageHeaderComponent } from './page-header/page-header.component';

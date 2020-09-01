@@ -46,8 +46,8 @@ namespace StandardBank.ConcessionManagement.Repository
             model.ConcessionDetailId = concessionDetail.ConcessionDetailId;
 
             const string sql =
-                @"INSERT [dbo].[tblConcessionLending] ([fkConcessionId], [fkConcessionDetailId], [fkProductTypeId], [fkReviewFeeTypeId], [Limit], [Term], [MarginToPrime], [ApprovedMarginToPrime], [LoadedMarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [AverageBalance],[Frequency],[ServiceFee],[MRS_ERI])
-                VALUES (@ConcessionId, @ConcessionDetailId, @ProductTypeId, @ReviewFeeTypeId, @Limit, @Term, @MarginToPrime, @ApprovedMarginToPrime, @LoadedMarginToPrime, @InitiationFee, @ReviewFee, @UFFFee, @AverageBalance, @Frequency,@ServiceFee,@MRS_ERI)
+                @"INSERT [dbo].[tblConcessionLending] ([fkConcessionId], [fkConcessionDetailId], [fkProductTypeId], [fkReviewFeeTypeId], [Limit], [Term], [MarginToPrime], [ApprovedMarginToPrime], [LoadedMarginToPrime], [InitiationFee], [ReviewFee], [UFFFee], [AverageBalance],[Frequency],[ServiceFee],[MRS_ERI],[ExtensionFee])
+                VALUES (@ConcessionId, @ConcessionDetailId, @ProductTypeId, @ReviewFeeTypeId, @Limit, @Term, @MarginToPrime, @ApprovedMarginToPrime, @LoadedMarginToPrime, @InitiationFee, @ReviewFee, @UFFFee, @AverageBalance, @Frequency,@ServiceFee,@MRS_ERI,@ExtensionFee)
                 SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
@@ -70,7 +70,8 @@ namespace StandardBank.ConcessionManagement.Repository
                         AverageBalance = model.AverageBalance,
                         ServiceFee = model.ServiceFee,
                         Frequency = model.Frequency,
-                        MRS_ERI = model.MRS_ERI
+                        MRS_ERI = model.MRS_ERI,
+                        ExtensionFee = model.ExtensionFee
                     }).Single();
             }
 
@@ -107,7 +108,8 @@ namespace StandardBank.ConcessionManagement.Repository
 		                    d.[fkLegalEntityAccountId] [LegalEntityAccountId],
 		                    d.[ExpiryDate],
 		                    d.[DateApproved],
-		                    [MRS_ERI]
+		                    [MRS_ERI],
+                            [ExtensionFee]
                     FROM [dbo].[tblConcessionLending] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
                     WHERE [pkConcessionLendingId] = @Id",
@@ -145,7 +147,8 @@ namespace StandardBank.ConcessionManagement.Repository
 		                    d.[fkLegalEntityAccountId] [LegalEntityAccountId],
 		                    d.[ExpiryDate],
 		                    d.[DateApproved],
-		                    [MRS_ERI]
+		                    [MRS_ERI],
+                            [ExtensionFee]
                     FROM [dbo].[tblConcessionLending] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
                     WHERE t.[fkConcessionId] = @concessionId",
@@ -182,7 +185,8 @@ namespace StandardBank.ConcessionManagement.Repository
 		                    d.[fkLegalEntityAccountId] [LegalEntityAccountId],
 		                    d.[ExpiryDate],
 		                    d.[DateApproved],
-		                    [MRS_ERI]
+		                    [MRS_ERI],
+                            [ExtensionFee]
                     FROM [dbo].[tblConcessionLending] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]");
             }
@@ -213,7 +217,8 @@ namespace StandardBank.ConcessionManagement.Repository
 	                    [AverageBalance] = @AverageBalance,
 	                    [ServiceFee] = @ServiceFee,
 	                    [Frequency] = @Frequency,
-	                    [MRS_ERI] = @MRS_ERI
+	                    [MRS_ERI] = @MRS_ERI,
+                        [ExtensionFee] = @ExtensionFee
                     WHERE [pkConcessionLendingId] = @Id",
                     new
                     {
@@ -233,7 +238,8 @@ namespace StandardBank.ConcessionManagement.Repository
                         AverageBalance = model.AverageBalance,
                         ServiceFee = model.ServiceFee,
                         Frequency = model.Frequency,
-                        MRS_ERI = model.MRS_ERI
+                        MRS_ERI = model.MRS_ERI,
+                        ExtensionFee = model.ExtensionFee
                     });
             }
 

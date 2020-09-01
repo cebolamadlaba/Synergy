@@ -229,12 +229,12 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
                 this.lookupDataService.getPeriodTypes(),
                 this.lookupDataService.getConditionTypes(),
                 this.lookupDataService.getRiskGroup(this.riskGroupNumber),
-                this.getGlmsGroup(this.riskGroupNumber, this.sapbpid),
-                this.getInterestType(),
-                this.getSlabType(),
-                this.getRateType(),
-                this.getBaseRateCode(),
-                this.getInterestPricingCategory(),
+                super.getGlmsGroup(this.riskGroupNumber, this.sapbpid),
+                super.getInterestType(),
+                super.getSlabType(),
+                super.getRateType(),
+                super.getBaseRateCode(),
+                super.getInterestPricingCategory(),
             ]).subscribe(results => {
                 this.setInitialData(results, true);
             }, error => {
@@ -249,12 +249,12 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
                 this.lookupDataService.getPeriodTypes(),
                 this.lookupDataService.getConditionTypes(),
                 this.lookupDataService.getLegalEntity(this.sapbpid),
-                this.getGlmsGroup(this.riskGroupNumber, this.sapbpid),
-                this.getInterestType(),
-                this.getSlabType(),
-                this.getRateType(),
-                this.getBaseRateCode(),
-                this.getInterestPricingCategory(),
+                super.getGlmsGroup(this.riskGroupNumber, this.sapbpid),
+                super.getInterestType(),
+                super.getSlabType(),
+                super.getRateType(),
+                super.getBaseRateCode(),
+                super.getInterestPricingCategory(),
 
             ]).subscribe(results => {
                 this.setInitialData(results, false);
@@ -363,10 +363,8 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
 
         const concessions = <FormArray>this.glmsConcessionForm.controls['concessionItemRows'];
 
-        let hasTypeId: boolean = false;
-        let hasLegalEntityId: boolean = false;
-
         for (let concessionFormItem of concessions.controls) {
+
             if (!glmsConcession.glmsConcessionDetails)
                 glmsConcession.glmsConcessionDetails = [];
 
@@ -409,13 +407,32 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
             }
 
             if (concessionFormItem.get('concessionItemTier').value && concessionFormItem.get('concessionItemTier').value != "") {
-                glmsConcessionDetail.glmsTierData = concessionFormItem.get('concessionItemTier').value;
+                this.populateTierForm(concessions.controls.indexOf(concessionFormItem));
+                if (this.validateTierData(true)) {
+                    glmsConcessionDetail.glmsTierData = concessionFormItem.get('concessionItemTier').value;
+                }
             }
             else {
                 this.addValidationError("Concession line Tier data not set");
             }
 
             glmsConcession.glmsConcessionDetails.push(glmsConcessionDetail);
+
+            if (glmsConcessionDetail.interestPricingCategoryId != null &&
+                glmsConcessionDetail.interestPricingCategoryId > 0 &&
+                glmsConcessionDetail.interestTypeId != null &&
+                glmsConcessionDetail.interestTypeId) {
+                let hasDuplicates = this.baseComponentService.HasDuplicateConcessionInterestPricingCategoryAndInterestType(
+                    glmsConcession.glmsConcessionDetails,
+                    glmsConcessionDetail.interestPricingCategoryId,
+                    glmsConcessionDetail.interestTypeId);
+
+                if (hasDuplicates) {
+                    this.addValidationError("Duplicate 'Interest Pricing Category' and 'Interest Type' combination found. Please select different combination.");
+
+                    break;
+                }
+            }
         }
 
         const conditions = <FormArray>this.glmsConcessionForm.controls['conditionItemsRows'];
@@ -479,60 +496,121 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
         const tierForm = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
 
         var lastRow = tierForm.length - 1;
+
         if (tierForm.length > 0) {
+
+            //if (!this.validateTierData(false)) {
+            //    return;
+            //}
+            this.validateTierData(false);
+
             tierForm.controls[lastRow].get('tieredTo').setValue(0);
+
+            //if (tierForm.length == 1) {
+            //    this.addValidationError("Minimum of 2 tiers must be added");
+            //}
+
+            for (let glmsTierFormItem of tierForm.controls) {
+
+                let tierItem = new GlmsTierData();
+
+                if (glmsTierFormItem.get('tieredFrom').value) {
+                    tierItem.tierFrom = glmsTierFormItem.get('tieredFrom').value;
+                } else {
+                    tierItem.tierFrom = 0;
+                }
+
+                if (glmsTierFormItem.get('tieredTo').value) {
+                    tierItem.tierTo = glmsTierFormItem.get('tieredTo').value;
+                } else {
+                    tierItem.tierTo = 0;
+                }
+
+                if (glmsTierFormItem.get('rateType').value.description === "F") {
+                    if (glmsTierFormItem.value) {
+                        tierItem.value = glmsTierFormItem.get('value').value;
+                    } //else {
+                    //this.addValidationError("Value not selected");
+                    //}
+                }
+
+                if (glmsTierFormItem.get('rateType').value.description === "V") {
+
+                    if (glmsTierFormItem.get('baseRate').value) {
+                        tierItem.baseRateId = glmsTierFormItem.get('baseRate').value.id;
+                    } //else {
+                    //this.addValidationError("BaseRate not selected");
+                    //}
+
+                    if (glmsTierFormItem.get('spread').value) {
+                        tierItem.spread = glmsTierFormItem.get('spread').value;
+                    } //else {
+                    //this.addValidationError("Spread not selected");
+                    //}
+                }
+
+                if (glmsTierFormItem.get('rateType').value) {
+                    tierItem.rateTypeId = glmsTierFormItem.get('rateType').value.id;
+                } //else {
+                //this.addValidationError("RateType not selected");
+                //}
+
+                tierItemsList.push(tierItem);
+            }
+        }
+        tierItemsList.splice(0, 1);
+        concessions.controls[this.glmsConcessionItemIndex].get('concessionItemTier').setValue(tierItemsList);
+    }
+
+    validateTierData(isSaveConcession: boolean) {
+
+        if (!isSaveConcession) {
+            this.validationError = [];
         }
 
-        for (let glmsTierFormItem of tierForm.value) {
+        let isValid = true;
+        const tierForm = <FormArray>this.glmsConcessionForm.controls['tierItemsRows'];
+
+        if (tierForm.length < 2) {
+            this.addValidationError("Minimum of 2 Concession line tiers must be added ");
+            isValid = false;
+        }
+
+        for (let glmsTierFormItem of tierForm.controls) {
 
             let tierItem = new GlmsTierData();
 
-            if (glmsTierFormItem.tieredFrom) {
-                tierItem.tierFrom = glmsTierFormItem.tieredFrom;
-            } else {
-                tierItem.tierFrom = 0;
-            }
-
-            if (glmsTierFormItem.tieredTo) {
-                tierItem.tierTo = glmsTierFormItem.tieredTo;
-            } else {
-                tierItem.tierTo = 0;
-            }
-
-            if (glmsTierFormItem.rateType.description === "F") {
-                if (glmsTierFormItem.value) {
-                    tierItem.value = glmsTierFormItem.value;
-                } else {
+            if (glmsTierFormItem.get('rateType').value.description === "F") {
+                if (!glmsTierFormItem.value) {
                     this.addValidationError("Value not selected");
+                    isValid = false;
                 }
             }
 
-            if (glmsTierFormItem.rateType.description === "V") {
+            if (glmsTierFormItem.get('rateType').value.description === "V") {
 
-                if (glmsTierFormItem.baseRate) {
-                    tierItem.baseRateId = glmsTierFormItem.baseRate.id;
-                } else {
+                if (!glmsTierFormItem.get('baseRate').value) {
                     this.addValidationError("BaseRate not selected");
+                    isValid = false;
                 }
 
-                if (glmsTierFormItem.spread) {
-                    tierItem.spread = glmsTierFormItem.spread;
-                } else {
+                if (!glmsTierFormItem.get('spread').value) {
                     this.addValidationError("Spread not selected");
+                    isValid = false;
                 }
             }
 
-            if (glmsTierFormItem.rateType) {
-                tierItem.rateTypeId = glmsTierFormItem.rateType.id;
-            } else {
+            if (!glmsTierFormItem.get('rateType').value) {
                 this.addValidationError("RateType not selected");
+                isValid = false;
             }
-
-            tierItemsList.push(tierItem);
         }
 
-        tierItemsList.splice(0, 1);
-        concessions.controls[this.glmsConcessionItemIndex].get('concessionItemTier').setValue(tierItemsList);
+        if (!isSaveConcession && isValid) {
+            this.validationError = null;
+        }
+
+        return isValid;
     }
 
     populateTierForm(rowIndex: number) {
@@ -773,6 +851,10 @@ export class GlmsAddConcessionComponent extends GlmsBaseService implements OnIni
 
     ngOnDestroy() {
         this.sub.unsubscribe();
+    }
+
+    getNumberInput(input) {
+        this.glmsConcessionForm.controls['smtDealNumber'].setValue(this.baseComponentService.removeLetters(input.value));
     }
 
     disableField(fieldname: string, index: number = null) {

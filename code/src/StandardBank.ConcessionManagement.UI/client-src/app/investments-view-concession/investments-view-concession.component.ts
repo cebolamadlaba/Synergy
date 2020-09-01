@@ -39,6 +39,7 @@ import { InvestmentConcessionDetail } from "../models/investment-concession-deta
 import { InvestmentConcessionService } from "../services/investment-concession.service";
 
 import { InvestmentView } from "../models/investment-view";
+import { EditTypeEnum } from '../models/edit-type-enum';
 
 import { BaseComponentService } from '../services/base-component.service';
 import { InvestmentBaseService } from '../services/investment-base.service';
@@ -113,6 +114,7 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
     legalentitygbbnumbers: LegalEntityGBBNumber[];
 
     selectedConditionTypes: ConditionType[];
+    // Specifies whether Field:NoticePeriod must be disabled[true]:NotDisabled[false]
     selectedInvestmentConcession: boolean[];
 
     observableConditionTypes: Observable<ConditionType[]>;
@@ -217,6 +219,10 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
                 this.capturedComments = value.comments;
             }
         });
+    }
+
+    getInvestmentConcessionItemRows(): FormArray {
+        return <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
     }
 
     getInitialData() {
@@ -345,10 +351,10 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
                 for (let investmentConcessionDetail of this.investmentConcession.investmentConcessionDetails) {
 
                     if (rowIndex != 0) {
-                        this.addNewConcessionRow();
+                        this.addNewConcessionRow(false);
                     }
 
-                    const concessions = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
+                    const concessions = this.getInvestmentConcessionItemRows();
                     let currentConcession = concessions.controls[concessions.length - 1];
 
                     currentConcession.get('investmentConcessionDetailId').setValue(investmentConcessionDetail.investmentConcessionDetailId);
@@ -364,19 +370,18 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
                     if (this.productTypes) {
 
                         let selectedProductType = this.productTypes.filter(_ => _.id === investmentConcessionDetail.productTypeId);
-                        currentConcession.get('productType').setValue(selectedProductType[0]);
 
+                        if (selectedProductType != null) {
+                            currentConcession.get('productType').setValue(selectedProductType[0]);
 
-                        if (selectedProductType[0].description == 'Notice deposit (BND)') {
-
-                            this.selectedInvestmentConcession[rowIndex] = false;
-
+                            if (selectedProductType[0].description == 'Notice deposit (BND)') {
+                                this.selectedInvestmentConcession[rowIndex] = false;
+                            }
+                            else {
+                                this.selectedInvestmentConcession[rowIndex] = true;
+                            }
                         }
-                        else {
 
-                            this.selectedInvestmentConcession[rowIndex] = true;
-
-                        }
 
                     }
 
@@ -494,9 +499,17 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
         });
     }
 
-    addNewConcessionRow() {
-        const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
+    addNewConcessionRow(isClickEvent: boolean) {
+        const control = this.getInvestmentConcessionItemRows();
         var newRow = this.initConcessionItemRows();
+        if (isClickEvent) {
+            if (control != null && control.length > 0) {
+                let expiryDate = control.controls[0].get('expiryDate').value;
+                if (expiryDate != null) {
+                    newRow.controls['expiryDate'].setValue(expiryDate);
+                }
+            }
+        }
         control.push(newRow);
     }
 
@@ -513,7 +526,7 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
 
     deleteConcessionRow(index: number) {
         if (confirm("Are you sure you want to remove this row?")) {
-            const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
+            const control = this.getInvestmentConcessionItemRows();
             control.removeAt(index);
 
             this.selectedInvestmentConcession.splice(index, 1);
@@ -544,22 +557,27 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
 
 
     isEnabledExpiryDate(rowIndex: number) {
-        const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
+        const control = this.getInvestmentConcessionItemRows();
 
         let currentRow = control.controls[rowIndex];
         var productType = currentRow.get('productType').value;
 
-        if (productType.description == 'Notice deposit (BND)') {           
+        if (productType.description == 'Notice deposit (BND)') {
             return false;
         }
         else {
-            return true;
+            if (this.editType == EditTypeEnum.Renew || this.editType == EditTypeEnum.UpdateApproved) {
+                return false;
+            }
+            else {
+                return true;
+            }
         }
     }
 
     productTypeChanged(rowIndex) {
 
-        const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
+        const control = this.getInvestmentConcessionItemRows();
 
         let currentRow = control.controls[rowIndex];
         var productType = currentRow.get('productType').value;
@@ -582,11 +600,8 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
 
             this.selectedInvestmentConcession[rowIndex] = false;
             currentRow.get('noticeperiod').setValue(null);
-            currentRow.get('expiryDate').setValue('');
-            currentRow.get('expiryDate').disable();
         }
         else {
-            currentRow.get('expiryDate').enable();
             this.selectedInvestmentConcession[rowIndex] = true;
 
         }
@@ -604,7 +619,7 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
         investmentConcession.concession.referenceNumber = this.concessionReferenceId;
         investmentConcession.concession.concessionType = ConcessionTypes.Investment;
 
-       
+
 
         if (this.investmentConcessionForm.controls['smtDealNumber'].value) {
             investmentConcession.concession.smtDealNumber = this.investmentConcessionForm.controls['smtDealNumber'].value;
@@ -620,7 +635,7 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
         else
             investmentConcession.concession.motivation = '.';
 
-        const concessions = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getInvestmentConcessionItemRows();
 
         let hasTypeId: boolean = false;
         let hasLegalEntityId: boolean = false;
@@ -641,12 +656,12 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
                 investmentConcessionDetail.concessionDetailId = concessionFormItem.get('concessionDetailId').value;
 
 
-            let applyexpirydate = false;
+            let applyExpirydate = false;
 
             if (concessionFormItem.get('productType').value) {
 
                 if (concessionFormItem.get('productType').value.description == 'Notice deposit (BND)') {
-                    applyexpirydate = true;
+                    applyExpirydate = true;
                 }
                 investmentConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;
                 hasTypeId = true;
@@ -677,9 +692,7 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
             if (concessionFormItem.get('noticeperiod').value) {
                 investmentConcessionDetail.term = concessionFormItem.get('noticeperiod').value;
             } else {
-
-                if (applyexpirydate) {
-
+                if (applyExpirydate) {
                     this.addValidationError("Notice period value not entered");
                 }
             }
@@ -687,9 +700,9 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
             if (concessionFormItem.get('loadedRate').value) {
                 investmentConcessionDetail.loadedRate = concessionFormItem.get('loadedRate').value;
             } else {
-
-                this.addValidationError("Rate value not entered");
-
+                if (applyExpirydate) {
+                    this.addValidationError("Rate value not entered");
+                }
             }
 
             if (concessionFormItem.get('expiryDate').value && concessionFormItem.get('expiryDate').value != "") {
@@ -700,7 +713,7 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
                 investmentConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
             }
             else {
-                if (!applyexpirydate) {
+                if (!applyExpirydate) {
                     this.addValidationError("Expiry date not selected");
                 }
             }
@@ -733,7 +746,7 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
 
 
     getBackgroundColour(rowIndex: number) {
-        const control = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
+        const control = this.getInvestmentConcessionItemRows();
 
         if (String(control.controls[rowIndex].get('isExpired').value) == "true") {
             return "#EC7063";
@@ -897,7 +910,7 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
         let changedProperties = [];
         let rowIndex = 0;
 
-        const concessions = <FormArray>this.investmentConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getInvestmentConcessionItemRows();
 
         //this is detailed line items,  but not yet the controls
         for (let concessionFormItem of concessions.controls) {
@@ -1012,6 +1025,18 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
         this.canArchive = false;
 
         this.investmentConcessionForm.controls['motivation'].setValue('');
+
+        if (editType == EditTypeEnum.Renew) { // || editType == EditTypeEnum.UpdateApproved) {
+            const concessions = this.getInvestmentConcessionItemRows();
+            for (let concessionFormItem of concessions.controls) {
+                // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
+                if (concessionFormItem.get('expiryDate').value) {
+                    let expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+                    expiryDate = new Date(expiryDate.setFullYear(expiryDate.getFullYear() + 1));
+                    concessionFormItem.get('expiryDate').setValue(this.datepipe.transform(expiryDate, 'yyyy-MM-dd'));
+                }
+            }
+        }
     }
 
     saveConcession() {
@@ -1281,8 +1306,12 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
         return this.motivationEnabled ? null : '';
     }
 
+    getNumberInput(input) {
+        this.investmentConcessionForm.controls['smtDealNumber'].setValue(this.baseComponentService.removeLetters(input.value));
+    }
+
     disableField(index, fieldName) {
-        return this.disableFieldBase(
+        return super.disableFieldBase(
             this.selectedConditionTypes[index],
             fieldName,
             this.canEdit,

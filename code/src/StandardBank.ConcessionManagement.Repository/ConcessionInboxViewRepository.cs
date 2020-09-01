@@ -167,7 +167,7 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                string sql = 
+                string sql =
                     @"SELECT distinct [ConcessionId],
 		                    [RiskGroupId],
 		                    [RiskGroupNumber],
@@ -192,7 +192,9 @@ namespace StandardBank.ConcessionManagement.Repository
 		                    [CentreId],
 		                    [CentreName],
 		                    [RegionId],
-		                    [Region]
+		                    [Region],
+							CustomerNumber,
+							CustomerName
                     FROM [dbo].[ConcessionInboxView]
                     WHERE [IsActive] = 1
 	                    AND [Archived] is null
@@ -756,7 +758,7 @@ namespace StandardBank.ConcessionManagement.Repository
             using (var db = _dbConnectionFactory.Connection())
             {
                 return db.Query<ConcessionInboxView>(
-					@"SELECT [ConcessionId],
+                    @"SELECT [ConcessionId],
 							[RiskGroupId],
 							[RiskGroupNumber],
 							[RiskGroupName],
@@ -792,7 +794,11 @@ namespace StandardBank.ConcessionManagement.Repository
 							[IsActive],
 							[IsCurrent],
 							[PriceExported],
-							[PriceExportedDate]
+							[PriceExportedDate],
+		                    [CurrentAEUserId],
+		                    [CurrentAAUserId],
+							[AEUserFullName],
+							[AAUserFullName]
 					FROM [dbo].[ConcessionInboxView]
 					WHERE [StatusId] IN (2, 3)
 						AND [IsActive] = 1
