@@ -1163,6 +1163,8 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         this.tieredRateMessage = "";
         const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
         concessions.controls[this.selectedRowIndex].get('lendingTieredRates').setValue(this.selectedLineItemTieredRates);
+        concessions.controls[this.selectedRowIndex].get('limit').setValue(this.baseComponentService.formatDecimalThree(this.selectedLineItemTieredRates[0].limit));
+        concessions.controls[this.selectedRowIndex].get('marginAgainstPrime').setValue(this.baseComponentService.formatDecimalThree(this.selectedLineItemTieredRates[0].marginToPrime));
         this.selectedRowIndex = 0;
         this.selectedLineItemTieredRates = [];
         this.closeTieredRatesModal();
@@ -1489,5 +1491,15 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             this.canEdit && canUpdateExpiryDate,
             this.canEdit != null
         );
+    }
+
+    getNgClassForField(rowIndex: number) {
+        if (this.showTieredRateButton(rowIndex)) {
+            return "form-control tiered-rate-field";
+        }
+        else {
+            return "form-control";
+        }
+
     }
 }

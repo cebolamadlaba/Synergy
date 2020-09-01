@@ -149,13 +149,13 @@
 
                 </td>
                 <!-- Limit -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="limit" [ngClass]="getNgClassForField(i)" (change)="setTwoNumberDecimal($event)" (click)="openTieredRateModal(i)" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="limit" [ngClass]="getNgClassForField(i)" (change)="setTwoNumberDecimal($event)" (click)="openTieredRateModal(i)" [attr.readonly]="showTieredRateButton(i)" /></td>
                 <!-- Term -->
                 <td class="length-short"><input type="text" numbersOnly="true" formControlName="term" class="form-control" [attr.disabled]="disableField(i,'term')"
                                                 (keyup)="onTermValueChange(i)" /></td>
 
                 <!-- Prime -->
-                <td class="length-short"><input type="text" formControlName="marginAgainstPrime" [ngClass]="getNgClassForField(i)" (change)="setThreeNumberDecimal($event)" (click)="openTieredRateModal(i)" /></td>
+                <td class="length-short"><input type="text" formControlName="marginAgainstPrime" [ngClass]="getNgClassForField(i)" (change)="setThreeNumberDecimal($event)" (click)="openTieredRateModal(i)" [attr.readonly]="showTieredRateButton(i)" /></td>
 
                 <!-- Frequency -->
                 <td class="length-short">
