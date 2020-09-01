@@ -22,6 +22,7 @@ import { ConcessionCondition } from "../models/concession-condition";
 import { LendingFinancial } from "../models/lending-financial";
 import { ConcessionComment } from "../models/concession-comment";
 import { LegalEntity } from '../models/legal-entity';
+import { ProductTypeFieldLogic } from '../models/product-type-field-logic';
 
 import { LookupDataService } from "../services/lookup-data.service";
 import { UserConcessionsService } from "../services/user-concessions.service";
@@ -71,6 +72,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     sapbpid: number;
     selectedConditionTypes: ConditionType[];
     selectedProductTypes: ProductType[];
+    selectedProductTypeFieldLogics: ProductTypeFieldLogic[] = [];
     isLoading = true;
     canBcmApprove = false;
     canPcmApprove = false;
@@ -283,47 +285,9 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                 this.addNewConcessionRow(false);
             }
 
-            if (lendingConcessionDetail.productType == 'Overdraft') {
-
-                lendingConcessionDetail.show_term = false;
-                lendingConcessionDetail.show_reviewFeeType = true;
-                lendingConcessionDetail.show_reviewFee = true;
-                lendingConcessionDetail.show_uffFee = true;
-                lendingConcessionDetail.show_frequency = false;
-                lendingConcessionDetail.show_serviceFee = false;
-
-            }
-            else if (lendingConcessionDetail.productType === "Temporary Overdraft") {
-
-
-                lendingConcessionDetail.show_term = true;
-                lendingConcessionDetail.show_reviewFeeType = true;
-                lendingConcessionDetail.show_reviewFee = true;
-                lendingConcessionDetail.show_uffFee = true;
-                lendingConcessionDetail.show_frequency = false;
-                lendingConcessionDetail.show_serviceFee = false;
-
-
-            }
-            else if (lendingConcessionDetail.productType.indexOf("VAF") == 0) {
-
-                lendingConcessionDetail.show_term = true;
-                lendingConcessionDetail.show_reviewFeeType = false;
-                lendingConcessionDetail.show_reviewFee = false;
-                lendingConcessionDetail.show_uffFee = false;
-                lendingConcessionDetail.show_frequency = true;
-                lendingConcessionDetail.show_serviceFee = true;
-            }
-            else {
-
-                lendingConcessionDetail.show_term = true;
-                lendingConcessionDetail.show_reviewFeeType = false;
-                lendingConcessionDetail.show_reviewFee = false;
-                lendingConcessionDetail.show_uffFee = false;
-                lendingConcessionDetail.show_frequency = false;
-                lendingConcessionDetail.show_serviceFee = false;
-            }
-
+            let productTypeFieldLogic = new ProductTypeFieldLogic();
+            productTypeFieldLogic = super.setProductTypeFieldLogic(lendingConcessionDetail.productType, productTypeFieldLogic);
+            this.selectedProductTypeFieldLogics.push(productTypeFieldLogic);
 
             const concessions = this.getLendingConcessionItemRows();
             let currentConcession = concessions.controls[concessions.length - 1];
@@ -540,6 +504,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                     newRow.controls['expiryDate'].setValue(expiryDate);
                 }
             }
+            this.selectedProductTypeFieldLogics.push(new ProductTypeFieldLogic());
         }
         control.push(newRow);
     }
@@ -561,6 +526,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             control.removeAt(index);
 
             this.selectedProductTypes.splice(index, 1);
+            this.selectedProductTypeFieldLogics.splice(index, 1);
         }
     }
 
@@ -627,52 +593,10 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
         }
 
+        this.selectedProductTypeFieldLogics[rowIndex] = super.setProductTypeFieldLogic(productType.description, this.selectedProductTypeFieldLogics[rowIndex]);
+
         if (productType.description === "Overdraft") {
-
-            currentRow.get('term').enable();
             currentRow.get('term').setValue('12');
-
-            currentRow.get('reviewFeeType').enable();
-            currentRow.get('reviewFee').enable();
-            currentRow.get('uffFee').enable();
-
-            currentRow.get('frequency').disable();
-            currentRow.get('serviceFee').disable();
-
-        }
-        else if (productType.description === "Temporary Overdraft") {
-
-            currentRow.get('term').enable();
-
-            currentRow.get('reviewFeeType').enable();
-            currentRow.get('reviewFee').enable();
-            currentRow.get('uffFee').enable();
-
-            currentRow.get('frequency').disable();
-            currentRow.get('serviceFee').disable();
-
-        }
-        else if (productType.description.indexOf("VAF") == 0) {
-
-            currentRow.get('term').enable();
-
-            currentRow.get('frequency').enable();
-            currentRow.get('serviceFee').enable();
-
-            currentRow.get('reviewFeeType').disable();
-            currentRow.get('reviewFee').disable();
-            currentRow.get('uffFee').disable();
-        }
-        else {
-
-            currentRow.get('term').enable();
-
-            currentRow.get('reviewFeeType').disable();
-            currentRow.get('reviewFee').disable();
-            currentRow.get('uffFee').disable();
-
-            currentRow.get('frequency').disable();
-            currentRow.get('serviceFee').disable();
         }
     }
 
@@ -1557,9 +1481,10 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             }
         }
 
-        return this.disableFieldBase(
+        return super.disableFieldBase(
             this.selectedConditionTypes[index],
             this.lendingConcession.lendingConcessionDetails[index],
+            this.selectedProductTypeFieldLogics[index],
             fieldname,
             this.canEdit && canUpdateExpiryDate,
             this.canEdit != null

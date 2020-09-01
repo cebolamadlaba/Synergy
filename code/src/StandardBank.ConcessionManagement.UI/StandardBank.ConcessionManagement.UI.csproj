@@ -48,6 +48,7 @@
     <None Remove="client-src\app\models\month-enum.ts" />
     <None Remove="client-src\app\models\mrs-eri-enum.ts" />
     <None Remove="client-src\app\models\pricing-product-enum.ts" />
+    <None Remove="client-src\app\models\product-type-field-logic.ts" />
     <None Remove="client-src\app\models\role-enum.ts" />
     <None Remove="client-src\app\models\pricing-view.ts" />
     <None Remove="client-src\app\models\search-concession-detail.ts" />
@@ -124,6 +125,7 @@
     <TypeScriptCompile Include="client-src\app\models\archive-type.ts" />
     <TypeScriptCompile Include="client-src\app\models\bol-chargeCodeRelationship.ts" />
     <TypeScriptCompile Include="client-src\app\models\concession-condition-return-object.ts" />
+    <TypeScriptCompile Include="client-src\app\models\product-type-field-logic.ts" />
     <TypeScriptCompile Include="client-src\app\models\transactional-concession-enum.ts" />
     <TypeScriptCompile Include="client-src\app\models\legal-entity-address.ts" />
     <TypeScriptCompile Include="client-src\app\models\legal-entity-gbb-number.ts" />

@@ -105,8 +105,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                {
                    RequestorName = expiringConcession.RecipientName,
                    ExpiringConcessionDetails = expiringConcession.ExpiringConcessionDetails,
-                   ServerURL = _serverPath//,
-                   //MonthBeforeExpiry = expiringConcession.MonthBeforeExpiry
+                   ServerURL = _serverPath
                });
         }
 
