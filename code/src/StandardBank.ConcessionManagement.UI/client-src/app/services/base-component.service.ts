@@ -9,6 +9,7 @@ import { User } from '../models/user';
 import { FormArray } from '@angular/forms';
 import { ConcessionCondition } from '../models/concession-condition';
 import { ConcessionConditionReturnObject } from '../models/concession-condition-return-object';
+import { GlmsConcessionDetail } from '../models/glms-concession-detail';
 
 declare var accounting: any;
 
@@ -80,14 +81,17 @@ export class BaseComponentService {
     }
 
     // GLMS
-    public HasDuplicateInterestProfile(concessionDetails: any[], interestPricingCategoryId: number, interestTypeId: number): boolean {
-        let duplicates = concessionDetails.filter((item) => {
-            return item.interestPricingCategoryId == interestPricingCategoryId
-                && item.interestTypeId == interestTypeId;
+    public HasDuplicateConcessionInterestPricingCategoryAndInterestType(glmsConcessionDetails: GlmsConcessionDetail[], interstPricingCategoryId: number, interestTypeId: number): boolean {
+
+        let duplicates = glmsConcessionDetails.filter(item => {
+            return item.interestPricingCategoryId == interstPricingCategoryId &&
+                item.interestTypeId == interestTypeId;
         });
 
         return duplicates.length > 1;
     }
+
+
 
     public unformat(itemValue: number) {
         return accounting.unformat(itemValue);
@@ -105,9 +109,8 @@ export class BaseComponentService {
         await this.getUserData();
         this.checkAEExistOnriskGroupNumber();
 
+        // FOR TESTING: comment out the first part of the if-statement.
         if (concessionListLength > 0) {
-
-            //    // FOR TESTING: comment out the first part of the if-statement.
             if (sapbpid == 0) {
                 this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Risk group. Please select the concession below and update");
             } else {
@@ -139,11 +142,7 @@ export class BaseComponentService {
             return new DecimalPipe('en-US').transform(itemValue, '1.2-2');
         }
 
-        return 0.00;
-    }
-
-    public GetTodayDate() {
-        return new Date().toISOString().split('T')[0];
+        return "0.00";
     }
 
     public formatDecimalThree(itemValue: number) {
@@ -153,7 +152,11 @@ export class BaseComponentService {
             return new DecimalPipe('en-US').transform(itemValue, '1.3-3');
         }
 
-        return null;
+        return "0.00";
+    }
+
+    public GetTodayDate() {
+        return new Date().toISOString().split('T')[0];
     }
 
     public expiringDateDifferenceValidation(selectedExpiryDate: string) {
@@ -175,6 +178,16 @@ export class BaseComponentService {
         if (expDate <= futureMonth) {
             return "Concession expiry date should be later than " + futureMonth.format('DD-MM-YYYY');
         }
+    }
+
+    public getNumberInput(input) {
+        let value = input.value;
+        let numbers = this.removeLetters(value);
+        input.value = numbers;
+    }
+
+    public removeLetters(value) {
+        return value.replace(/[^0-9]/g, "");
     }
 
     getUserData(): Promise<any> {

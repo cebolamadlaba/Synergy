@@ -212,13 +212,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             foreach (var glmsConcessionDetail in glmsConcession.GlmsConcessionDetails)
             {
                 glmsConcessionDetail.DateApproved = null;
-                if (glmsConcessionDetail.ExpiryDate != null)
-                {
-                    var dateExp = Convert.ToDateTime(glmsConcessionDetail.ExpiryDate);
-                    dateExp = dateExp.AddMonths(3);
-                    glmsConcessionDetail.ExpiryDate = dateExp;
-                }
-
                 glmsConcessionDetail.GlmsConcessionDetailId = 0;
                 await _mediator.Send(new AddOrUpdateGlmsConcessionDetail(glmsConcessionDetail, user, concession));
             }

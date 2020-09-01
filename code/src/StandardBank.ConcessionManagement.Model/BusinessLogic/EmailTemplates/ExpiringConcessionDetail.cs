@@ -60,5 +60,23 @@
         /// The date approved.
         /// </value>
         public string DateApproved { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Responsible AE/RM/BM.
+        /// </summary>
+        /// <value>
+        /// This column must display the Name and Surname of the AE that is responsible for the RiskGroup.
+        /// </value>
+        public string ResponsibleAE { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Responsible AA.
+        /// </summary>
+        /// <value>
+        /// This column must display the name and surname of the AA who logged the concession on behalf of the responsible AE. Display "-" if the concession has no responsible AA.
+        /// </value>
+        public string ResponsibleAA { get; set; } = "(-) NULL";
+
+        public int MonthBeforeExpiry { get; set; }
     }
 }

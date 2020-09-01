@@ -248,6 +248,11 @@
             {
                 public const string ReadAll = "CacheKey.Repository.LegalEntityAddress.ReadAll";
             }
+
+            public static class ExtensionFeeRepository
+            {
+                public const string ReadByIdIsActive = "CacheKey.Repository.ExtensionFeeRepository.ReadByIdIsActive";
+            }
         }
     }
 }

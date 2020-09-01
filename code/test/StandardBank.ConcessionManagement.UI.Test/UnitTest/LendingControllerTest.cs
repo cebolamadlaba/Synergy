@@ -151,7 +151,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
 
             MockMediator.Setup(_ => _.Send(It.IsAny<AddConcession>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Concession());
 
-            var result = await _lendingController.ExtendConcession("L001");
+            var result = await _lendingController.ExtendConcession("L001", 0);
             var apiResult = Assert.IsType<OkObjectResult>(result);
 
             Assert.NotNull(apiResult.Value);

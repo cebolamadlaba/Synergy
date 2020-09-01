@@ -80,12 +80,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private async Task<bool> SendTemplatedEmail(string recipient, string subject, string message,
             string templateName, object model)
         {
-      
-               var email = Email
-                .From(DefaultEmail)
-                .To(recipient)
-                .Subject(subject)
-                .UsingTemplateFromFile(Path.Combine(EmailTemplatePath, templateName + ".cshtml"), model.ToExpando());
+
+            var email = Email
+             .From(DefaultEmail)
+             .To(recipient)
+             .Subject(subject)
+             .UsingTemplateFromFile(Path.Combine(EmailTemplatePath, templateName + ".cshtml"), model.ToExpando());
 
             var response = await email.SendAsync();
 

@@ -1298,14 +1298,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
             var relationships = _concessionRelationshipRepository.ReadByChildConcessionId(concession.Id);
 
-            //you can only extend a concession once
-            if (relationships != null && relationships.Any())
-            {
-                if (relationships.Last().RelationshipId == extensionRelationshipId)
-                    return false;
-                else
-                    return true;
-            }
+            // User Story 33393 - 3.1.6 Extend Functionality - Temporarily disabled - 2020-07-28
+            ////you can only extend a concession once
+            //if (relationships != null && relationships.Any())
+            //{
+            //    if (relationships.Last().RelationshipId == extensionRelationshipId)
+            //        return false;
+            //    else
+            //        return true;
+            //}
 
             //if we get up to this point that means all the checks have passed and we can extend
             return true;

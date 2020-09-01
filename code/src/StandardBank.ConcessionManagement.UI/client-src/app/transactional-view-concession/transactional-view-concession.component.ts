@@ -29,7 +29,9 @@ import { LegalEntity } from "../models/legal-entity";
 import { ConcessionConditionReturnObject } from '../models/concession-condition-return-object';
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
+import { EditTypeEnum } from '../models/edit-type-enum';
 import { TransactionalBaseService } from '../services/transactional-base.service';
+import { FileService } from '../services/file.service';
 
 @Component({
     selector: 'app-transactional-view-concession',
@@ -40,7 +42,6 @@ import { TransactionalBaseService } from '../services/transactional-base.service
 export class TransactionalViewConcessionComponent extends TransactionalBaseService implements OnInit, OnDestroy {
 
     concessionReferenceId: string;
-    public transactionalConcessionForm: FormGroup;
     private sub: any;
     errorMessage: String;
     saveMessage: String;
@@ -55,7 +56,6 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
     createdDate: string;
 
     selectedConditionTypes: ConditionType[];
-    selectedTransactionTypes: TransactionType[];
     isLoading = true;
     canBcmApprove = false;
     canPcmApprove = false;
@@ -88,10 +88,8 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
     conditionTypes: ConditionType[];
 
     observableClientAccounts: Observable<ClientAccount[]>;
-    clientAccounts: ClientAccount[];
 
     observableTransactionTypes: Observable<TransactionType[]>;
-    transactionTypes: TransactionType[];
 
     observableTransactionalConcession: Observable<TransactionalConcession>;
     transactionalConcession: TransactionalConcession;
@@ -100,15 +98,19 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
     transactionalFinancial: TransactionalFinancial;
 
     constructor(private route: ActivatedRoute,
-        private formBuilder: FormBuilder,
+        formBuilder: FormBuilder,
         private location: Location,
-        private datepipe: DatePipe,
+        datepipe: DatePipe,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(TransactionalConcessionService) private transactionalConcessionService,
         @Inject(UserConcessionsService) private userConcessionsService,
+        fileService: FileService,
         private baseComponentService: BaseComponentService) {
         super();
+        this.formBuilder = formBuilder;
+        this.fileService = fileService;
         this.riskGroup = new RiskGroup();
+        this.datepipe = datepipe;
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
         this.conditionTypes = [new ConditionType()];
@@ -129,7 +131,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
         });
 
         this.transactionalConcessionForm = this.formBuilder.group({
-            concessionItemRows: this.formBuilder.array([this.initConcessionItemRows()]),
+            concessionItemRows: this.formBuilder.array([this.initConcessionItemRowsUpdate()]),
             conditionItemsRows: this.formBuilder.array([]),
             mrsCrs: new FormControl(),
             smtDealNumber: new FormControl(),
@@ -150,6 +152,10 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
                 this.capturedComments = value.comments;
             }
         });
+    }
+
+    getTransactionalConcessionItemRows(): FormArray {
+        return <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
     }
 
     getInitialData() {
@@ -223,145 +229,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
             this.observableTransactionalConcession.subscribe(transactionalConcession => {
                 this.transactionalConcession = transactionalConcession;
 
-                if (transactionalConcession.concession.status == ConcessionStatus.Pending && transactionalConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
-                    this.canBcmApprove = transactionalConcession.currentUser.canBcmApprove;
-                }
-
-                if (transactionalConcession.concession.status == ConcessionStatus.Pending && transactionalConcession.concession.subStatus == ConcessionSubStatus.PCMPending) {
-                    if (this.transactionalConcession.currentUser.isHO) {
-                        this.canPcmApprove = transactionalConcession.currentUser.canPcmApprove
-                    } else {
-                        this.canPcmApprove = transactionalConcession.currentUser.canPcmApprove && transactionalConcession.currentUser.canApprove;
-                    }
-
-                    // Removed as per SBSA.Anthony's request - 2019-07-15
-                    this.canEdit = transactionalConcession.currentUser.canPcmApprove;
-                }
-
-                //if it's still pending and the user is a requestor then they can recall it
-                if (transactionalConcession.concession.status == ConcessionStatus.Pending && transactionalConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
-                    this.canRecall = transactionalConcession.currentUser.canRequest && transactionalConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
-                }
-
-                if (transactionalConcession.concession.status == ConcessionStatus.Pending &&
-                    (transactionalConcession.concession.subStatus == ConcessionSubStatus.PCMApprovedWithChanges || transactionalConcession.concession.subStatus == ConcessionSubStatus.HOApprovedWithChanges)) {
-                    this.canApproveChanges = transactionalConcession.currentUser.canRequest && transactionalConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
-                }
-
-                if (transactionalConcession.concession.status === ConcessionStatus.Approved ||
-                    transactionalConcession.concession.status === ConcessionStatus.ApprovedWithChanges) {
-                    this.isApproved = true;
-                }
-
-                //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
-                this.canExtend = transactionalConcession.concession.canExtend && transactionalConcession.currentUser.canRequest;
-                this.canRenew = transactionalConcession.concession.canRenew && transactionalConcession.currentUser.canRequest;
-
-                //set the resubmit and update permissions
-                this.canResubmit = transactionalConcession.concession.canResubmit && transactionalConcession.currentUser.canRequest;
-                this.canUpdate = transactionalConcession.concession.canUpdate && transactionalConcession.currentUser.canRequest;
-
-                this.canArchive = transactionalConcession.concession.canArchive && transactionalConcession.currentUser.canRequest;
-                this.isInProgressExtension = transactionalConcession.concession.isInProgressExtension;
-                this.isInProgressRenewal = transactionalConcession.concession.isInProgressRenewal;
-
-                this.transactionalConcessionForm.controls['mrsCrs'].setValue(this.transactionalConcession.concession.mrsCrs);
-                this.transactionalConcessionForm.controls['smtDealNumber'].setValue(this.transactionalConcession.concession.smtDealNumber);
-                this.transactionalConcessionForm.controls['motivation'].setValue(this.transactionalConcession.concession.motivation);
-
-                if (transactionalConcession.concession.dateOpened) {
-                    var formattedDateOpened = this.datepipe.transform(transactionalConcession.concession.dateOpened, 'yyyy-MM-dd');
-                    this.createdDate = formattedDateOpened;
-                }
-
-                let rowIndex = 0;
-
-                for (let transactionalConcessionDetail of this.transactionalConcession.transactionalConcessionDetails) {
-
-                    if (rowIndex != 0) {
-                        this.addNewConcessionRow();
-                    }
-
-                    const concessions = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
-                    let currentConcession = concessions.controls[concessions.length - 1];
-
-                    currentConcession.get('transactionalConcessionDetailId').setValue(transactionalConcessionDetail.transactionalConcessionDetailId);
-                    currentConcession.get('concessionDetailId').setValue(transactionalConcessionDetail.concessionDetailId);
-
-                    let selectedTransactionType = this.transactionTypes.filter(_ => _.id === transactionalConcessionDetail.transactionTypeId);
-                    currentConcession.get('transactionType').setValue(selectedTransactionType[0]);
-
-                    if (this.clientAccounts) {
-
-                        let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == transactionalConcessionDetail.legalEntityAccountId);
-                        currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
-                    }
-
-                    this.selectedTransactionTypes[rowIndex] = selectedTransactionType[0];
-
-                    let selectedTransactionTableNumber = selectedTransactionType[0].transactionTableNumbers.filter(_ => _.id == transactionalConcessionDetail.transactionTableNumberId);
-                    currentConcession.get('transactionTableNumber').setValue(selectedTransactionTableNumber[0]);
-
-                    if (transactionalConcessionDetail.adValorem)
-                        currentConcession.get('adValorem').setValue(transactionalConcessionDetail.adValorem.toFixed(3));
-
-                    if (transactionalConcessionDetail.fee)
-                        currentConcession.get('flatFeeOrRate').setValue(transactionalConcessionDetail.fee.toFixed(2));
-
-                    currentConcession.get('approvedTableNumber').setValue(transactionalConcessionDetail.approvedTableNumber);
-
-                    if (transactionalConcessionDetail.expiryDate) {
-                        var formattedExpiryDate = this.datepipe.transform(transactionalConcessionDetail.expiryDate, 'yyyy-MM-dd');
-                        currentConcession.get('expiryDate').setValue(formattedExpiryDate);
-                    }
-
-                    if (transactionalConcessionDetail.dateApproved) {
-                        var formattedDateApproved = this.datepipe.transform(transactionalConcessionDetail.dateApproved, 'yyyy-MM-dd');
-                        currentConcession.get('dateApproved').setValue(formattedDateApproved);
-                    }
-
-                    currentConcession.get('isExpired').setValue(transactionalConcessionDetail.isExpired);
-                    currentConcession.get('isExpiring').setValue(transactionalConcessionDetail.isExpiring);
-
-                    rowIndex++;
-                }
-
-                rowIndex = 0;
-
-                for (let concessionCondition of this.transactionalConcession.concessionConditions) {
-                    this.addNewConditionRow();
-
-                    const conditions = <FormArray>this.transactionalConcessionForm.controls['conditionItemsRows'];
-                    let currentCondition = conditions.controls[conditions.length - 1];
-
-                    currentCondition.get('concessionConditionId').setValue(concessionCondition.concessionConditionId);
-
-                    let selectedConditionType = this.conditionTypes.filter(_ => _.id == concessionCondition.conditionTypeId);
-                    currentCondition.get('conditionType').setValue(selectedConditionType[0]);
-
-                    this.selectedConditionTypes[rowIndex] = selectedConditionType[0];
-
-                    let selectedConditionProduct = selectedConditionType[0].conditionProducts.filter(_ => _.id == concessionCondition.conditionProductId);
-                    if (selectedConditionProduct != null && selectedConditionProduct.length > 0) {
-
-                        currentCondition.get('conditionProduct').setValue(selectedConditionProduct[0]);
-                    }
-
-                    currentCondition.get('interestRate').setValue(concessionCondition.interestRate);
-                    currentCondition.get('volume').setValue(concessionCondition.conditionVolume);
-                    currentCondition.get('value').setValue(concessionCondition.conditionValue);
-                    currentCondition.get('conditionComment').setValue(concessionCondition.conditionComment);
-
-                    let selectedPeriodType = this.periodTypes.filter(_ => _.id == concessionCondition.periodTypeId);
-                    currentCondition.get('periodType').setValue(selectedPeriodType[0]);
-
-                    let selectedPeriod = this.periods.filter(_ => _.id == concessionCondition.periodId);
-                    currentCondition.get('period').setValue(selectedPeriod[0]);
-
-                    rowIndex++;
-                }
-
-                this.changearray = this.lookupDataService.checkforLC(this.transactionalConcession.concession.status, this.transactionalConcession.concession.subStatus, transactionalConcession.concession.concessionComments);
+                this.populateFormWithTransactionalConcession();
 
                 this.isLoading = false;
             }, error => {
@@ -371,23 +239,148 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
         }
     }
 
-    initConcessionItemRows() {
-        this.selectedTransactionTypes.push(new TransactionType());
+    populateFormWithTransactionalConcession() {
+        if (this.transactionalConcession.concession.status == ConcessionStatus.Pending && this.transactionalConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
+            this.canBcmApprove = this.transactionalConcession.currentUser.canBcmApprove;
+        }
 
-        return this.formBuilder.group({
-            transactionalConcessionDetailId: [''],
-            concessionDetailId: [''],
-            transactionType: [''],
-            accountNumber: [''],
-            transactionTableNumber: [''],
-            flatFeeOrRate: [{ value: '', disabled: true }],
-            adValorem: [{ value: '', disabled: true }],
-            approvedTableNumber: [{ value: '', disabled: true }],
-            expiryDate: [''],
-            dateApproved: [{ value: '', disabled: true }],
-            isExpired: [''],
-            isExpiring: ['']
-        });
+        if (this.transactionalConcession.concession.status == ConcessionStatus.Pending && this.transactionalConcession.concession.subStatus == ConcessionSubStatus.PCMPending) {
+            if (this.transactionalConcession.currentUser.isHO) {
+                this.canPcmApprove = this.transactionalConcession.currentUser.canPcmApprove
+            } else {
+                this.canPcmApprove = this.transactionalConcession.currentUser.canPcmApprove && this.transactionalConcession.currentUser.canApprove;
+            }
+
+            // Removed as per SBSA.Anthony's request - 2019-07-15
+            this.canEdit = this.transactionalConcession.currentUser.canPcmApprove;
+        }
+
+        //if it's still pending and the user is a requestor then they can recall it
+        if (this.transactionalConcession.concession.status == ConcessionStatus.Pending && this.transactionalConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
+            this.canRecall = this.transactionalConcession.currentUser.canRequest && this.transactionalConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
+        }
+
+        if (this.transactionalConcession.concession.status == ConcessionStatus.Pending &&
+            (this.transactionalConcession.concession.subStatus == ConcessionSubStatus.PCMApprovedWithChanges || this.transactionalConcession.concession.subStatus == ConcessionSubStatus.HOApprovedWithChanges)) {
+            this.canApproveChanges = this.transactionalConcession.currentUser.canRequest && this.transactionalConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
+        }
+
+        if (this.transactionalConcession.concession.status === ConcessionStatus.Approved ||
+            this.transactionalConcession.concession.status === ConcessionStatus.ApprovedWithChanges) {
+            this.isApproved = true;
+        }
+
+        //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
+        this.canExtend = this.transactionalConcession.concession.canExtend && this.transactionalConcession.currentUser.canRequest;
+        this.canRenew = this.transactionalConcession.concession.canRenew && this.transactionalConcession.currentUser.canRequest;
+
+        //set the resubmit and update permissions
+        //can only update when concession is not "due for expiry"
+        this.canResubmit = this.transactionalConcession.concession.canResubmit && this.transactionalConcession.currentUser.canRequest;
+        this.canUpdate = !this.canRenew && this.transactionalConcession.concession.canUpdate && this.transactionalConcession.currentUser.canRequest;
+
+        this.canArchive = this.transactionalConcession.concession.canArchive && this.transactionalConcession.currentUser.canRequest;
+        this.isInProgressExtension = this.transactionalConcession.concession.isInProgressExtension;
+        this.isInProgressRenewal = this.transactionalConcession.concession.isInProgressRenewal;
+
+        this.transactionalConcessionForm.controls['mrsCrs'].setValue(this.transactionalConcession.concession.mrsCrs);
+        this.transactionalConcessionForm.controls['smtDealNumber'].setValue(this.transactionalConcession.concession.smtDealNumber);
+        this.transactionalConcessionForm.controls['motivation'].setValue(this.transactionalConcession.concession.motivation);
+
+        if (this.transactionalConcession.concession.dateOpened) {
+            var formattedDateOpened = this.datepipe.transform(this.transactionalConcession.concession.dateOpened, 'yyyy-MM-dd');
+            this.createdDate = formattedDateOpened;
+        }
+
+        let rowIndex = 0;
+
+        for (let transactionalConcessionDetail of this.transactionalConcession.transactionalConcessionDetails) {
+
+            if (rowIndex != 0) {
+                this.addNewConcessionRow(false, false);
+            }
+
+            const concessions = this.getTransactionalConcessionItemRows();
+            let currentConcession = concessions.controls[concessions.length - 1];
+
+            currentConcession.get('transactionalConcessionDetailId').setValue(transactionalConcessionDetail.transactionalConcessionDetailId);
+            currentConcession.get('concessionDetailId').setValue(transactionalConcessionDetail.concessionDetailId);
+
+            let selectedTransactionType = this.transactionTypes.filter(_ => _.id === transactionalConcessionDetail.transactionTypeId);
+            currentConcession.get('transactionType').setValue(selectedTransactionType[0]);
+
+            if (this.clientAccounts) {
+
+                let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == transactionalConcessionDetail.legalEntityAccountId);
+                currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
+            }
+
+            this.selectedTransactionTypes[rowIndex] = selectedTransactionType[0];
+
+            let selectedTransactionTableNumber = selectedTransactionType[0].transactionTableNumbers.filter(_ => _.id == transactionalConcessionDetail.transactionTableNumberId);
+            currentConcession.get('transactionTableNumber').setValue(selectedTransactionTableNumber[0]);
+
+            if (transactionalConcessionDetail.adValorem)
+                currentConcession.get('adValorem').setValue(transactionalConcessionDetail.adValorem.toFixed(3));
+
+            if (transactionalConcessionDetail.fee)
+                currentConcession.get('flatFeeOrRate').setValue(transactionalConcessionDetail.fee.toFixed(2));
+
+            currentConcession.get('approvedTableNumber').setValue(transactionalConcessionDetail.approvedTableNumber);
+
+            if (transactionalConcessionDetail.expiryDate) {
+                var formattedExpiryDate = this.datepipe.transform(transactionalConcessionDetail.expiryDate, 'yyyy-MM-dd');
+                currentConcession.get('expiryDate').setValue(formattedExpiryDate);
+            }
+
+            if (transactionalConcessionDetail.dateApproved) {
+                var formattedDateApproved = this.datepipe.transform(transactionalConcessionDetail.dateApproved, 'yyyy-MM-dd');
+                currentConcession.get('dateApproved').setValue(formattedDateApproved);
+            }
+
+            currentConcession.get('isExpired').setValue(transactionalConcessionDetail.isExpired);
+            currentConcession.get('isExpiring').setValue(transactionalConcessionDetail.isExpiring);
+
+            rowIndex++;
+        }
+
+        rowIndex = 0;
+
+        for (let concessionCondition of this.transactionalConcession.concessionConditions) {
+            this.addNewConditionRow();
+
+            const conditions = <FormArray>this.transactionalConcessionForm.controls['conditionItemsRows'];
+            let currentCondition = conditions.controls[conditions.length - 1];
+
+            currentCondition.get('concessionConditionId').setValue(concessionCondition.concessionConditionId);
+
+            let selectedConditionType = this.conditionTypes.filter(_ => _.id == concessionCondition.conditionTypeId);
+            currentCondition.get('conditionType').setValue(selectedConditionType[0]);
+
+            this.selectedConditionTypes[rowIndex] = selectedConditionType[0];
+
+            let selectedConditionProduct = selectedConditionType[0].conditionProducts.filter(_ => _.id == concessionCondition.conditionProductId);
+            if (selectedConditionProduct != null && selectedConditionProduct.length > 0) {
+
+                currentCondition.get('conditionProduct').setValue(selectedConditionProduct[0]);
+            }
+
+            currentCondition.get('interestRate').setValue(concessionCondition.interestRate);
+            currentCondition.get('volume').setValue(concessionCondition.conditionVolume);
+            currentCondition.get('value').setValue(concessionCondition.conditionValue);
+            currentCondition.get('conditionComment').setValue(concessionCondition.conditionComment);
+
+            let selectedPeriodType = this.periodTypes.filter(_ => _.id == concessionCondition.periodTypeId);
+            currentCondition.get('periodType').setValue(selectedPeriodType[0]);
+
+            let selectedPeriod = this.periods.filter(_ => _.id == concessionCondition.periodId);
+            currentCondition.get('period').setValue(selectedPeriod[0]);
+
+            rowIndex++;
+        }
+
+        this.changearray = this.lookupDataService.checkforLC(this.transactionalConcession.concession.status, this.transactionalConcession.concession.subStatus, this.transactionalConcession.concession.concessionComments);
+
     }
 
     initConditionItemRows() {
@@ -406,11 +399,6 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
         });
     }
 
-    addNewConcessionRow() {
-        const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
-        control.push(this.initConcessionItemRows());
-    }
-
     addNewConditionRow() {
         const control = <FormArray>this.transactionalConcessionForm.controls['conditionItemsRows'];
         control.push(this.initConditionItemRows());
@@ -424,7 +412,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
 
     deleteConcessionRow(index: number) {
         if (confirm("Are you sure you want to remove this row?")) {
-            const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+            const control = this.getTransactionalConcessionItemRows();
             control.removeAt(index);
 
             this.selectedTransactionTypes.splice(index, 1);
@@ -451,27 +439,13 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
     }
 
     transactionTypeChanged(rowIndex) {
-        const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+        const control = this.getTransactionalConcessionItemRows();
         this.selectedTransactionTypes[rowIndex] = control.controls[rowIndex].get('transactionType').value;
 
         let currentTransactionType = control.controls[rowIndex];
 
         currentTransactionType.get('adValorem').setValue(null);
         currentTransactionType.get('flatFeeOrRate').setValue(null);
-    }
-
-    transactionTableNumberChanged(rowIndex) {
-        const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
-
-        if (control.controls[rowIndex].get('transactionTableNumber').value.fee)
-            control.controls[rowIndex].get('flatFeeOrRate').setValue(control.controls[rowIndex].get('transactionTableNumber').value.fee.toFixed(2));
-        else
-            control.controls[rowIndex].get('flatFeeOrRate').setValue(null);
-
-        if (control.controls[rowIndex].get('transactionTableNumber').value.adValorem)
-            control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('transactionTableNumber').value.adValorem.toFixed(3));
-        else
-            control.controls[rowIndex].get('adValorem').setValue(null);
     }
 
     getTransactionalConcession(isNew: boolean): TransactionalConcession {
@@ -500,7 +474,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
         if (this.transactionalConcessionForm.controls['comments'].value)
             transactionalConcession.concession.comments = this.transactionalConcessionForm.controls['comments'].value;
 
-        const concessions = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getTransactionalConcessionItemRows();
 
         let hasTypeId: boolean = false;
         let hasLegalEntityId: boolean = false;
@@ -573,6 +547,8 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
         transactionalConcession.concessionConditions = concessionConditionReturnObject.concessionConditions;
         this.validationError = concessionConditionReturnObject.validationError;
 
+        super.checkConcessionExpiryDate(transactionalConcession);
+
         return transactionalConcession;
     }
 
@@ -585,7 +561,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
     }
 
     getBackgroundColour(rowIndex: number) {
-        const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+        const control = this.getTransactionalConcessionItemRows();
 
         if (String(control.controls[rowIndex].get('isExpired').value) == "true") {
             return "#EC7063";
@@ -707,6 +683,8 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
 
         if (!this.validationError) {
             this.transactionalConcessionService.postUpdateTransactionalData(transactionalConcession).subscribe(entity => {
+                this.transactionalConcession = entity;
+                this.populateFormWithTransactionalConcession();
                 console.log("data saved");
                 this.canPcmApprove = false;
                 this.saveMessage = entity.concession.referenceNumber;
@@ -739,7 +717,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
         let changedProperties = [];
         let rowIndex = 0;
 
-        const concessions = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getTransactionalConcessionItemRows();
 
         //this is detailed line items,  but not yet the controls
         for (let concessionFormItem of concessions.controls) {
@@ -854,6 +832,18 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
         this.canArchive = false;
 
         this.transactionalConcessionForm.controls['motivation'].setValue('');
+
+        if (editType == EditTypeEnum.Renew) { // || editType == EditTypeEnum.UpdateApproved) {
+            const concessions = this.getTransactionalConcessionItemRows();
+            for (let concessionFormItem of concessions.controls) {
+                // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
+                if (concessionFormItem.get('expiryDate').value) {
+                    let expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+                    expiryDate = new Date(expiryDate.setFullYear(expiryDate.getFullYear() + 1));
+                    concessionFormItem.get('expiryDate').setValue(this.datepipe.transform(expiryDate, 'yyyy-MM-dd'));
+                }
+            }
+        }
     }
 
     saveConcession() {
@@ -936,7 +926,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
         this.errorMessage = null;
         this.validationError = null;
 
-        var transactionalConcession = this.getTransactionalConcession(true);
+        var transactionalConcession = this.getTransactionalConcession(false);
 
         transactionalConcession.concession.status = ConcessionStatus.Pending;
         transactionalConcession.concession.subStatus = ConcessionSubStatus.BCMPending;
@@ -1081,7 +1071,26 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
     }
 
+    getNumberInput(input) {
+        this.transactionalConcessionForm.controls['smtDealNumber'].setValue(this.baseComponentService.removeLetters(input.value));
+    }
+
     disableField(fieldname: string, index: number = null) {
-        return this.disableFieldBase(fieldname, this.canEdit, index, this.selectedConditionTypes, this.isRecalling, this.motivationEnabled)
+        let canUpdateExpiryDate: boolean = true;
+
+        if (fieldname == "expiryDate" && this.editType != null &&
+            (this.editType == EditTypeEnum.Renew || this.editType == EditTypeEnum.UpdateApproved)) {
+            {
+                canUpdateExpiryDate = false;
+            }
+        }
+
+        return this.disableFieldBase(
+            fieldname,
+            this.canEdit && canUpdateExpiryDate,
+            index,
+            this.selectedConditionTypes,
+            this.isRecalling,
+            this.motivationEnabled)
     }
 }

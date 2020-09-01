@@ -156,7 +156,8 @@
     <div class="col-md-4">
         <div class="row">
             <label>SMT Deal Number</label>
-            <input type="text" numbersOnly="true" class="form-control" [attr.disabled]="disableField('smtDealNumber')" formControlName="smtDealNumber" maxlength="16" required />
+            <input type="text" class="form-control" [attr.disabled]="disableField('smtDealNumber')" formControlName="smtDealNumber"
+                   maxlength="16" required #refElSmtDealNumber (input)="getNumberInput(refElSmtDealNumber)"/>
         </div>
     </div>
     <div class="col-md-7 col-md-offset-1">
@@ -174,7 +175,8 @@
     <div class="col-md-12" style="border-bottom: 1px solid gray; margin-bottom: 15px;">
         <div class="row">
             <h3 class="table-title">Concessions</h3>
-            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow()" style="margin-top: 15px;" *ngIf="canPcmApprove || isEditing || isRecalling">New Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="manageBulkUploadModal.show()" style="margin-top: 15px;" *ngIf="canPcmApprove || isEditing || isRecalling">Bulk Upload</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="addNewConcessionRow(false,true)" style="margin-top: 15px;" *ngIf="canPcmApprove || isEditing || isRecalling">New Concession</button>
         </div>
     </div>
 
@@ -289,6 +291,39 @@
                 <div class="modal-footer">
                     <div class="float-right">
                         <button type="button" class="btn btn-primary" (click)="manageConditionsModal.hide()">Done</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal bulk upload -->
+    <div bsModal #manageBulkUploadModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="manageBulkUploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="col-md-12 modal-header">
+                    <h4>Manage Transactional Bulk Upload</h4>
+                </div>
+                <div class="col-md-12 modal-body">
+                    <div class="row">
+                        <div class="col-md-12 modal-title">
+                            <div class="image-upload">
+                                <label class="upImage btn" for="file-input">
+                                    <span>Upload</span>
+                                    <i class="fa fa-chevron-up" aria-hidden="true"></i>
+                                </label>
+                                <input id="file-input" type="file" (change)="onFileSelected($event,false)" />
+                                <button class="downImage btn" for="file-output" (click)="downloadFile('transactional')">
+                                    <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                                    <span>Download</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="float-right">
+                        <button type="button" class="btn btn-primary" (click)="manageBulkUploadModal.hide()">Cancel</button>
                     </div>
                 </div>
             </div>

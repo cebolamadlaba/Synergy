@@ -52,7 +52,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     if (expiryDate < DateTime.Now)
                         expiryDate = DateTime.Now;
 
-                    concessionDetail.ExpiryDate = expiryDate.AddMonths(3);
+                    if (this.IsFirstExtension(concessionDetail.ConcessionId))
+                        concessionDetail.ExpiryDate = expiryDate.AddMonths(3);
+                    else
+                        concessionDetail.ExpiryDate = expiryDate.AddMonths(1);
                 }
             }
         }
@@ -70,6 +73,26 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             var extensionRelationshipId = _lookupTableManager.GetRelationshipId(Constants.RelationshipType.Extension);
 
             return parentRelationships.Any(_ => _.RelationshipId == extensionRelationshipId);
+        }
+
+        private bool IsFirstExtension(int childConcessionId)
+        {
+            var concessionRelationshipDetail = this._concessionRelationshipRepository.GetParentDetails(childConcessionId);
+
+            // if no relationship exists it must be the first extension.
+            if (concessionRelationshipDetail == null)
+                return true;
+
+            // check whether the child concession's parent is part of an extension.
+            var concession = concessionRelationshipDetail
+                .FirstOrDefault(a => a.ChildConcessionId == childConcessionId
+                && concessionRelationshipDetail.Any(b => b.ChildConcessionId == a.ParentConcessionId && b.Relationship == Constants.RelationshipType.Extension));
+
+            // if no relationship exists where the parent is the child extension, this must be the first extension.
+            if (concession == null)
+                return true;
+
+            return false;
         }
     }
 }
