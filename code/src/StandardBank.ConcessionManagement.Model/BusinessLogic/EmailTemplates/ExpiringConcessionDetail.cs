@@ -76,5 +76,7 @@
         /// This column must display the name and surname of the AA who logged the concession on behalf of the responsible AE. Display "-" if the concession has no responsible AA.
         /// </value>
         public string ResponsibleAA { get; set; } = "(-) NULL";
+
+        public int MonthBeforeExpiry { get; set; }
     }
 }

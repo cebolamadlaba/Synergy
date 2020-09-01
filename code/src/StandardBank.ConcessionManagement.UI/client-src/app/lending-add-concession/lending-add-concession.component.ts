@@ -24,6 +24,7 @@ import { MrsEriEnum } from '../models/mrs-eri-enum';
 import { ConcessionConditionReturnObject } from '../models/concession-condition-return-object';
 import { ProductTypeEnum } from '../models/product-type-enum';
 import { LendingConcessionTieredRate } from '../models/lending-concession-tiered-rate';
+import { ProductTypeFieldLogic } from '../models/product-type-field-logic';
 
 import { Location } from '@angular/common';
 import { LookupDataService } from "../services/lookup-data.service";
@@ -64,6 +65,7 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
 
     selectedRowIndex: number;
     selectedLineItemTieredRates: LendingConcessionTieredRate[] = [];
+    selectedProductTypeFieldLogics: ProductTypeFieldLogic[] = [];
     tieredRateMessage: string = "";
 
     entityName: string;
@@ -137,6 +139,7 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
 
         this.selectedProductTypes.push(new ProductType());
         this.selectedAccountNumbers.push(new ClientAccountArray());
+        this.selectedProductTypeFieldLogics.push(new ProductTypeFieldLogic());
 
         return this.formBuilder.group({
             productType: [''],
@@ -260,9 +263,10 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
             newRow.controls['accountNumber'].setValue(this.clientAccounts[0]);
 
         control.push(newRow);
+
+        //this.selectedProductTypeFieldLogics.push(new ProductTypeFieldLogic());
+
         this.productTypeChanged(control.controls.length - 1)
-
-
     }
 
     addNewConditionRow() {
@@ -282,6 +286,7 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
 
             this.selectedProductTypes.splice(index, 1);
             this.selectedAccountNumbers.splice(index, 1);
+            this.selectedProductTypeFieldLogics.splice(index, 1);
 
             control.removeAt(index);
         }
@@ -318,9 +323,6 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
     }
 
     productTypeChanged(rowIndex: number) {
-
-        //console.log('Row:' + rowIndex);
-
         const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
 
         let currentRow = control.controls[rowIndex];
@@ -335,66 +337,14 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
                 control.controls[rowIndex].get('accountNumber').setValue(null);
             }
             else {
-
                 control.controls[rowIndex].get('accountNumber').setValue(this.selectedAccountNumbers[rowIndex].clientaccounts[0]);
-
             }
-
         }
 
-        //currentRow.get('limit').enable();
-        //currentRow.get('marginAgainstPrime').enable();
+        this.selectedProductTypeFieldLogics[rowIndex] = super.setProductTypeFieldLogic(productType.description, this.selectedProductTypeFieldLogics[rowIndex]);
 
         if (productType.description === "Overdraft") {
-            //currentRow.get('limit').disable();
-            //currentRow.get('marginAgainstPrime').disable();
-
-            currentRow.get('term').enable();
             currentRow.get('term').setValue('12');
-
-            currentRow.get('reviewFeeType').enable();
-            currentRow.get('reviewFee').enable();
-            currentRow.get('uffFee').enable();
-
-            currentRow.get('frequency').disable();
-            currentRow.get('serviceFee').disable();
-
-        }
-        else if (productType.description === "Temporary Overdraft") {
-            //currentRow.get('limit').disable();
-            //currentRow.get('marginAgainstPrime').disable();
-
-            currentRow.get('term').enable();
-
-            currentRow.get('reviewFeeType').enable();
-            currentRow.get('reviewFee').enable();
-            currentRow.get('uffFee').enable();
-
-            currentRow.get('frequency').disable();
-            currentRow.get('serviceFee').disable();
-
-        }
-        else if (productType.description.indexOf("VAF") == 0) {
-
-            currentRow.get('term').enable();
-
-            currentRow.get('frequency').enable();
-            currentRow.get('serviceFee').enable();
-
-            currentRow.get('reviewFeeType').disable();
-            currentRow.get('reviewFee').disable();
-            currentRow.get('uffFee').disable();
-        }
-        else {
-
-            currentRow.get('term').enable();
-
-            currentRow.get('reviewFeeType').disable();
-            currentRow.get('reviewFee').disable();
-            currentRow.get('uffFee').disable();
-
-            currentRow.get('frequency').disable();
-            currentRow.get('serviceFee').disable();
         }
     }
 
@@ -757,9 +707,10 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
     }
 
     disableField(index: number, fieldname: string) {
-        return this.disableFieldBase(
+        return super.disableFieldBase(
             this.selectedConditionTypes[index],
             new LendingConcessionDetail(),
+            this.selectedProductTypeFieldLogics[index],
             fieldname,
             this.saveMessage == null,
             this.saveMessage != null

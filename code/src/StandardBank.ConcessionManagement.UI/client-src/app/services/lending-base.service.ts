@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ConditionType } from "../models/condition-type";
 import { LendingConcessionDetail } from "../models/lending-concession-detail";
+import { ProductTypeFieldLogic } from '../models/product-type-field-logic';
 
 @Injectable()
 export class LendingBaseService {
@@ -8,9 +9,46 @@ export class LendingBaseService {
 
     constructor() { }
 
+    setProductTypeFieldLogic(productType: string, selectedProductTypeFieldLogic: ProductTypeFieldLogic): ProductTypeFieldLogic {
+        if (productType === "Overdraft") {
+            selectedProductTypeFieldLogic.termIsEnabled = true;
+            selectedProductTypeFieldLogic.reviewFeeTypeIsEnabled = true;
+            selectedProductTypeFieldLogic.reviewFeeIsEnabled = true;
+            selectedProductTypeFieldLogic.uffFeeIsEnabled = true;
+            selectedProductTypeFieldLogic.frequencyIsEnabled = false;
+            selectedProductTypeFieldLogic.serviceFeeIsEnabled = false;
+        }
+        else if (productType === "Temporary Overdraft") {
+            selectedProductTypeFieldLogic.termIsEnabled = true;
+            selectedProductTypeFieldLogic.reviewFeeTypeIsEnabled = true;
+            selectedProductTypeFieldLogic.reviewFeeIsEnabled = true;
+            selectedProductTypeFieldLogic.uffFeeIsEnabled = true;
+            selectedProductTypeFieldLogic.frequencyIsEnabled = false;
+            selectedProductTypeFieldLogic.serviceFeeIsEnabled = false;
+        }
+        else if (productType.indexOf("VAF") == 0) {
+            selectedProductTypeFieldLogic.termIsEnabled = true;
+            selectedProductTypeFieldLogic.reviewFeeTypeIsEnabled = false;
+            selectedProductTypeFieldLogic.reviewFeeIsEnabled = false;
+            selectedProductTypeFieldLogic.uffFeeIsEnabled = false;
+            selectedProductTypeFieldLogic.frequencyIsEnabled = true;
+            selectedProductTypeFieldLogic.serviceFeeIsEnabled = true;
+        }
+        else {
+            selectedProductTypeFieldLogic.termIsEnabled = true;
+            selectedProductTypeFieldLogic.reviewFeeTypeIsEnabled = false;
+            selectedProductTypeFieldLogic.reviewFeeIsEnabled = false;
+            selectedProductTypeFieldLogic.uffFeeIsEnabled = false;
+            selectedProductTypeFieldLogic.frequencyIsEnabled = false;
+            selectedProductTypeFieldLogic.serviceFeeIsEnabled = false;
+        }
+        return selectedProductTypeFieldLogic;
+    }
+
     disableFieldBase(
         selectedConditionType: ConditionType,
         lendingConcessionDetail: LendingConcessionDetail,
+        selectedProductTypeFieldLogic: ProductTypeFieldLogic,
         fieldname: string,
         canEdit: boolean,
         canSaveMessage: boolean
@@ -25,15 +63,15 @@ export class LendingBaseService {
             case 'mrsEri':
                 return (!canSaveMessage || canEdit) ? null : '';
             case 'reviewFeeType':
-                return (lendingConcessionDetail.show_reviewFeeType && canEdit) ? null : '';
+                return (selectedProductTypeFieldLogic.reviewFeeTypeIsEnabled && canEdit) ? null : '';
             case 'reviewFee':
-                return (lendingConcessionDetail.show_reviewFee && canEdit) ? null : '';
+                return (selectedProductTypeFieldLogic.reviewFeeIsEnabled && canEdit) ? null : '';
             case 'uffFee':
-                return (lendingConcessionDetail.show_uffFee && canEdit) ? null : '';
+                return (selectedProductTypeFieldLogic.uffFeeIsEnabled && canEdit) ? null : '';
             case 'frequency':
-                return (lendingConcessionDetail.show_frequency && canEdit) ? null : '';
+                return (selectedProductTypeFieldLogic.frequencyIsEnabled && canEdit) ? null : '';
             case 'serviceFee':
-                return (lendingConcessionDetail.show_serviceFee && canEdit) ? null : '';
+                return (selectedProductTypeFieldLogic.serviceFeeIsEnabled && canEdit) ? null : '';
             case 'interestRate':
                 return selectedConditionType != null && selectedConditionType.enableInterestRate ? null : '';
             case 'volume':
