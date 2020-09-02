@@ -311,11 +311,10 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                     selectedProductType[0].description == ProductTypeEnum.TemporaryOverdraft)) {
                 currentConcession.get('lendingTieredRates').setValue(lendingConcessionDetail.lendingConcessionDetailTieredRates);
             }
-            else {
-                if (lendingConcessionDetail.lendingConcessionDetailTieredRates != null && lendingConcessionDetail.lendingConcessionDetailTieredRates.length > 0) {
-                    currentConcession.get('limit').setValue(lendingConcessionDetail.lendingConcessionDetailTieredRates[0].limit);
-                    currentConcession.get('marginAgainstPrime').setValue(lendingConcessionDetail.lendingConcessionDetailTieredRates[0].marginToPrime);
-                }
+
+            if (lendingConcessionDetail.lendingConcessionDetailTieredRates != null && lendingConcessionDetail.lendingConcessionDetailTieredRates.length > 0) {
+                currentConcession.get('limit').setValue(lendingConcessionDetail.lendingConcessionDetailTieredRates[0].limit);
+                currentConcession.get('marginAgainstPrime').setValue(lendingConcessionDetail.lendingConcessionDetailTieredRates[0].marginToPrime);
             }
 
             currentConcession.get('term').setValue(lendingConcessionDetail.term);
@@ -1499,6 +1498,16 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         }
         else {
             return "form-control";
+        }
+
+    }
+
+    isFieldReadonly(rowIndex: number) {
+        if (this.showTieredRateButton(rowIndex)) {
+            return '';
+        }
+        else {
+            return null;
         }
 
     }

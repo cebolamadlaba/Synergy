@@ -736,4 +736,14 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
         }
 
     }
+
+    isFieldReadonly(rowIndex: number) {
+        if (this.showTieredRateButton(rowIndex)) {
+            return '';
+        }
+        else {
+            return null;
+        }
+
+    }
 }
