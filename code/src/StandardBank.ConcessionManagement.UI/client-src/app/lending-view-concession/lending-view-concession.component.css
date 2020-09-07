@@ -15,3 +15,8 @@
 .extend-disclaimer-radio {
     cursor: pointer;
 }
+
+.tiered-rate-field {
+    background-color: #286090;
+    color: #fff;
+}

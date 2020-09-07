@@ -222,7 +222,7 @@
                 </td>
                 <!-- Limit -->
                 <td class="length-short">
-                    <input type="text" numbersOnly="true" formControlName="limit" class="form-control" [attr.disabled]="disableField(i,'limit')"
+                    <input type="text" [attr.readonly]="isFieldReadonly(i)" numbersOnly="true" formControlName="limit" [ngClass]="getNgClassForField(i)" [attr.disabled]="disableField(i,'limit')"
                            (change)="setTwoNumberDecimal($event)" [class.markred]="bcmhochanged(i,'limit')" (click)="openTieredRateModal(i)" />
                 </td>
                 <!-- Term -->
@@ -233,8 +233,8 @@
                 <!-- MAP -->
                 <td class="length-short">
 
-                    <input type="text" formControlName="marginAgainstPrime" [attr.disabled]="disableField(i,'marginAgainstPrime')" (change)="setThreeNumberDecimal($event)"
-                           class="form-control" [class.markred]="bcmhochanged(i,'marginAgainstPrime')" (click)="openTieredRateModal(i)" />
+                    <input type="text" [attr.readonly]="isFieldReadonly(i)" formControlName="marginAgainstPrime" [attr.disabled]="disableField(i,'marginAgainstPrime')" (change)="setThreeNumberDecimal($event)"
+                           [ngClass]="getNgClassForField(i)" [class.markred]="bcmhochanged(i,'marginAgainstPrime')" (click)="openTieredRateModal(i)" />
 
                 </td>
                 <td class="length-short" *ngIf="isApproved"><input type="text" numbersOnly="true" formControlName="approvedMarginAgainstPrime" class="form-control" /></td>
