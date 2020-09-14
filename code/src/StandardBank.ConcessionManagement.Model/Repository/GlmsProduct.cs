@@ -9,9 +9,15 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         public int pkProductGlmsId { get; set; }
 
         public int fkRiskGroupId { get; set; }
-  
+
+        /// <summary>
+        /// fkLegalEntityId / fkGroupId is a one-to-one relationship
+        /// </summary>
         public int fkLegalEntityId { get; set; }
-    
+
+        /// <summary>
+        /// fkLegalEntityId / fkGroupId is a one-to-one relationship
+        /// </summary>
         public int fkGroupId { get; set; }
 
         public string GroupType { get; set; }

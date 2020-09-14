@@ -7,10 +7,23 @@ import { TransactionalConcessionDetail } from "../models/transactional-concessio
 import { TransactionalConcessionEnum } from "../models//transactional-concession-enum";
 import { ConditionType } from "../models/condition-type";
 import { TransactionalConcession } from '../models/transactional-concession';
+import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { TransactionType } from "../models/transaction-type";
+import { ClientAccount } from "../models/client-account";
+import { Location, DatePipe } from '@angular/common';
 
 @Injectable()
 export class TransactionalBaseService {
     validationError: String[];
+    fileService: FileService;
+    xlsxModel = new XlsxModel();
+    transactionalConcessionDetail: TransactionalConcessionDetail[];
+    public transactionalConcessionForm: FormGroup;
+    transactionTypes: TransactionType[];
+    selectedTransactionTypes: TransactionType[];
+    clientAccounts: ClientAccount[];
+    datepipe: DatePipe;
+    formBuilder: FormBuilder;
 
     constructor() { }
 
@@ -59,10 +72,7 @@ export class TransactionalBaseService {
                         detail.transactionType = cell.v;
                         break;
                     case TransactionalConcessionEnum.ExpiryDate:
-                        var expiryDate = cell.w.split('/')
-                        var newDate = expiryDate[1] + '/' + expiryDate[0] + '/' + expiryDate[2];
-
-                        detail.expiryDate = new Date(newDate);
+                        detail.expiryDate = new Date(cell.w);
                         break;
                 }
 
@@ -122,5 +132,178 @@ export class TransactionalBaseService {
                 }
             });
         }
+    }
+
+    downloadFile(name) {
+        this.fileService.downloadFile(name).subscribe(response => {
+            window.location.href = response.url;
+        }), error => console.log('Error downloading the file'),
+            () => console.info('File downloaded successfully');
+    }
+
+    onFileSelected(event, isNewConcession: boolean) {
+
+        var file: File = event.target.files[0];
+        var fileReader: FileReader = new FileReader();
+
+        this.xlsxModel = new XlsxModel();
+        this.transactionalConcessionDetail = [new TransactionalConcessionDetail()];
+
+        var self = this;
+        fileReader.onload = function (e) {
+            // set initial properties in order to process the file
+            self.xlsxModel.fileContent = fileReader.result;
+            self.xlsxModel.selectedFileName = file.name;
+
+            self.transactionalConcessionDetail = self.processFileContent(self.xlsxModel);
+            self.populateTransactionalConcessionByFile(isNewConcession);
+        }
+
+        // execute reading of the file
+        fileReader.readAsBinaryString(file);
+    }
+
+    populateTransactionalConcessionByFile(isNewConcession: boolean) {
+
+        let rowIndex = 0;
+
+        for (let transactionalConcessionDetail of this.transactionalConcessionDetail) {
+
+            if (rowIndex != 0) {
+                this.addNewConcessionRow(isNewConcession, false);
+            }
+
+            const concessions = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+            let currentConcession = concessions.controls[concessions.length - 1];
+
+            if (transactionalConcessionDetail.transactionType) {
+                let selectedTransactionType = this.transactionTypes.filter(_ => _.description === transactionalConcessionDetail.transactionType);
+                if (selectedTransactionType.length > 0) {
+                    currentConcession.get('transactionType').setValue(selectedTransactionType[0]);
+
+                    this.selectedTransactionTypes[concessions.length - 1] = selectedTransactionType[0];
+                    if (transactionalConcessionDetail.approvedTransactionTableNumberId && selectedTransactionType.length > 0) {
+
+                        let selectedTransactionTableNumber = selectedTransactionType[0].transactionTableNumbers.filter(_ => _.tariffTable == transactionalConcessionDetail.approvedTransactionTableNumberId);
+                        if (selectedTransactionTableNumber.length > 0) {
+
+                            currentConcession.get('transactionTableNumber').setValue(selectedTransactionTableNumber[0]);
+                            this.transactionTableNumberChanged(concessions.length - 1);
+
+                        } else {
+                            this.addValidationError('Table number is not linked to transactional type.');
+                        }
+                    }
+
+                } else {
+
+                    this.addValidationError('Transactional type added does not exist.');
+                    currentConcession.get('transactionType').setValue(null);
+                    currentConcession.get('transactionTableNumber').setValue(null);
+                    currentConcession.get('flatFeeOrRate').setValue(null);
+                }
+            }
+
+            if (transactionalConcessionDetail.accountNumber) {
+                if (this.clientAccounts) {
+                    let selectedAccountNo = this.clientAccounts.filter(_ => _.accountNumber == transactionalConcessionDetail.accountNumber);
+                    if (selectedAccountNo.length > 0) {
+                        currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
+                    } else {
+                        this.addValidationError('AccountNumber doesnt belong to selected risk group');
+                    }
+                }
+            }
+
+            if (transactionalConcessionDetail.expiryDate) {
+                var formattedExpiryDate = this.datepipe.transform(transactionalConcessionDetail.expiryDate, 'yyyy-MM-dd');
+                currentConcession.get('expiryDate').setValue(formattedExpiryDate);
+            }
+
+            rowIndex++;
+        }
+    }
+
+    addNewConcessionRow(isNewConcession: boolean, isClickEvent: boolean = false) {
+        const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+        var newRow;
+
+        if (isNewConcession) {
+            newRow = this.initConcessionItemRowsAdd();
+        } else {
+            newRow = this.initConcessionItemRowsUpdate();
+        }
+
+        var length = control.controls.length;
+
+        if (this.transactionTypes)
+            newRow.controls['transactionType'].setValue(this.transactionTypes[0]);
+
+        if (this.clientAccounts)
+            newRow.controls['accountNumber'].setValue(this.clientAccounts[0]);
+
+        this.selectedTransactionTypes[length] = this.transactionTypes[0];
+
+        if (this.transactionTypes && this.transactionTypes[0].transactionTableNumbers)
+            newRow.controls['transactionTableNumber'].setValue(this.transactionTypes[0].transactionTableNumbers[0]);
+
+        if (isClickEvent) {
+            if (control != null && control.length > 0) {
+                let expiryDate = control.controls[0].get('expiryDate').value;
+                if (expiryDate != null) {
+                    newRow.controls['expiryDate'].setValue(expiryDate);
+                }
+            }
+        }
+
+        control.push(newRow);
+
+        this.transactionTableNumberChanged(length);
+    }
+
+    transactionTableNumberChanged(rowIndex) {
+        const control = <FormArray>this.transactionalConcessionForm.controls['concessionItemRows'];
+
+        if (control.controls[rowIndex].get('transactionTableNumber').value.fee)
+            control.controls[rowIndex].get('flatFeeOrRate').setValue(control.controls[rowIndex].get('transactionTableNumber').value.fee.toFixed(2));
+        else
+            control.controls[rowIndex].get('flatFeeOrRate').setValue(null);
+
+        if (control.controls[rowIndex].get('transactionTableNumber').value.adValorem)
+            control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('transactionTableNumber').value.adValorem.toFixed(3));
+        else
+            control.controls[rowIndex].get('adValorem').setValue(null);
+    }
+
+    initConcessionItemRowsAdd() {
+        this.selectedTransactionTypes.push(new TransactionType());
+
+        return this.formBuilder.group({
+            transactionType: [''],
+            accountNumber: [''],
+            transactionTableNumber: [''],
+            flatFeeOrRate: [{ value: '', disabled: true }],
+            adValorem: [{ value: '', disabled: true }],
+            expiryDate: ['']
+        });
+    }
+
+    initConcessionItemRowsUpdate() {
+        this.selectedTransactionTypes.push(new TransactionType());
+
+        return this.formBuilder.group({
+            transactionalConcessionDetailId: [''],
+            concessionDetailId: [''],
+            transactionType: [''],
+            accountNumber: [''],
+            transactionTableNumber: [''],
+            flatFeeOrRate: [{ value: '', disabled: true }],
+            adValorem: [{ value: '', disabled: true }],
+            approvedTableNumber: [{ value: '', disabled: true }],
+            expiryDate: [''],
+            dateApproved: [{ value: '', disabled: true }],
+            isExpired: [''],
+            isExpiring: ['']
+        });
     }
 }

@@ -761,7 +761,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             if (periodType == "Standard")
             {
                 periodType = Constants.PeriodType.Standard;
-            }                
+            }
 
             var periodId = _lookupTableManager.GetPeriods().First(x => x.Description == period).Id;
             var periodTypeId = _lookupTableManager.GetPeriodTypes().First(x => x.Description == periodType).Id;
@@ -996,7 +996,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// <returns></returns>
         public Concession GetConcessionForConcessionId(int concessionId)
         {
-            return _concessionRepository.ReadById(concessionId); 
+            return _concessionRepository.ReadById(concessionId);
         }
 
         /// <summary>
@@ -1097,7 +1097,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 throw new Exception(
                     $"No active concession found for concession reference id {concessionReferenceId}. The concession could have been recalled.");
-            }               
+            }
 
             //if there is more than one record returned then there is something wrong,
             //there shouldn't be two active concessions with the same concession reference number
@@ -1295,27 +1295,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
 
             var extensionRelationshipId = _lookupTableManager.GetRelationshipId(Constants.RelationshipType.Extension);
-            var childConcessionRelationships = _concessionRelationshipRepository.ReadByParentConcessionId(concession.Id);
 
-            if (childConcessionRelationships != null && childConcessionRelationships.Any())
-            {
-                var mostRecentCHildConcession = childConcessionRelationships.Last();
+            var relationships = _concessionRelationshipRepository.ReadByChildConcessionId(concession.Id);
 
-                if (mostRecentCHildConcession.RelationshipId != extensionRelationshipId)
-                {
-                    return true;
-                }
-            }
-
-            var relationships =
-                _concessionRelationshipRepository.ReadByChildConcessionIdRelationshipIdRelationships(concession.Id,
-                    extensionRelationshipId);
-
-            //you can only extend a concession once
-            if (relationships != null && relationships.Count() >= 1)
-            {
-                return false;
-            }
+            // User Story 33393 - 3.1.6 Extend Functionality - Temporarily disabled - 2020-07-28
+            ////you can only extend a concession once
+            //if (relationships != null && relationships.Any())
+            //{
+            //    if (relationships.Last().RelationshipId == extensionRelationshipId)
+            //        return false;
+            //    else
+            //        return true;
+            //}
 
             //if we get up to this point that means all the checks have passed and we can extend
             return true;

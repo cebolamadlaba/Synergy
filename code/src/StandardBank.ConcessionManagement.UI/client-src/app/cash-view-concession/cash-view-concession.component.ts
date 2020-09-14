@@ -1,37 +1,32 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import { Observable } from "rxjs";
+import { DatePipe, Location } from '@angular/common';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { RiskGroup } from "../models/risk-group";
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { Location, DatePipe } from '@angular/common';
-import { Period } from "../models/period";
-import { PeriodType } from "../models/period-type";
-import { ConditionType } from "../models/condition-type";
-import { ClientAccount } from "../models/client-account";
-import { AccrualType } from "../models/accrual-type";
-import { ChannelType } from "../models/channel-type";
-import { LookupDataService } from "../services/lookup-data.service";
-import { CashConcession } from "../models/cash-concession";
-import { Concession } from "../models/concession";
-import { CashConcessionService } from "../services/cash-concession.service";
-import { CashConcessionDetail } from "../models/cash-concession-detail";
-import { ConcessionCondition } from "../models/concession-condition";
-import { TableNumber } from "../models/table-number";
-import { UserConcessionsService } from "../services/user-concessions.service";
-import { ConcessionComment } from "../models/concession-comment";
-import { CashFinancial } from "../models/cash-financial";
-import { DecimalPipe } from '@angular/common';
-import { ConcessionTypes } from '../constants/concession-types';
+import { Observable } from "rxjs";
 import { ConcessionStatus } from '../constants/concession-status';
 import { ConcessionSubStatus } from '../constants/concession-sub-status';
-import { BaseComponentService } from '../services/base-component.service';
+import { ConcessionTypes } from '../constants/concession-types';
+import { AccrualType } from "../models/accrual-type";
+import { CashConcession } from "../models/cash-concession";
+import { CashConcessionDetail } from "../models/cash-concession-detail";
+import { CashFinancial } from "../models/cash-financial";
+import { ChannelType } from "../models/channel-type";
+import { ClientAccount } from "../models/client-account";
+import { Concession } from "../models/concession";
+import { ConcessionComment } from "../models/concession-comment";
+import { ConditionType } from "../models/condition-type";
 import { LegalEntity } from "../models/legal-entity";
-import * as moment from 'moment';
-import { MOnthEnum } from '../models/month-enum';
-import { ConcessionConditionReturnObject } from '../models/concession-condition-return-object';	
+import { Period } from "../models/period";
+import { PeriodType } from "../models/period-type";
+import { RiskGroup } from "../models/risk-group";
+import { TableNumber } from "../models/table-number";
+import { BaseComponentService } from '../services/base-component.service';
 import { CashBaseService } from '../services/cash-base.service';
-
+import { CashConcessionService } from "../services/cash-concession.service";
+import { FileService } from '../services/file.service';
+import { LookupDataService } from "../services/lookup-data.service";
+import { UserConcessionsService } from "../services/user-concessions.service";
+import { EditTypeEnum } from '../models/edit-type-enum';
 
 @Component({
     selector: 'app-cash-view-concession',
@@ -51,7 +46,6 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
     riskGroupNumber: number;
     sapbpid: number;
     legalEntity: LegalEntity;
-    public cashConcessionForm: FormGroup;
     selectedConditionTypes: ConditionType[];
     isLoading = true;
     canBcmApprove = false;
@@ -88,32 +82,32 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
     conditionTypes: ConditionType[];
 
     observableClientAccounts: Observable<ClientAccount[]>;
-    clientAccounts: ClientAccount[];
 
     observableAccrualTypes: Observable<AccrualType[]>;
-    accrualTypes: AccrualType[];
 
     observableChannelTypes: Observable<ChannelType[]>;
-    channelTypes: ChannelType[];
 
     observableCashConcession: Observable<CashConcession>;
     cashConcession: CashConcession;
 
     observableTableNumbers: Observable<TableNumber[]>;
-    tableNumbers: TableNumber[];
 
     observableCashFinancial: Observable<CashFinancial>;
     cashFinancial: CashFinancial;
 
     constructor(private route: ActivatedRoute,
-        private formBuilder: FormBuilder,
+        formBuilder: FormBuilder,
         private location: Location,
-        private datepipe: DatePipe,
+        datepipe: DatePipe,
         @Inject(LookupDataService) private lookupDataService,
         @Inject(CashConcessionService) private cashConcessionService,
         @Inject(UserConcessionsService) private userConcessionsService,
+        fileService: FileService,
         private baseComponentService: BaseComponentService) {
         super();
+        this.formBuilder = formBuilder;
+        this.datepipe = datepipe;
+        this.fileService = fileService;
         this.riskGroup = new RiskGroup();
         this.periods = [new Period()];
         this.periodTypes = [new PeriodType()];
@@ -134,7 +128,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
         });
 
         this.cashConcessionForm = this.formBuilder.group({
-            concessionItemRows: this.formBuilder.array([this.initConcessionItemRows()]),
+            concessionItemRows: this.formBuilder.array([this.initConcessionItemRowsUpdate()]),
             conditionItemsRows: this.formBuilder.array([]),
             smtDealNumber: new FormControl(),
             motivation: new FormControl(),
@@ -156,142 +150,17 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
         });
     }
 
+    getCashConcessionItemRows(): FormArray {
+        return <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
+    }
+
     populateForm() {
         if (this.concessionReferenceId) {
             this.observableCashConcession = this.cashConcessionService.getCashConcessionData(this.concessionReferenceId);
             this.observableCashConcession.subscribe(cashConcession => {
                 this.cashConcession = cashConcession;
 
-                if (cashConcession.concession.status == ConcessionStatus.Pending && cashConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
-                    this.canBcmApprove = cashConcession.currentUser.canBcmApprove;
-                }
-
-                if (cashConcession.concession.status == ConcessionStatus.Pending && cashConcession.concession.subStatus == ConcessionSubStatus.PCMPending) {
-                    if (this.cashConcession.currentUser.isHO) {
-                        this.canPcmApprove = cashConcession.currentUser.canPcmApprove
-                    } else {
-                        this.canPcmApprove = cashConcession.currentUser.canPcmApprove && cashConcession.currentUser.canApprove;
-                    }
-
-                    // Removed as per SBSA.Anthony's request - 2019-07-15
-                    this.canEdit = cashConcession.currentUser.canPcmApprove;
-                }
-
-                //if it's still pending and the user is a requestor then they can recall it
-                if (cashConcession.concession.status == ConcessionStatus.Pending && cashConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
-                    this.canRecall = cashConcession.currentUser.canRequest && cashConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
-                }
-
-                if (cashConcession.concession.status == ConcessionStatus.Pending &&
-                    (cashConcession.concession.subStatus == ConcessionSubStatus.PCMApprovedWithChanges || cashConcession.concession.subStatus == ConcessionSubStatus.HOApprovedWithChanges)) {
-                    this.canApproveChanges = cashConcession.currentUser.canRequest && cashConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
-                }
-
-                if (cashConcession.concession.status === ConcessionStatus.Approved ||
-                    cashConcession.concession.status === ConcessionStatus.ApprovedWithChanges) {
-                    this.isApproved = true;
-                }
-
-                //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
-                this.canExtend = cashConcession.concession.canExtend && cashConcession.currentUser.canRequest;
-                this.canRenew = cashConcession.concession.canRenew && cashConcession.currentUser.canRequest;
-
-                //set the resubmit and update permissions
-                this.canResubmit = cashConcession.concession.canResubmit && cashConcession.currentUser.canRequest;
-                this.canUpdate = cashConcession.concession.canUpdate && cashConcession.currentUser.canRequest;
-
-                this.canArchive = cashConcession.concession.canArchive && cashConcession.currentUser.canRequest;
-                this.isInProgressExtension = cashConcession.concession.isInProgressExtension;
-                this.isInProgressRenewal = cashConcession.concession.isInProgressRenewal;
-
-                this.cashConcessionForm.controls['smtDealNumber'].setValue(this.cashConcession.concession.smtDealNumber);
-                this.cashConcessionForm.controls['motivation'].setValue(this.cashConcession.concession.motivation);
-
-                let rowIndex = 0;
-
-                for (let cashConcessionDetail of this.cashConcession.cashConcessionDetails) {
-
-                    if (rowIndex != 0) {
-                        this.addNewConcessionRow();
-                    }
-
-                    const concessions = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
-                    let currentConcession = concessions.controls[concessions.length - 1];
-
-                    currentConcession.get('cashConcessionDetailId').setValue(cashConcessionDetail.cashConcessionDetailId);
-                    currentConcession.get('concessionDetailId').setValue(cashConcessionDetail.concessionDetailId);
-
-                    let selectedChannelType = this.channelTypes.filter(_ => _.id == cashConcessionDetail.channelTypeId);
-                    currentConcession.get('channelType').setValue(selectedChannelType[0]);
-
-                    if (this.clientAccounts) {
-                        let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == cashConcessionDetail.legalEntityAccountId);
-                        currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
-                    }
-
-                    if (cashConcessionDetail.baseRate)
-                        currentConcession.get('baseRate').setValue(cashConcessionDetail.baseRate.toFixed(2));
-
-                    if (cashConcessionDetail.adValorem)
-                        currentConcession.get('adValorem').setValue(cashConcessionDetail.adValorem.toFixed(3));
-
-                    currentConcession.get('approvedTableNumber').setValue(cashConcessionDetail.approvedTableNumber);
-
-                    let selectedTableNumber = this.tableNumbers.filter(_ => _.id == cashConcessionDetail.tableNumberId);
-                    currentConcession.get('tableNumber').setValue(selectedTableNumber[0]);
-
-                    let selectedAccrualType = this.accrualTypes.filter(_ => _.id == cashConcessionDetail.accrualTypeId);
-                    currentConcession.get('accrualType').setValue(selectedAccrualType[0]);
-
-                    if (cashConcessionDetail.expiryDate) {
-                        var formattedExpiryDate = this.datepipe.transform(cashConcessionDetail.expiryDate, 'yyyy-MM-dd');
-                        currentConcession.get('expiryDate').setValue(formattedExpiryDate);
-                    }
-
-                    if (cashConcessionDetail.dateApproved) {
-                        var formattedDateApproved = this.datepipe.transform(cashConcessionDetail.dateApproved, 'yyyy-MM-dd');
-                        currentConcession.get('dateApproved').setValue(formattedDateApproved);
-                    }
-
-                    currentConcession.get('isExpired').setValue(cashConcessionDetail.isExpired);
-                    currentConcession.get('isExpiring').setValue(cashConcessionDetail.isExpiring);
-
-                    rowIndex++;
-                }
-
-                rowIndex = 0;
-
-                for (let concessionCondition of this.cashConcession.concessionConditions) {
-                    this.addNewConditionRow();
-
-                    const conditions = <FormArray>this.cashConcessionForm.controls['conditionItemsRows'];
-                    let currentCondition = conditions.controls[conditions.length - 1];
-
-                    currentCondition.get('concessionConditionId').setValue(concessionCondition.concessionConditionId);
-
-                    let selectedConditionType = this.conditionTypes.filter(_ => _.id == concessionCondition.conditionTypeId);
-                    currentCondition.get('conditionType').setValue(selectedConditionType[0]);
-
-                    this.selectedConditionTypes[rowIndex] = selectedConditionType[0];
-
-                    let selectedConditionProduct = selectedConditionType[0].conditionProducts.filter(_ => _.id == concessionCondition.conditionProductId);
-                    currentCondition.get('conditionProduct').setValue(selectedConditionProduct[0]);
-
-                    currentCondition.get('interestRate').setValue(this.baseComponentService.formatDecimal(concessionCondition.interestRate));
-                    currentCondition.get('volume').setValue(concessionCondition.conditionVolume);
-                    currentCondition.get('value').setValue(concessionCondition.conditionValue);
-                    currentCondition.get('conditionComment').setValue(concessionCondition.conditionComment);
-
-                    let selectedPeriodType = this.periodTypes.filter(_ => _.id == concessionCondition.periodTypeId);
-                    currentCondition.get('periodType').setValue(selectedPeriodType[0]);
-
-                    let selectedPeriod = this.periods.filter(_ => _.id == concessionCondition.periodId);
-                    currentCondition.get('period').setValue(selectedPeriod[0]);
-
-                    rowIndex++;
-                }
-
-                this.changearray = this.lookupDataService.checkforLC(this.cashConcession.concession.status, this.cashConcession.concession.subStatus, cashConcession.concession.concessionComments);
+                this.populateFormFromConcession(cashConcession);
 
                 this.isLoading = false;
             }, error => {
@@ -299,6 +168,141 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
                 this.errorMessage = <any>error;
             });
         }
+    }
+
+    populateFormFromConcession(cashConcession) {
+        if (cashConcession.concession.status == ConcessionStatus.Pending && cashConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
+            this.canBcmApprove = cashConcession.currentUser.canBcmApprove;
+        }
+
+        if (cashConcession.concession.status == ConcessionStatus.Pending && cashConcession.concession.subStatus == ConcessionSubStatus.PCMPending) {
+            if (this.cashConcession.currentUser.isHO) {
+                this.canPcmApprove = cashConcession.currentUser.canPcmApprove
+            } else {
+                this.canPcmApprove = cashConcession.currentUser.canPcmApprove && cashConcession.currentUser.canApprove;
+            }
+
+            // Removed as per SBSA.Anthony's request - 2019-07-15
+            this.canEdit = cashConcession.currentUser.canPcmApprove;
+        }
+
+        //if it's still pending and the user is a requestor then they can recall it
+        if (cashConcession.concession.status == ConcessionStatus.Pending && cashConcession.concession.subStatus == ConcessionSubStatus.BCMPending) {
+            this.canRecall = cashConcession.currentUser.canRequest && cashConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
+        }
+
+        if (cashConcession.concession.status == ConcessionStatus.Pending &&
+            (cashConcession.concession.subStatus == ConcessionSubStatus.PCMApprovedWithChanges || cashConcession.concession.subStatus == ConcessionSubStatus.HOApprovedWithChanges)) {
+            this.canApproveChanges = cashConcession.currentUser.canRequest && cashConcession.concession.isAENumberLinkedAccountExecutiveOrAssistant;
+        }
+
+        if (cashConcession.concession.status === ConcessionStatus.Approved ||
+            cashConcession.concession.status === ConcessionStatus.ApprovedWithChanges) {
+            this.isApproved = true;
+        }
+
+        //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
+        this.canExtend = cashConcession.concession.canExtend && cashConcession.currentUser.canRequest;
+        this.canRenew = cashConcession.concession.canRenew && cashConcession.currentUser.canRequest;
+
+        //set the resubmit and update permissions
+        //can only update when concession is not "due for expiry"
+        this.canResubmit = cashConcession.concession.canResubmit && cashConcession.currentUser.canRequest;
+        this.canUpdate = !this.canRenew && cashConcession.concession.canUpdate && cashConcession.currentUser.canRequest;
+
+        this.canArchive = cashConcession.concession.canArchive && cashConcession.currentUser.canRequest;
+        this.isInProgressExtension = cashConcession.concession.isInProgressExtension;
+        this.isInProgressRenewal = cashConcession.concession.isInProgressRenewal;
+
+        this.cashConcessionForm.controls['smtDealNumber'].setValue(this.cashConcession.concession.smtDealNumber);
+        this.cashConcessionForm.controls['motivation'].setValue(this.cashConcession.concession.motivation);
+
+        let rowIndex = 0;
+
+        for (let cashConcessionDetail of this.cashConcession.cashConcessionDetails) {
+
+            if (rowIndex != 0) {
+                this.addNewConcessionRow(false);
+            }
+
+            const concessions = this.getCashConcessionItemRows();
+            let currentConcession = concessions.controls[concessions.length - 1];
+
+            currentConcession.get('cashConcessionDetailId').setValue(cashConcessionDetail.cashConcessionDetailId);
+            currentConcession.get('concessionDetailId').setValue(cashConcessionDetail.concessionDetailId);
+
+            let selectedChannelType = this.channelTypes.filter(_ => _.id == cashConcessionDetail.channelTypeId);
+            currentConcession.get('channelType').setValue(selectedChannelType[0]);
+
+            if (this.clientAccounts) {
+                let selectedAccountNo = this.clientAccounts.filter(_ => _.legalEntityAccountId == cashConcessionDetail.legalEntityAccountId);
+                currentConcession.get('accountNumber').setValue(selectedAccountNo[0]);
+            }
+
+            if (cashConcessionDetail.baseRate)
+                currentConcession.get('baseRate').setValue(cashConcessionDetail.baseRate.toFixed(2));
+
+            if (cashConcessionDetail.adValorem)
+                currentConcession.get('adValorem').setValue(cashConcessionDetail.adValorem.toFixed(3));
+
+            currentConcession.get('approvedTableNumber').setValue(cashConcessionDetail.approvedTableNumber);
+
+            let selectedTableNumber = this.tableNumbers.filter(_ => _.id == cashConcessionDetail.tableNumberId);
+            currentConcession.get('tableNumber').setValue(selectedTableNumber[0]);
+
+            let selectedAccrualType = this.accrualTypes.filter(_ => _.id == cashConcessionDetail.accrualTypeId);
+            currentConcession.get('accrualType').setValue(selectedAccrualType[0]);
+
+            if (cashConcessionDetail.expiryDate) {
+                var formattedExpiryDate = this.datepipe.transform(cashConcessionDetail.expiryDate, 'yyyy-MM-dd');
+                currentConcession.get('expiryDate').setValue(formattedExpiryDate);
+            }
+
+            if (cashConcessionDetail.dateApproved) {
+                var formattedDateApproved = this.datepipe.transform(cashConcessionDetail.dateApproved, 'yyyy-MM-dd');
+                currentConcession.get('dateApproved').setValue(formattedDateApproved);
+            }
+
+            currentConcession.get('isExpired').setValue(cashConcessionDetail.isExpired);
+            currentConcession.get('isExpiring').setValue(cashConcessionDetail.isExpiring);
+
+            rowIndex++;
+        }
+
+        rowIndex = 0;
+
+        for (let concessionCondition of this.cashConcession.concessionConditions) {
+            this.addNewConditionRow();
+
+            const conditions = <FormArray>this.cashConcessionForm.controls['conditionItemsRows'];
+            let currentCondition = conditions.controls[conditions.length - 1];
+
+            currentCondition.get('concessionConditionId').setValue(concessionCondition.concessionConditionId);
+
+            let selectedConditionType = this.conditionTypes.filter(_ => _.id == concessionCondition.conditionTypeId);
+            currentCondition.get('conditionType').setValue(selectedConditionType[0]);
+
+            this.selectedConditionTypes[rowIndex] = selectedConditionType[0];
+
+            let selectedConditionProduct = selectedConditionType[0].conditionProducts.filter(_ => _.id == concessionCondition.conditionProductId);
+            currentCondition.get('conditionProduct').setValue(selectedConditionProduct[0]);
+
+            currentCondition.get('interestRate').setValue(this.baseComponentService.formatDecimal(concessionCondition.interestRate));
+            currentCondition.get('volume').setValue(concessionCondition.conditionVolume);
+            currentCondition.get('value').setValue(concessionCondition.conditionValue);
+            currentCondition.get('conditionComment').setValue(concessionCondition.conditionComment);
+
+            let selectedPeriodType = this.periodTypes.filter(_ => _.id == concessionCondition.periodTypeId);
+            currentCondition.get('periodType').setValue(selectedPeriodType[0]);
+
+            let selectedPeriod = this.periods.filter(_ => _.id == concessionCondition.periodId);
+            currentCondition.get('period').setValue(selectedPeriod[0]);
+
+            rowIndex++;
+        }
+
+        this.changearray = this.lookupDataService.checkforLC(this.cashConcession.concession.status, this.cashConcession.concession.subStatus, cashConcession.concession.concessionComments);
+
     }
 
     getInitialData() {
@@ -363,24 +367,6 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
         this.populateForm();
     }
 
-    initConcessionItemRows() {
-        return this.formBuilder.group({
-            cashConcessionDetailId: [''],
-            concessionDetailId: [''],
-            channelType: [''],
-            accountNumber: [''],
-            baseRate: [{ value: '', disabled: true }],
-            adValorem: [{ value: '', disabled: true }],
-            tableNumber: [''],
-            approvedTableNumber: [{ value: '', disabled: true }],
-            accrualType: [''],
-            expiryDate: [''],
-            dateApproved: [{ value: '', disabled: true }],
-            isExpired: [''],
-            isExpiring: ['']
-        });
-    }
-
     initConditionItemRows() {
         this.selectedConditionTypes.push(new ConditionType());
 
@@ -397,10 +383,18 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
         });
     }
 
-    addNewConcessionRow() {
-        const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
-        var newRow = this.initConcessionItemRows();
+    addNewConcessionRow(isClickEvent: boolean) {
+        const control = this.getCashConcessionItemRows();
+        var newRow = this.initConcessionItemRowsUpdate();
         newRow.controls['accrualType'].setValue(this.accrualTypes[0]);
+        if (isClickEvent) {
+            if (control != null && control.length > 0) {
+                let expiryDate = control.controls[0].get('expiryDate').value;
+                if (expiryDate != null) {
+                    newRow.controls['expiryDate'].setValue(expiryDate);
+                }
+            }
+        }
         control.push(newRow);
     }
 
@@ -417,7 +411,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
 
     deleteConcessionRow(index: number) {
         if (confirm("Are you sure you want to remove this row?")) {
-            const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
+            const control = this.getCashConcessionItemRows();
             control.removeAt(index);
         }
     }
@@ -453,20 +447,6 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
         currentCondition.get('value').setValue(null);
     }
 
-    tableNumberChanged(rowIndex) {
-        const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
-
-        if (control.controls[rowIndex].get('tableNumber').value.baseRate)
-            control.controls[rowIndex].get('baseRate').setValue(control.controls[rowIndex].get('tableNumber').value.baseRate.toFixed(2));
-        else
-            control.controls[rowIndex].get('baseRate').setValue(null);
-
-        if (control.controls[rowIndex].get('tableNumber').value.adValorem)
-            control.controls[rowIndex].get('adValorem').setValue(control.controls[rowIndex].get('tableNumber').value.adValorem.toFixed(3));
-        else
-            control.controls[rowIndex].get('adValorem').setValue(null);
-    }
-
     getCashConcession(isNew: boolean): CashConcession {
         var cashConcession = new CashConcession();
         cashConcession.concession = new Concession();
@@ -490,7 +470,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
         else
             cashConcession.concession.motivation = '.';
 
-        const concessions = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getCashConcessionItemRows();
 
         let hasChannelType: boolean = false;
         let hasLegalEntityId: boolean = false;
@@ -575,13 +555,13 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
         cashConcession.concessionConditions = concessionConditionReturnObject.concessionConditions;
         this.validationError = concessionConditionReturnObject.validationError;
 
-        this.checkConcessionExpiryDate(cashConcession);
+        super.checkConcessionExpiryDate(cashConcession);
 
         return cashConcession;
     }
 
     getBackgroundColour(rowIndex: number) {
-        const control = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
+        const control = this.getCashConcessionItemRows();
 
         if (String(control.controls[rowIndex].get('isExpired').value) == "true") {
             return "#EC7063";
@@ -742,7 +722,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
         let changedProperties = [];
         let rowIndex = 0;
 
-        const concessions = <FormArray>this.cashConcessionForm.controls['concessionItemRows'];
+        const concessions = this.getCashConcessionItemRows();
 
         //this is detailed line items,  but not yet the controls
         for (let concessionFormItem of concessions.controls) {
@@ -857,6 +837,18 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
         this.canArchive = false;
 
         this.cashConcessionForm.controls['motivation'].setValue('');
+
+        if (editType == EditTypeEnum.Renew) { //|| editType == EditTypeEnum.UpdateApproved) {
+            const concessions = this.getCashConcessionItemRows();
+            for (let concessionFormItem of concessions.controls) {
+                // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
+                if (concessionFormItem.get('expiryDate').value) {
+                    let expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+                    expiryDate = new Date(expiryDate.setFullYear(expiryDate.getFullYear() + 1));
+                    concessionFormItem.get('expiryDate').setValue(this.datepipe.transform(expiryDate, 'yyyy-MM-dd'));
+                }
+            }
+        }
     }
 
     saveConcession() {
@@ -941,7 +933,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
         this.errorMessage = null;
         this.validationError = null;
 
-        var cashConcession = this.getCashConcession(true);
+        var cashConcession = this.getCashConcession(false);
 
         cashConcession.concession.status = ConcessionStatus.Pending;
         cashConcession.concession.subStatus = ConcessionSubStatus.BCMPending;
@@ -949,6 +941,8 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
 
         if (!this.validationError) {
             this.cashConcessionService.postRecallCashData(cashConcession).subscribe(entity => {
+
+                this.populateFormFromConcession(entity);
                 console.log("data saved");
                 this.isRecalling = false;
                 this.saveMessage = entity.concession.referenceNumber;
@@ -1083,7 +1077,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
     }
 
     setTwoNumberDecimal($event) {
-        $event.target.value = this.baseComponentService.formatDecimal($event.target.value);        
+        $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
     }
 
     canEditSMTDealNumber() {
@@ -1094,11 +1088,24 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
         return this.motivationEnabled ? null : '';
     }
 
+    getNumberInput(input) {
+        this.cashConcessionForm.controls['smtDealNumber'].setValue(this.baseComponentService.removeLetters(input.value));
+    }
+
     disableField(index: number, fieldname: string) {
+        let canUpdateExpiryDate: boolean = true;
+
+        if (fieldname == "expiryDate" && this.editType != null &&
+            (this.editType == EditTypeEnum.Renew || this.editType == EditTypeEnum.UpdateApproved)) {
+            {
+                canUpdateExpiryDate = false;
+            }
+        }
+
         return this.disableFieldBase(
             this.selectedConditionTypes[index],
             fieldname,
-            this.canEdit,
+            this.canEdit && canUpdateExpiryDate,
             this.canEdit != null
         );
     }

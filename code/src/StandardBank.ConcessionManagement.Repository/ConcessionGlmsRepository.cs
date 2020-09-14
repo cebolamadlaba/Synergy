@@ -46,8 +46,8 @@ namespace StandardBank.ConcessionManagement.Repository
                 model.ConcessionDetailId = concessionDetail.ConcessionDetailId;
 
                 const string sql =
-                    @"INSERT [dbo].[tblConcessionGlms] ([fkConcessionId], [fkConcessionDetailId], [fkProductId],[fkLegalEntityAccountId], [fkGroupId], [fkInterestPricingCategoryId],[fkSlabTypeId],[fkInterestTypeId]) 
-                    VALUES (@fkConcessionId, @fkConcessionDetailId, @fkProductId,@fkLegalEntityAccountId, @fkGroupId, @fkInterestPricingCategoryId,@fkSlabTypeId,@fkInterestTypeId) 
+                    @"INSERT [dbo].[tblConcessionGlms] ([fkConcessionId], [fkConcessionDetailId], [fkGroupId], [fkInterestPricingCategoryId],[fkSlabTypeId],[fkInterestTypeId]) 
+                    VALUES (@fkConcessionId, @fkConcessionDetailId, @fkGroupId, @fkInterestPricingCategoryId,@fkSlabTypeId,@fkInterestTypeId) 
                     SELECT CAST(SCOPE_IDENTITY() as int)";
 
                 using (var db = _dbConnectionFactory.Connection())
@@ -57,8 +57,6 @@ namespace StandardBank.ConcessionManagement.Repository
                         {
                             fkConcessionId = model.ConcessionId,
                             fkConcessionDetailId = model.ConcessionDetailId,
-                            fkProductId = model.ProductTypeId,
-                            fkLegalEntityAccountId = model.LegalEntityAccountId,
                             fkGroupId = model.GlmsGroupId,
                             fkSlabTypeId = model.SlabTypeId,
                             fkInterestPricingCategoryId = model.InterestPricingCategoryId,
@@ -83,10 +81,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     @"SELECT [pkConcessionGlmsId] [Id],
                              t.[fkConcessionId] [ConcessionId],
                              [fkConcessionDetailId] [ConcessionDetailId],
-                             [fkProductId],
-                             d.[fkLegalEntityAccountId],
                              d.[fkLegalEntityId] [LegalEntityId],
-                             d.[fkLegalEntityAccountId] [LegalEntityAccountId],
                              d.[ExpiryDate] 
                     FROM [dbo].[tblConcessionGlms] t
                       JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]
@@ -107,10 +102,7 @@ namespace StandardBank.ConcessionManagement.Repository
                     @"Select [pkConcessionGlmsId] [Id],
                              t.[fkConcessionId] [ConcessionId],
                              [fkConcessionDetailId] [ConcessionDetailId],
-                             [fkProductId],
-                             d.[fkLegalEntityAccountId],
                              d.[fkLegalEntityId] [LegalEntityId],
-                             d.[fkLegalEntityAccountId] [LegalEntityAccountId],
                              d.[ExpiryDate] 
                     FROM [dbo].[tblConcessionGlms] t
                     JOIN [dbo].[tblConcessionDetail] d ON d.[pkConcessionDetailId] = t.[fkConcessionDetailId]");
@@ -129,11 +121,9 @@ namespace StandardBank.ConcessionManagement.Repository
                     @"UPDATE [dbo].[tblConcessionGlms]
                     SET [fkConcessionId] = @ConcessionId,
                         [fkConcessionDetailId] = @ConcessionDetailId, 
-                        [fkProductId] = @ProductTypeId,
-                        [fkLegalEntityAccountId] = @LegalEntityAccountId, 
                         [fkGroupId] = @GlmsGroupId,
-                        [fkInterestPricingCategoryId] = @SlabTypeId,
-                        [fkSlabTypeId] = @InterestPricingCategoryId,
+                        [fkInterestPricingCategoryId] = @InterestPricingCategoryId,
+                        [fkSlabTypeId] = @SlabTypeId,
                         [fkInterestTypeId] = @InterestTypeId,
                         [fkArchiveTypeId] = @ArchiveTypeId
                     WHERE [fkConcessionId] = @ConcessionId AND [fkConcessionDetailId] = @ConcessionDetailId",
@@ -142,8 +132,6 @@ namespace StandardBank.ConcessionManagement.Repository
                         model.Id,
                         model.ConcessionId,
                         model.ConcessionDetailId,
-                        model.ProductTypeId,
-                        model.LegalEntityAccountId,
                         model.GlmsGroupId,
                         model.SlabTypeId,
                         model.InterestPricingCategoryId,

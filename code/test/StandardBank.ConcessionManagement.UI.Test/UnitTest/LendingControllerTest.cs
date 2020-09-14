@@ -29,7 +29,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         public LendingControllerTest()
         {
             _lendingController = new LendingController(MockLendingManager.Object, MockSiteHelper.Object,
-                MockMediator.Object,null,null);
+                MockMediator.Object, null, null, null);
         }
 
         /// <summary>
@@ -42,8 +42,8 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
             MockLendingManager.Setup(_ => _.GetLendingViewData(It.IsAny<int>(), null)).Returns(new LendingView
             {
                 RiskGroup = riskGroup,
-                LendingConcessions = new[] {new LendingConcession()},
-                LendingProductGroups = new[] {new LendingProductGroup()},
+                LendingConcessions = new[] { new LendingConcession() },
+                LendingProductGroups = new[] { new LendingProductGroup() },
                 LendingFinancial = new LendingFinancial
                 {
                     TotalExposure = 100,
@@ -151,7 +151,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
 
             MockMediator.Setup(_ => _.Send(It.IsAny<AddConcession>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Concession());
 
-            var result = await _lendingController.ExtendConcession("L001");
+            var result = await _lendingController.ExtendConcession("L001", 0);
             var apiResult = Assert.IsType<OkObjectResult>(result);
 
             Assert.NotNull(apiResult.Value);

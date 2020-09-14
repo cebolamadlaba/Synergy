@@ -33,8 +33,8 @@ export class GlmsBaseService extends BaseComponentService {
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    getGlmsGroup(): Observable<GlmsGroup[]> {
-        const url = "/api/Concession/GlmsGroup";
+    getGlmsGroup(riskGroupNumber, sapBpId): Observable<GlmsGroup[]> {
+        const url = "/api/Concession/GlmsGroup/" + riskGroupNumber + "/" + sapBpId;
         return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
     }
 

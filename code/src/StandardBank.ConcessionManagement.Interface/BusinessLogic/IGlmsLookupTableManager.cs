@@ -12,7 +12,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
     /// </summary>
     public interface IGlmsLookupTableManager
     {
-     
+
         IEnumerable<GlmsGroup> GetGlmsGroups();
 
         IEnumerable<InterestPricingCategory> GetInterestPricingCategories();
@@ -24,5 +24,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         IEnumerable<SlabType> GetSlabTypes();
 
         IEnumerable<BaseRateCode> GetBaseRateCodes();
+
+        IEnumerable<GlmsGroup> GetGlmsGroups(int riskGroupNumber, int? sapBpId);
     }
 }

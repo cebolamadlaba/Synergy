@@ -1,0 +1,22 @@
+
+.modal-width-position {
+    width: 50%;
+    margin: 0px auto;
+}
+
+.modal-content-style {
+    margin: 25px !important;
+}
+
+.extend-disclaimer-row {
+    padding: 10px 0px;
+}
+
+.extend-disclaimer-radio {
+    cursor: pointer;
+}
+
+.tiered-rate-field {
+    background-color: #286090;
+    color: #fff;
+}

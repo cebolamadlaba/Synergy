@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy, ViewChild } from '@angular/core';
 import { Observable } from "rxjs";
 import { ActivatedRoute } from '@angular/router';
 import { RiskGroup } from "../models/risk-group";
@@ -21,7 +21,10 @@ import { LegalEntity } from '../models/legal-entity';
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
 import { MrsEriEnum } from '../models/mrs-eri-enum';
-import { ConcessionConditionReturnObject } from '../models/concession-condition-return-object';	
+import { ConcessionConditionReturnObject } from '../models/concession-condition-return-object';
+import { ProductTypeEnum } from '../models/product-type-enum';
+import { LendingConcessionTieredRate } from '../models/lending-concession-tiered-rate';
+import { ProductTypeFieldLogic } from '../models/product-type-field-logic';
 
 import { Location } from '@angular/common';
 import { LookupDataService } from "../services/lookup-data.service";
@@ -31,6 +34,7 @@ import { ConcessionTypes } from '../constants/concession-types';
 
 import { BaseComponentService } from '../services/base-component.service';
 import { LendingBaseService } from '../services/lending-base.service';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
     selector: 'app-lending-add-concession',
@@ -39,6 +43,9 @@ import { LendingBaseService } from '../services/lending-base.service';
     providers: [LendingBaseService]
 })
 export class LendingAddConcessionComponent extends LendingBaseService implements OnInit, OnDestroy {
+
+    @ViewChild('tieredRateModal') tieredRateModal: ModalDirective;
+
     public lendingConcessionForm: FormGroup;
     private sub: any;
     showHide = false;
@@ -56,10 +63,18 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
     selectedProductTypes: ProductType[];
     selectedAccountNumbers: ClientAccountArray[];
 
+    selectedRowIndex: number;
+    selectedLineItemTieredRates: LendingConcessionTieredRate[] = [];
+    selectedProductTypeFieldLogics: ProductTypeFieldLogic[] = [];
+    tieredRateMessage: string = "";
+    currentRowIndex: number;
+    rollbackTieredRates: LendingConcessionTieredRate[];
+
     entityName: string;
     entityNumber: string;
 
     isLoading = true;
+    isOverdraftProductType = false;
 
     primeRate = "0.00";
     today: string;
@@ -126,6 +141,7 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
 
         this.selectedProductTypes.push(new ProductType());
         this.selectedAccountNumbers.push(new ClientAccountArray());
+        this.selectedProductTypeFieldLogics.push(new ProductTypeFieldLogic());
 
         return this.formBuilder.group({
             productType: [''],
@@ -140,6 +156,7 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
             frequency: [{ value: '', disabled: true }],
             serviceFee: [{ value: '', disabled: true }],
             mrsEri: [''],
+            lendingTieredRates: [[]]
         });
     }
 
@@ -248,9 +265,10 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
             newRow.controls['accountNumber'].setValue(this.clientAccounts[0]);
 
         control.push(newRow);
+
+        //this.selectedProductTypeFieldLogics.push(new ProductTypeFieldLogic());
+
         this.productTypeChanged(control.controls.length - 1)
-
-
     }
 
     addNewConditionRow() {
@@ -270,6 +288,7 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
 
             this.selectedProductTypes.splice(index, 1);
             this.selectedAccountNumbers.splice(index, 1);
+            this.selectedProductTypeFieldLogics.splice(index, 1);
 
             control.removeAt(index);
         }
@@ -306,9 +325,6 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
     }
 
     productTypeChanged(rowIndex: number) {
-
-        console.log('Row:' + rowIndex);
-
         const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
 
         let currentRow = control.controls[rowIndex];
@@ -323,60 +339,137 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
                 control.controls[rowIndex].get('accountNumber').setValue(null);
             }
             else {
-
                 control.controls[rowIndex].get('accountNumber').setValue(this.selectedAccountNumbers[rowIndex].clientaccounts[0]);
-
             }
-
         }
+
+        this.selectedProductTypeFieldLogics[rowIndex] = super.setProductTypeFieldLogic(productType.description, this.selectedProductTypeFieldLogics[rowIndex]);
 
         if (productType.description === "Overdraft") {
-
-            currentRow.get('term').enable();
             currentRow.get('term').setValue('12');
-
-            currentRow.get('reviewFeeType').enable();
-            currentRow.get('reviewFee').enable();
-            currentRow.get('uffFee').enable();
-
-            currentRow.get('frequency').disable();
-            currentRow.get('serviceFee').disable();
-
         }
-        else if (productType.description === "Temporary Overdraft") {
+    }
 
-            currentRow.get('term').enable();
+    onLimitChanged(rowIndex: number, $event) {
+        var limit = $event.target.value;
+        const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        let rowLendingTieredRates = this.getRowTieredRates(rowIndex);
+        rowLendingTieredRates[0].limit = limit;
 
-            currentRow.get('reviewFeeType').enable();
-            currentRow.get('reviewFee').enable();
-            currentRow.get('uffFee').enable();
+        this.setTwoNumberDecimal($event);
+    }
 
-            currentRow.get('frequency').disable();
-            currentRow.get('serviceFee').disable();
+    onPrimeChanged(rowIndex: number, $event) {
+        var marginAgainstPrime = $event.target.value;
+        const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        let rowLendingTieredRates = this.getRowTieredRates(rowIndex);
+        rowLendingTieredRates[0].marginToPrime = marginAgainstPrime;
 
+        this.setThreeNumberDecimal($event);
+    }
+
+    private getRowTieredRates(rowIndex: number) {
+        const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        let rowLendingTieredRates: LendingConcessionTieredRate[] = concessions.controls[rowIndex].get('lendingTieredRates').value;
+        if (rowLendingTieredRates == null) {
+            rowLendingTieredRates = [];
         }
-        else if (productType.description.indexOf("VAF") == 0) {
+        if (rowLendingTieredRates.length == 0) {
+            let tieredRate = new LendingConcessionTieredRate();
+            tieredRate.id = 0;
+            tieredRate.concessionLendingId = 0;
+            tieredRate.limit = 0;
+            tieredRate.marginToPrime = 0;
 
-            currentRow.get('term').enable();
+            rowLendingTieredRates.push(tieredRate);
+        }
+        return rowLendingTieredRates;
+    }
 
-            currentRow.get('frequency').enable();
-            currentRow.get('serviceFee').enable();
-
-            currentRow.get('reviewFeeType').disable();
-            currentRow.get('reviewFee').disable();
-            currentRow.get('uffFee').disable();
+    showTieredRateButton(rowIndex: number) {
+        const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        let currentRow = control.controls[rowIndex];
+        var productType = currentRow.get('productType').value;
+        // Is the product Overdraft or Temporary Overdraft?
+        if (productType.description == ProductTypeEnum.Overdraft || productType.description == ProductTypeEnum.TemporaryOverdraft) {
+            return true;
         }
         else {
-
-            currentRow.get('term').enable();
-
-            currentRow.get('reviewFeeType').disable();
-            currentRow.get('reviewFee').disable();
-            currentRow.get('uffFee').disable();
-
-            currentRow.get('frequency').disable();
-            currentRow.get('serviceFee').disable();
+            return false;
         }
+    }
+
+    openTieredRateModal(rowIndex) {
+        if (this.showTieredRateButton(rowIndex)) {
+            this.tieredRateModal.show();
+            this.selectedRowIndex = rowIndex;
+            const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+            this.selectedLineItemTieredRates = concessions.controls[rowIndex].get('lendingTieredRates').value;
+
+            this.currentRowIndex = rowIndex;
+            this.rollbackTieredRates = JSON.parse(JSON.stringify(this.selectedLineItemTieredRates));
+
+            if (this.selectedLineItemTieredRates == null || this.selectedLineItemTieredRates.length == 0) {
+                this.addNewTieredRateRow();
+            }
+            this.selectedLineItemTieredRates.forEach((item) => {
+                item.limitString = this.baseComponentService.formatDecimal(item.limit).toString();
+                item.marginToPrimeString = this.baseComponentService.formatDecimal(item.marginToPrime).toString();
+            });
+        }
+    }
+
+    addNewTieredRateRow() {
+        if (this.selectedLineItemTieredRates == null) {
+            this.selectedLineItemTieredRates = [];
+        }
+
+        this.tieredRateMessage = "";
+        if (this.selectedLineItemTieredRates.length < 3) {
+            let tieredRate = new LendingConcessionTieredRate();
+            tieredRate.id = 0;
+            tieredRate.concessionLendingId = 0;
+            tieredRate.limit = 0;
+            tieredRate.marginToPrime = 0;
+
+            this.selectedLineItemTieredRates.push(tieredRate);
+        }
+        else {
+            this.tieredRateMessage = "Only three Tiered Rates allowed";
+        }
+
+    }
+
+    deleteTieredRateRow(rowIndex: number) {
+        this.tieredRateMessage = "";
+        this.selectedLineItemTieredRates = this.selectedLineItemTieredRates.filter((item) => {
+            return item != this.selectedLineItemTieredRates[rowIndex];
+        });
+    }
+
+    saveTieredRates() {
+        this.selectedLineItemTieredRates.forEach((item) => {
+            item.limit = this.baseComponentService.unformat(<any>item.limitString);
+            item.marginToPrime = this.baseComponentService.unformat(<any>item.marginToPrimeString);
+        });
+        this.tieredRateMessage = "";
+        const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        concessions.controls[this.selectedRowIndex].get('lendingTieredRates').setValue(this.selectedLineItemTieredRates);
+        concessions.controls[this.selectedRowIndex].get('limit').setValue(this.baseComponentService.formatDecimal(this.selectedLineItemTieredRates[0].limit));
+        concessions.controls[this.selectedRowIndex].get('marginAgainstPrime').setValue(this.baseComponentService.formatDecimalThree(this.selectedLineItemTieredRates[0].marginToPrime));
+        this.selectedRowIndex = 0;
+        this.selectedLineItemTieredRates = [];
+        this.closeTieredRatesModal(false);
+    }
+
+    closeTieredRatesModal(isRollback: boolean) {
+        if (isRollback) {
+            const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+            concessions.controls[this.currentRowIndex].get('lendingTieredRates').setValue(this.rollbackTieredRates);
+        }
+        this.selectedRowIndex = 0;
+        this.selectedLineItemTieredRates = [];
+        this.tieredRateModal.hide();
     }
 
     onSubmit() {
@@ -412,6 +505,7 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
         let hasProductType: boolean = false;
         let hasLegalEntityId: boolean = false;
         let hasLegalEntityAccountId: boolean = false;
+        let isOverdraftOrTempOverdraft: boolean = false;
 
         for (let concessionFormItem of concessions.controls) {
             if (!lendingConcession.lendingConcessionDetails)
@@ -422,9 +516,20 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
             if (concessionFormItem.get('productType').value) {
                 lendingConcessionDetail.productTypeId = concessionFormItem.get('productType').value.id;
                 hasProductType = true;
+
+                // Is the product Overdraft or Temporary Overdraft?
+                if (concessionFormItem.get('productType').value.description == ProductTypeEnum.Overdraft ||
+                    concessionFormItem.get('productType').value.description == ProductTypeEnum.TemporaryOverdraft) {
+                    isOverdraftOrTempOverdraft = true;
+                }
+                else {
+                    isOverdraftOrTempOverdraft = false;
+                }
             }
-            else
+            else {
                 this.addValidationError("Product type not selected");
+                hasProductType = true;
+            }
 
             if (concessionFormItem.get('accountNumber').value) {
                 lendingConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
@@ -502,16 +607,10 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
             }
 
             // validate for all.
-            if (concessionFormItem.get('limit').value == "") {
-                this.addValidationError("Limit cannot be empty");
-            }
+
 
             if (concessionFormItem.get('initiationFee').value == "") {
                 this.addValidationError("Initiation Fee cannot be empty");
-            }
-
-            if (concessionFormItem.get('marginAgainstPrime').value == "") {
-                this.addValidationError("Prime fixed rate cannot be empty");
             }
 
             if (concessionFormItem.get('mrsEri').value == "" ||
@@ -526,9 +625,37 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
                 };
             }
 
+            if (isOverdraftOrTempOverdraft) {
+                if (lendingConcessionDetail.lendingConcessionDetailTieredRates == null)
+                    lendingConcessionDetail.lendingConcessionDetailTieredRates = [];
 
-            if (concessionFormItem.get('limit').value)
-                lendingConcessionDetail.limit = concessionFormItem.get('limit').value;
+                lendingConcessionDetail.lendingConcessionDetailTieredRates = concessionFormItem.get('lendingTieredRates').value;
+
+                if (lendingConcessionDetail.lendingConcessionDetailTieredRates == null ||
+                    lendingConcessionDetail.lendingConcessionDetailTieredRates.length == 0)
+                    this.addValidationError("Tiered Rate cannot be empty for Product Type: Overdraft / Temporary Overdraft");
+            }
+            else {
+                if (concessionFormItem.get('limit').value == "") {
+                    this.addValidationError("Limit cannot be empty");
+                }
+                if (concessionFormItem.get('marginAgainstPrime').value == "") {
+                    this.addValidationError("Prime fixed rate cannot be empty");
+                }
+
+                let tieredRate = new LendingConcessionTieredRate();
+                tieredRate.id = 0;
+                tieredRate.concessionLendingId = 0;
+
+                if (concessionFormItem.get('limit').value)
+                    tieredRate.limit = concessionFormItem.get('limit').value;
+
+                if (concessionFormItem.get('marginAgainstPrime').value)
+                    tieredRate.marginToPrime = concessionFormItem.get('marginAgainstPrime').value;
+
+                lendingConcessionDetail.lendingConcessionDetailTieredRates = [];
+                lendingConcessionDetail.lendingConcessionDetailTieredRates.push(tieredRate);
+            }
 
             if (concessionFormItem.get('term').value)
                 if (concessionFormItem.get('term').value < MOnthEnum.ThreeMonths) {
@@ -536,9 +663,6 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
                 } else {
                     lendingConcessionDetail.term = concessionFormItem.get('term').value;
                 }
-
-            if (concessionFormItem.get('marginAgainstPrime').value)
-                lendingConcessionDetail.marginAgainstPrime = concessionFormItem.get('marginAgainstPrime').value;
 
             if (concessionFormItem.get('initiationFee').value)
                 lendingConcessionDetail.initiationFee = concessionFormItem.get('initiationFee').value;
@@ -617,37 +741,26 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
     }
 
     setTwoNumberDecimalMAP($event) {
-
-        //check that it is a valid number
-        if (((isNaN($event.target.value)).valueOf()) == true) {
-
-            alert("Not a valid number for 'Prime -/+'");
-            $event.target.value = 0;
-        }
-        else {
-
-            $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
-        }
+        $event.target.value = this.baseComponentService.formatDecimalThree($event.target.value);
     }
 
     setThreeNumberDecimal($event) {
-        if ($event.target.value) {
-            $event.target.value = new DecimalPipe('en-US').transform($event.target.value, '1.3-3');
-        }
-        else {
-
-            $event.target.value = null;
-        }
+        $event.target.value = this.baseComponentService.formatDecimalThree($event.target.value);
     }
 
     canSaveMessage() {
         return this.saveMessage ? '' : null;
     }
 
+    getNumberInput(input) {
+        this.lendingConcessionForm.controls['smtDealNumber'].setValue(this.baseComponentService.removeLetters(input.value));
+    }
+
     disableField(index: number, fieldname: string) {
-        return this.disableFieldBase(
+        return super.disableFieldBase(
             this.selectedConditionTypes[index],
             new LendingConcessionDetail(),
+            this.selectedProductTypeFieldLogics[index],
             fieldname,
             this.saveMessage == null,
             this.saveMessage != null
@@ -661,4 +774,20 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
     ngOnDestroy() {
         this.sub.unsubscribe();
     }
+
+    getNgClassForField(rowIndex: number) {
+        let rowTieredRates = this.getRowTieredRates(rowIndex);
+        if (rowTieredRates.length < 2) {
+            return "form-control";
+        }
+
+        if (this.showTieredRateButton(rowIndex)) {
+            return "form-control tiered-rate-field";
+        }
+        else {
+            return "form-control";
+        }
+
+    }
+
 }

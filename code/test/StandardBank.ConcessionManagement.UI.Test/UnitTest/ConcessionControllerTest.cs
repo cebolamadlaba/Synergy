@@ -27,7 +27,8 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         public ConcessionControllerTest()
         {
             _concessionController = new ConcessionController(MockConcessionManager.Object,
-                MockLookupTableManager.Object, MockLegalEntityAddressManager.Object, new FakeSiteHelper(), MockLetterGeneratorManager.Object, MockMediator.Object);
+                MockLookupTableManager.Object, MockLegalEntityAddressManager.Object,
+                new FakeSiteHelper(), MockLetterGeneratorManager.Object, MockMediator.Object, null, null);
         }
 
         /// <summary>
@@ -177,7 +178,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         [Fact]
         public async Task DeactivateConcession_Executes_Positive()
         {
-            var result = await _concessionController.DeactivateConcession("D001");
+            var result = await _concessionController.DeactivateConcession("D001", null);
             var apiResult = Assert.IsType<OkObjectResult>(result);
 
             Assert.NotNull(apiResult.Value);

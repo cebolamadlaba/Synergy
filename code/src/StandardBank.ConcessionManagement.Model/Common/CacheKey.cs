@@ -162,6 +162,7 @@
             public static class GlmsGroupRepository
             {
                 public const string ReadAll = "CacheKey.Repository.GlmsGroupRepository.ReadAll";
+                public const string ReadAllByRiskGroupAndOrSapBpId = "CacheKey.Repository.GlmsGroupRepository.ReadAllByRiskGroupAndOrSapBpId";
             }
 
 
@@ -246,6 +247,11 @@
             public static class LegalEntityAddressRepository
             {
                 public const string ReadAll = "CacheKey.Repository.LegalEntityAddress.ReadAll";
+            }
+
+            public static class ExtensionFeeRepository
+            {
+                public const string ReadByIdIsActive = "CacheKey.Repository.ExtensionFeeRepository.ReadByIdIsActive";
             }
         }
     }
