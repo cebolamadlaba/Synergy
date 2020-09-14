@@ -88,6 +88,8 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     selectedRowIndex: number;
     selectedLineItemTieredRates: LendingConcessionTieredRate[] = [];
     tieredRateMessage: string = "";
+    currentRowIndex: number;
+    rollbackTieredRates: LendingConcessionTieredRate[];
 
     capturedComments: string;
     canApproveChanges: boolean;
@@ -311,11 +313,10 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                     selectedProductType[0].description == ProductTypeEnum.TemporaryOverdraft)) {
                 currentConcession.get('lendingTieredRates').setValue(lendingConcessionDetail.lendingConcessionDetailTieredRates);
             }
-            else {
-                if (lendingConcessionDetail.lendingConcessionDetailTieredRates != null && lendingConcessionDetail.lendingConcessionDetailTieredRates.length > 0) {
-                    currentConcession.get('limit').setValue(lendingConcessionDetail.lendingConcessionDetailTieredRates[0].limit);
-                    currentConcession.get('marginAgainstPrime').setValue(lendingConcessionDetail.lendingConcessionDetailTieredRates[0].marginToPrime);
-                }
+
+            if (lendingConcessionDetail.lendingConcessionDetailTieredRates != null && lendingConcessionDetail.lendingConcessionDetailTieredRates.length > 0) {
+                currentConcession.get('limit').setValue(lendingConcessionDetail.lendingConcessionDetailTieredRates[0].limit);
+                currentConcession.get('marginAgainstPrime').setValue(lendingConcessionDetail.lendingConcessionDetailTieredRates[0].marginToPrime);
             }
 
             currentConcession.get('term').setValue(lendingConcessionDetail.term);
@@ -1092,6 +1093,42 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         }
     }
 
+    onLimitChanged(rowIndex: number, $event) {
+        var limit = $event.target.value;
+        const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        let rowLendingTieredRates = this.getRowTieredRates(rowIndex);
+        rowLendingTieredRates[0].limit = limit;
+
+        this.setTwoNumberDecimal($event);
+    }
+
+    onPrimeChanged(rowIndex: number, $event) {
+        var marginAgainstPrime = $event.target.value;
+        const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        let rowLendingTieredRates = this.getRowTieredRates(rowIndex);
+        rowLendingTieredRates[0].marginToPrime = marginAgainstPrime;
+
+        this.setThreeNumberDecimal($event);
+    }
+
+    private getRowTieredRates(rowIndex: number) {
+        const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+        let rowLendingTieredRates: LendingConcessionTieredRate[] = concessions.controls[rowIndex].get('lendingTieredRates').value;
+        if (rowLendingTieredRates == null) {
+            rowLendingTieredRates = [];
+        }
+        if (rowLendingTieredRates.length == 0) {
+            let tieredRate = new LendingConcessionTieredRate();
+            tieredRate.id = 0;
+            tieredRate.concessionLendingId = 0;
+            tieredRate.limit = 0;
+            tieredRate.marginToPrime = 0;
+
+            rowLendingTieredRates.push(tieredRate);
+        }
+        return rowLendingTieredRates;
+    }
+
     showTieredRateButton(rowIndex: number) {
         const control = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
         let currentRow = control.controls[rowIndex];
@@ -1117,6 +1154,10 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             this.selectedRowIndex = rowIndex;
             const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
             this.selectedLineItemTieredRates = concessions.controls[rowIndex].get('lendingTieredRates').value;
+
+            this.currentRowIndex = rowIndex;
+            this.rollbackTieredRates = JSON.parse(JSON.stringify(this.selectedLineItemTieredRates));
+
             if (this.selectedLineItemTieredRates == null || this.selectedLineItemTieredRates.length == 0) {
                 this.addNewTieredRateRow();
             }
@@ -1163,12 +1204,20 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         this.tieredRateMessage = "";
         const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
         concessions.controls[this.selectedRowIndex].get('lendingTieredRates').setValue(this.selectedLineItemTieredRates);
+        concessions.controls[this.selectedRowIndex].get('limit').setValue(this.baseComponentService.formatDecimal(this.selectedLineItemTieredRates[0].limit));
+        concessions.controls[this.selectedRowIndex].get('marginAgainstPrime').setValue(this.baseComponentService.formatDecimalThree(this.selectedLineItemTieredRates[0].marginToPrime));
         this.selectedRowIndex = 0;
         this.selectedLineItemTieredRates = [];
-        this.closeTieredRatesModal();
+        this.closeTieredRatesModal(false);
     }
 
-    closeTieredRatesModal() {
+    closeTieredRatesModal(isRollback: boolean) {
+        if (isRollback) {
+            const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
+            concessions.controls[this.currentRowIndex].get('lendingTieredRates').setValue(this.rollbackTieredRates);
+        }
+        this.selectedRowIndex = 0;
+        this.selectedLineItemTieredRates = [];
         this.tieredRateModal.hide();
     }
 
@@ -1490,4 +1539,20 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             this.canEdit != null
         );
     }
+
+    getNgClassForField(rowIndex: number) {
+        let rowTieredRates = this.getRowTieredRates(rowIndex);
+        if (rowTieredRates.length < 2) {
+            return "form-control";
+        }
+
+        if (this.showTieredRateButton(rowIndex)) {
+            return "form-control tiered-rate-field";
+        }
+        else {
+            return "form-control";
+        }
+
+    }
+
 }

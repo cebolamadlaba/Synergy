@@ -15,7 +15,7 @@
     <PackageReference Include="Hangfire" Version="1.6.17" />
     <PackageReference Include="MailKit" Version="1.16.2" />
     <PackageReference Include="MediatR" Version="3.0.1" />
-    <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.0-dev-10172" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
