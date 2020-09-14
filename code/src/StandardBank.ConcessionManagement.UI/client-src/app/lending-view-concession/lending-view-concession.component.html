@@ -145,7 +145,7 @@
             <!-- SMT deal number -->
             <label>SMT Deal Number</label>
             <input type="text" class="form-control" [attr.disabled]="canEditSmtDealNumber()" formControlName="smtDealNumber"
-                   maxlength="16" required #refElSmtDealNumber (input)="getNumberInput(refElSmtDealNumber)"/>
+                   maxlength="16" required #refElSmtDealNumber (input)="getNumberInput(refElSmtDealNumber)" />
         </div>
     </div>
     <div class="col-md-7 col-md-offset-1">
@@ -222,8 +222,8 @@
                 </td>
                 <!-- Limit -->
                 <td class="length-short">
-                    <input type="text" [attr.readonly]="isFieldReadonly(i)" numbersOnly="true" formControlName="limit" [ngClass]="getNgClassForField(i)" [attr.disabled]="disableField(i,'limit')"
-                           (change)="setTwoNumberDecimal($event)" [class.markred]="bcmhochanged(i,'limit')" (click)="openTieredRateModal(i)" />
+                    <input type="text" numbersOnly="true" formControlName="limit" [ngClass]="getNgClassForField(i)" [attr.disabled]="disableField(i,'limit')"
+                           (change)="onLimitChanged(i, $event)" [class.markred]="bcmhochanged(i,'limit')" />
                 </td>
                 <!-- Term -->
                 <td class="length-short">
@@ -233,8 +233,8 @@
                 <!-- MAP -->
                 <td class="length-short">
 
-                    <input type="text" [attr.readonly]="isFieldReadonly(i)" formControlName="marginAgainstPrime" [attr.disabled]="disableField(i,'marginAgainstPrime')" (change)="setThreeNumberDecimal($event)"
-                           [ngClass]="getNgClassForField(i)" [class.markred]="bcmhochanged(i,'marginAgainstPrime')" (click)="openTieredRateModal(i)" />
+                    <input type="text" formControlName="marginAgainstPrime" (change)="onPrimeChanged(i, $event)" [attr.disabled]="disableField(i,'marginAgainstPrime')"
+                           [ngClass]="getNgClassForField(i)" [class.markred]="bcmhochanged(i,'marginAgainstPrime')" />
 
                 </td>
                 <td class="length-short" *ngIf="isApproved"><input type="text" numbersOnly="true" formControlName="approvedMarginAgainstPrime" class="form-control" /></td>
@@ -525,7 +525,7 @@
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" (click)="tieredRateModal.hide()">Close</button>
+                <button type="button" class="btn btn-default" (click)="closeTieredRatesModal(true)">Close</button>
                 <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="saveTieredRates()" *ngIf="canEdit">Save</button>
             </div>
         </div>

@@ -149,13 +149,12 @@
 
                 </td>
                 <!-- Limit -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="limit" [ngClass]="getNgClassForField(i)" (change)="setTwoNumberDecimal($event)" (click)="openTieredRateModal(i)" [attr.readonly]="isFieldReadonly(i)" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="limit" [ngClass]="getNgClassForField(i)" (change)="onLimitChanged(i, $event)" /></td>
                 <!-- Term -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="term" class="form-control" [attr.disabled]="disableField(i,'term')"
-                                                (keyup)="onTermValueChange(i)" /></td>
+                <td class="length-short"><input type="text" numbersOnly="true" formControlName="term" class="form-control" [attr.disabled]="disableField(i,'term')" (keyup)="onTermValueChange(i)" /></td>
 
                 <!-- Prime -->
-                <td class="length-short"><input type="text" formControlName="marginAgainstPrime" [ngClass]="getNgClassForField(i)" (change)="setThreeNumberDecimal($event)" (click)="openTieredRateModal(i)" [attr.readonly]="isFieldReadonly(i)" /></td>
+                <td class="length-short"><input type="text" formControlName="marginAgainstPrime" [ngClass]="getNgClassForField(i)" (change)="onPrimeChanged(i, $event)" /></td>
 
                 <!-- Frequency -->
                 <td class="length-short">
@@ -168,13 +167,17 @@
                 </td>
 
                 <!-- Initiation fee -->
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="initiationFee" class="form-control" [attr.disabled]="disableField(i,'initiationFee')"
-                                                (change)="setThreeNumberDecimal($event)" /></td>
+                <td class="length-short">
+                    <input type="text" numbersOnly="true" formControlName="initiationFee" class="form-control" [attr.disabled]="disableField(i,'initiationFee')"
+                           (change)="setThreeNumberDecimal($event)" />
+                </td>
 
                 <!-- Service fee -->
 
-                <td class="length-short"><input type="text" numbersOnly="true" formControlName="serviceFee" class="form-control" [attr.disabled]="disableField(i,'serviceFee')"
-                                                (change)="setThreeNumberDecimal($event)" /></td>
+                <td class="length-short">
+                    <input type="text" numbersOnly="true" formControlName="serviceFee" class="form-control" [attr.disabled]="disableField(i,'serviceFee')"
+                           (change)="setThreeNumberDecimal($event)" />
+                </td>
 
                 <!-- Review fee type -->
                 <td class="length-short">
@@ -183,11 +186,15 @@
                     </select>
                 </td>
                 <!-- Review fee -->
-                <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="reviewFee" [attr.disabled]="disableField(i,'reviewFee')"
-                                                (change)="setThreeNumberDecimal($event)" /></td>
+                <td class="length-short">
+                    <input type="text" numbersOnly="true" class="form-control" formControlName="reviewFee" [attr.disabled]="disableField(i,'reviewFee')"
+                           (change)="setThreeNumberDecimal($event)" />
+                </td>
                 <!-- UFF fee -->
-                <td class="length-short"><input type="text" numbersOnly="true" class="form-control" formControlName="uffFee" [attr.disabled]="disableField(i,'uffFee')"
-                                                (change)="setThreeNumberDecimal($event)" /></td>
+                <td class="length-short">
+                    <input type="text" numbersOnly="true" class="form-control" formControlName="uffFee" [attr.disabled]="disableField(i,'uffFee')"
+                           (change)="setThreeNumberDecimal($event)" />
+                </td>
                 <!-- MRS/BRI -->
                 <td class="length-short"><input type="text" numbersOnly="true" maxlength="2" class="form-control" formControlName="mrsEri" [attr.disabled]="disableField(i,'mrsEri')" /></td>
                 <td><button *ngIf="lendingConcessionForm.controls.concessionItemRows.controls.length > 1 && !saveMessage" (click)="deleteConcessionRow(i)" class="btn-delete"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
@@ -319,7 +326,7 @@
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" (click)="tieredRateModal.hide()">Close</button>
+                <button type="button" class="btn btn-default" (click)="closeTieredRatesModal(true)">Close</button>
                 <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="saveTieredRates()" *ngIf="!saveMessage">Save</button>
             </div>
         </div>
