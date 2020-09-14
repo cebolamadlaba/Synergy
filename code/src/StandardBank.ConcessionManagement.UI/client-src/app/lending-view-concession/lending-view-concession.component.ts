@@ -312,15 +312,24 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                 (selectedProductType[0].description == ProductTypeEnum.Overdraft ||
                     selectedProductType[0].description == ProductTypeEnum.TemporaryOverdraft)) {
                 currentConcession.get('lendingTieredRates').setValue(lendingConcessionDetail.lendingConcessionDetailTieredRates);
+
+                if (lendingConcessionDetail.lendingConcessionDetailTieredRates != null && lendingConcessionDetail.lendingConcessionDetailTieredRates.length > 0) {
+                    currentConcession.get('limit').setValue(this.formatDecimal(lendingConcessionDetail.lendingConcessionDetailTieredRates[0].limit));
+                    currentConcession.get('marginAgainstPrime').setValue(this.formatDecimal3(lendingConcessionDetail.lendingConcessionDetailTieredRates[0].marginToPrime));
+                    currentConcession.get('approvedMarginAgainstPrime').setValue(this.formatDecimal3(lendingConcessionDetail.lendingConcessionDetailTieredRates[0].approvedMap));
+                }
+            }
+            if (selectedProductType[0] != null &&
+                (selectedProductType[0].description != ProductTypeEnum.Overdraft &&
+                    selectedProductType[0].description != ProductTypeEnum.TemporaryOverdraft)) {
+                currentConcession.get('limit').setValue(this.formatDecimal(lendingConcessionDetail.limit));
+                currentConcession.get('marginAgainstPrime').setValue(this.formatDecimal3(lendingConcessionDetail.marginAgainstPrime));
+                currentConcession.get('approvedMarginAgainstPrime').setValue(this.formatDecimal3(lendingConcessionDetail.approvedMap));
             }
 
-            if (lendingConcessionDetail.lendingConcessionDetailTieredRates != null && lendingConcessionDetail.lendingConcessionDetailTieredRates.length > 0) {
-                currentConcession.get('limit').setValue(lendingConcessionDetail.lendingConcessionDetailTieredRates[0].limit);
-                currentConcession.get('marginAgainstPrime').setValue(lendingConcessionDetail.lendingConcessionDetailTieredRates[0].marginToPrime);
-            }
 
             currentConcession.get('term').setValue(lendingConcessionDetail.term);
-            currentConcession.get('approvedMarginAgainstPrime').setValue(this.formatDecimal3(lendingConcessionDetail.approvedMap));
+
             currentConcession.get('initiationFee').setValue(this.formatDecimal3(lendingConcessionDetail.initiationFee));
 
             let selectedReviewFeeType = this.reviewFeeTypes.filter(_ => _.id == lendingConcessionDetail.reviewFeeTypeId);
@@ -1164,6 +1173,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             this.selectedLineItemTieredRates.forEach((item) => {
                 item.limitString = this.baseComponentService.formatDecimal(item.limit).toString();
                 item.marginToPrimeString = this.baseComponentService.formatDecimal(item.marginToPrime).toString();
+                item.approvedMapString = this.baseComponentService.formatDecimal(item.approvedMap).toString();
             });
         }
     }
