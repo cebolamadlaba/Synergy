@@ -311,6 +311,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
                 this.isInProgressRenewal = tradeConcession.concession.isInProgressRenewal;
 
                 this.tradeConcessionForm.controls['motivation'].setValue(this.tradeConcession.concession.motivation);
+                this.tradeConcessionForm.controls['smtDealNumber'].setValue(this.tradeConcession.concession.smtDealNumber);
 
                 let rowIndex = 0;
 
@@ -691,6 +692,12 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
         this.saveMessage = null;
     }
 
+    canEditSMTDealNumber() {
+        return (this.isRecalling || this.canEdit) ? null : '';
+    }
+
+
+
     disableField(rowIndex, fieldname) {
         let canUpdateExpiryDate: boolean = true;
 
@@ -734,6 +741,11 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
             tradeConcession.concession.motivation = this.tradeConcessionForm.controls['motivation'].value;
         else
             tradeConcession.concession.motivation = '.';
+
+        if (this.tradeConcessionForm.controls['smtDealNumber'].value)
+            tradeConcession.concession.smtDealNumber = this.tradeConcessionForm.controls['smtDealNumber'].value;
+        else
+            this.addValidationError("SMT Deal Number not captured");
 
         const concessions = this.getTradeConcessionItemRows();
 
@@ -1492,6 +1504,10 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
                 this.isLoading = false;
             });
         }
+    }
+
+    getNumberInput(input) {
+        this.tradeConcessionForm.controls['smtDealNumber'].setValue(this.baseComponentService.removeLetters(input.value));
     }
 
     setadvalorem($event, rowIndex, controlname) {
