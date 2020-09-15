@@ -19,7 +19,7 @@ namespace StandardBank.ConcessionManagement.Repository
         public ConcessionLendingTieredRate Create(ConcessionLendingTieredRate model)
         {
             const string sql =
-                @"INSERT INTO [dbo].[tblConcessionLendingTieredRate]([fkConcessionLendingId],[Limit],[MarginToPrime])
+                @"INSERT INTO [dbo].[tblConcessionLendingTieredRate]([fkConcessionLendingId],[Limit],[MarginToPrime],[ApprovedMarginToPrime])
                     VALUES(@ConcessionLendingId, @Limit, @MarginToPrime, @ApprovedMarginToPrime)
                     SELECT CAST(SCOPE_IDENTITY() as int)";
 

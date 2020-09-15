@@ -72,10 +72,6 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 
         void CreateConcessionLendingTieredRates(IEnumerable<LendingConcessionDetail> lendingConcessionDetails);
 
-        void UpdateConcessionLendingTieredRates(LendingConcessionDetail lendingConcessionDetail);
-
-        void UpdateConcessionLendingTieredRates(IEnumerable<LendingConcessionDetail> lendingConcessionDetails);
-
         void DeleteConcessionLendingTieredRate(int concessionLendingTieredRateId);
 
         void DeleteConcessionLendingTieredRates(IEnumerable<StandardBank.ConcessionManagement.Model.Repository.ConcessionLendingTieredRate> concessionLendingTieredRates);
