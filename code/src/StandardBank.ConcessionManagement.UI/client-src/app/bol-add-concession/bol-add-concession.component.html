@@ -102,6 +102,12 @@
     </div>
 </div>
 
+<!-- disclaimer section -->
+<div class="alert alert-warning alert-dismissible col-md-12">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <strong>Note:</strong> Please note that the cut-off date for submitting BOL rates is the 20th of each month. All rates of BOL concessions submitted before the 20th will effectively be implemented on the 1st of next the month, however the rates of BOL concessions submitted after the 20th will only be implemented on the 1st of the second month.
+</div>
+
 <!-- Loading message -->
 <div class="col-md-12" *ngIf="isLoading">
     <div class="form-feedback-container">
@@ -118,7 +124,7 @@
         <div class="row">
             <label>SMT Deal Number</label>
             <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="disableField('smtDealNumber')"
-                    #refElSmtDealNumber (input)="getNumberInput(refElSmtDealNumber)"/>
+                   #refElSmtDealNumber (input)="getNumberInput(refElSmtDealNumber)" />
         </div>
 
     </div>
