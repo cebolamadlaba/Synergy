@@ -538,11 +538,7 @@ export class TradeAddConcessionComponent extends TradeConcessionBaseService impl
                 concessionFormItem.get('flatfee').value === 0) {
                 flatfeefound = true;
                 tradeConcessionDetail.flatFee = concessionFormItem.get('flatfee').value;
-            } else {
-                if (!tradeConcessionDetail.disablecontrolset && !advaloremfound) {
-                 
-                }
-            }
+            } 
 
             if ((flatfeefound == false) && (advaloremfound == false)) {
 
