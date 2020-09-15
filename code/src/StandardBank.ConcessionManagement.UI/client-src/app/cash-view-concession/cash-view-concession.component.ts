@@ -9,6 +9,7 @@ import { ConcessionTypes } from '../constants/concession-types';
 import { AccrualType } from "../models/accrual-type";
 import { CashConcession } from "../models/cash-concession";
 import { CashConcessionDetail } from "../models/cash-concession-detail";
+import { extendConcessionModel } from "../models/extendConcessionModel";
 import { CashFinancial } from "../models/cash-financial";
 import { ChannelType } from "../models/channel-type";
 import { ClientAccount } from "../models/client-account";
@@ -802,22 +803,36 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
             this.errorMessage = null;
             this.validationError = null;
 
-            this.cashConcessionService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
-                console.log("data saved");
-                this.canBcmApprove = false;
-                this.canBcmApprove = false;
-                this.canExtend = false;
-                this.canRenew = false;
-                this.canRecall = false;
-                this.canUpdate = false;
-                this.canArchive = false;
-                this.saveMessage = entity.concession.childReferenceNumber;
-                this.isLoading = false;
-                this.cashConcession = entity;
-            }, error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
+             var extendConceModel = new extendConcessionModel()
+               extendConceModel.concessionReferenceId = this.concessionReferenceId;
+
+            if (this.cashConcessionForm.controls['motivation'].value)
+                extendConceModel.motivation = this.cashConcessionForm.controls['motivation'].value;
+            else
+                this.addValidationError("Motivation not captured");
+                 this.isLoading = false;
+
+            if(!this.validationError) {
+         
+                this.cashConcessionService.postExtendConcession(extendConceModel).subscribe(entity => {
+                    console.log("data saved");
+                    this.canBcmApprove = false;
+                    this.canBcmApprove = false;
+                    this.canExtend = false;
+                    this.canRenew = false;
+                    this.canRecall = false;
+                    this.canUpdate = false;
+                    this.canArchive = false;
+                    this.saveMessage = entity.concession.childReferenceNumber;
+                    this.isLoading = false;
+                    this.cashConcession = entity;
+                    this.errorMessage = null;
+                    this.validationError = null;
+                }, error => {
+                    this.errorMessage = <any>error;
+                    this.isLoading = false;
+                        });
+            }
         }
     }
 
@@ -1085,7 +1100,10 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
     }
 
     isMotivationEnabled() {
-        return this.motivationEnabled ? null : '';
+     
+        if (!this.canExtend) {
+           return this.motivationEnabled ? null : '';
+        }
     }
 
     getNumberInput(input) {
