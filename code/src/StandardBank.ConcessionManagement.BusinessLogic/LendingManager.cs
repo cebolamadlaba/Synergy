@@ -542,8 +542,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         private IEnumerable<LendingConcessionDetail> GetRelatedLendingConcessionTieredRates(IEnumerable<LendingConcessionDetail> lendingConcessionDetails)
         {
+
             foreach (var lendingConcessionDetail in lendingConcessionDetails)
+            {
                 lendingConcessionDetail.LendingConcessionDetailTieredRates = this.GetLendingConcessionTieredRates(lendingConcessionDetail.LendingConcessionDetailId);
+
+                LendingConcessionDetailTieredRate firstTier = lendingConcessionDetail.LendingConcessionDetailTieredRates.FirstOrDefault();
+                if (firstTier != null)
+                {
+                    lendingConcessionDetail.Limit = (decimal)firstTier.Limit;
+                    lendingConcessionDetail.MarginAgainstPrime = (decimal)firstTier.MarginToPrime;
+                    lendingConcessionDetail.ApprovedMap = firstTier.ApprovedMap;
+                }
+            }
 
             return lendingConcessionDetails;
         }
