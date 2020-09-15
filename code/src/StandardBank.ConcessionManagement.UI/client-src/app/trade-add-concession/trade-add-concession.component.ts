@@ -428,6 +428,11 @@ export class TradeAddConcessionComponent extends TradeConcessionBaseService impl
         else
             tradeConcession.concession.motivation = '.';
 
+        if (this.tradeConcessionForm.controls['smtDealNumber'].value)
+            tradeConcession.concession.smtDealNumber = this.tradeConcessionForm.controls['smtDealNumber'].value;
+        else
+            this.addValidationError("SMT Deal Number not captured");
+
         const concessions = <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
 
         let hasTypeId: boolean = false;
@@ -535,7 +540,7 @@ export class TradeAddConcessionComponent extends TradeConcessionBaseService impl
                 tradeConcessionDetail.flatFee = concessionFormItem.get('flatfee').value;
             } else {
                 if (!tradeConcessionDetail.disablecontrolset && !advaloremfound) {
-                    //this.addValidationError("Flat fee not entered");
+                 
                 }
             }
 
@@ -637,6 +642,9 @@ export class TradeAddConcessionComponent extends TradeConcessionBaseService impl
         $event.target.value = this.baseComponentService.formatDecimal($event.target.value);
     }
 
+    getNumberInput(input) {
+        this.tradeConcessionForm.controls['smtDealNumber'].setValue(this.baseComponentService.removeLetters(input.value));
+    }
 
     setThreeNumberDecimal($event) {
 
