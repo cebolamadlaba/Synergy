@@ -689,12 +689,12 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                 hasLegalEntityAccountId = false;
             }
 
-            if (lendingConcessionDetail.lendingConcessionDetailTieredRates == null)
-                lendingConcessionDetail.lendingConcessionDetailTieredRates = [];
-
-            lendingConcessionDetail.lendingConcessionDetailTieredRates = concessionFormItem.get('lendingTieredRates').value;
-
             if (isOverdraftOrTempOverdraft) {
+                if (lendingConcessionDetail.lendingConcessionDetailTieredRates == null)
+                    lendingConcessionDetail.lendingConcessionDetailTieredRates = [];
+
+                lendingConcessionDetail.lendingConcessionDetailTieredRates = concessionFormItem.get('lendingTieredRates').value;
+
                 lendingConcessionDetail.lendingConcessionDetailTieredRates.forEach(item => {
                     if (item.concessionLendingId == null || item.concessionLendingId == 0)
                         item.concessionLendingId = lendingConcessionDetail.lendingConcessionDetailId;
@@ -712,31 +712,11 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                     this.addValidationError("Prime fixed rate cannot be empty");
                 }
 
-                let tieredRate = new LendingConcessionTieredRate();
-                tieredRate.id = 0;
-                tieredRate.concessionLendingId = lendingConcessionDetail.lendingConcessionDetailId;
-                tieredRate.limit = concessionFormItem.get('limit').value;
-                tieredRate.marginToPrime = concessionFormItem.get('marginAgainstPrime').value;
+                if (concessionFormItem.get('limit').value)
+                    lendingConcessionDetail.limit = concessionFormItem.get('limit').value;
 
-                lendingConcessionDetail.lendingConcessionDetailTieredRates = [];
-                lendingConcessionDetail.lendingConcessionDetailTieredRates.push(tieredRate);
-                //if (lendingConcessionDetail.lendingConcessionDetailTieredRates[0] != null) {
-                //    lendingConcessionDetail.lendingConcessionDetailTieredRates[0].limit = concessionFormItem.get('limit').value;
-                //    lendingConcessionDetail.lendingConcessionDetailTieredRates[0].marginToPrime = concessionFormItem.get('marginAgainstPrime').value;
-                //}
-                //else {
-                //    let tieredRate = new LendingConcessionTieredRate();
-                //    tieredRate.id = 0;
-                //    tieredRate.concessionLendingId = lendingConcessionDetail.lendingConcessionDetailId;
-
-                //    if (concessionFormItem.get('limit').value)
-                //        tieredRate.limit = concessionFormItem.get('limit').value;
-
-                //    if (concessionFormItem.get('marginAgainstPrime').value)
-                //        tieredRate.marginToPrime = concessionFormItem.get('marginAgainstPrime').value;
-
-                //    lendingConcessionDetail.lendingConcessionDetailTieredRates.push(tieredRate);
-                //}
+                if (concessionFormItem.get('marginAgainstPrime').value)
+                    lendingConcessionDetail.marginAgainstPrime = concessionFormItem.get('marginAgainstPrime').value;
             }
 
             if (concessionFormItem.get('term').value) {
@@ -1290,34 +1270,6 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
         if (!this.validationError) {
             this.lendingService.postChildConcession(lendingConcession, this.editType).subscribe(entity => {
-                console.log("data saved");
-                this.isEditing = false;
-                this.saveMessage = entity.concession.childReferenceNumber;
-                this.lendingConcession = entity;
-                this.canEdit = false;
-                this.motivationEnabled = false;
-                this.isLoading = false;
-            }, error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
-        } else {
-            this.isLoading = false;
-        }
-    }
-
-    saveUpdatedConcession() {
-        this.isLoading = true;
-        this.errorMessage = null;
-        this.validationError = null;
-
-        var lendingConcession = this.getLendingConcession(true);
-
-        lendingConcession.concession.type = "Existing";
-        lendingConcession.concession.referenceNumber = this.concessionReferenceId;
-
-        if (!this.validationError) {
-            this.lendingService.postUpdateLendingData(lendingConcession, this.editType).subscribe(entity => {
                 console.log("data saved");
                 this.isEditing = false;
                 this.saveMessage = entity.concession.childReferenceNumber;
