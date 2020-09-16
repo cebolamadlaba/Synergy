@@ -190,17 +190,23 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         public ConcessionLending UpdateConcessionLending(LendingConcessionDetail lendingConcessionDetail,
             Concession concession)
         {
-            this.UpdateConcessionLendingTieredRates(lendingConcessionDetail);
-
             var concessionLending = _mapper.Map<ConcessionLending>(lendingConcessionDetail);
+            concessionLending.ConcessionLendingTieredRates = _mapper.Map<IEnumerable<ConcessionLendingTieredRate>>(lendingConcessionDetail.LendingConcessionDetailTieredRates);
 
             concessionLending.ConcessionId = concession.Id;
 
             if (concession.Status == Constants.ConcessionStatus.Approved ||
                 concession.Status == Constants.ConcessionStatus.ApprovedWithChanges)
             {
-                UpdateApprovedPrice(concessionLending);
-                UpdateIsMismatched(concessionLending);
+
+                if (concessionLending.ProductTypeId == Constants.Lending.ProductType.OverdraftId ||
+                    concessionLending.ProductTypeId == Constants.Lending.ProductType.TempOverdraftId)
+                    this.UpdateApprovedPriceForTieredRate(concessionLending.ConcessionLendingTieredRates);
+                else
+                    this.UpdateApprovedPrice(concessionLending);
+
+                this.UpdateIsMismatched(concessionLending);
+
 
                 _ruleManager.UpdateBaseFieldsOnApproval(concessionLending);
 
@@ -223,12 +229,20 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 }
             }
             else if (concession.Status == Constants.ConcessionStatus.Pending &&
-                     concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges)
+                     (concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges ||
+                     concession.SubStatus == Constants.ConcessionSubStatus.HoApprovedWithChanges))
             {
-                UpdateApprovedPrice(concessionLending);
+                if (concessionLending.ProductTypeId == Constants.Lending.ProductType.OverdraftId ||
+                    concessionLending.ProductTypeId == Constants.Lending.ProductType.TempOverdraftId)
+                    this.UpdateApprovedPriceForTieredRate(concessionLending.ConcessionLendingTieredRates);
+                else
+                    this.UpdateApprovedPrice(concessionLending);
+
             }
 
             _concessionLendingRepository.Update(concessionLending);
+
+            this.UpdateConcessionLendingTieredRates(concessionLending);
 
             return concessionLending;
         }
@@ -256,6 +270,33 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
         }
 
+        private void UpdateApprovedPriceForTieredRate(IEnumerable<ConcessionLendingTieredRate> concessionLendingTieredRates)
+        {
+            if (concessionLendingTieredRates == null || concessionLendingTieredRates.Count() == 0)
+                return;
+
+            ConcessionLendingTieredRate dbTieredRate = null;
+            foreach (ConcessionLendingTieredRate tieredRate in concessionLendingTieredRates)
+            {
+                dbTieredRate = this._concessionLendingTieredRateRepository.ReadById(tieredRate.Id);
+                if (dbTieredRate == null)
+                    continue;
+
+                if (dbTieredRate.ApprovedMarginToPrime.HasValue)
+                {
+                    tieredRate.ApprovedMarginToPrime = dbTieredRate.ApprovedMarginToPrime;
+                }
+                else
+                {
+                    //the approved margin to prime is what has been captured when approved
+                    tieredRate.ApprovedMarginToPrime = tieredRate.MarginToPrime;
+
+                    //the approved margin to prime is what has been captured when approved
+                    tieredRate.MarginToPrime = dbTieredRate.MarginToPrime;
+                }
+            }
+        }
+
         /// <summary>
         /// Updates the is mismatched.
         /// </summary>
@@ -279,8 +320,25 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 concessionLending.LoadedMarginToPrime = loadedPriceLending.MarginToPrime;
 
-                if (loadedPriceLending.MarginToPrime != concessionLending.ApprovedMarginToPrime)
-                    concessionLending.IsMismatched = true;
+                if (concessionLending.ProductTypeId == Constants.Lending.ProductType.OverdraftId ||
+                    concessionLending.ProductTypeId == Constants.Lending.ProductType.TempOverdraftId)
+                {
+                    if (concessionLending.ConcessionLendingTieredRates != null ||
+                        concessionLending.ConcessionLendingTieredRates.Count() > 0)
+                    {
+                        concessionLending.IsMismatched = concessionLending.ConcessionLendingTieredRates
+                            .Any(a => a.ApprovedMarginToPrime != loadedPriceLending.MarginToPrime);
+                    }
+                    else
+                    {
+                        concessionLending.IsMismatched = true;
+                    }
+                }
+                else
+                {
+                    if (loadedPriceLending.MarginToPrime != concessionLending.ApprovedMarginToPrime)
+                        concessionLending.IsMismatched = true;
+                }
             }
             else
             {
@@ -542,8 +600,19 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
         private IEnumerable<LendingConcessionDetail> GetRelatedLendingConcessionTieredRates(IEnumerable<LendingConcessionDetail> lendingConcessionDetails)
         {
+
             foreach (var lendingConcessionDetail in lendingConcessionDetails)
+            {
                 lendingConcessionDetail.LendingConcessionDetailTieredRates = this.GetLendingConcessionTieredRates(lendingConcessionDetail.LendingConcessionDetailId);
+
+                LendingConcessionDetailTieredRate firstTier = lendingConcessionDetail.LendingConcessionDetailTieredRates.FirstOrDefault();
+                if (firstTier != null)
+                {
+                    lendingConcessionDetail.Limit = (decimal)firstTier.Limit;
+                    lendingConcessionDetail.MarginAgainstPrime = (decimal)firstTier.MarginToPrime;
+                    lendingConcessionDetail.ApprovedMap = firstTier.ApprovedMap;
+                }
+            }
 
             return lendingConcessionDetails;
         }
@@ -571,40 +640,26 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             }
         }
 
-        public void UpdateConcessionLendingTieredRates(LendingConcessionDetail lendingConcessionDetail)
+        private void UpdateConcessionLendingTieredRates(ConcessionLending concessionLending)
         {
-            if (lendingConcessionDetail == null)
+            if (concessionLending == null)
                 return;
-            if (lendingConcessionDetail.LendingConcessionDetailTieredRates == null || lendingConcessionDetail.LendingConcessionDetailTieredRates.Count() == 0)
+            if (concessionLending.ConcessionLendingTieredRates == null || concessionLending.ConcessionLendingTieredRates.Count() == 0)
                 return;
-
-            var concessionLendingTieredRates = this._mapper.Map<IEnumerable<ConcessionLendingTieredRate>>(lendingConcessionDetail.LendingConcessionDetailTieredRates);
 
             // remove tiered rates no longer present.
-            var dbLendingConcessionTieredRates = this.GetLendingConcessionTieredRates(lendingConcessionDetail.LendingConcessionDetailId);
+            var dbLendingConcessionTieredRates = this.GetLendingConcessionTieredRates(concessionLending.Id);
             foreach (var dbLendingConcessionTieredRate in dbLendingConcessionTieredRates)
             {
-                if (!concessionLendingTieredRates.Any(a => a.Id == dbLendingConcessionTieredRate.Id))
+                if (!concessionLending.ConcessionLendingTieredRates.Any(a => a.Id == dbLendingConcessionTieredRate.Id))
                     this.DeleteConcessionLendingTieredRate(dbLendingConcessionTieredRate.Id);
             }
-
-            foreach (var concessionLendingTieredRate in concessionLendingTieredRates)
+            foreach (var concessionLendingTieredRate in concessionLending.ConcessionLendingTieredRates)
             {
                 if (concessionLendingTieredRate.Id == 0)
                     this._concessionLendingTieredRateRepository.Create(concessionLendingTieredRate);
                 else
                     this._concessionLendingTieredRateRepository.Update(concessionLendingTieredRate);
-            }
-        }
-
-        public void UpdateConcessionLendingTieredRates(IEnumerable<LendingConcessionDetail> lendingConcessionDetails)
-        {
-            if (lendingConcessionDetails == null || lendingConcessionDetails.Count() == 0)
-                return;
-
-            foreach (var lendingConcessionDetail in lendingConcessionDetails)
-            {
-                this.UpdateConcessionLendingTieredRates(lendingConcessionDetail);
             }
         }
 

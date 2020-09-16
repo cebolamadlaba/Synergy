@@ -504,6 +504,7 @@
                         <tr *ngIf="selectedLineItemTieredRates.length > 0">
                             <th>Limit</th>
                             <th>Prime(-/+) / Fixed rate</th>
+                            <th *ngIf="isApproved">Appr. Prime(-/+)</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -518,6 +519,8 @@
                             <td style="width:40%"><input type="text" class="form-control" [(ngModel)]="lendingTieredRate.limitString" (change)="setTwoNumberDecimal($event)" [disabled]="!canEdit" /></td>
                             <!-- Prime -->
                             <td style="width:40%"><input type="text" class="form-control" [(ngModel)]="lendingTieredRate.marginToPrimeString" (change)="setThreeNumberDecimal($event)" [disabled]="!canEdit" /></td>
+                            <!-- Approved Prime -->
+                            <td *ngIf="isApproved" style="width:40%"><input type="text" class="form-control" [(ngModel)]="lendingTieredRate.approvedMapString" [disabled]="true" /></td>
                             <!-- Remove Row-->
                             <td style="width:10%"><button class="btn-delete" type="button" (click)="deleteTieredRateRow(i)" *ngIf="canEdit"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
                         </tr>
