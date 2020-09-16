@@ -21,7 +21,7 @@ Begin Transaction
 
     -- update the first tiered rate row approved margin against prime
 	Update		tr
-	Set			tr.ApprovedMarginToPrime = cl.ApprovedMarginToPrime,
+	Set			tr.ApprovedMarginToPrime = cl.ApprovedMarginToPrime
 	--Select	*
 	From		tblConcessionLending cl
 	Inner Join	tblConcessionLendingTieredRate tr	On	tr.fkConcessionLendingId	=	cl.pkConcessionLendingId
