@@ -5,6 +5,21 @@ Add ApprovedMarginToPrime Decimal(18,3) Null
 
 
 Begin Transaction
+
+	-- get list of non-overdraft lending concessions that have tiered rates;
+	-- populate the first row tiered rate into tblConcessionLending.Limit and tblConcessionLending.MarginToPrime;
+	-- for approved concessions populate the tblConcessionLending.ApprovedMarginToPrime from first row tiered rate MarginToPrime;
+	Update		cl
+	Set			cl.Limit = tr.Limit,
+				cl.MarginToPrime = tr.MarginToPrime
+	--Select		*
+	From		tblConcession c
+	Inner Join	tblConcessionLending cl	On	cl.fkConcessionId	=	c.pkConcessionId
+	Inner Join	tblConcessionLendingTieredRate tr	On	tr.fkConcessionLendingId	=	cl.pkConcessionLendingId
+	Where	    cl.fkProductTypeId Not In (1, 15)	
+	And		    (cl.Limit = 0 And cl.MarginToPrime = 0)
+
+    -- update the first tiered rate row approved margin against prime
 	Update		tr
 	Set			tr.ApprovedMarginToPrime = cl.ApprovedMarginToPrime,
 	--Select	*
@@ -18,6 +33,7 @@ Begin Transaction
 	)
 	And		cl.ApprovedMarginToPrime Is Not Null
 
+    -- update tiered rate approved margin to prime with either tiered rate margin to prime or line item approved margin to prime
 	Update		tr
 	Set			tr.ApprovedMarginToPrime = 
 					Case When cl.MarginToPrime = 0 And cl.MarginToPrime < tr.MarginToPrime
