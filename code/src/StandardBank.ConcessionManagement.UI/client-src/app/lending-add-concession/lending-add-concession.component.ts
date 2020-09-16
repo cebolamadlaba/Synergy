@@ -540,27 +540,8 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
                 this.addValidationError("Client account not selected");
             }
 
-            if (concessionFormItem.get('productType').value.description === "Overdraft") {
-
-                if (concessionFormItem.get('term').value == "") {
-
-                    this.addValidationError("Term cannot be empty");
-                }
-
-                if (concessionFormItem.get('reviewFeeType').value == "") {
-                    this.addValidationError("Review Fee Type cannot be empty");
-                }
-
-                if (concessionFormItem.get('reviewFee').value == "") {
-                    this.addValidationError("Review Fee cannot be empty");
-                }
-
-                if (concessionFormItem.get('uffFee').value == "") {
-                    this.addValidationError("UffFee cannot be empty");
-                }
-            }
-            else if (concessionFormItem.get('productType').value.description === "Temporary Overdraft") {
-
+            if (concessionFormItem.get('productType').value.description === "Overdraft" ||
+                concessionFormItem.get('productType').value.description === "Temporary Overdraft") {
 
                 if (concessionFormItem.get('term').value == "") {
                     this.addValidationError("Term cannot be empty");
@@ -577,7 +558,6 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
                 if (concessionFormItem.get('uffFee').value == "") {
                     this.addValidationError("UffFee cannot be empty");
                 }
-
             }
             else if (
                 concessionFormItem.get('productType').value.description === "MTL (Medium Term Loan)" ||
@@ -643,18 +623,11 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
                     this.addValidationError("Prime fixed rate cannot be empty");
                 }
 
-                let tieredRate = new LendingConcessionTieredRate();
-                tieredRate.id = 0;
-                tieredRate.concessionLendingId = 0;
-
                 if (concessionFormItem.get('limit').value)
-                    tieredRate.limit = concessionFormItem.get('limit').value;
+                    lendingConcessionDetail.limit = concessionFormItem.get('limit').value;
 
                 if (concessionFormItem.get('marginAgainstPrime').value)
-                    tieredRate.marginToPrime = concessionFormItem.get('marginAgainstPrime').value;
-
-                lendingConcessionDetail.lendingConcessionDetailTieredRates = [];
-                lendingConcessionDetail.lendingConcessionDetailTieredRates.push(tieredRate);
+                    lendingConcessionDetail.marginAgainstPrime = concessionFormItem.get('marginAgainstPrime').value;
             }
 
             if (concessionFormItem.get('term').value)

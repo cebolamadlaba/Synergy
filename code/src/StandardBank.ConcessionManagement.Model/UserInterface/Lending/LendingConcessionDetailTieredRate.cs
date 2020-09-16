@@ -10,7 +10,8 @@ namespace StandardBank.ConcessionManagement.Model.UserInterface.Lending
 
         public decimal? Limit { get; set; }
 
-        public decimal? MarginToPrime { get; set; }  
+        public decimal? MarginToPrime { get; set; }
 
+        public decimal? ApprovedMap { get; set; }
     }
 }
