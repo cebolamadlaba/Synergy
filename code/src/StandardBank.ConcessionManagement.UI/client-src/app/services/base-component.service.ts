@@ -11,6 +11,8 @@ import { ConcessionCondition } from '../models/concession-condition';
 import { ConcessionConditionReturnObject } from '../models/concession-condition-return-object';
 import { GlmsConcessionDetail } from '../models/glms-concession-detail';
 
+import { environment } from '../../environments/environment';
+
 declare var accounting: any;
 
 @Injectable()
@@ -110,7 +112,7 @@ export class BaseComponentService {
         this.checkAEExistOnriskGroupNumber();
 
         // FOR TESTING: comment out the first part of the if-statement.
-        if (concessionListLength > 0) {
+        if (!environment.isDebug && concessionListLength > 0) {
             if (sapbpid == 0) {
                 this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Risk group. Please select the concession below and update");
             } else {
