@@ -13,6 +13,7 @@ import { AccrualType } from "../models/accrual-type";
 import { ChannelType } from "../models/channel-type";
 import { LookupDataService } from "../services/lookup-data.service";
 import { Concession } from "../models/concession";
+import { extendConcessionModel } from "../models/extendConcessionModel";
 
 import { ConcessionCondition } from "../models/concession-condition";
 import { TableNumber } from "../models/table-number";
@@ -203,6 +204,14 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
 
     getTradeConcessionItemRows(): FormArray {
         return <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
+    }
+
+
+    isMotivationEnabled() {
+
+        if (!this.canExtend) {
+            return this.motivationEnabled ? null : '';
+        }
     }
 
     getInitialData() {
@@ -1229,27 +1238,40 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
     }
 
     extendConcession() {
+
         if (confirm("Are you sure you want to extend this concession?")) {
             this.isLoading = true;
             this.errorMessage = null;
             this.validationError = null;
 
-            this.tradeConcessionService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
-                console.log("data saved");
-                this.canBcmApprove = false;
-                this.canBcmApprove = false;
-                this.canExtend = false;
-                this.canRenew = false;
-                this.canRecall = false;
-                this.canUpdate = false;
-                this.canArchive = false;
-                this.saveMessage = entity.concession.childReferenceNumber;
-                this.isLoading = false;
-                this.tradeConcession = entity;
-            }, error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
+            var extendConceModel = new extendConcessionModel()
+            extendConceModel.concessionReferenceId = this.concessionReferenceId;
+
+            if (this.tradeConcessionForm.controls['motivation'].value)
+                extendConceModel.motivation = this.tradeConcessionForm.controls['motivation'].value;
+            else
+                this.addValidationError("Motivation not captured");
+                 this.isLoading = false;
+
+            if (!this.validationError) {
+
+                this.tradeConcessionService.postExtendConcession(extendConceModel).subscribe(entity => {
+                    console.log("data saved");
+                    this.canBcmApprove = false;
+                    this.canBcmApprove = false;
+                    this.canExtend = false;
+                    this.canRenew = false;
+                    this.canRecall = false;
+                    this.canUpdate = false;
+                    this.canArchive = false;
+                    this.saveMessage = entity.concession.childReferenceNumber;
+                    this.isLoading = false;
+                    this.tradeConcession = entity;
+                }, error => {
+                    this.errorMessage = <any>error;
+                    this.isLoading = false;
+                });
+            }
         }
     }
 

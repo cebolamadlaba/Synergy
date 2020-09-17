@@ -12,6 +12,7 @@ import { LendingFinancial } from "../models/lending-financial";
 
 import { SearchConcessionDetail } from '../models/search-concession-detail';
 import { ApprovedConcessionDetail } from "../models/approved-concession-detail";
+import { extendConcessionModel } from "../models/extendConcessionModel";
 
 @Injectable()
 export class LendingService {
@@ -55,11 +56,11 @@ export class LendingService {
         return this.http.post(url, lendingConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    postExtendConcession(concessionReferenceId, extensionFee): Observable<LendingConcession> {
+    postExtendConcession(extendConcessionModel: extendConcessionModel, extensionFee): Observable<LendingConcession> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        const url = "/api/Lending/ExtendConcession/" + concessionReferenceId + "/" + extensionFee;
-        return this.http.post(url, concessionReferenceId, options).map(this.extractData).catch(this.handleErrorObservable);
+        const url = "/api/Lending/ExtendConcession/" + extensionFee;
+        return this.http.post(url, extendConcessionModel, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
     postChildConcession(lendingConcession: LendingConcession, relationshipType: string): Observable<LendingConcession> {

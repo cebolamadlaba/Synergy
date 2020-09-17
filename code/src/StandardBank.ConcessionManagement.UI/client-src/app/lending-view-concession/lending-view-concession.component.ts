@@ -40,6 +40,7 @@ import { EditTypeEnum } from '../models/edit-type-enum';
 import { ConcessionConditionReturnObject } from '../models/concession-condition-return-object';
 import { ProductTypeEnum } from '../models/product-type-enum';
 import { LendingConcessionTieredRate } from '../models/lending-concession-tiered-rate';
+import { extendConcessionModel } from "../models/extendConcessionModel";
 
 @Component({
     selector: 'app-lending-view-concession',
@@ -1055,32 +1056,48 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     }
 
     extendConcession() {
+
         if (this.selectedExtensionFee == null) {
             return;
         }
-        if (confirm("Are you sure you want to extend this concession?")) {
-            this.isLoading = true;
-            this.errorMessage = null;
-            this.validationError = null;
 
-            this.lendingService.postExtendConcession(this.concessionReferenceId, this.selectedExtensionFee).subscribe(entity => {
-                this.lendingConcession = entity;
-                this.populateFormFromLendingConcession();
-                console.log("data saved");
-                this.canBcmApprove = false;
-                this.canBcmApprove = false;
-                this.canExtend = false;
-                this.canRenew = false;
-                this.canRecall = false;
-                this.canUpdate = false;
-                this.canArchive = false;
-                this.saveMessage = entity.concession.childReferenceNumber;
+         var extendConceModel = new extendConcessionModel()
+               extendConceModel.concessionReferenceId = this.concessionReferenceId;
+
+        if (this.lendingConcessionForm.controls['motivation'].value)
+                extendConceModel.motivation = this.lendingConcessionForm.controls['motivation'].value;
+            else
+                this.addValidationError("Motivation not captured");
                 this.isLoading = false;
-                this.lendingConcession = entity;
-            }, error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
+
+        if (!this.validationError) {
+
+            if (confirm("Are you sure you want to extend this concession?")) {
+                this.isLoading = true;
+                this.errorMessage = null;
+                this.validationError = null;
+
+                this.lendingService.postExtendConcession(extendConceModel, this.selectedExtensionFee).subscribe(entity => {
+                    this.lendingConcession = entity;
+                    this.populateFormFromLendingConcession();
+                    console.log("data saved");
+                    this.canBcmApprove = false;
+                    this.canBcmApprove = false;
+                    this.canExtend = false;
+                    this.canRenew = false;
+                    this.canRecall = false;
+                    this.canUpdate = false;
+                    this.canArchive = false;
+                    this.saveMessage = entity.concession.childReferenceNumber;
+                    this.isLoading = false;
+                    this.lendingConcession = entity;
+                    this.errorMessage = null;
+                    this.validationError = null;
+                }, error => {
+                    this.errorMessage = <any>error;
+                    this.isLoading = false;
+                });
+                }
         }
     }
 
@@ -1517,7 +1534,10 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     }
 
     isMotivationEnabled() {
-        return this.motivationEnabled ? null : '';
+
+        if (!this.canExtend) {
+            return this.motivationEnabled ? null : '';
+        }    
     }
 
     disableField(index: number, fieldname: string) {
