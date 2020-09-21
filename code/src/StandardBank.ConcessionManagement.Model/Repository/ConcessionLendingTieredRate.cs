@@ -29,7 +29,15 @@ namespace StandardBank.ConcessionManagement.Model.Repository
         /// <value>
         /// The MarginToPrime.
         /// </value>
-        public decimal? MarginToPrime { get; set; }  
+        public decimal? MarginToPrime { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ApprovedMarginToPrime.
+        /// </summary>
+        /// <value>
+        /// The MarginToPrime.
+        /// </value>
+        public decimal? ApprovedMarginToPrime { get; set; }
 
         /// <summary>
         /// Gets or the name of the table.

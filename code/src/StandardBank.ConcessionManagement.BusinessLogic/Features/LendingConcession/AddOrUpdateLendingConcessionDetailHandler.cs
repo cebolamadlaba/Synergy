@@ -42,7 +42,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.LendingConces
                 message.AuditRecord = new AuditRecord(result, message.User, AuditType.Insert);
                 message.LendingConcessionDetail.LendingConcessionDetailId = result.Id;
 
-                if (result.Id > 0)
+                if (message.LendingConcessionDetail.LendingConcessionDetailTieredRates != null && result.Id > 0)
                 {
                     foreach (var lendingConcessionDetailTieredRate in message.LendingConcessionDetail.LendingConcessionDetailTieredRates)
                         lendingConcessionDetailTieredRate.ConcessionLendingId = result.Id;

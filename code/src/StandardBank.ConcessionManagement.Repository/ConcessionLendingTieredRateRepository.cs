@@ -19,8 +19,8 @@ namespace StandardBank.ConcessionManagement.Repository
         public ConcessionLendingTieredRate Create(ConcessionLendingTieredRate model)
         {
             const string sql =
-                @"INSERT INTO [dbo].[tblConcessionLendingTieredRate]([fkConcessionLendingId],[Limit],[MarginToPrime])
-                    VALUES(@ConcessionLendingId, @Limit, @MarginToPrime)
+                @"INSERT INTO [dbo].[tblConcessionLendingTieredRate]([fkConcessionLendingId],[Limit],[MarginToPrime],[ApprovedMarginToPrime])
+                    VALUES(@ConcessionLendingId, @Limit, @MarginToPrime, @ApprovedMarginToPrime)
                     SELECT CAST(SCOPE_IDENTITY() as int)";
 
             using (var db = _dbConnectionFactory.Connection())
@@ -30,7 +30,8 @@ namespace StandardBank.ConcessionManagement.Repository
                     {
                         model.ConcessionLendingId,
                         model.Limit,
-                        model.MarginToPrime
+                        model.MarginToPrime,
+                        model.ApprovedMarginToPrime
                     }).Single();
             }
 
@@ -46,6 +47,7 @@ namespace StandardBank.ConcessionManagement.Repository
                             ,[fkConcessionLendingId] [ConcessionLendingId]
                             ,[Limit]
                             ,[MarginToPrime]
+                            ,[ApprovedMarginToPrime]
                         FROM [tblConcessionLendingTieredRate]
                         Where [pkConcessionLendingTieredRateId] = @Id",
                     new { id }).SingleOrDefault();
@@ -61,6 +63,7 @@ namespace StandardBank.ConcessionManagement.Repository
                             ,[fkConcessionLendingId] [ConcessionLendingId]
                             ,[Limit]
                             ,[MarginToPrime]
+                            ,[ApprovedMarginToPrime]
                         FROM [tblConcessionLendingTieredRate]
                         Where [fkConcessionLendingId] = @concessionLendingId",
                     new { concessionLendingId });
@@ -76,6 +79,7 @@ namespace StandardBank.ConcessionManagement.Repository
                             ,[fkConcessionLendingId] [ConcessionLendingId]
                             ,[Limit]
                             ,[MarginToPrime]
+                            ,[ApprovedMarginToPrime]
                         FROM [tblConcessionLendingTieredRate]");
             }
         }
@@ -89,13 +93,15 @@ namespace StandardBank.ConcessionManagement.Repository
                         SET [fkConcessionLendingId] = @ConcessionLendingId
 	                        ,[Limit] = @Limit
 	                        ,[MarginToPrime] = @MarginToPrime
+                            ,[ApprovedMarginToPrime] = @ApprovedMarginToPrime
                         WHERE pkConcessionLendingTieredRateId = @Id",
                     new
                     {
                         model.Id,
                         model.ConcessionLendingId,
                         model.Limit,
-                        model.MarginToPrime
+                        model.MarginToPrime,
+                        model.ApprovedMarginToPrime
                     });
             }
         }
