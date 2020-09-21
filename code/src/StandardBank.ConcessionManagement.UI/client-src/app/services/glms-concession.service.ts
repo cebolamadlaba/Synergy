@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { GlmsConcession } from '../models/glms-concession';
 import { ApprovedConcessionDetail } from '../models/approved-concession-detail';
 import { SearchConcessionDetail } from '../models/search-concession-detail';
+import { extendConcessionModel } from "../models/extendConcessionModel";
 
 @Injectable()
 export class GlmsConcessionService {
@@ -42,11 +43,11 @@ export class GlmsConcessionService {
         return this.http.post(url, glmsConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    postExtendConcession(concessionReferenceId): Observable<GlmsConcession> {
+    postExtendConcession(extendConcessionModel: extendConcessionModel ): Observable<GlmsConcession> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        const url = "/api/Glms/ExtendConcession/" + concessionReferenceId;
-        return this.http.post(url, concessionReferenceId, options).map(this.extractData).catch(this.handleErrorObservable);
+        const url = "/api/Glms/ExtendConcession";
+        return this.http.post(url, extendConcessionModel, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
     postChildConcession(glmsConcession: GlmsConcession, relationshipType: string): Observable<GlmsConcession> {
