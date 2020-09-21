@@ -229,10 +229,10 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// </summary>
         /// <param name="concessionReferenceId">The concession reference identifier.</param>
         /// <returns></returns>
-        [Route("ExtendConcession/{concessionReferenceId}/{extensionFee:decimal}")]
-        public async Task<IActionResult> ExtendConcession(string concessionReferenceId, decimal extensionFee)
+        [Route("ExtendConcession/{extensionFee:decimal}")]
+        public async Task<IActionResult> ExtendConcession([FromBody] ExtendConcessionModel extendConcession, decimal extensionFee)
         {
-            var lendingConcession = await CreateChildConcession(concessionReferenceId, Constants.RelationshipType.Extension, extensionFee);
+            var lendingConcession = await CreateChildConcession(extendConcession, Constants.RelationshipType.Extension, extensionFee);
 
             return Ok(lendingConcession);
         }
@@ -243,12 +243,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <param name="concessionReferenceId">The concession reference identifier.</param>
         /// <param name="relationshipType">Type of the relationship.</param>
         /// <returns></returns>
-        private async Task<LendingConcession> CreateChildConcession(string concessionReferenceId, string relationshipType, decimal? extensionFee = null)
+        private async Task<LendingConcession> CreateChildConcession(ExtendConcessionModel extendConcession, string relationshipType, decimal? extensionFee = null)
         {
             var user = _siteHelper.LoggedInUser(this);
 
             //get the lending concession details
-            var lendingConcession = _lendingManager.GetLendingConcession(concessionReferenceId, user);
+            var lendingConcession = _lendingManager.GetLendingConcession(extendConcession.ConcessionReferenceId, user);
 
             var parentConcessionId = lendingConcession.Concession.Id;
 
@@ -264,6 +264,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             newConcession.ReferenceNumber = string.Empty;
             newConcession.SubStatus = Constants.ConcessionSubStatus.BcmPending;
             newConcession.Type = Constants.ReferenceType.Existing;
+            newConcession.Motivation = extendConcession.Motivation;
 
             var concession = await _mediator.Send(new AddConcession(newConcession, user));
 
@@ -315,7 +316,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             await _mediator.Send(new AddConcessionRelationship(concessionRelationship, user));
 
-            var returnConcession = _lendingManager.GetLendingConcession(concessionReferenceId, user);
+            var returnConcession = _lendingManager.GetLendingConcession(extendConcession.ConcessionReferenceId, user);
             returnConcession.Concession.ChildReferenceNumber = concession.ReferenceNumber;
 
             return returnConcession;

@@ -10,6 +10,7 @@ import { Concession } from "../models/concession";
 import { ConcessionCondition } from "../models/concession-condition";
 import { TradeConcessionDetail } from "../models/trade-concession-detail";
 import { TradeFinancial } from "../models/trade-financial";
+import { extendConcessionModel } from "../models/extendConcessionModel";
 
 
 import { SearchConcessionDetail } from '../models/search-concession-detail';
@@ -52,11 +53,11 @@ export class TradeConcessionService {
         return this.http.post(url, tradeConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    postExtendConcession(concessionReferenceId): Observable<TradeConcession> {
+    postExtendConcession(extendConcessionModel: extendConcessionModel): Observable<TradeConcession> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        const url = "/api/Trade/ExtendConcession/" + concessionReferenceId;
-        return this.http.post(url, concessionReferenceId, options).map(this.extractData).catch(this.handleErrorObservable);
+        const url = "/api/Trade/ExtendConcession";
+        return this.http.post(url,extendConcessionModel, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
     postChildConcession(bolConcession: TradeConcession, relationshipType: string): Observable<TradeConcession> {

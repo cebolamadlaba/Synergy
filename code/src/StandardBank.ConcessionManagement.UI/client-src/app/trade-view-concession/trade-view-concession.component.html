@@ -160,7 +160,7 @@
 
         <div class="row">
             <label>Motivation</label>
-            <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="motivationEnabled ? null : ''"></textarea>
+            <textarea class="form-control large-input" maxlength="800" formControlName="motivation" [attr.disabled]="isMotivationEnabled()"></textarea>
         </div>
 
         <div class="row" *ngIf="canBcmApprove || canPcmApprove || canApproveChanges">

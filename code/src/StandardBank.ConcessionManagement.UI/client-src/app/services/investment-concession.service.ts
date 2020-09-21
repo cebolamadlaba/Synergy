@@ -3,6 +3,7 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import { InvestmentView } from "../models/investment-view";
+import { extendConcessionModel } from "../models/extendConcessionModel";
 
 import { RiskGroup } from "../models/risk-group";
 import { InvestmentConcession } from "../models/investment-concession";
@@ -51,11 +52,11 @@ export class InvestmentConcessionService {
         return this.http.post(url, investmentConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    postExtendConcession(concessionReferenceId): Observable<InvestmentConcession> {
+    postExtendConcession(extendConcessionModel: extendConcessionModel): Observable<InvestmentConcession> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        const url = "/api/Investment/ExtendConcession/" + concessionReferenceId;
-        return this.http.post(url, concessionReferenceId, options).map(this.extractData).catch(this.handleErrorObservable);
+        const url = "/api/Investment/ExtendConcession/";
+        return this.http.post(url, extendConcessionModel, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
     postChildConcession(investmentConcession: InvestmentConcession, relationshipType: string): Observable<InvestmentConcession> {

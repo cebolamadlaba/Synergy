@@ -175,13 +175,13 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             return Ok(_investmentManager.GetInvestmentConcession(investmentConcession.Concession.ReferenceNumber, user));
         }
 
-        [Route("ExtendConcession/{concessionReferenceId}")]
-        public async Task<IActionResult> ExtendConcession(string concessionReferenceId)
+        [Route("ExtendConcession")]
+        public async Task<IActionResult> ExtendConcession([FromBody] ExtendConcessionModel extendConcession)
         {
             var user = _siteHelper.LoggedInUser(this);
 
             //get the concession details
-            var investmentConcession = _investmentManager.GetInvestmentConcession(concessionReferenceId, user);
+            var investmentConcession = _investmentManager.GetInvestmentConcession(extendConcession.ConcessionReferenceId, user);
 
             var parentConcessionId = investmentConcession.Concession.Id;
 
@@ -197,6 +197,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             newConcession.ReferenceNumber = string.Empty;
             newConcession.SubStatus = Constants.ConcessionSubStatus.BcmPending;
             newConcession.Type = Constants.ReferenceType.Existing;
+            newConcession.Motivation = extendConcession.Motivation;
 
             var concession = await _mediator.Send(new AddConcession(newConcession, user));
 
@@ -231,7 +232,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             await _mediator.Send(new AddConcessionRelationship(concessionRelationship, user));
 
-            var returnConcession = _investmentManager.GetInvestmentConcession(concessionReferenceId, user);
+            var returnConcession = _investmentManager.GetInvestmentConcession(extendConcession.ConcessionReferenceId, user);
             returnConcession.Concession.ChildReferenceNumber = concession.ReferenceNumber;
             return Ok(returnConcession);
         }
