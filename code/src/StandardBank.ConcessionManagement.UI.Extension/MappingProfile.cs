@@ -110,7 +110,9 @@ namespace StandardBank.ConcessionManagement.UI.Extension
                 .ForMember(target => target.MRS_ERI, _ => _.MapFrom(source => source.MrsEri));
 
             //ConcessionLendingTieredRate
-            CreateMap<Model.Repository.ConcessionLendingTieredRate, Model.UserInterface.Lending.LendingConcessionDetailTieredRate>().ReverseMap();
+            CreateMap<Model.Repository.ConcessionLendingTieredRate, Model.UserInterface.Lending.LendingConcessionDetailTieredRate>()
+                .ForMember(target => target.ApprovedMap, _ => _.MapFrom(source => source.ApprovedMarginToPrime))
+                .ReverseMap();
 
             //ConcessionRelationship
             CreateMap<Model.Repository.ConcessionRelationship, Model.UserInterface.ConcessionRelationship>()
