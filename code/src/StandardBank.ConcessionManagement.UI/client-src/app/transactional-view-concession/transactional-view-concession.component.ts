@@ -796,6 +796,8 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
 
         if (this.canExtend && this.motivationEnabled == false) {
             this.motivationEnabled = true;
+            this.transactionalConcessionForm.controls['motivation'].setValue('');
+
         } else {
 
             var extendConceModel = new extendConcessionModel()
@@ -809,7 +811,10 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
                 this.isLoading = false;
             }
 
-            if (confirm("Are you sure you want to extend this concession?")) {
+            if (!this.validationError) {
+
+                if (confirm("Are you sure you want to extend this concession?")) {
+
                 this.isLoading = true;
                 this.errorMessage = null;
                 this.validationError = null;
@@ -831,6 +836,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
                     this.errorMessage = <any>error;
                     this.isLoading = false;
                 });
+                }
             }
         }
     }

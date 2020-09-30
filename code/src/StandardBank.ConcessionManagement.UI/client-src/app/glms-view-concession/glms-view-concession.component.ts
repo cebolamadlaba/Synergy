@@ -1305,6 +1305,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
         if (this.canExtend && this.motivationEnabled == false) {
             this.motivationEnabled = true;
+            this.glmsConcessionForm.controls['motivation'].setValue('');
 
         } else {
 

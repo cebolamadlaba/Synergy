@@ -1239,39 +1239,49 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
 
     extendConcession() {
 
-        if (confirm("Are you sure you want to extend this concession?")) {
-            this.isLoading = true;
-            this.errorMessage = null;
-            this.validationError = null;
+        if (this.canExtend && this.motivationEnabled == false) {
+            this.motivationEnabled = true;
+            this.tradeConcessionForm.controls['motivation'].setValue('');
+
+        } else {
 
             var extendConceModel = new extendConcessionModel()
             extendConceModel.concessionReferenceId = this.concessionReferenceId;
 
-            if (this.tradeConcessionForm.controls['motivation'].value)
+            if (this.tradeConcessionForm.controls['motivation'].value) {
                 extendConceModel.motivation = this.tradeConcessionForm.controls['motivation'].value;
-            else
+
+            } else
+            {
                 this.addValidationError("Motivation not captured");
-                 this.isLoading = false;
+                this.isLoading = false;
+            }
 
             if (!this.validationError) {
 
-                this.tradeConcessionService.postExtendConcession(extendConceModel).subscribe(entity => {
-                    console.log("data saved");
-                    this.canBcmApprove = false;
-                    this.canBcmApprove = false;
-                    this.canExtend = false;
-                    this.canRenew = false;
-                    this.canRecall = false;
-                    this.canUpdate = false;
-                    this.canArchive = false;
-                    this.saveMessage = entity.concession.childReferenceNumber;
-                    this.isLoading = false;
-                    this.tradeConcession = entity;
-                }, error => {
-                    this.errorMessage = <any>error;
-                    this.isLoading = false;
-                });
-            }
+                if (confirm("Are you sure you want to extend this concession?")) {
+                    this.isLoading = true;
+                    this.errorMessage = null;
+                    this.validationError = null;
+
+                        this.tradeConcessionService.postExtendConcession(extendConceModel).subscribe(entity => {
+                            console.log("data saved");
+                            this.canBcmApprove = false;
+                            this.canBcmApprove = false;
+                            this.canExtend = false;
+                            this.canRenew = false;
+                            this.canRecall = false;
+                            this.canUpdate = false;
+                            this.canArchive = false;
+                            this.saveMessage = entity.concession.childReferenceNumber;
+                            this.isLoading = false;
+                            this.tradeConcession = entity;
+                        }, error => {
+                            this.errorMessage = <any>error;
+                            this.isLoading = false;
+                        });
+                    }
+                }
         }
     }
 
