@@ -133,7 +133,7 @@ export class BaseComponentService {
         }
 
         if (this.riskGroupAEUser.id != this.aeUser.accountExecutiveUserId) {
-            this.addConcessionValidationError("The logged in user does not have access to the account in the Risk group." + this.riskGroupAEUser.firstName + " " + this.riskGroupAEUser.surname + " is the responsible person for this Risk Group, please refer this concession request to them");
+           this.addConcessionValidationError("The logged in user does not have access to the account in the Risk group." + this.riskGroupAEUser.firstName + " " + this.riskGroupAEUser.surname + " is the responsible person for this Risk Group, please refer this concession request to them");
         }
     }
 

@@ -11,6 +11,7 @@ import { TransactionalConcessionDetail } from "../models/transactional-concessio
 import { TransactionalFinancial } from "../models/transactional-financial";
 import { SearchConcessionDetail } from '../models/search-concession-detail';
 import { ApprovedConcessionDetail } from "../models/approved-concession-detail";
+import { extendConcessionModel } from "../models/extendConcessionModel";
 
 @Injectable()
 export class TransactionalConcessionService {
@@ -49,11 +50,11 @@ export class TransactionalConcessionService {
         return this.http.post(url, transactionalConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    postExtendConcession(concessionReferenceId): Observable<TransactionalConcession> {
+    postExtendConcession(extendConcessionModel: extendConcessionModel): Observable<TransactionalConcession> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        const url = "/api/Transactional/ExtendConcession/" + concessionReferenceId;
-        return this.http.post(url, concessionReferenceId, options).map(this.extractData).catch(this.handleErrorObservable);
+        const url = "/api/Transactional/ExtendConcession";
+        return this.http.post(url, extendConcessionModel, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
     postChildConcession(transactionalConcession: TransactionalConcession, relationshipType: string): Observable<TransactionalConcession> {

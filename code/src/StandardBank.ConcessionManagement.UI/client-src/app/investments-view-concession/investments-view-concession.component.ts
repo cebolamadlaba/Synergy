@@ -987,39 +987,47 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
 
     extendConcession() {
 
-        if (confirm("Are you sure you want to extend this concession?")) {
-            this.isLoading = true;
-            this.errorMessage = null;
-            this.validationError = null;
+        if (this.canExtend && this.motivationEnabled == false) {
+            this.motivationEnabled = true;
+            this.investmentConcessionForm.controls['motivation'].setValue('');
+
+        } else {
 
             var extendConcessionModel = new extendConcessionModel()
             extendConcessionModel.concessionReferenceId = this.concessionReferenceId;
 
-            if (this.investmentConcessionForm.controls['motivation'].value)
+            if (this.investmentConcessionForm.controls['motivation'].value) {
                 extendConcessionModel.motivation = this.investmentConcessionForm.controls['motivation'].value;
-            else
+            } else {
                 this.addValidationError("Motivation not captured");
                 this.isLoading = false;
+            }
 
             if (!this.validationError) {
 
-                this.investmentConcessionService.postExtendConcession(extendConcessionModel).subscribe(entity => {
-                    console.log("data saved");
-                    this.canBcmApprove = false;
-                    this.canBcmApprove = false;
-                    this.canExtend = false;
-                    this.canRenew = false;
-                    this.canRecall = false;
-                    this.canUpdate = false;
-                    this.canArchive = false;
-                    this.saveMessage = entity.concession.childReferenceNumber;
-                    this.isLoading = false;
-                    this.investmentConcession = entity;
-                }, error => {
-                    this.errorMessage = <any>error;
-                    this.isLoading = false;
-                });
-                }
+            if (confirm("Are you sure you want to extend this concession?")) {
+                this.isLoading = true;
+                this.errorMessage = null;
+                this.validationError = null;
+
+                    this.investmentConcessionService.postExtendConcession(extendConcessionModel).subscribe(entity => {
+                        console.log("data saved");
+                        this.canBcmApprove = false;
+                        this.canBcmApprove = false;
+                        this.canExtend = false;
+                        this.canRenew = false;
+                        this.canRecall = false;
+                        this.canUpdate = false;
+                        this.canArchive = false;
+                        this.saveMessage = entity.concession.childReferenceNumber;
+                        this.isLoading = false;
+                        this.investmentConcession = entity;
+                    }, error => {
+                        this.errorMessage = <any>error;
+                        this.isLoading = false;
+                    });
+             }
+               }
         }
     }
 

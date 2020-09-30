@@ -32,6 +32,7 @@ import { MOnthEnum } from '../models/month-enum';
 import { EditTypeEnum } from '../models/edit-type-enum';
 import { TransactionalBaseService } from '../services/transactional-base.service';
 import { FileService } from '../services/file.service';
+import { extendConcessionModel } from "../models/extendConcessionModel";
 
 @Component({
     selector: 'app-transactional-view-concession',
@@ -792,27 +793,51 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
     }
 
     extendConcession() {
-        if (confirm("Are you sure you want to extend this concession?")) {
-            this.isLoading = true;
-            this.errorMessage = null;
-            this.validationError = null;
 
-            this.transactionalConcessionService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
-                console.log("data saved");
-                this.canBcmApprove = false;
-                this.canBcmApprove = false;
-                this.canExtend = false;
-                this.canRenew = false;
-                this.canRecall = false;
-                this.canUpdate = false;
-                this.canArchive = false;
-                this.saveMessage = entity.concession.childReferenceNumber;
+        if (this.canExtend && this.motivationEnabled == false) {
+            this.motivationEnabled = true;
+            this.transactionalConcessionForm.controls['motivation'].setValue('');
+
+        } else {
+
+            var extendConceModel = new extendConcessionModel()
+            extendConceModel.concessionReferenceId = this.concessionReferenceId;
+
+            if (this.transactionalConcessionForm.controls['motivation'].value) {
+                extendConceModel.motivation = this.transactionalConcessionForm.controls['motivation'].value;
+
+            } else {
+                this.addValidationError("Motivation not captured");
                 this.isLoading = false;
-                this.transactionalConcession = entity;
-            }, error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
+            }
+
+            if (!this.validationError) {
+
+                if (confirm("Are you sure you want to extend this concession?")) {
+
+                this.isLoading = true;
+                this.errorMessage = null;
+                this.validationError = null;
+
+                this.transactionalConcessionService.postExtendConcession(extendConceModel).subscribe(entity => {
+                    console.log("data saved");
+                    this.canBcmApprove = false;
+                    this.canBcmApprove = false;
+                    this.canExtend = false;
+                    this.canRenew = false;
+                    this.canRecall = false;
+                    this.canUpdate = false;
+                    this.canArchive = false;
+                    this.saveMessage = entity.concession.childReferenceNumber;
+                    this.isLoading = false;
+                    this.motivationEnabled = false;
+                    this.transactionalConcession = entity;
+                }, error => {
+                    this.errorMessage = <any>error;
+                    this.isLoading = false;
+                });
+                }
+            }
         }
     }
 

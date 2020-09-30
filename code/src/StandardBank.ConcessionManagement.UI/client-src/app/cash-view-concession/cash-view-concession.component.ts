@@ -798,41 +798,52 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
     }
 
     extendConcession() {
-        if (confirm("Are you sure you want to extend this concession?")) {
-            this.isLoading = true;
-            this.errorMessage = null;
-            this.validationError = null;
 
-             var extendConceModel = new extendConcessionModel()
-                extendConceModel.concessionReferenceId = this.concessionReferenceId;
 
-            if (this.cashConcessionForm.controls['motivation'].value)
+        if (this.canExtend && this.motivationEnabled == false) {
+            this.motivationEnabled = true;
+            this.cashConcessionForm.controls['motivation'].setValue('');
+
+        } else {
+
+            var extendConceModel = new extendConcessionModel()
+            extendConceModel.concessionReferenceId = this.concessionReferenceId;
+
+            if (this.cashConcessionForm.controls['motivation'].value) {
                 extendConceModel.motivation = this.cashConcessionForm.controls['motivation'].value;
-            else
+            } else
+            {
                 this.addValidationError("Motivation not captured");
-                 this.isLoading = false;
-
-            if(!this.validationError) {
-         
-                this.cashConcessionService.postExtendConcession(extendConceModel).subscribe(entity => {
-                    console.log("data saved");
-                    this.canBcmApprove = false;
-                    this.canBcmApprove = false;
-                    this.canExtend = false;
-                    this.canRenew = false;
-                    this.canRecall = false;
-                    this.canUpdate = false;
-                    this.canArchive = false;
-                    this.saveMessage = entity.concession.childReferenceNumber;
-                    this.isLoading = false;
-                    this.cashConcession = entity;
-                    this.errorMessage = null;
-                    this.validationError = null;
-                }, error => {
-                    this.errorMessage = <any>error;
-                    this.isLoading = false;
-                        });
+                this.isLoading = false;
             }
+
+            if (!this.validationError) {
+
+            if (confirm("Are you sure you want to extend this concession?")) {
+                this.isLoading = true;
+                this.errorMessage = null;
+                this.validationError = null;
+
+                    this.cashConcessionService.postExtendConcession(extendConceModel).subscribe(entity => {
+                        console.log("data saved");
+                        this.canBcmApprove = false;
+                        this.canBcmApprove = false;
+                        this.canExtend = false;
+                        this.canRenew = false;
+                        this.canRecall = false;
+                        this.canUpdate = false;
+                        this.canArchive = false;
+                        this.saveMessage = entity.concession.childReferenceNumber;
+                        this.isLoading = false;
+                        this.cashConcession = entity;
+                        this.errorMessage = null;
+                        this.validationError = null;
+                    }, error => {
+                        this.errorMessage = <any>error;
+                        this.isLoading = false;
+                            });
+                }
+          }
         }
     }
 
