@@ -511,5 +511,28 @@ namespace StandardBank.ConcessionManagement.Repository
                     new { model.Id });
             }
         }
+
+
+        public int GetConcessionByRiskGroupOrSapbip(int sapbpidOrRiskGroupNumber,int concessionTypeId)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<int>(
+                     @" SELECT Distinct
+                        con.pkConcessionId
+
+                       FROM [dbo].[tblLegalEntity] lea
+                          INNER JOIN  [dbo].[tblRiskGroup] riskgroup
+	                        ON  riskgroup.pkRiskGroupId=lea.fkRiskGroupId 
+                          INNER JOIN[dbo].[tblConcession] con 
+	                        ON con.fkRiskGroupId=riskgroup.pkRiskGroupId
+                       WHERE (riskgroup.RiskGroupNumber = @sapbpidOrRiskGroupNumber 
+                            OR lea.CustomerNumber  = @sapbpidOrRiskGroupNumber) 
+							AND con.fkStatusId=1
+							AND con.fkConcessionTypeId = @concessionTypeId
+                            AND con.IsActive=1",
+                     new { sapbpidOrRiskGroupNumber, concessionTypeId }).FirstOrDefault();
+            }
+        }
     }
 }
