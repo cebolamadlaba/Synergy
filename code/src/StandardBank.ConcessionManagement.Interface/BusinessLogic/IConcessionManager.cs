@@ -246,5 +246,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         ConcessionLetter CreateConcessionLetter(ConcessionLetter model);
 
         ConcessionDetail DeactivateConcessionDetailed(int ConcessionDetailId, User user);
+
+        int CheckPendingConcessionInRiskGroupOrSapbPid(int sapbpidOrRiskGroupNumber, int concessionTypeId);
     }
 }

@@ -522,5 +522,6 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             return Ok(_glmsLookupTableManager.GetBaseRateCodes());
         }
+   
     }
 }

@@ -21,14 +21,20 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         private readonly IUserManager _userManager;
 
         /// <summary>
+        /// The concession manager
+        /// </summary>
+        private readonly IConcessionManager _concessionManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="PricingController"/> class.
         /// </summary>
         /// <param name="lookupTableManager">The lookup table manager.</param>
-        public PricingController(ILookupTableManager lookupTableManager, IConfigurationData configurationData, IUserManager userManager)
+        public PricingController(ILookupTableManager lookupTableManager, IConfigurationData configurationData, IUserManager userManager, IConcessionManager concessionManager)
         {
             _lookupTableManager = lookupTableManager;
             _configurationData = configurationData;
             _userManager = userManager;
+            _concessionManager = concessionManager;
         }
 
         [Route("LegalEntity/{sapbpid}")]
@@ -86,6 +92,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             var user = _userManager.GetUserByRiskGroupNumber(sapbpidOrRiskGroupNumber);
 
             return Ok(user);
+        }
+
+        [Route("CheckPendingConcessionInRiskGroupOrSapbPid/{sapbpidOrRiskGroupNumber}/{concessionTypeId}")]
+        public IActionResult CheckPendingConcessionInRiskGroupOrSapbPid(int sapbpidOrRiskGroupNumber,int concessionTypeId)
+        {
+            return Ok(_concessionManager.CheckPendingConcessionInRiskGroupOrSapbPid(sapbpidOrRiskGroupNumber, concessionTypeId));
         }
     }
 }

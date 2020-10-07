@@ -1567,5 +1567,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 }
             }
         }
+
+        /// <summary>
+        /// Check Existing Concession with RiskGroupOrSapbPid
+        /// </summary>
+        /// <param name="sapbpidOrRiskGroupNumber">The concession identifier.</param>
+
+        public int CheckPendingConcessionInRiskGroupOrSapbPid(int sapbpidOrRiskGroupNumber, int concessionTypeId)
+        {
+            return _concessionRepository.GetConcessionByRiskGroupOrSapbip(sapbpidOrRiskGroupNumber, concessionTypeId);
+
+        }
+
     }
 }

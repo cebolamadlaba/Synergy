@@ -69,5 +69,7 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// </summary>
         /// <param name="model">The model.</param>
         void Delete(Concession model);
+
+        int GetConcessionByRiskGroupOrSapbip(int sapbpidOrRiskGroupNumber, int concessionTypeId);
     }
 }
