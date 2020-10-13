@@ -69,6 +69,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
     canPcmApprove = false;
     hasChanges = false;
     canExtend = false;
+    isExtendingConcession = false;
     canRenew = false;
     canRecall = false;
     isEditing = false;
@@ -1306,8 +1307,11 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         if (this.canExtend && this.motivationEnabled == false) {
             this.motivationEnabled = true;
             this.glmsConcessionForm.controls['motivation'].setValue('');
+            this.isExtendingConcession = true;
 
         } else {
+
+            this.isExtendingConcession = false;
 
             var extendConceModel = new extendConcessionModel()
             extendConceModel.concessionReferenceId = this.concessionReferenceId;
@@ -1325,6 +1329,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
                     this.isLoading = true;
                     this.errorMessage = null;
                     this.validationError = null;
+                    this.motivationEnabled = false;
 
                     this.glmsConcessionService.postExtendConcession(extendConceModel).subscribe(entity => {
 
@@ -1333,12 +1338,13 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
                         this.canExtend = false;
                         this.canRenew = false;
                         this.canRecall = false;
+                        this.motivationEnabled = false;
                         this.canUpdate = false;
                         this.canArchive = false;
                         this.saveMessage = entity.concession.childReferenceNumber;
                         this.isLoading = false;
                         this.glmsConcession = entity;
-                        this.motivationEnabled = true;
+                        
                     }, error => {
                         this.errorMessage = <any>error;
                         this.isLoading = false;

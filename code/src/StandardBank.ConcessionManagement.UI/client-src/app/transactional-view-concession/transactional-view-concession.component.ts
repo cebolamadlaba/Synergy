@@ -62,6 +62,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
     canPcmApprove = false;
     hasChanges = false;
     canExtend = false;
+    isExtendingConcession = false;
     canRenew = false;
     canRecall = false;
     isEditing = false;
@@ -341,6 +342,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
 
             currentConcession.get('isExpired').setValue(transactionalConcessionDetail.isExpired);
             currentConcession.get('isExpiring').setValue(transactionalConcessionDetail.isExpiring);
+
 
             rowIndex++;
         }
@@ -797,8 +799,11 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
         if (this.canExtend && this.motivationEnabled == false) {
             this.motivationEnabled = true;
             this.transactionalConcessionForm.controls['motivation'].setValue('');
+            this.isExtendingConcession = true;
 
         } else {
+
+            this.isExtendingConcession = false;
 
             var extendConceModel = new extendConcessionModel()
             extendConceModel.concessionReferenceId = this.concessionReferenceId;

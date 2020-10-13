@@ -162,7 +162,7 @@
     <div class="col-md-6 search-and-results-container" id="lending-search-container">
         <h2 class="headings">
             Concessions
-            <button type="button" class="btn btn-primary btn-concession" (click)="checkForExistingConcessions(lendingView.lendingConcessions.length,'/lending-add-concession', riskGroupNumber, sapbpid)" *ngIf="pageLoaded && canRequest">Add Concession</button>
+            <button type="button" class="btn btn-primary btn-concession" (click)="checkForExistingConcessions(lendingView.lendingConcessions.length,'/lending-add-concession', riskGroupNumber, sapbpid,'Lending')" *ngIf="pageLoaded && canRequest">Add Concession</button>
         </h2>
 
         <!-- Search bar -->
@@ -180,30 +180,32 @@
                 </div>
             </div>
             <div class="section-body">
-                <div class="table-container" [routerLink]="['/lending-view-concession', riskGroupNumber, sapbpid, lendingConcession.concession.referenceNumber]">
+                <div class="table-container" >
                     <table class="table table-bordered table-hover header-fixed table-striped">
-                        <thead>
+                        <thead [routerLink]="['/lending-view-concession', riskGroupNumber, sapbpid, lendingConcession.concession.referenceNumber]">
                             <tr>
                                 <th style="width: 25%;">Product</th>
                                 <th style="width: 35%;">Customer</th>
                                 <th style="width: 10%;">Limit</th>
-                                <th style="width: 10%;">Term</th>
+                                <th style="width: 5%;">Term</th>
                                 <th style="width: 20%;">MAP</th>
+                                <th style="width: 5%;"></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let concession of lendingConcession.lendingConcessionDetails; trackBy: index;">
-                                <td>{{concession.productType}}</td>
-                                <td>
+                            <tr *ngFor="let concession of lendingConcession.lendingConcessionDetails; trackBy: index; let i=index">
+                                <td [routerLink]="['/lending-view-concession', riskGroupNumber, sapbpid, lendingConcession.concession.referenceNumber]">{{concession.productType}}</td>
+                                <td [routerLink]="['/lending-view-concession', riskGroupNumber, sapbpid, lendingConcession.concession.referenceNumber]">
                                     <p class="customerInfo">{{concession.customerName}}</p>
                                     <p class="accInfo">Acc No : {{concession.accountNumber}}</p>
                                 </td>
-                                <td class="rightAlign">{{concession.limit | number : '1.2-2'}}</td>
-                                <td class="rightAlign">{{concession.term}}</td>
-                                <td>
+                                <td [routerLink]="['/lending-view-concession', riskGroupNumber, sapbpid, lendingConcession.concession.referenceNumber]" class="rightAlign">{{concession.limit | number : '1.2-2'}}</td>
+                                <td [routerLink]="['/lending-view-concession', riskGroupNumber, sapbpid, lendingConcession.concession.referenceNumber]" class="rightAlign">{{concession.term}}</td>
+                                <td [routerLink]="['/lending-view-concession', riskGroupNumber, sapbpid, lendingConcession.concession.referenceNumber]">
                                     <p class="mapInfo">Loaded:{{concession.loadedMap | number : '1.2-2'}}</p>
                                     <p class="mapInfo">Approved:{{concession.approvedMap | number : '1.2-2'}}</p>
                                 </td>
+                                <td *ngIf="showTieredRateButton(i,concession)"> <button type="button" class="btn btn-primary" (click)="openManageTier(tiereRateModal.show(),concession)">View Tiere Rate</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -217,5 +219,40 @@
             <p>No concessions found matching your search</p>
         </div>
 
+    </div>
+</div>
+
+<!-- Modal -->
+<div bsModal #tiereRateModal="bs-modal" class="modal fade preview-modal" data-backdrop="" tabindex="-1" role="dialog" aria-labelledby="manageTierModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="col-md-12 modal-header">
+                <h4>Tiered Rates</h4>
+            </div>
+            <div class="col-md-12 modal-body">
+
+                <table class="form-concessions-table" style="width:100%">
+                    <thead class="form-concessions-table-headings">
+                        <tr>
+                            <th>Limit</th>
+                            <th>Prime(-/+) / Fixed rate</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="form-concessions-table-content">
+                        <tr *ngFor="let lendingTieredRate of selectedLineItemTieredRates; let i=index">
+                            <!-- Limit -->
+                            <td style="width:40%"><input type="text" class="form-control" [(ngModel)]="lendingTieredRate.limit" (change)="setTwoNumberDecimal($event)" [disabled]="!canEdit" /></td>
+                            <!-- Prime -->
+                            <td style="width:40%"><input type="text" class="form-control" [(ngModel)]="lendingTieredRate.marginToPrime" (change)="setThreeNumberDecimal($event)" [disabled]="!canEdit" /></td>                
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" (click)="closeTieredRatesModal(tiereRateModal.hide())">Close</button>
+            </div>
+        </div>
     </div>
 </div>
