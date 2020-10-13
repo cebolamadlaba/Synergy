@@ -1068,7 +1068,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         if (isOverdraft) {
             this.extendDisclamerModal.show();
         } else {
-            this.extendConcession();4
+            this.extendConcession();
         }
 
         const concessions = this.getLendingConcessionItemRows();
