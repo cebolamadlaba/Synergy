@@ -268,10 +268,9 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         }
 
         //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
-       // this.canExtend = this.lendingConcession.concession.canExtend && this.lendingConcession.currentUser.canRequest;
-       // this.canRenew = this.lendingConcession.concession.canRenew && this.lendingConcession.currentUser.canRequest;
-        this.canExtend = true;
-        this.canRenew = true
+        this.canExtend = this.lendingConcession.concession.canExtend && this.lendingConcession.currentUser.canRequest;
+        this.canRenew = this.lendingConcession.concession.canRenew && this.lendingConcession.currentUser.canRequest;
+
 
   
 
@@ -372,7 +371,6 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                     || lendingConcessionDetail.productType == ProductTypeEnum.BTL
                     || lendingConcessionDetail.productType == ProductTypeEnum.TemporaryOverdraft) {
 
-                    // this.isAbleToRenew = false;
                     currentConcession.disabled;
             
                 }               
@@ -1198,13 +1196,11 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         var productType = currentRow.get('productType').value;
         // Is the product Overdraft or Temporary Overdraft?
         if (productType.description == ProductTypeEnum.Overdraft || productType.description == ProductTypeEnum.TemporaryOverdraft) {
-            //currentRow.get('limit').disable();
-            //currentRow.get('marginAgainstPrime').disable();
+
             return true;
         }
         else {
-            //currentRow.get('limit').enable();
-            //currentRow.get('marginAgainstPrime').enable();
+
             return false;
         }
 
