@@ -12,6 +12,8 @@ import { LendingFinancial } from "../models/lending-financial";
 import { UserService } from "../services/user.service";
 import { BaseComponentService } from '../services/base-component.service';
 import { Http } from '@angular/http';
+import { LendingConcessionTieredRate } from '../models/lending-concession-tiered-rate';
+import { ProductTypeEnum } from '../models/product-type-enum';
 
 @Component({
     selector: 'app-pricing-lending',
@@ -35,6 +37,8 @@ export class PricingLendingComponent extends BaseComponentService implements OnI
 
     subHeading: string = "n/a";
     title: number = 0;
+
+    selectedLineItemTieredRates: LendingConcessionTieredRate[] = [];
 
     constructor(
         public router: Router,
@@ -86,10 +90,24 @@ export class PricingLendingComponent extends BaseComponentService implements OnI
         });
     }
 
+    openManageTier(x, tier) {
+        this.selectedLineItemTieredRates = tier.lendingConcessionDetailTieredRates;
+    }
+
+    showTieredRateButton(rowIndex: number, concession) {
+        // Is the product Overdraft or Temporary Overdraft?
+        if (concession.productType == ProductTypeEnum.Overdraft || concession.productType == ProductTypeEnum.TemporaryOverdraft) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     goBack() {     
         this.router.navigate(['/pricing', { riskGroupNumber: this.riskGroupNumber, sapbpid: this.sapbpid }]);
     }
-
+    
     ngOnDestroy() {
         this.sub.unsubscribe();
     }

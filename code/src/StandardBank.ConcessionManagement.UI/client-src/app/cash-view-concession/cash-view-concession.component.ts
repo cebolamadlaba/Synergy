@@ -53,6 +53,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
     canPcmApprove = false;
     hasChanges = false;
     canExtend = false;
+    isExtendingConcession = false;
     canRenew = false;
     canRecall = false;
     isEditing = false;
@@ -266,6 +267,15 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
 
             currentConcession.get('isExpired').setValue(cashConcessionDetail.isExpired);
             currentConcession.get('isExpiring').setValue(cashConcessionDetail.isExpiring);
+
+
+            //check if Can extend
+            if (this.canRenew) {
+                var currentDate = new Date();
+                currentDate.setMonth(currentDate.getMonth() + 12);
+                var formattedExpiryDate = this.datepipe.transform(currentDate, 'yyyy-MM-dd');
+                currentConcession.get('expiryDate').setValue(formattedExpiryDate);
+            }
 
             rowIndex++;
         }
@@ -801,10 +811,13 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
 
 
         if (this.canExtend && this.motivationEnabled == false) {
+            this.isExtendingConcession = true;
             this.motivationEnabled = true;
             this.cashConcessionForm.controls['motivation'].setValue('');
 
         } else {
+
+            this.isExtendingConcession = false;
 
             var extendConceModel = new extendConcessionModel()
             extendConceModel.concessionReferenceId = this.concessionReferenceId;
@@ -833,6 +846,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
                         this.canRecall = false;
                         this.canUpdate = false;
                         this.canArchive = false;
+                        this.motivationEnabled = false;
                         this.saveMessage = entity.concession.childReferenceNumber;
                         this.isLoading = false;
                         this.cashConcession = entity;
@@ -1112,9 +1126,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
 
     isMotivationEnabled() {
      
-        if (!this.canExtend) {
-           return this.motivationEnabled ? null : '';
-        }
+       return this.motivationEnabled ? null : '';
     }
 
     getNumberInput(input) {

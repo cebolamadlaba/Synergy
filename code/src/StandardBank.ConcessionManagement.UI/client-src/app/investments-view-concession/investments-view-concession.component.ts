@@ -80,6 +80,7 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
     canPcmApprove = false;
     hasChanges = false;
     canExtend = false;
+    isExtendingConcession = false;
     canRenew = false;
     canRecall = false;
     isEditing = false;
@@ -333,7 +334,8 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
                 }
 
                 //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
-                this.canExtend = investmentConcession.concession.canExtend && investmentConcession.currentUser.canRequest;
+               // this.canExtend = investmentConcession.concession.canExtend && investmentConcession.currentUser.canRequest;
+                this.canExtend = true;
                 this.canRenew = investmentConcession.concession.canRenew && investmentConcession.currentUser.canRequest;
 
                 //set the resubmit and update permissions
@@ -990,8 +992,10 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
         if (this.canExtend && this.motivationEnabled == false) {
             this.motivationEnabled = true;
             this.investmentConcessionForm.controls['motivation'].setValue('');
+            this.isExtendingConcession = true;
 
         } else {
+            this.isExtendingConcession = false;
 
             var extendConcessionModel = new extendConcessionModel()
             extendConcessionModel.concessionReferenceId = this.concessionReferenceId;
@@ -1017,6 +1021,7 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
                         this.canExtend = false;
                         this.canRenew = false;
                         this.canRecall = false;
+                        this.motivationEnabled = false;
                         this.canUpdate = false;
                         this.canArchive = false;
                         this.saveMessage = entity.concession.childReferenceNumber;
@@ -1326,10 +1331,8 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
 
     isMotivationEnabled() {
 
-        if (!this.canExtend)
-        {
-            return this.motivationEnabled ? null : '';
-        }
+        return this.motivationEnabled ? null : '';
+
     }
 
     getNumberInput(input) {

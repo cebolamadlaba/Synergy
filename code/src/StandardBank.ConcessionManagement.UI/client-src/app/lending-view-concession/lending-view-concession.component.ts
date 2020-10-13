@@ -80,6 +80,9 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     hasChanges = false;
     canExtend = false;
     canRenew = false;
+    isAbleToRenew = true;
+    isExtendingConcession = false;
+    isExtendable = true;
     canRecall = false;
     isEditing = false;
     motivationEnabled = false;
@@ -265,8 +268,13 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         }
 
         //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
-        this.canExtend = this.lendingConcession.concession.canExtend && this.lendingConcession.currentUser.canRequest;
-        this.canRenew = this.lendingConcession.concession.canRenew && this.lendingConcession.currentUser.canRequest;
+       // this.canExtend = this.lendingConcession.concession.canExtend && this.lendingConcession.currentUser.canRequest;
+       // this.canRenew = this.lendingConcession.concession.canRenew && this.lendingConcession.currentUser.canRequest;
+        this.canExtend = true;
+        this.canRenew = true
+
+  
+
 
         //set the resubmit and update permissions
         //can only update when concession is not "due for expiry"
@@ -356,6 +364,32 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
             currentConcession.get('isExpired').setValue(lendingConcessionDetail.isExpired);
             currentConcession.get('isExpiring').setValue(lendingConcessionDetail.isExpiring);
+
+            //check if Can Renew 
+            if (this.canRenew) {
+
+                if (lendingConcessionDetail.productType == ProductTypeEnum.MTL
+                    || lendingConcessionDetail.productType == ProductTypeEnum.BTL
+                    || lendingConcessionDetail.productType == ProductTypeEnum.TemporaryOverdraft) {
+
+                    // this.isAbleToRenew = false;
+                    currentConcession.disabled;
+            
+                }               
+            }
+
+            //check if Can extend
+            if (this.canExtend) {
+
+                if (lendingConcessionDetail.productType == ProductTypeEnum.MTL
+                    || lendingConcessionDetail.productType == ProductTypeEnum.BTL
+                    || lendingConcessionDetail.productType == ProductTypeEnum.TemporaryOverdraft) {
+
+                    currentConcession.disabled;
+                }
+
+            }
+
 
             rowIndex++;
         }
@@ -1036,8 +1070,20 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         if (isOverdraft) {
             this.extendDisclamerModal.show();
         } else {
-            this.extendConcession();
+            this.extendConcession();4
         }
+
+        const concessions = this.getLendingConcessionItemRows();
+        for (let concessionFormItem of concessions.controls) {
+            
+            if (concessionFormItem.get('producttype').value == ProductTypeEnum.MTL
+                    || concessionFormItem.get('producttype').value == ProductTypeEnum.BTL
+                    || concessionFormItem.get('producttype').value == ProductTypeEnum.TemporaryOverdraft) {
+
+                    concessionFormItem.disabled;
+               }
+        }
+
     }
 
     extensionDisclamerClose() {
@@ -1053,8 +1099,11 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         if (this.canExtend && this.motivationEnabled == false) {
             this.motivationEnabled = true;
             this.lendingConcessionForm.controls['motivation'].setValue('');
+            this.isExtendingConcession = true;
 
         } else {
+
+            this.isExtendingConcession = false;
 
              var extendConceModel = new extendConcessionModel()
                    extendConceModel.concessionReferenceId = this.concessionReferenceId;
@@ -1081,6 +1130,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                         this.canExtend = false;
                         this.canRenew = false;
                         this.canRecall = false;
+                        this.motivationEnabled = false;
                         this.canUpdate = false;
                         this.canArchive = false;
                         this.saveMessage = entity.concession.childReferenceNumber;
@@ -1271,7 +1321,14 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                     expiryDate = new Date(expiryDate.setFullYear(expiryDate.getFullYear() + 1));
                     concessionFormItem.get('expiryDate').setValue(this.datepipe.transform(expiryDate, 'yyyy-MM-dd'));
                 }
+      
+                //The term on Overdraft must default to 12 months. 
+                if (concessionFormItem.get('producttype').value == ProductTypeEnum.Overdraft) {
+                    concessionFormItem.get('term').setValue(12);
+                }
+
             }
+          
         }
         if (editType == EditTypeEnum.Renew) {
             this.baseComponentService.isRenewing = true;
@@ -1504,9 +1561,8 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
     isMotivationEnabled() {
 
-        if (!this.canExtend) {
-            return this.motivationEnabled ? null : '';
-        }    
+         return this.motivationEnabled ? null : '';
+  
     }
 
     disableField(index: number, fieldname: string) {

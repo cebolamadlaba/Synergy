@@ -83,7 +83,10 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
     canPcmApprove = false;
     hasChanges = false;
     canExtend = false;
+    isExtendingConcession = false;
     canRenew = false;
+    isExtendable = true;
+    isRenewable = true;
     canRecall = false;
     isEditing = false;
     motivationEnabled = false;
@@ -209,9 +212,8 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
 
     isMotivationEnabled() {
 
-        if (!this.canExtend) {
-            return this.motivationEnabled ? null : '';
-        }
+      return this.motivationEnabled ? null : '';
+
     }
 
     getInitialData() {
@@ -308,8 +310,9 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
                 }
 
                 //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
-                this.canExtend = tradeConcession.concession.canExtend && tradeConcession.currentUser.canRequest;
+                this.canExtend = tradeConcession.concession.canExtend && tradeConcession.currentUser.canRequest;              
                 this.canRenew = tradeConcession.concession.canRenew && tradeConcession.currentUser.canRequest;
+           
 
                 //set the resubmit and update permissions
                 this.canResubmit = tradeConcession.concession.canResubmit && tradeConcession.currentUser.canRequest;
@@ -442,6 +445,26 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
 
                     currentConcession.get('isExpired').setValue(tradeConcessionDetail.isExpired);
                     currentConcession.get('isExpiring').setValue(tradeConcessionDetail.isExpiring);
+
+                    //check if Can extend
+                    if (this.canRenew) {
+
+                        if (tradeConcessionDetail.tradeProductType == "Inward TT"
+                            || tradeConcessionDetail.tradeProductType == "Outward TT"
+                           ) {
+                            var currentDate = new Date();
+                            currentDate.setMonth(currentDate.getMonth() + 12);
+                            var formattedExpiryDate = this.datepipe.transform(currentDate, 'yyyy-MM-dd');
+                            currentConcession.get('expiryDate').setValue(formattedExpiryDate);
+                        }
+
+                        if (tradeConcessionDetail.tradeProductType == "Local guarantee")
+                        {
+                            currentConcession.get('term').setValue(12);
+                            tradeConcessionDetail.show_term = true;
+                        }
+
+                    }
 
                     rowIndex++;
                 }
@@ -716,6 +739,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
                 canUpdateExpiryDate = false;
             }
         }
+
 
         return super.disableFieldBase(
             this.selectedTradeConcession[rowIndex],
@@ -1242,8 +1266,11 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
         if (this.canExtend && this.motivationEnabled == false) {
             this.motivationEnabled = true;
             this.tradeConcessionForm.controls['motivation'].setValue('');
+            this.isExtendingConcession = true;
 
         } else {
+
+            this.isExtendingConcession = false;
 
             var extendConceModel = new extendConcessionModel()
             extendConceModel.concessionReferenceId = this.concessionReferenceId;
@@ -1270,6 +1297,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
                             this.canBcmApprove = false;
                             this.canExtend = false;
                             this.canRenew = false;
+                            this.motivationEnabled = false;
                             this.canRecall = false;
                             this.canUpdate = false;
                             this.canArchive = false;
@@ -1305,14 +1333,29 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
         if (editType == EditTypeEnum.Renew) { // || editType == EditTypeEnum.UpdateApproved) {
             const concessions = this.getTradeConcessionItemRows();
             for (let concessionFormItem of concessions.controls) {
-                // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
-                if (concessionFormItem.get('expiryDate').value) {
-                    let expiryDate = new Date(concessionFormItem.get('expiryDate').value);
-                    expiryDate = new Date(expiryDate.setFullYear(expiryDate.getFullYear() + 1));
-                    concessionFormItem.get('expiryDate').setValue(this.datepipe.transform(expiryDate, 'yyyy-MM-dd'));
+               
+
+                if (concessionFormItem.get('producttype').value.tradeProductType == "Inward TT"
+                    || concessionFormItem.get('producttype').value.tradeProductType == "Outward TT"
+                ) {
+                   // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
+                    if (concessionFormItem.get('expiryDate').value) {
+                        let expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+                        expiryDate = new Date(expiryDate.setFullYear(expiryDate.getFullYear() + 1));
+                        concessionFormItem.get('expiryDate').setValue(this.datepipe.transform(expiryDate, 'yyyy-MM-dd'));
+                    }
                 }
+
+                if (concessionFormItem.get('producttype').value.tradeProductType == "Local guarantee") {
+                    concessionFormItem.get('term').setValue(12);
+                    concessionFormItem.get('term').enable;
+                }
+
             }
         }
+
+
+
     }
 
     saveConcession() {
