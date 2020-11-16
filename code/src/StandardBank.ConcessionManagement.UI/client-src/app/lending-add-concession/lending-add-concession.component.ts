@@ -660,6 +660,14 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
 
             lendingConcession.lendingConcessionDetails.push(lendingConcessionDetail);
 
+            for (var i = 0; i < lendingConcession.lendingConcessionDetails.length; i++) {
+                if (lendingConcession.lendingConcessionDetails[i].lendingConcessionDetailTieredRates.length > 0) {
+                    lendingConcession.lendingConcessionDetails[i].marginAgainstPrime = lendingConcession.lendingConcessionDetails[i].lendingConcessionDetailTieredRates[0].marginToPrime
+                    lendingConcession.lendingConcessionDetails[i].approvedMap = lendingConcession.lendingConcessionDetails[i].lendingConcessionDetailTieredRates[0].approvedMap
+                }
+            }
+
+
             if (hasProductType && hasLegalEntityId && hasLegalEntityAccountId) {
                 let hasDuplicates = this.baseComponentService.HasDuplicateConcessionAccountProduct(
                     lendingConcession.lendingConcessionDetails,
