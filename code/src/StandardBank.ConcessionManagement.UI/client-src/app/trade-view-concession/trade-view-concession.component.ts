@@ -83,7 +83,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
     canPcmApprove = false;
     hasChanges = false;
     canExtend = false;
-    isExtendingConcession = false;
+    showMotivationDisclaimer = false;
     canRenew = false;
     isExtendable = true;
     isRenewable = true;
@@ -314,9 +314,10 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
                 this.canRenew = tradeConcession.concession.canRenew && tradeConcession.currentUser.canRequest;
            
 
-                //set the resubmit and update permissions
+                  //set the resubmit and update permissions
+                 //can only update when concession is not "due for expiry"
                 this.canResubmit = tradeConcession.concession.canResubmit && tradeConcession.currentUser.canRequest;
-                this.canUpdate = tradeConcession.concession.canUpdate && tradeConcession.currentUser.canRequest;
+                this.canUpdate = !this.canRenew && tradeConcession.concession.canUpdate && tradeConcession.currentUser.canRequest;
 
                 this.canArchive = tradeConcession.concession.canArchive && tradeConcession.currentUser.canRequest;
                 this.isInProgressExtension = tradeConcession.concession.isInProgressExtension;
@@ -456,13 +457,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
                             currentDate.setMonth(currentDate.getMonth() + 12);
                             var formattedExpiryDate = this.datepipe.transform(currentDate, 'yyyy-MM-dd');
                             currentConcession.get('expiryDate').setValue(formattedExpiryDate);
-                        }
-
-                        if (tradeConcessionDetail.tradeProductType == "Local guarantee")
-                        {
-                            currentConcession.get('term').setValue(12);
-                            tradeConcessionDetail.show_term = true;
-                        }
+                        }                     
 
                     }
 
@@ -1266,11 +1261,12 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
         if (this.canExtend && this.motivationEnabled == false) {
             this.motivationEnabled = true;
             this.tradeConcessionForm.controls['motivation'].setValue('');
-            this.isExtendingConcession = true;
+            this.showMotivationDisclaimer = true;
 
         } else {
 
-            this.isExtendingConcession = false;
+            this.showMotivationDisclaimer = false;
+            this.validationError = null;
 
             var extendConceModel = new extendConcessionModel()
             extendConceModel.concessionReferenceId = this.concessionReferenceId;

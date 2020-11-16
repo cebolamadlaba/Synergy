@@ -53,7 +53,7 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
     canPcmApprove = false;
     hasChanges = false;
     canExtend = false;
-    isExtendingConcession = false;
+    showMotivationDisclaimer = false;
     canRenew = false;
     canRecall = false;
     isEditing = false;
@@ -809,15 +809,17 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
 
     extendConcession() {
 
+        this.validationError = null;
 
         if (this.canExtend && this.motivationEnabled == false) {
-            this.isExtendingConcession = true;
+            this.showMotivationDisclaimer = true;
             this.motivationEnabled = true;
             this.cashConcessionForm.controls['motivation'].setValue('');
 
         } else {
 
-            this.isExtendingConcession = false;
+            this.showMotivationDisclaimer = false;
+            this.validationError = null;
 
             var extendConceModel = new extendConcessionModel()
             extendConceModel.concessionReferenceId = this.concessionReferenceId;

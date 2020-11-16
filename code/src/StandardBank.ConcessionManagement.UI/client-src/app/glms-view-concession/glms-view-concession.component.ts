@@ -69,7 +69,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
     canPcmApprove = false;
     hasChanges = false;
     canExtend = false;
-    isExtendingConcession = false;
+    showMotivationDisclaimer = false;
     canRenew = false;
     canRecall = false;
     isEditing = false;
@@ -1307,11 +1307,12 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
         if (this.canExtend && this.motivationEnabled == false) {
             this.motivationEnabled = true;
             this.glmsConcessionForm.controls['motivation'].setValue('');
-            this.isExtendingConcession = true;
+            this.showMotivationDisclaimer = true;
 
         } else {
 
-            this.isExtendingConcession = false;
+            this.showMotivationDisclaimer = false;
+            this.validationError = null;
 
             var extendConceModel = new extendConcessionModel()
             extendConceModel.concessionReferenceId = this.concessionReferenceId;

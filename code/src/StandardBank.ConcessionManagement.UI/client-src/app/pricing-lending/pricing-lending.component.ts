@@ -96,13 +96,15 @@ export class PricingLendingComponent extends BaseComponentService implements OnI
 
     showTieredRateButton(rowIndex: number, concession) {
         // Is the product Overdraft or Temporary Overdraft?
-        if (concession.productType == ProductTypeEnum.Overdraft || concession.productType == ProductTypeEnum.TemporaryOverdraft) {
+        if ((concession.productType == ProductTypeEnum.Overdraft || concession.productType == ProductTypeEnum.TemporaryOverdraft)
+            && concession.lendingConcessionDetailTieredRates.length > 1) {
             return true;
         }
         else {
             return false;
         }
     }
+
 
     goBack() {     
         this.router.navigate(['/pricing', { riskGroupNumber: this.riskGroupNumber, sapbpid: this.sapbpid }]);

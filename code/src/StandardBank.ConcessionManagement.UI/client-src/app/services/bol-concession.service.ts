@@ -9,6 +9,7 @@ import { Concession } from "../models/concession";
 import { ConcessionCondition } from "../models/concession-condition";
 import { BolConcessionDetail } from "../models/bol-concession-detail";
 import { BolFinancial } from "../models/bol-financial";
+import { extendConcessionModel } from "../models/extendConcessionModel";
 
 import { BolChargeCodeType } from "../models/bol-chargecodetype";
 import { BolChargeCode } from "../models/bol-chargecode";
@@ -52,11 +53,11 @@ export class BolConcessionService {
         return this.http.post(url, bolConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    postExtendConcession(concessionReferenceId): Observable<BolConcession> {
+    postExtendConcession(extendConcessionModel: extendConcessionModel): Observable<BolConcession> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        const url = "/api/Bol/ExtendConcession/" + concessionReferenceId;
-        return this.http.post(url, concessionReferenceId, options).map(this.extractData).catch(this.handleErrorObservable);
+        const url = "/api/Bol/ExtendConcession";
+        return this.http.post(url, extendConcessionModel, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
     postChildConcession(bolConcession: BolConcession, relationshipType: string): Observable<BolConcession> {

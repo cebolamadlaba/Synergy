@@ -67,47 +67,65 @@
 
         if (legalEntityConcession.HasLendingOverDraftConcessionLetters)
         {
-            <table border="1" width="100%">
-                <tr style="background: #dbe5f1;">
-                    <td style="padding: 5px; width: 15%;">Product Type</td>
-                    <td style="padding: 5px; width: 15%;">Account Number</td>
-                    <td style="padding: 5px; width: 15%;">Limit</td>
-                    <td style="padding: 5px; width: 21%;">Channel / Fee Type</td>
-                    <td style="padding: 5px; width: 21%;">Fee / Margin Above Prime %<br />(Incl. VAT)</td>
+        <table border="1" width="100%">
+            <tr style="background: #dbe5f1;">
+                <td style="padding: 5px; width: 15%;">Product Type</td>
+                <td style="padding: 5px; width: 15%;">Account Number</td>
+                <td style="padding: 5px; width: 15%;">Limit</td>
+                <td style="padding: 5px; width: 15%;">Map</td>
+                <td style="padding: 5px; width: 21%;">Channel / Fee Type</td>
+                <td style="padding: 5px; width: 21%;">Fee / Margin Above Prime %<br />(Incl. VAT)</td>
 
-                    <td style="padding: 5px; width: 14%;">Concession Start Date</td>
-                    <td style="padding: 5px; width: 14%;">Concession End Date</td>
-                </tr>
-                @foreach (var lendingOverDraftConcessionLetter in legalEntityConcession.LendingOverDraftConcessionLetters)
-                {
+                <td style="padding: 5px; width: 14%;">Concession Start Date</td>
+                <td style="padding: 5px; width: 14%;">Concession End Date</td>
+            </tr>
+            @foreach (var lendingOverDraftConcessionLetter in legalEntityConcession.LendingOverDraftConcessionLetters)
+            {
+
+                var lendingConcessionDetailTieredRates = lendingOverDraftConcessionLetter.LendingConcessionDetailTieredRates.ToList();
+      
                     <tr>
                         <td rowspan="5">@lendingOverDraftConcessionLetter.ProductType</td>
                         <td rowspan="5">@lendingOverDraftConcessionLetter.AccountNumber</td>
+
+
                         <td rowspan="5">@lendingOverDraftConcessionLetter.Limit</td>
+                        <td>@lendingConcessionDetailTieredRates[0].MarginToPrime</td>
+
                         <td>Margin Above Prime</td>
                         <td>@lendingOverDraftConcessionLetter.MarginToPrime</td>
 
                         <td rowspan="5">@lendingOverDraftConcessionLetter.ConcessionStartDate</td>
                         <td rowspan="5">@lendingOverDraftConcessionLetter.ConcessionEndDate</td>
                     </tr>
+
                     <tr>
+                        <td rowspan="5">@lendingOverDraftConcessionLetter.Limit</td>
+                        <td>@lendingConcessionDetailTieredRates[0].MarginToPrime</td>
                         <td>Initiation Fee</td>
                         <td>@lendingOverDraftConcessionLetter.InitiationFee</td>
                     </tr>
                     <tr>
+                        <td rowspan="5">@lendingOverDraftConcessionLetter.Limit</td>
+                        <td>@lendingConcessionDetailTieredRates[0].MarginToPrime</td>
                         <td>Review Fee Type</td>
                         <td>@lendingOverDraftConcessionLetter.ReviewFeeType</td>
                     </tr>
                     <tr>
+                        <td rowspan="5">@lendingOverDraftConcessionLetter.Limit</td>
+                        <td>@lendingConcessionDetailTieredRates[0].MarginToPrime</td>
                         <td>Review Fee</td>
                         <td>@lendingOverDraftConcessionLetter.ReviewFee</td>
                     </tr>
                     <tr>
+                        <td rowspan="5">@lendingOverDraftConcessionLetter.Limit</td>
+                        <td>@lendingConcessionDetailTieredRates[0].MarginToPrime</td>
                         <td>Unutilised Facility Fee</td>
                         <td>@lendingOverDraftConcessionLetter.UFFFee</td>
                     </tr>
-                }
-            </table>
+                
+            }
+        </table>
         }
 
         if (legalEntityConcession.HasConditionConcessionLetters)

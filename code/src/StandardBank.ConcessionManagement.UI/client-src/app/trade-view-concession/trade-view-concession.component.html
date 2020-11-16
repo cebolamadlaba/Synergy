@@ -148,7 +148,7 @@
 </div>
 
 <!-- disclaimer section -->
-<div class="alert alert-warning alert-dismissible col-md-12" *ngIf="isExtendingConcession">
+<div class="alert alert-warning alert-dismissible col-md-12" *ngIf="showMotivationDisclaimer">
     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
     <strong>Note:</strong> Please motivate why you are extending this concession.
 </div>
@@ -428,8 +428,8 @@ i + 1
             <button type="button" class="btn btn-success" (click)="bcmApproveConcession()" *ngIf="canBcmApprove">Forward</button>
             <button type="button" class="btn btn-danger" (click)="pcmDeclineConcession()" *ngIf="canPcmApprove">Decline</button>
             <button type="button" class="btn btn-success" (click)="pcmApproveConcession()" *ngIf="canPcmApprove">Approve</button>
-            <!--<button type="button" class="btn btn-success" (click)="extendConcession()" *ngIf="canExtend">Extend</button>
-            <!--<button type="button" class="btn btn-success" (click)="editConcession('Renew')" *ngIf="canRenew">Renew</button>-->
+            <button type="button" class="btn btn-success" (click)="extendConcession()" *ngIf="canExtend">Extend</button>
+            <button type="button" class="btn btn-success" (click)="editConcession('Renew')" *ngIf="canRenew">Renew</button>
             <button type="button" class="btn btn-success" (click)="editConcession('Resubmit')" *ngIf="canResubmit">Resubmit</button>
             <button type="button" class="btn btn-success" (click)="editConcession('UpdateApproved')" *ngIf="canUpdate">Update</button>
             <button type="button" class="btn btn-warning" (click)="archiveConcession()" *ngIf="canArchive">Archive</button>

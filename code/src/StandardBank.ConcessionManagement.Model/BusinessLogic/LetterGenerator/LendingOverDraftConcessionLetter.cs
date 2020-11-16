@@ -1,4 +1,7 @@
-﻿namespace StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator
+﻿using StandardBank.ConcessionManagement.Model.UserInterface.Lending;
+using System.Collections.Generic;
+
+namespace StandardBank.ConcessionManagement.Model.BusinessLogic.LetterGenerator
 {
     /// <summary>
     /// Lending over draft concession letter
@@ -86,6 +89,9 @@
         public string UFFFee { get; set; }
 
         public string Limit { get; set; }
+
+
+        public IEnumerable<LendingConcessionDetailTieredRate> LendingConcessionDetailTieredRates { get; set; }
 
 
     }

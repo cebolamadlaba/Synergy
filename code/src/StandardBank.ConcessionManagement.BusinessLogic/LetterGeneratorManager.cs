@@ -883,7 +883,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 ConcessionStartDate = lendingConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
                 UFFFee = $" {lendingConcessionDetail.UffFee.ToString("N2", CultureInfo.InvariantCulture)}",
                 LegalEntityId = lendingConcessionDetail.LegalEntityId,
-                Limit = lendingConcessionDetail.Limit.ToString("N2", CultureInfo.InvariantCulture)
+                Limit = lendingConcessionDetail.Limit.ToString("N2", CultureInfo.InvariantCulture),
+                LendingConcessionDetailTieredRates=lendingConcessionDetail.LendingConcessionDetailTieredRates
             };
         }
 
