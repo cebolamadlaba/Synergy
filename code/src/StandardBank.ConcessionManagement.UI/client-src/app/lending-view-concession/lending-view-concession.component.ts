@@ -856,6 +856,9 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         }
 
         if (!this.validationError) {
+
+            lendingConcession = this.SetLendingMargin(lendingConcession);
+
             this.lendingService.postUpdateLendingData(lendingConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canBcmApprove = false;
@@ -889,6 +892,9 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         }
 
         if (!this.validationError) {
+
+            lendingConcession = this.SetLendingMargin(lendingConcession);
+
             this.lendingService.postUpdateLendingData(lendingConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canBcmApprove = false;
@@ -948,6 +954,9 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         }
 
         if (!this.validationError) {
+
+            lendingConcession = this.SetLendingMargin(lendingConcession);
+
             this.lendingService.postUpdateLendingData(lendingConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canPcmApprove = false;
@@ -1038,6 +1047,9 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         }
 
         if (!this.validationError) {
+
+            lendingConcession = this.SetLendingMargin(lendingConcession);
+
             this.lendingService.postUpdateLendingData(lendingConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canPcmApprove = false;
@@ -1431,6 +1443,9 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         }
 
         if (!this.validationError) {
+
+            lendingConcession = this.SetLendingMargin(lendingConcession);
+
             this.lendingService.postUpdateLendingData(lendingConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canApproveChanges = false;
@@ -1464,6 +1479,9 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         }
 
         if (!this.validationError) {
+
+            lendingConcession = this.SetLendingMargin(lendingConcession);
+
             this.lendingService.postUpdateLendingData(lendingConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canApproveChanges = false;
@@ -1596,4 +1614,15 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
     }
 
+    SetLendingMargin(lendingConcession) {
+
+        for (var i = 0; i < lendingConcession.lendingConcessionDetails.length; i++) {
+            if (lendingConcession.lendingConcessionDetails[i].lendingConcessionDetailTieredRates.length > 0) {
+                lendingConcession.lendingConcessionDetails[i].marginAgainstPrime = lendingConcession.lendingConcessionDetails[i].lendingConcessionDetailTieredRates[0].marginToPrime
+                lendingConcession.lendingConcessionDetails[i].approvedMap = lendingConcession.lendingConcessionDetails[i].lendingConcessionDetailTieredRates[0].approvedMap
+            }
+        }
+        return lendingConcession;
+    }
+    
 }
