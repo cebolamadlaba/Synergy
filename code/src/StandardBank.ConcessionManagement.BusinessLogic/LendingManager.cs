@@ -201,7 +201,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 if (concessionLending.ProductTypeId == Constants.Lending.ProductType.OverdraftId ||
                     concessionLending.ProductTypeId == Constants.Lending.ProductType.TempOverdraftId)
+                {
                     this.UpdateApprovedPriceForTieredRate(concessionLending.ConcessionLendingTieredRates);
+                    this.UpdateApprovedPrice(concessionLending);
+                }
                 else
                     this.UpdateApprovedPrice(concessionLending);
 
@@ -234,7 +237,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             {
                 if (concessionLending.ProductTypeId == Constants.Lending.ProductType.OverdraftId ||
                     concessionLending.ProductTypeId == Constants.Lending.ProductType.TempOverdraftId)
+                {
                     this.UpdateApprovedPriceForTieredRate(concessionLending.ConcessionLendingTieredRates);
+                    this.UpdateApprovedPrice(concessionLending);
+                }
                 else
                     this.UpdateApprovedPrice(concessionLending);
 
