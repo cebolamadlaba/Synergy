@@ -208,7 +208,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 else
                     this.UpdateApprovedPrice(concessionLending);
 
-                this.UpdateIsMismatched(concessionLending);
+                //STB has a stored proc that does the mismatch this proc runs every morning
+                //this.UpdateIsMismatched(concessionLending);
 
 
                 _ruleManager.UpdateBaseFieldsOnApproval(concessionLending);
