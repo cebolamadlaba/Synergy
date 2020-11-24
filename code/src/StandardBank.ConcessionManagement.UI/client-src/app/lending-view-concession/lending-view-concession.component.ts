@@ -362,29 +362,6 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             currentConcession.get('isExpired').setValue(lendingConcessionDetail.isExpired);
             currentConcession.get('isExpiring').setValue(lendingConcessionDetail.isExpiring);
 
-            //check if Can Renew 
-            if (this.canRenew) {
-
-                if (lendingConcessionDetail.productType == ProductTypeEnum.MTL
-                    || lendingConcessionDetail.productType == ProductTypeEnum.BTL
-                    || lendingConcessionDetail.productType == ProductTypeEnum.TemporaryOverdraft) {
-
-                    currentConcession.disabled;
-            
-                }               
-            }
-
-            //check if Can extend
-            if (this.canExtend) {
-
-                if (lendingConcessionDetail.productType == ProductTypeEnum.MTL
-                    || lendingConcessionDetail.productType == ProductTypeEnum.BTL
-                    || lendingConcessionDetail.productType == ProductTypeEnum.TemporaryOverdraft) {
-
-                    currentConcession.disabled;
-                }
-
-            }
 
 
             rowIndex++;
@@ -482,12 +459,12 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             }              
         }
 
-    
-
+   
         if (this.editType == EditTypeEnum.Extend)
         {
             if (itemRow.value.productType.description == ProductTypeEnum.BTL               
-                || itemRow.value.productType.description == ProductTypeEnum.MTL) {
+                || itemRow.value.productType.description == ProductTypeEnum.MTL
+                || itemRow.value.productType.description == ProductTypeEnum.TemporaryOverdraft) {
 
                 itemRow.disable();
             }              
