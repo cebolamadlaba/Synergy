@@ -1532,15 +1532,16 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         else {
             return "form-control";
         }
-
     }
 
     SetLendingMargin(lendingConcession) {
 
         for (var i = 0; i < lendingConcession.lendingConcessionDetails.length; i++) {
-            if (lendingConcession.lendingConcessionDetails[i].lendingConcessionDetailTieredRates.length > 0) {
-                lendingConcession.lendingConcessionDetails[i].marginAgainstPrime = lendingConcession.lendingConcessionDetails[i].lendingConcessionDetailTieredRates[0].marginToPrime
-                lendingConcession.lendingConcessionDetails[i].approvedMap = lendingConcession.lendingConcessionDetails[i].lendingConcessionDetailTieredRates[0].approvedMap
+            if (lendingConcession.lendingConcessionDetails[i].lendingConcessionDetailTieredRates) {
+                if (lendingConcession.lendingConcessionDetails[i].lendingConcessionDetailTieredRates.length > 0) {
+                    lendingConcession.lendingConcessionDetails[i].marginAgainstPrime = lendingConcession.lendingConcessionDetails[i].lendingConcessionDetailTieredRates[0].marginToPrime
+                    lendingConcession.lendingConcessionDetails[i].approvedMap = lendingConcession.lendingConcessionDetails[i].lendingConcessionDetailTieredRates[0].approvedMap
+                }
             }
         }
         return lendingConcession;
