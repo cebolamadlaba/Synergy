@@ -199,12 +199,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 concession.Status == Constants.ConcessionStatus.ApprovedWithChanges)
             {
 
-                if (concessionLending.ProductTypeId == Constants.Lending.ProductType.OverdraftId)
+                if (concessionLending.ProductTypeId == Constants.Lending.ProductType.OverdraftId ||
+                    concessionLending.ProductTypeId == Constants.Lending.ProductType.TempOverdraftId)
+                {
                     this.UpdateApprovedPriceForTieredRate(concessionLending.ConcessionLendingTieredRates);
+                    this.UpdateApprovedPrice(concessionLending);
+                }
                 else
                     this.UpdateApprovedPrice(concessionLending);
 
-                this.UpdateIsMismatched(concessionLending);
+                //STB has a stored proc that does the mismatch this proc runs every morning
+                //this.UpdateIsMismatched(concessionLending);
 
 
                 _ruleManager.UpdateBaseFieldsOnApproval(concessionLending);
@@ -227,8 +232,12 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                      (concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges ||
                      concession.SubStatus == Constants.ConcessionSubStatus.HoApprovedWithChanges))
             {
-                if (concessionLending.ProductTypeId == Constants.Lending.ProductType.OverdraftId)
+                if (concessionLending.ProductTypeId == Constants.Lending.ProductType.OverdraftId ||
+                    concessionLending.ProductTypeId == Constants.Lending.ProductType.TempOverdraftId)
+                {
                     this.UpdateApprovedPriceForTieredRate(concessionLending.ConcessionLendingTieredRates);
+                    this.UpdateApprovedPrice(concessionLending);
+                }
                 else
                     this.UpdateApprovedPrice(concessionLending);
 
