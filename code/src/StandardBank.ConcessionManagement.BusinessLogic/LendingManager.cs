@@ -217,10 +217,6 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     {
                         concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
                     }
-                    //else if (productType == Constants.Lending.ProductType.TempOverdraft)
-                    //{
-                    //    concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
-                    //}
                     else if (productType != Constants.Lending.ProductType.Overdraft && concessionLending.Term.HasValue)
                     {
                         concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
