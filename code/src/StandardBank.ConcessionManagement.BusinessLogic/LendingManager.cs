@@ -199,8 +199,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 concession.Status == Constants.ConcessionStatus.ApprovedWithChanges)
             {
 
-                if (concessionLending.ProductTypeId == Constants.Lending.ProductType.OverdraftId ||
-                    concessionLending.ProductTypeId == Constants.Lending.ProductType.TempOverdraftId)
+                if (concessionLending.ProductTypeId == Constants.Lending.ProductType.OverdraftId)
                     this.UpdateApprovedPriceForTieredRate(concessionLending.ConcessionLendingTieredRates);
                 else
                     this.UpdateApprovedPrice(concessionLending);
@@ -218,10 +217,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     {
                         concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
                     }
-                    else if (productType == Constants.Lending.ProductType.TempOverdraft)
-                    {
-                        concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
-                    }
+                    //else if (productType == Constants.Lending.ProductType.TempOverdraft)
+                    //{
+                    //    concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
+                    //}
                     else if (productType != Constants.Lending.ProductType.Overdraft && concessionLending.Term.HasValue)
                     {
                         concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
@@ -232,8 +231,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                      (concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges ||
                      concession.SubStatus == Constants.ConcessionSubStatus.HoApprovedWithChanges))
             {
-                if (concessionLending.ProductTypeId == Constants.Lending.ProductType.OverdraftId ||
-                    concessionLending.ProductTypeId == Constants.Lending.ProductType.TempOverdraftId)
+                if (concessionLending.ProductTypeId == Constants.Lending.ProductType.OverdraftId)
                     this.UpdateApprovedPriceForTieredRate(concessionLending.ConcessionLendingTieredRates);
                 else
                     this.UpdateApprovedPrice(concessionLending);

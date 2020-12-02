@@ -1068,7 +1068,6 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             }
         });
 
-
         if (isOverdraft && this.selectedExtensionFee == null) {
             this.extendDisclamerModal.show();
         } else {
@@ -1087,11 +1086,11 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             return;
         } else {
 
-            const concessions = this.getLendingConcessionItemRows();
-            for (let concessionFormItem of concessions.controls)
-            {
-                if (concessionFormItem.get('productType').value.description == ProductTypeEnum.Overdraft) {
-                    concessionFormItem.get('extensionFee').setValue(this.selectedExtensionFee);
+           const concessions = this.getLendingConcessionItemRows();
+           for (let concessionFormItem of concessions.controls)
+           {
+               if (concessionFormItem.get('productType').value.description == ProductTypeEnum.Overdraft) {
+                   concessionFormItem.get('extensionFee').setValue(this.selectedExtensionFee);
                 }
             }
         }
