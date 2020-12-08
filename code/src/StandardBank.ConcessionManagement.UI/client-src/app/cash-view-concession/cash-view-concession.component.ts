@@ -819,7 +819,6 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
         } else {
 
             this.showMotivationDisclaimer = false;
-            this.validationError = null;
 
             var extendConceModel = new extendConcessionModel()
             extendConceModel.concessionReferenceId = this.concessionReferenceId;
