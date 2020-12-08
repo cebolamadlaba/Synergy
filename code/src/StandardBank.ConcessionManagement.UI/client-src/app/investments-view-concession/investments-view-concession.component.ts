@@ -80,7 +80,7 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
     canPcmApprove = false;
     hasChanges = false;
     canExtend = false;
-    isExtendingConcession = false;
+    showMotivationDisclaimer = false;
     canRenew = false;
     canRecall = false;
     isEditing = false;
@@ -334,8 +334,7 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
                 }
 
                 //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
-               // this.canExtend = investmentConcession.concession.canExtend && investmentConcession.currentUser.canRequest;
-                this.canExtend = true;
+                this.canExtend = investmentConcession.concession.canExtend && investmentConcession.currentUser.canRequest;
                 this.canRenew = investmentConcession.concession.canRenew && investmentConcession.currentUser.canRequest;
 
                 //set the resubmit and update permissions
@@ -992,10 +991,10 @@ export class InvestmentsViewConcessionComponent extends InvestmentBaseService im
         if (this.canExtend && this.motivationEnabled == false) {
             this.motivationEnabled = true;
             this.investmentConcessionForm.controls['motivation'].setValue('');
-            this.isExtendingConcession = true;
+            this.showMotivationDisclaimer = true;
 
         } else {
-            this.isExtendingConcession = false;
+            this.showMotivationDisclaimer = false;
 
             var extendConcessionModel = new extendConcessionModel()
             extendConcessionModel.concessionReferenceId = this.concessionReferenceId;

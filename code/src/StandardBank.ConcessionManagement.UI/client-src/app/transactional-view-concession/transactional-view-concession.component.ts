@@ -62,7 +62,7 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
     canPcmApprove = false;
     hasChanges = false;
     canExtend = false;
-    isExtendingConcession = false;
+    showMotivationDisclaimer = false;
     canRenew = false;
     canRecall = false;
     isEditing = false;
@@ -799,11 +799,12 @@ export class TransactionalViewConcessionComponent extends TransactionalBaseServi
         if (this.canExtend && this.motivationEnabled == false) {
             this.motivationEnabled = true;
             this.transactionalConcessionForm.controls['motivation'].setValue('');
-            this.isExtendingConcession = true;
+            this.showMotivationDisclaimer = true;
 
         } else {
 
-            this.isExtendingConcession = false;
+            this.showMotivationDisclaimer = false;
+            this.validationError = null;
 
             var extendConceModel = new extendConcessionModel()
             extendConceModel.concessionReferenceId = this.concessionReferenceId;
