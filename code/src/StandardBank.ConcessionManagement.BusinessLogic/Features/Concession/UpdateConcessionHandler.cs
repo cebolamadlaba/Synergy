@@ -133,15 +133,22 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
 
             if (message.User.SelectedCentre?.Id > 0)
             {
-                if (message.Concession.Status == Constants.ConcessionStatus.Pending && !string.IsNullOrWhiteSpace(message.Concession.SubStatus))
-                    await SendNotificationEmail(message, result);
+                try
+                {
+                    if (message.Concession.Status == Constants.ConcessionStatus.Pending && !string.IsNullOrWhiteSpace(message.Concession.SubStatus))
+                        await SendNotificationEmail(message, result);
 
-                if (message.Concession.Status == Constants.ConcessionStatus.Approved ||
-                    message.Concession.Status == Constants.ConcessionStatus.ApprovedWithChanges)
-                    SendApprovedNotificationEmail(message);
+                    if (message.Concession.Status == Constants.ConcessionStatus.Approved ||
+                        message.Concession.Status == Constants.ConcessionStatus.ApprovedWithChanges)
+                        SendApprovedNotificationEmail(message);
 
-                if (message.Concession.Status == Constants.ConcessionStatus.Declined)
-                    SendDeclinedNotificationEmail(message);
+                    if (message.Concession.Status == Constants.ConcessionStatus.Declined)
+                        SendDeclinedNotificationEmail(message);
+                }
+                catch (Exception ex)
+                {
+                    ex.ToString();
+                }
             }
             else
             {

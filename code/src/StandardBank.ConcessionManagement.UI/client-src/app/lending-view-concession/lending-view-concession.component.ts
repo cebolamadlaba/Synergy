@@ -1138,6 +1138,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
                     this.lendingService.postExtendConcession(extendConceModel, this.selectedExtensionFee).subscribe(entity => {
                         this.lendingConcession = entity;
+                        window.location.reload();
                         this.populateFormFromLendingConcession();
                         console.log("data saved");
                         this.canBcmApprove = false;
@@ -1326,6 +1327,9 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         this.canArchive = false;
 
         if (editType == EditTypeEnum.Renew) { // || editType == EditTypeEnum.UpdateApproved) {
+
+            let canUpdateExpiryDate: boolean = true;
+
             const concessions = this.getLendingConcessionItemRows();
             for (let concessionFormItem of concessions.controls) {
                 // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
@@ -1333,11 +1337,14 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                     let expiryDate = new Date(concessionFormItem.get('expiryDate').value);
                     expiryDate = new Date(expiryDate.setFullYear(expiryDate.getFullYear() + 1));
                     concessionFormItem.get('expiryDate').setValue(this.datepipe.transform(expiryDate, 'yyyy-MM-dd'));
+                    
                 }
                 
                 //The term on Overdraft must default to 12 months. 
                 if (concessionFormItem.get('productType').value.description == ProductTypeEnum.Overdraft) {
                     concessionFormItem.get('term').setValue(12);
+                    canUpdateExpiryDate = true;
+                   
 
                 }
 
