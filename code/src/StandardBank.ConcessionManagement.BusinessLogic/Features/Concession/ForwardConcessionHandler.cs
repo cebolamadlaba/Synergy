@@ -102,9 +102,15 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
 
             if (message.User.SelectedCentre?.Id > 0)
             {
-
-                if (message.Concession.IsInProgressForwarding)// && message.Concession.SubStatusId == _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.PcmPending))
-                    SendForwardNotificationEmail(message);
+                try
+                {
+                    if (message.Concession.IsInProgressForwarding)// && message.Concession.SubStatusId == _lookupTableManager.GetSubStatusId(Constants.ConcessionSubStatus.PcmPending))
+                        SendForwardNotificationEmail(message);
+                }
+                catch (Exception ex)
+                {
+                    ex.ToString();
+                }
             }
             else
             {
