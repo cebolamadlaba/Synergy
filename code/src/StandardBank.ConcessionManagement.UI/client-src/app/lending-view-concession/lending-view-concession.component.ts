@@ -276,7 +276,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         //set the resubmit and update permissions
         //can only update when concession is not "due for expiry"
         this.canResubmit = this.lendingConcession.concession.canResubmit && this.lendingConcession.currentUser.canRequest;
-        this.canUpdate = !this.canRenew && !this.canExtend && this.lendingConcession.concession.canUpdate && this.lendingConcession.currentUser.canRequest;
+        this.canUpdate = this.lendingConcession.concession.canUpdate && this.lendingConcession.currentUser.canRequest;
 
         this.canArchive = this.lendingConcession.concession.canArchive && this.lendingConcession.currentUser.canRequest;
         this.isInProgressExtension = this.lendingConcession.concession.isInProgressExtension;
