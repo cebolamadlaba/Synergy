@@ -145,7 +145,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             //we are only allowed to extend or renew overdraft products
             if (concession.CanExtend || concession.CanRenew)
             {
-                if (!lendingConcessionDetails.Any(_ => _.ProductType == Constants.Lending.ProductType.Overdraft || _.ProductType == Constants.Lending.ProductType.TempOverdraft || _.ProductType.StartsWith("VAF")))
+                if (!lendingConcessionDetails.Any(_ => _.ProductType == Constants.Lending.ProductType.Overdraft || _.ProductType.StartsWith("VAF")))
                 {
                     concession.CanExtend = false;
                     concession.CanRenew = false;
