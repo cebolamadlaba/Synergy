@@ -72,6 +72,7 @@
     <Folder Include="Change Scripts\Old Migrator" />
     <Folder Include="HangFire\" />
     <Folder Include="HangFire\Tables\" />
+    <Folder Include="Change Scripts\ATM_Channel_Type" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\tblUserRole.sql" />
@@ -286,6 +287,7 @@
     <Build Include="HangFire\Tables\Schema.sql" />
     <None Include="dbo\Views\ConcessionInboxView_1.sql" />
     <Build Include="Security\HangFire.sql" />
+    <Build Include="Change Scripts\ATM_Channel_Type\01_ATM_Channel_Type.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Change Scripts\09_create_rtblPeriod.sql" />
