@@ -1,11 +1,12 @@
 
-
+declare @fkChannelTypeId int
 
 insert into [rtblChannelType] (Description,IsActive,StandardPricingTable)
 values('ATM', 1 , 300)
 
-declare @fkrtblChannelTypeImport int = SCOPE_IDENTITY()
+ select @fkChannelTypeId = pkChannelTypeId from [rtblChannelType]
+ where Description = 'ATM' --The description should alwais be unique 
 
 insert into [rtblChannelTypeImport] (fkChannelTypeId,ImportFileChannel)
-values (@fkrtblChannelTypeImport,122)
+values (@fkChannelTypeId,122)
 
