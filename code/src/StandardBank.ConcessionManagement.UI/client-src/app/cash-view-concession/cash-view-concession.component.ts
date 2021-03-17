@@ -269,14 +269,6 @@ export class CashViewConcessionComponent extends CashBaseService implements OnIn
             currentConcession.get('isExpiring').setValue(cashConcessionDetail.isExpiring);
 
 
-            //check if Can extend
-            if (this.canRenew) {
-                var currentDate = new Date();
-                currentDate.setMonth(currentDate.getMonth() + 12);
-                var formattedExpiryDate = this.datepipe.transform(currentDate, 'yyyy-MM-dd');
-                currentConcession.get('expiryDate').setValue(formattedExpiryDate);
-            }
-
             rowIndex++;
         }
 
