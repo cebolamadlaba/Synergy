@@ -1413,6 +1413,9 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
         var lendingConcession = this.getLendingConcession(false);
 
+        //update lending marging
+        lendingConcession = this.SetLendingMargin(lendingConcession);
+
         lendingConcession.concession.status = ConcessionStatus.Pending;
         lendingConcession.concession.subStatus = ConcessionSubStatus.BCMPending;
         lendingConcession.concession.referenceNumber = this.concessionReferenceId;
