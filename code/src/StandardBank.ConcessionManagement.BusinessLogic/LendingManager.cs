@@ -72,6 +72,11 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         private readonly IExtensionFeeRepository _extensionFeeRepository;
 
         /// <summary>
+        /// The concession relationship repository
+        /// </summary>
+        private readonly IConcessionRelationshipRepository _concessionRelationshipRepository;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LendingManager"/> class.
         /// </summary>
         /// <param name="concessionManager">The concession manager.</param>
@@ -88,7 +93,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             ILoadedPriceLendingRepository loadedPriceLendingRepository, IRuleManager ruleManager,
             IMiscPerformanceRepository miscPerformanceRepository, IPrimeRateRepository primeRateRepository,
             IMediator mediator, IConcessionLendingTieredRateRepository concessionLendingTieredRateRepository,
-            IExtensionFeeRepository extensionFeeRepository)
+            IExtensionFeeRepository extensionFeeRepository,
+            IConcessionRelationshipRepository concessionRelationshipRepository)
         {
             _concessionManager = concessionManager;
             _concessionLendingRepository = concessionLendingRepository;
@@ -102,6 +108,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             _mediator = mediator;
             _concessionLendingTieredRateRepository = concessionLendingTieredRateRepository;
             _extensionFeeRepository = extensionFeeRepository;
+            _concessionRelationshipRepository = concessionRelationshipRepository;
         }
 
         /// <summary>
@@ -138,7 +145,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
             //we are only allowed to extend or renew overdraft products
             if (concession.CanExtend || concession.CanRenew)
             {
-                if (!lendingConcessionDetails.Any(_ => _.ProductType == Constants.Lending.ProductType.Overdraft || _.ProductType == Constants.Lending.ProductType.TempOverdraft || _.ProductType.StartsWith("VAF")))
+                if (!lendingConcessionDetails.Any(_ => _.ProductType == Constants.Lending.ProductType.Overdraft || _.ProductType.StartsWith("VAF")))
                 {
                     concession.CanExtend = false;
                     concession.CanRenew = false;
@@ -201,23 +208,34 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 if (concessionLending.ProductTypeId == Constants.Lending.ProductType.OverdraftId ||
                     concessionLending.ProductTypeId == Constants.Lending.ProductType.TempOverdraftId)
+                {
                     this.UpdateApprovedPriceForTieredRate(concessionLending.ConcessionLendingTieredRates);
+                    this.UpdateApprovedPrice(concessionLending);
+                }
                 else
                     this.UpdateApprovedPrice(concessionLending);
 
-                this.UpdateIsMismatched(concessionLending);
+                //STB has a stored proc that does the mismatch this proc runs every morning
+                //this.UpdateIsMismatched(concessionLending);
 
+                var productType = _lookupTableManager.GetProductTypeName(concessionLending.ProductTypeId);
 
-                _ruleManager.UpdateBaseFieldsOnApproval(concessionLending);
+                if (IsExtension(concessionLending.ConcessionId) &&  productType == Constants.Lending.ProductType.Overdraft)
+                {
+                    _ruleManager.UpdateBaseFieldsOnApproval(concessionLending);
+                }
+                else
+                {
+                    if (!concessionLending.DateApproved.HasValue)
+                        concessionLending.DateApproved = DateTime.Now;
+                }
 
                 if (!concessionLending.ExpiryDate.HasValue)
                 {
-                    var productType = _lookupTableManager.GetProductTypeName(concessionLending.ProductTypeId);
-
                     if (productType == Constants.Lending.ProductType.Overdraft)
                     {
                         concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
-                    }
+                    }   
                     else if (productType == Constants.Lending.ProductType.TempOverdraft)
                     {
                         concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
@@ -227,18 +245,21 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
                     }
                 }
-            }
-            else if (concession.Status == Constants.ConcessionStatus.Pending &&
-                     (concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges ||
-                     concession.SubStatus == Constants.ConcessionSubStatus.HoApprovedWithChanges))
-            {
-                if (concessionLending.ProductTypeId == Constants.Lending.ProductType.OverdraftId ||
-                    concessionLending.ProductTypeId == Constants.Lending.ProductType.TempOverdraftId)
-                    this.UpdateApprovedPriceForTieredRate(concessionLending.ConcessionLendingTieredRates);
-                else
-                    this.UpdateApprovedPrice(concessionLending);
+                }
+                else if (concession.Status == Constants.ConcessionStatus.Pending &&
+                         (concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges ||
+                         concession.SubStatus == Constants.ConcessionSubStatus.HoApprovedWithChanges))
+                {
+                    if (concessionLending.ProductTypeId == Constants.Lending.ProductType.OverdraftId ||
+                        concessionLending.ProductTypeId == Constants.Lending.ProductType.TempOverdraftId)
+                    {
+                        this.UpdateApprovedPriceForTieredRate(concessionLending.ConcessionLendingTieredRates);
+                        this.UpdateApprovedPrice(concessionLending);
+                    }
+                    else
+                        this.UpdateApprovedPrice(concessionLending);
 
-            }
+                }
 
             _concessionLendingRepository.Update(concessionLending);
 
@@ -295,6 +316,14 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     tieredRate.MarginToPrime = dbTieredRate.MarginToPrime;
                 }
             }
+        }
+
+        private bool IsExtension(int concessionId)
+        {
+            var parentRelationships = _concessionRelationshipRepository.ReadByChildConcessionId(concessionId);
+            var extensionRelationshipId = _lookupTableManager.GetRelationshipId(Constants.RelationshipType.Extension);
+
+            return parentRelationships.Any(_ => _.RelationshipId == extensionRelationshipId);
         }
 
         /// <summary>

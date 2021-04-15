@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MoreLinq;
 using StandardBank.ConcessionManagement.Interface.BusinessLogic;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.BusinessLogic;
@@ -623,7 +624,8 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 });
             }
 
-            return approvedConcessionDetails;
+
+            return approvedConcessionDetails.DistinctBy(d => d.ReferenceNumber);
         }
 
         /// <summary>
@@ -1567,5 +1569,17 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 }
             }
         }
+
+        /// <summary>
+        /// Check Existing Concession with RiskGroupOrSapbPid
+        /// </summary>
+        /// <param name="sapbpidOrRiskGroupNumber">The concession identifier.</param>
+
+        public int CheckPendingConcessionInRiskGroupOrSapbPid(int sapbpidOrRiskGroupNumber, int concessionTypeId)
+        {
+            return _concessionRepository.GetConcessionByRiskGroupOrSapbip(sapbpidOrRiskGroupNumber, concessionTypeId);
+
+        }
+
     }
 }

@@ -13,6 +13,7 @@ import { AccrualType } from "../models/accrual-type";
 import { ChannelType } from "../models/channel-type";
 import { LookupDataService } from "../services/lookup-data.service";
 import { Concession } from "../models/concession";
+import { extendConcessionModel } from "../models/extendConcessionModel";
 
 import { ConcessionCondition } from "../models/concession-condition";
 import { TableNumber } from "../models/table-number";
@@ -80,6 +81,7 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
     canRecall = false;
     isEditing = false;
     motivationEnabled = false;
+    showMotivationDisclaimer = false;
     canEdit = false;
     isRecalling = false;
     capturedComments: string;
@@ -287,12 +289,14 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
                 }
 
                 //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
-                this.canExtend = bolConcession.concession.canExtend && bolConcession.currentUser.canRequest;
+                this.canExtend = bolConcession.concession.canExtend && bolConcession.currentUser.canRequest;               
                 this.canRenew = bolConcession.concession.canRenew && bolConcession.currentUser.canRequest;
+               
 
-                //set the resubmit and update permissions
+                 //set the resubmit and update permissions
+                 //can only update when concession is not "due for expiry"
                 this.canResubmit = bolConcession.concession.canResubmit && bolConcession.currentUser.canRequest;
-                this.canUpdate = bolConcession.concession.canUpdate && bolConcession.currentUser.canRequest;
+                this.canUpdate = !this.canRenew && bolConcession.concession.canUpdate && bolConcession.currentUser.canRequest;
 
                 this.canArchive = bolConcession.concession.canArchive && bolConcession.currentUser.canRequest;
                 this.isInProgressExtension = bolConcession.concession.isInProgressExtension;
@@ -363,7 +367,7 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
                     }
 
                     currentConcession.get('isExpired').setValue(bolConcessionDetail.isExpired);
-                    currentConcession.get('isExpiring').setValue(bolConcessionDetail.isExpiring);
+                    currentConcession.get('isExpiring').setValue(bolConcessionDetail.isExpiring);     
 
                     rowIndex++;
                 }
@@ -888,27 +892,54 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
     }
 
     extendConcession() {
-        if (confirm("Are you sure you want to extend this concession?")) {
-            this.isLoading = true;
-            this.errorMessage = null;
+
+
+        if (this.canExtend && this.motivationEnabled == false) {
+            this.showMotivationDisclaimer = true;
+            this.motivationEnabled = true;
+            this.bolConcessionForm.controls['motivation'].setValue('');
+
+        } else {
+
+            this.showMotivationDisclaimer = false;
             this.validationError = null;
 
-            this.bolConcessionService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
-                console.log("data saved");
-                this.canBcmApprove = false;
-                this.canBcmApprove = false;
-                this.canExtend = false;
-                this.canRenew = false;
-                this.canRecall = false;
-                this.canUpdate = false;
-                this.canArchive = false;
-                this.saveMessage = entity.concession.childReferenceNumber;
+            var extendConceModel = new extendConcessionModel()
+            extendConceModel.concessionReferenceId = this.concessionReferenceId;
+
+            if (this.bolConcessionForm.controls['motivation'].value) {
+                extendConceModel.motivation = this.bolConcessionForm.controls['motivation'].value;
+            } else {
+                this.addValidationError("Motivation not captured");
                 this.isLoading = false;
-                this.bolConcession = entity;
-            }, error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
+            }
+
+            if (!this.validationError) {
+
+                if (confirm("Are you sure you want to extend this concession?")) {
+                    this.isLoading = true;
+                    this.errorMessage = null;
+                    this.validationError = null;
+
+                    this.bolConcessionService.postExtendConcession(extendConceModel).subscribe(entity => {
+                        console.log("data saved");
+                        this.canBcmApprove = false;
+                        this.canBcmApprove = false;
+                        this.canExtend = false;
+                        this.canRenew = false;
+                        this.canRecall = false;
+                        this.canUpdate = false;
+                        this.motivationEnabled = false;
+                        this.canArchive = false;
+                        this.saveMessage = entity.concession.childReferenceNumber;
+                        this.isLoading = false;
+                        this.bolConcession = entity;
+                    }, error => {
+                        this.errorMessage = <any>error;
+                        this.isLoading = false;
+                    });
+                }
+            }
         }
     }
 
@@ -929,17 +960,17 @@ export class BolViewConcessionComponent extends BolConcessionBaseService impleme
 
         this.bolConcessionForm.controls['motivation'].setValue('');
 
-        //if (editType == EditTypeEnum.UpdateApproved) {
-        //    const concessions = this.getBolConcessionItemRows();
-        //    for (let concessionFormItem of concessions.controls) {
-        //        // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
-        //        if (concessionFormItem.get('expiryDate').value) {
-        //            let expiryDate = new Date(concessionFormItem.get('expiryDate').value);
-        //            expiryDate = new Date(expiryDate.setFullYear(expiryDate.getFullYear() + 1));
-        //            concessionFormItem.get('expiryDate').setValue(this.datepipe.transform(expiryDate, 'yyyy-MM-dd'));
-        //        }
-        //    }
-        //}
+        if (editType == EditTypeEnum.Renew) {
+            const concessions = this.getBolConcessionItemRows();
+            for (let concessionFormItem of concessions.controls) {
+                // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
+                if (concessionFormItem.get('expiryDate').value) {
+                    let expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+                    expiryDate = new Date(expiryDate.setFullYear(expiryDate.getFullYear() + 1));
+                    concessionFormItem.get('expiryDate').setValue(this.datepipe.transform(expiryDate, 'yyyy-MM-dd'));
+                }
+            }
+        }
     }
 
     saveConcession() {

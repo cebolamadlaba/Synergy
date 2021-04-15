@@ -13,6 +13,7 @@ import { AccrualType } from "../models/accrual-type";
 import { ChannelType } from "../models/channel-type";
 import { LookupDataService } from "../services/lookup-data.service";
 import { Concession } from "../models/concession";
+import { extendConcessionModel } from "../models/extendConcessionModel";
 
 import { ConcessionCondition } from "../models/concession-condition";
 import { TableNumber } from "../models/table-number";
@@ -82,7 +83,10 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
     canPcmApprove = false;
     hasChanges = false;
     canExtend = false;
+    showMotivationDisclaimer = false;
     canRenew = false;
+    isExtendable = true;
+    isRenewable = true;
     canRecall = false;
     isEditing = false;
     motivationEnabled = false;
@@ -205,6 +209,13 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
         return <FormArray>this.tradeConcessionForm.controls['concessionItemRows'];
     }
 
+
+    isMotivationEnabled() {
+
+      return this.motivationEnabled ? null : '';
+
+    }
+
     getInitialData() {
         if (this.riskGroupNumber != null && this.riskGroupNumber != 0) {
             Observable.forkJoin([
@@ -299,18 +310,21 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
                 }
 
                 //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
-                this.canExtend = tradeConcession.concession.canExtend && tradeConcession.currentUser.canRequest;
+                this.canExtend = tradeConcession.concession.canExtend && tradeConcession.currentUser.canRequest;              
                 this.canRenew = tradeConcession.concession.canRenew && tradeConcession.currentUser.canRequest;
+           
 
-                //set the resubmit and update permissions
+                  //set the resubmit and update permissions
+                 //can only update when concession is not "due for expiry"
                 this.canResubmit = tradeConcession.concession.canResubmit && tradeConcession.currentUser.canRequest;
-                this.canUpdate = tradeConcession.concession.canUpdate && tradeConcession.currentUser.canRequest;
+                this.canUpdate = !this.canRenew && tradeConcession.concession.canUpdate && tradeConcession.currentUser.canRequest;
 
                 this.canArchive = tradeConcession.concession.canArchive && tradeConcession.currentUser.canRequest;
                 this.isInProgressExtension = tradeConcession.concession.isInProgressExtension;
                 this.isInProgressRenewal = tradeConcession.concession.isInProgressRenewal;
 
                 this.tradeConcessionForm.controls['motivation'].setValue(this.tradeConcession.concession.motivation);
+                this.tradeConcessionForm.controls['smtDealNumber'].setValue(this.tradeConcession.concession.smtDealNumber);
 
                 let rowIndex = 0;
 
@@ -432,6 +446,20 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
 
                     currentConcession.get('isExpired').setValue(tradeConcessionDetail.isExpired);
                     currentConcession.get('isExpiring').setValue(tradeConcessionDetail.isExpiring);
+
+                    //check if Can extend
+                    if (this.canRenew) {
+
+                        if (tradeConcessionDetail.tradeProductType == "Inward TT"
+                            || tradeConcessionDetail.tradeProductType == "Outward TT"
+                           ) {
+                            var currentDate = new Date();
+                            currentDate.setMonth(currentDate.getMonth() + 12);
+                            var formattedExpiryDate = this.datepipe.transform(currentDate, 'yyyy-MM-dd');
+                            currentConcession.get('expiryDate').setValue(formattedExpiryDate);
+                        }                     
+
+                    }
 
                     rowIndex++;
                 }
@@ -691,6 +719,12 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
         this.saveMessage = null;
     }
 
+    canEditSMTDealNumber() {
+        return (this.isRecalling || this.canEdit) ? null : '';
+    }
+
+
+
     disableField(rowIndex, fieldname) {
         let canUpdateExpiryDate: boolean = true;
 
@@ -700,6 +734,7 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
                 canUpdateExpiryDate = false;
             }
         }
+
 
         return super.disableFieldBase(
             this.selectedTradeConcession[rowIndex],
@@ -734,6 +769,11 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
             tradeConcession.concession.motivation = this.tradeConcessionForm.controls['motivation'].value;
         else
             tradeConcession.concession.motivation = '.';
+
+        if (this.tradeConcessionForm.controls['smtDealNumber'].value)
+            tradeConcession.concession.smtDealNumber = this.tradeConcessionForm.controls['smtDealNumber'].value;
+        else
+            this.addValidationError("SMT Deal Number not captured");
 
         const concessions = this.getTradeConcessionItemRows();
 
@@ -1217,27 +1257,55 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
     }
 
     extendConcession() {
-        if (confirm("Are you sure you want to extend this concession?")) {
-            this.isLoading = true;
-            this.errorMessage = null;
+
+        if (this.canExtend && this.motivationEnabled == false) {
+            this.motivationEnabled = true;
+            this.tradeConcessionForm.controls['motivation'].setValue('');
+            this.showMotivationDisclaimer = true;
+
+        } else {
+
+            this.showMotivationDisclaimer = false;
             this.validationError = null;
 
-            this.tradeConcessionService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
-                console.log("data saved");
-                this.canBcmApprove = false;
-                this.canBcmApprove = false;
-                this.canExtend = false;
-                this.canRenew = false;
-                this.canRecall = false;
-                this.canUpdate = false;
-                this.canArchive = false;
-                this.saveMessage = entity.concession.childReferenceNumber;
+            var extendConceModel = new extendConcessionModel()
+            extendConceModel.concessionReferenceId = this.concessionReferenceId;
+
+            if (this.tradeConcessionForm.controls['motivation'].value) {
+                extendConceModel.motivation = this.tradeConcessionForm.controls['motivation'].value;
+
+            } else
+            {
+                this.addValidationError("Motivation not captured");
                 this.isLoading = false;
-                this.tradeConcession = entity;
-            }, error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
+            }
+
+            if (!this.validationError) {
+
+                if (confirm("Are you sure you want to extend this concession?")) {
+                    this.isLoading = true;
+                    this.errorMessage = null;
+                    this.validationError = null;
+
+                        this.tradeConcessionService.postExtendConcession(extendConceModel).subscribe(entity => {
+                            console.log("data saved");
+                            this.canBcmApprove = false;
+                            this.canBcmApprove = false;
+                            this.canExtend = false;
+                            this.canRenew = false;
+                            this.motivationEnabled = false;
+                            this.canRecall = false;
+                            this.canUpdate = false;
+                            this.canArchive = false;
+                            this.saveMessage = entity.concession.childReferenceNumber;
+                            this.isLoading = false;
+                            this.tradeConcession = entity;
+                        }, error => {
+                            this.errorMessage = <any>error;
+                            this.isLoading = false;
+                        });
+                    }
+                }
         }
     }
 
@@ -1261,14 +1329,29 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
         if (editType == EditTypeEnum.Renew) { // || editType == EditTypeEnum.UpdateApproved) {
             const concessions = this.getTradeConcessionItemRows();
             for (let concessionFormItem of concessions.controls) {
-                // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
-                if (concessionFormItem.get('expiryDate').value) {
-                    let expiryDate = new Date(concessionFormItem.get('expiryDate').value);
-                    expiryDate = new Date(expiryDate.setFullYear(expiryDate.getFullYear() + 1));
-                    concessionFormItem.get('expiryDate').setValue(this.datepipe.transform(expiryDate, 'yyyy-MM-dd'));
+               
+
+                if (concessionFormItem.get('producttype').value.tradeProductType == "Inward TT"
+                    || concessionFormItem.get('producttype').value.tradeProductType == "Outward TT"
+                ) {
+                   // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
+                    if (concessionFormItem.get('expiryDate').value) {
+                        let expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+                        expiryDate = new Date(expiryDate.setFullYear(expiryDate.getFullYear() + 1));
+                        concessionFormItem.get('expiryDate').setValue(this.datepipe.transform(expiryDate, 'yyyy-MM-dd'));
+                    }
                 }
+
+                if (concessionFormItem.get('producttype').value.tradeProductType == "Local guarantee") {
+                    concessionFormItem.get('term').setValue(12);
+                    concessionFormItem.get('term').enable;
+                }
+
             }
         }
+
+
+
     }
 
     saveConcession() {
@@ -1492,6 +1575,10 @@ export class TradeViewConcessionComponent extends TradeConcessionBaseService imp
                 this.isLoading = false;
             });
         }
+    }
+
+    getNumberInput(input) {
+        this.tradeConcessionForm.controls['smtDealNumber'].setValue(this.baseComponentService.removeLetters(input.value));
     }
 
     setadvalorem($event, rowIndex, controlname) {

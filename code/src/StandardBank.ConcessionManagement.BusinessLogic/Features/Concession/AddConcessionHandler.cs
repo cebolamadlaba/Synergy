@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
 {
@@ -89,7 +90,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic.Features.Concession
                     _lookupTableManager.GetConcessionType(result.ConcessionTypeId).Description;
 
             if (message.User.SelectedCentre?.Id > 0)
-                await SendNotificationEmail(message, result);
+                try {
+                    await SendNotificationEmail(message, result);
+                }
+                catch (Exception ex)
+                {
+                    ex.ToString();
+                }
             else
                 _logger.LogWarning(new EventId(1, "ApprovalEmailNotSent"), "Consession # {0} has no selected center",
                     result.Id);

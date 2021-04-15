@@ -8,4 +8,5 @@ export class ProductTypeFieldLogic {
     uffFeeIsEnabled: boolean;
     frequencyIsEnabled: boolean;
     serviceFeeIsEnabled: boolean;
+    fieldIsEnabled: boolean;
 }

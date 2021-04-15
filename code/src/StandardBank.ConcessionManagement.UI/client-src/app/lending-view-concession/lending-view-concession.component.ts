@@ -40,6 +40,7 @@ import { EditTypeEnum } from '../models/edit-type-enum';
 import { ConcessionConditionReturnObject } from '../models/concession-condition-return-object';
 import { ProductTypeEnum } from '../models/product-type-enum';
 import { LendingConcessionTieredRate } from '../models/lending-concession-tiered-rate';
+import { extendConcessionModel } from "../models/extendConcessionModel";
 
 @Component({
     selector: 'app-lending-view-concession',
@@ -79,11 +80,15 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     hasChanges = false;
     canExtend = false;
     canRenew = false;
+    isAbleToRenew = true;
+    showMotivationDisclaimer = false;
+    isExtendable = true;
     canRecall = false;
     isEditing = false;
     motivationEnabled = false;
     canEdit = false;
     selectedAccountNumbers: ClientAccountArray[];
+    isPrimeRateChanged = false;
 
     selectedRowIndex: number;
     selectedLineItemTieredRates: LendingConcessionTieredRate[] = [];
@@ -267,10 +272,12 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         this.canExtend = this.lendingConcession.concession.canExtend && this.lendingConcession.currentUser.canRequest;
         this.canRenew = this.lendingConcession.concession.canRenew && this.lendingConcession.currentUser.canRequest;
 
+
+
         //set the resubmit and update permissions
         //can only update when concession is not "due for expiry"
         this.canResubmit = this.lendingConcession.concession.canResubmit && this.lendingConcession.currentUser.canRequest;
-        this.canUpdate = !this.canRenew && this.lendingConcession.concession.canUpdate && this.lendingConcession.currentUser.canRequest;
+        this.canUpdate = this.lendingConcession.concession.canUpdate && this.lendingConcession.currentUser.canRequest;
 
         this.canArchive = this.lendingConcession.concession.canArchive && this.lendingConcession.currentUser.canRequest;
         this.isInProgressExtension = this.lendingConcession.concession.isInProgressExtension;
@@ -356,6 +363,8 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             currentConcession.get('isExpired').setValue(lendingConcessionDetail.isExpired);
             currentConcession.get('isExpiring').setValue(lendingConcessionDetail.isExpiring);
 
+
+
             rowIndex++;
         }
 
@@ -438,6 +447,31 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             period: ['']
         });
     }
+
+
+
+    disableFieldOnRenew(itemRow: FormControl) {
+
+        if (this.editType == EditTypeEnum.Renew) {
+            if (itemRow.value.productType.description == ProductTypeEnum.BTL
+                || itemRow.value.productType.description == ProductTypeEnum.TemporaryOverdraft
+                || itemRow.value.productType.description == ProductTypeEnum.MTL) {
+                itemRow.disable();
+            }              
+        }
+
+   
+        if (this.editType == EditTypeEnum.Extend)
+        {
+            if (itemRow.value.productType.description == ProductTypeEnum.BTL               
+                || itemRow.value.productType.description == ProductTypeEnum.MTL
+                || itemRow.value.productType.description == ProductTypeEnum.TemporaryOverdraft) {
+
+                itemRow.disable();
+            }              
+        }
+    }
+
 
     getInitialData() {
         if (this.riskGroupNumber != null && this.riskGroupNumber != 0) {
@@ -703,6 +737,12 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                 if (lendingConcessionDetail.lendingConcessionDetailTieredRates == null ||
                     lendingConcessionDetail.lendingConcessionDetailTieredRates.length == 0)
                     this.addValidationError("Tiered Rate cannot be empty for Product Type: Overdraft / Temporary Overdraft");
+
+                if (concessionFormItem.get('approvedMarginAgainstPrime').value)
+                    lendingConcessionDetail.approvedMap = concessionFormItem.get('approvedMarginAgainstPrime').value;
+
+                if (concessionFormItem.get('marginAgainstPrime').value)
+                    lendingConcessionDetail.marginAgainstPrime = concessionFormItem.get('marginAgainstPrime').value;
             }
             else {
                 if (concessionFormItem.get('limit').value == "") {
@@ -717,6 +757,9 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
                 if (concessionFormItem.get('marginAgainstPrime').value)
                     lendingConcessionDetail.marginAgainstPrime = concessionFormItem.get('marginAgainstPrime').value;
+
+                if (concessionFormItem.get('approvedMarginAgainstPrime').value)
+                    lendingConcessionDetail.approvedMap = concessionFormItem.get('approvedMarginAgainstPrime').value;
             }
 
             if (concessionFormItem.get('term').value) {
@@ -823,6 +866,9 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         }
 
         if (!this.validationError) {
+
+            lendingConcession = this.SetLendingMargin(lendingConcession);
+
             this.lendingService.postUpdateLendingData(lendingConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canBcmApprove = false;
@@ -856,6 +902,9 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         }
 
         if (!this.validationError) {
+
+            lendingConcession = this.SetLendingMargin(lendingConcession);
+
             this.lendingService.postUpdateLendingData(lendingConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canBcmApprove = false;
@@ -915,6 +964,9 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         }
 
         if (!this.validationError) {
+
+            lendingConcession = this.SetLendingMargin(lendingConcession);
+
             this.lendingService.postUpdateLendingData(lendingConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canPcmApprove = false;
@@ -1005,6 +1057,9 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         }
 
         if (!this.validationError) {
+
+            lendingConcession = this.SetLendingMargin(lendingConcession);
+
             this.lendingService.postUpdateLendingData(lendingConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canPcmApprove = false;
@@ -1026,16 +1081,20 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     }
 
     extensionDisclamer() {
+
+        this.editType = EditTypeEnum.Extend;
+
         var isOverdraft = this.lendingConcession.lendingConcessionDetails.find(item => {
             if (item.productType === "Overdraft") {
                 return true
             }
         });
 
-        if (isOverdraft) {
+        if (isOverdraft && this.selectedExtensionFee == null) {
             this.extendDisclamerModal.show();
         } else {
             this.extendConcession();
+            
         }
     }
 
@@ -1044,32 +1103,73 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     }
 
     extendConcession() {
+
         if (this.selectedExtensionFee == null) {
             return;
+        } else {
+
+           const concessions = this.getLendingConcessionItemRows();
+           for (let concessionFormItem of concessions.controls)
+           {
+               if (concessionFormItem.get('productType').value.description == ProductTypeEnum.Overdraft) {
+                   concessionFormItem.get('extensionFee').setValue(this.selectedExtensionFee);
+                }
+            }
         }
-        if (confirm("Are you sure you want to extend this concession?")) {
-            this.isLoading = true;
-            this.errorMessage = null;
+
+        this.extensionDisclamerClose();
+
+        if (this.canExtend && this.motivationEnabled == false) {
+            this.motivationEnabled = true;
+            this.lendingConcessionForm.controls['motivation'].setValue('');
+            this.showMotivationDisclaimer = true;
+
+        } else {
+
+
+            this.showMotivationDisclaimer = false;
             this.validationError = null;
 
-            this.lendingService.postExtendConcession(this.concessionReferenceId, this.selectedExtensionFee).subscribe(entity => {
-                this.lendingConcession = entity;
-                this.populateFormFromLendingConcession();
-                console.log("data saved");
-                this.canBcmApprove = false;
-                this.canBcmApprove = false;
-                this.canExtend = false;
-                this.canRenew = false;
-                this.canRecall = false;
-                this.canUpdate = false;
-                this.canArchive = false;
-                this.saveMessage = entity.concession.childReferenceNumber;
-                this.isLoading = false;
-                this.lendingConcession = entity;
-            }, error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
+             var extendConceModel = new extendConcessionModel()
+                   extendConceModel.concessionReferenceId = this.concessionReferenceId;
+
+            if (this.lendingConcessionForm.controls['motivation'].value)
+                    extendConceModel.motivation = this.lendingConcessionForm.controls['motivation'].value;
+                else
+                    this.addValidationError("Motivation not captured");
+                    this.isLoading = false;
+
+            if (!this.validationError) {
+
+                if (confirm("Are you sure you want to extend this concession?")) {
+                    this.isLoading = true;
+                    this.errorMessage = null;
+                    this.validationError = null;
+
+                    this.lendingService.postExtendConcession(extendConceModel, this.selectedExtensionFee).subscribe(entity => {
+                        this.lendingConcession = entity;
+                        window.location.reload();
+                        this.populateFormFromLendingConcession();
+                        console.log("data saved");
+                        this.canBcmApprove = false;
+                        this.canBcmApprove = false;
+                        this.canExtend = false;
+                        this.canRenew = false;
+                        this.canRecall = false;
+                        this.motivationEnabled = false;
+                        this.canUpdate = false;
+                        this.canArchive = false;
+                        this.saveMessage = entity.concession.childReferenceNumber;
+                        this.isLoading = false;
+                        this.lendingConcession = entity;
+                        this.errorMessage = null;
+                        this.validationError = null;
+                    }, error => {
+                        this.errorMessage = <any>error;
+                        this.isLoading = false;
+                    });
+                  }
+               }
         }
     }
 
@@ -1096,6 +1196,12 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         const concessions = <FormArray>this.lendingConcessionForm.controls['concessionItemRows'];
         let rowLendingTieredRates = this.getRowTieredRates(rowIndex);
         rowLendingTieredRates[0].marginToPrime = marginAgainstPrime;
+
+        //update lending marging
+        if (this.editType == 'UpdateApproved') {
+            rowLendingTieredRates[0].approvedMap = marginAgainstPrime;
+            concessions.controls[rowIndex].get('approvedMarginAgainstPrime').setValue(marginAgainstPrime);
+        }
 
         this.setThreeNumberDecimal($event);
     }
@@ -1124,13 +1230,11 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         var productType = currentRow.get('productType').value;
         // Is the product Overdraft or Temporary Overdraft?
         if (productType.description == ProductTypeEnum.Overdraft || productType.description == ProductTypeEnum.TemporaryOverdraft) {
-            //currentRow.get('limit').disable();
-            //currentRow.get('marginAgainstPrime').disable();
+
             return true;
         }
         else {
-            //currentRow.get('limit').enable();
-            //currentRow.get('marginAgainstPrime').enable();
+
             return false;
         }
 
@@ -1238,7 +1342,10 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         this.canUpdate = false;
         this.canArchive = false;
 
-        if (editType == EditTypeEnum.Renew) { // || editType == EditTypeEnum.UpdateApproved) {
+        if (editType == EditTypeEnum.Renew) { 
+
+            let canUpdateExpiryDate: boolean = true;
+
             const concessions = this.getLendingConcessionItemRows();
             for (let concessionFormItem of concessions.controls) {
                 // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
@@ -1246,8 +1353,19 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                     let expiryDate = new Date(concessionFormItem.get('expiryDate').value);
                     expiryDate = new Date(expiryDate.setFullYear(expiryDate.getFullYear() + 1));
                     concessionFormItem.get('expiryDate').setValue(this.datepipe.transform(expiryDate, 'yyyy-MM-dd'));
+                    
                 }
+                
+                //The term on Overdraft must default to 12 months. 
+                if (concessionFormItem.get('productType').value.description == ProductTypeEnum.Overdraft) {
+                    concessionFormItem.get('term').setValue(12);
+                    canUpdateExpiryDate = true;
+                   
+
+                }
+
             }
+          
         }
         if (editType == EditTypeEnum.Renew) {
             this.baseComponentService.isRenewing = true;
@@ -1268,7 +1386,8 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         lendingConcession.concession.type = "Existing";
         lendingConcession.concession.referenceNumber = this.concessionReferenceId;
 
-        if (!this.validationError) {
+
+       if (!this.validationError) {
             this.lendingService.postChildConcession(lendingConcession, this.editType).subscribe(entity => {
                 console.log("data saved");
                 this.isEditing = false;
@@ -1310,6 +1429,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         this.validationError = null;
 
         var lendingConcession = this.getLendingConcession(false);
+
 
         lendingConcession.concession.status = ConcessionStatus.Pending;
         lendingConcession.concession.subStatus = ConcessionSubStatus.BCMPending;
@@ -1354,6 +1474,9 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         }
 
         if (!this.validationError) {
+
+            lendingConcession = this.SetLendingMargin(lendingConcession);
+
             this.lendingService.postUpdateLendingData(lendingConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canApproveChanges = false;
@@ -1387,6 +1510,9 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         }
 
         if (!this.validationError) {
+
+            lendingConcession = this.SetLendingMargin(lendingConcession);
+
             this.lendingService.postUpdateLendingData(lendingConcession).subscribe(entity => {
                 console.log("data saved");
                 this.canApproveChanges = false;
@@ -1479,7 +1605,9 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     }
 
     isMotivationEnabled() {
-        return this.motivationEnabled ? null : '';
+
+         return this.motivationEnabled ? null : '';
+  
     }
 
     disableField(index: number, fieldname: string) {
@@ -1514,7 +1642,19 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         else {
             return "form-control";
         }
-
     }
 
+    SetLendingMargin(lendingConcession) {
+
+        for (var i = 0; i < lendingConcession.lendingConcessionDetails.length; i++) {
+            if (lendingConcession.lendingConcessionDetails[i].lendingConcessionDetailTieredRates) {
+                if (lendingConcession.lendingConcessionDetails[i].lendingConcessionDetailTieredRates.length > 0) {
+                    lendingConcession.lendingConcessionDetails[i].marginAgainstPrime = lendingConcession.lendingConcessionDetails[i].lendingConcessionDetailTieredRates[0].marginToPrime
+                    lendingConcession.lendingConcessionDetails[i].approvedMap = lendingConcession.lendingConcessionDetails[i].lendingConcessionDetailTieredRates[0].approvedMap
+                }
+            }
+        }
+        return lendingConcession;
+    }
+    
 }

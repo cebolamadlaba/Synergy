@@ -4,7 +4,9 @@ import { Router, RouterModule } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
 import * as moment from 'moment';
 import { MOnthEnum } from '../models/month-enum';
+import { ConcessionTypeEnum } from '../models/concession-type-enum';
 import { UserService } from "../services/user.service";
+import { ConcessionProductTypeEnum } from "../models/concession-product-type-enum";
 import { User } from '../models/user';
 import { FormArray } from '@angular/forms';
 import { ConcessionCondition } from '../models/concession-condition';
@@ -105,11 +107,12 @@ export class BaseComponentService {
         this.validationError.push(validationDetail);
     }
 
-    public async checkForExistingConcessions(concessionListLength, url, riskGroupNumber, sapbpid) {
+    public async checkForExistingConcessions(concessionListLength, url, riskGroupNumber, sapbpid,type) {
 
         await this.getUserRiskGroupDetails(riskGroupNumber, sapbpid);
         await this.getUserData();
         this.checkAEExistOnriskGroupNumber();
+        await this.checkPendingConcessionInRiskGroupOrSapbPidDetails(riskGroupNumber, sapbpid, type);
 
         // FOR TESTING: comment out the first part of the if-statement.
         if (!environment.isDebug && concessionListLength > 0) {
@@ -124,6 +127,8 @@ export class BaseComponentService {
                 this.router.navigate([url, riskGroupNumber, sapbpid]);
             }
         }
+
+        
     }
 
     public checkAEExistOnriskGroupNumber() {
@@ -133,7 +138,7 @@ export class BaseComponentService {
         }
 
         if (this.riskGroupAEUser.id != this.aeUser.accountExecutiveUserId) {
-            this.addConcessionValidationError("The logged in user does not have access to the account in the Risk group." + this.riskGroupAEUser.firstName + " " + this.riskGroupAEUser.surname + " is the responsible person for this Risk Group, please refer this concession request to them");
+           this.addConcessionValidationError("The logged in user does not have access to the account in the Risk group." + this.riskGroupAEUser.firstName + " " + this.riskGroupAEUser.surname + " is the responsible person for this Risk Group, please refer this concession request to them");
         }
     }
 
@@ -210,6 +215,53 @@ export class BaseComponentService {
             this.userService.getUserRiskGroupDetailsData(sapbpidOrRiskGroupNumber).subscribe(user => {
                 resolve(user);
                 this.riskGroupAEUser = user;
+
+            });
+        });
+    }
+
+
+
+    checkPendingConcessionInRiskGroupOrSapbPidDetails(riskGroupNumber, sapbpid,type): Promise<any> {
+
+        var sapbpidOrRiskGroupNumber = riskGroupNumber == 0 ? sapbpid : riskGroupNumber;
+        
+
+        switch (type) {
+            case ConcessionProductTypeEnum.Bol:
+                var concessionType = ConcessionTypeEnum.Bol;
+                break;
+            case ConcessionProductTypeEnum.Cash:
+                concessionType = ConcessionTypeEnum.Cash;
+                break;
+            case ConcessionProductTypeEnum.Glms:
+                var concessionType = ConcessionTypeEnum.Glms;
+                break;
+            case ConcessionProductTypeEnum.Investment:
+                concessionType = ConcessionTypeEnum.Investment;
+                break;
+            case ConcessionProductTypeEnum.Lending:
+                var concessionType = ConcessionTypeEnum.Lending;
+                break;
+            case ConcessionProductTypeEnum.Trade:
+                concessionType = ConcessionTypeEnum.Trade;
+                break;
+            case ConcessionProductTypeEnum.Transactional:
+                concessionType = ConcessionTypeEnum.Transactional;
+                break;
+        }
+
+        return new Promise((resolve, reject) => {
+            this.userService.checkPendingConcessionInRiskGroupOrSapbPid(sapbpidOrRiskGroupNumber, concessionType).subscribe(entity => {
+                resolve(entity);
+                if (entity > 0) {
+                    if (riskGroupNumber > 0) {
+                        this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Risk Group. Please go to your Pending inbox to track progress");
+                    } else  {
+                        this.addConcessionValidationError("Please note that a concession already exists for the product you have selected in this Legal Entity. Please go to your Pending inbox to track progress");
+                    }
+                    
+                }               
 
             });
         });

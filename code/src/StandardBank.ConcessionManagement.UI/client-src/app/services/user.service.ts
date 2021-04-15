@@ -45,6 +45,11 @@ export class UserService {
         return Observable.throw(error.message || error);
     }
 
+    checkPendingConcessionInRiskGroupOrSapbPid(sapbpidOrRiskGroupNumber, concessionTypeId): Observable<number> {
+        const url = "/api/Pricing/CheckPendingConcessionInRiskGroupOrSapbPid/" + sapbpidOrRiskGroupNumber + "/" + concessionTypeId;
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
+
 }
 
 @Injectable()

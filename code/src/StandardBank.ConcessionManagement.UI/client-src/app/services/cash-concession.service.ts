@@ -6,6 +6,7 @@ import { CashView } from "../models/cash-view";
 import { RiskGroup } from "../models/risk-group";
 import { CashConcession } from "../models/cash-concession";
 import { Concession } from "../models/concession";
+import { extendConcessionModel } from "../models/extendConcessionModel";
 import { ConcessionCondition } from "../models/concession-condition";
 import { CashConcessionDetail } from "../models/cash-concession-detail";
 import { CashFinancial } from "../models/cash-financial";
@@ -52,11 +53,11 @@ export class CashConcessionService {
         return this.http.post(url, cashConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
-    postExtendConcession(concessionReferenceId): Observable<CashConcession> {
+    postExtendConcession(extendConcession: extendConcessionModel): Observable<CashConcession> {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        const url = "/api/Cash/ExtendConcession/" + concessionReferenceId;
-        return this.http.post(url, concessionReferenceId, options).map(this.extractData).catch(this.handleErrorObservable);
+        const url = "/api/Cash/ExtendConcession/";
+        return this.http.post(url, extendConcession, options).map(this.extractData).catch(this.handleErrorObservable);
     }
 
     postChildConcession(cashConcession: CashConcession, relationshipType: string): Observable<CashConcession> {

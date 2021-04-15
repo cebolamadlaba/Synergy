@@ -878,12 +878,13 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     $" {lendingConcessionDetail.MarginAgainstPrime.ToString("N2", CultureInfo.InvariantCulture)}",
                 InitiationFee =
                     $" {lendingConcessionDetail.InitiationFee.ToString("N2", CultureInfo.InvariantCulture)}",
-                ReviewFee = $" {lendingConcessionDetail.ReviewFee.ToString("N2", CultureInfo.InvariantCulture)}",
+                ReviewFee = $" {lendingConcessionDetail.ReviewFee.ToString()}",
                 ConcessionEndDate = lendingConcessionDetail.ExpiryDate.Value.ToString("dd/MM/yyyy"),
                 ConcessionStartDate = lendingConcessionDetail.DateApproved.Value.ToString("dd/MM/yyyy"),
                 UFFFee = $" {lendingConcessionDetail.UffFee.ToString("N2", CultureInfo.InvariantCulture)}",
                 LegalEntityId = lendingConcessionDetail.LegalEntityId,
-                Limit = lendingConcessionDetail.Limit.ToString("N2", CultureInfo.InvariantCulture)
+                Limit = lendingConcessionDetail.Limit.ToString("N2", CultureInfo.InvariantCulture),
+                LendingConcessionDetailTieredRates=lendingConcessionDetail.LendingConcessionDetailTieredRates
             };
         }
 

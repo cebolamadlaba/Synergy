@@ -18,6 +18,7 @@ import { ConcessionTypes } from '../constants/concession-types';
 import { ConditionType } from "../models/condition-type";
 import { GlmsTierData } from "../models/glms-tier-data";
 import { LegalEntity } from "../models/legal-entity";
+import { extendConcessionModel } from "../models/extendConcessionModel";
 
 import { InterestType } from "../models/interest-type";
 import { SlabType } from "../models/slab-type";
@@ -68,6 +69,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
     canPcmApprove = false;
     hasChanges = false;
     canExtend = false;
+    showMotivationDisclaimer = false;
     canRenew = false;
     canRecall = false;
     isEditing = false;
@@ -1302,27 +1304,54 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
 
     extendConcession() {
 
-        if (confirm("Are you sure you want to extend this concession?")) {
-            this.isLoading = true;
-            this.errorMessage = null;
+        if (this.canExtend && this.motivationEnabled == false) {
+            this.motivationEnabled = true;
+            this.glmsConcessionForm.controls['motivation'].setValue('');
+            this.showMotivationDisclaimer = true;
+
+        } else {
+
+            this.showMotivationDisclaimer = false;
             this.validationError = null;
 
-            this.glmsConcessionService.postExtendConcession(this.concessionReferenceId).subscribe(entity => {
+            var extendConceModel = new extendConcessionModel()
+            extendConceModel.concessionReferenceId = this.concessionReferenceId;
 
-                this.canBcmApprove = false;
-                this.canBcmApprove = false;
-                this.canExtend = false;
-                this.canRenew = false;
-                this.canRecall = false;
-                this.canUpdate = false;
-                this.canArchive = false;
-                this.saveMessage = entity.concession.childReferenceNumber;
+            if (this.glmsConcessionForm.controls['motivation'].value) {
+                extendConceModel.motivation = this.glmsConcessionForm.controls['motivation'].value;
+            } else {
+                this.addValidationError("Motivation not captured");
                 this.isLoading = false;
-                this.glmsConcession = entity;
-            }, error => {
-                this.errorMessage = <any>error;
-                this.isLoading = false;
-            });
+            }
+
+            if (!this.validationError) {
+
+                if (confirm("Are you sure you want to extend this concession?")) {
+                    this.isLoading = true;
+                    this.errorMessage = null;
+                    this.validationError = null;
+                    this.motivationEnabled = false;
+
+                    this.glmsConcessionService.postExtendConcession(extendConceModel).subscribe(entity => {
+
+                        this.canBcmApprove = false;
+                        this.canBcmApprove = false;
+                        this.canExtend = false;
+                        this.canRenew = false;
+                        this.canRecall = false;
+                        this.motivationEnabled = false;
+                        this.canUpdate = false;
+                        this.canArchive = false;
+                        this.saveMessage = entity.concession.childReferenceNumber;
+                        this.isLoading = false;
+                        this.glmsConcession = entity;
+                        
+                    }, error => {
+                        this.errorMessage = <any>error;
+                        this.isLoading = false;
+                    });
+                    }
+                }
         }
     }
 
@@ -1590,7 +1619,7 @@ export class GlmsViewConcessionComponent extends GlmsBaseService implements OnIn
             {
                 canUpdateExpiryDate = false;
             }
-        }
+        }       
 
         return this.disableFieldBase(
             fieldname,

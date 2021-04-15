@@ -142,13 +142,19 @@
     </div>
 </div>
 
+<!-- disclaimer section -->
+<div class="alert alert-warning alert-dismissible col-md-12"  *ngIf="showMotivationDisclaimer" >
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <strong>Note:</strong> Please motivate why you are extending this concession.
+</div>
+
 <form class="col-md-12 product-form" [formGroup]="cashConcessionForm" *ngIf="!isLoading">
     <div class="col-md-4">
         <div class="row">
             <!-- SMT deal number -->
             <label>SMT Deal Number</label>
             <input type="text" class="form-control" [attr.disabled]="canEditSMTDealNumber()" formControlName="smtDealNumber"
-                   maxlength="16" required #refElSmtDealNumber (input)="getNumberInput(refElSmtDealNumber)"/>
+                   maxlength="16" required #refElSmtDealNumber (input)="getNumberInput(refElSmtDealNumber)" />
         </div>
     </div>
     <div class="col-md-7 col-md-offset-1">

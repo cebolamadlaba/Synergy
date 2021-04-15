@@ -110,6 +110,12 @@
     </div>
 </div>
 
+<!-- disclaimer section -->
+<div class="alert alert-warning alert-dismissible col-md-12" *ngIf="showMotivationDisclaimer">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <strong>Note:</strong> Please motivate why you are extending this concession.
+</div>
+
 <!-- Form entries -->
 <form class="col-md-12 product-form" [formGroup]="glmsConcessionForm" *ngIf="!isLoading">
     <div class="col-md-4">
@@ -117,7 +123,7 @@
         <div class="row">
             <label>SMT Deal Number</label>
             <input class="form-control" formControlName="smtDealNumber" maxlength="16" [attr.disabled]="disableField('smtDealNumber')"
-                   #refElSmtDealNumber (input)="getNumberInput(refElSmtDealNumber)"/>
+                   #refElSmtDealNumber (input)="getNumberInput(refElSmtDealNumber)" />
         </div>
 
     </div>

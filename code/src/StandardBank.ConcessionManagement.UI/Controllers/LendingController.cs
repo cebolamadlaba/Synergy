@@ -229,10 +229,10 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// </summary>
         /// <param name="concessionReferenceId">The concession reference identifier.</param>
         /// <returns></returns>
-        [Route("ExtendConcession/{concessionReferenceId}/{extensionFee:decimal}")]
-        public async Task<IActionResult> ExtendConcession(string concessionReferenceId, decimal extensionFee)
+        [Route("ExtendConcession/{extensionFee:decimal}")]
+        public async Task<IActionResult> ExtendConcession([FromBody] ExtendConcessionModel extendConcession, decimal extensionFee)
         {
-            var lendingConcession = await CreateChildConcession(concessionReferenceId, Constants.RelationshipType.Extension, extensionFee);
+            var lendingConcession = await CreateChildConcession(extendConcession, Constants.RelationshipType.Extension, extensionFee);
 
             return Ok(lendingConcession);
         }
@@ -243,12 +243,12 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <param name="concessionReferenceId">The concession reference identifier.</param>
         /// <param name="relationshipType">Type of the relationship.</param>
         /// <returns></returns>
-        private async Task<LendingConcession> CreateChildConcession(string concessionReferenceId, string relationshipType, decimal? extensionFee = null)
+        private async Task<LendingConcession> CreateChildConcession(ExtendConcessionModel extendConcession, string relationshipType, decimal? extensionFee = null)
         {
             var user = _siteHelper.LoggedInUser(this);
 
             //get the lending concession details
-            var lendingConcession = _lendingManager.GetLendingConcession(concessionReferenceId, user);
+            var lendingConcession = _lendingManager.GetLendingConcession(extendConcession.ConcessionReferenceId, user);
 
             var parentConcessionId = lendingConcession.Concession.Id;
 
@@ -264,6 +264,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             newConcession.ReferenceNumber = string.Empty;
             newConcession.SubStatus = Constants.ConcessionSubStatus.BcmPending;
             newConcession.Type = Constants.ReferenceType.Existing;
+            newConcession.Motivation = extendConcession.Motivation;
 
             var concession = await _mediator.Send(new AddConcession(newConcession, user));
 
@@ -315,7 +316,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
 
             await _mediator.Send(new AddConcessionRelationship(concessionRelationship, user));
 
-            var returnConcession = _lendingManager.GetLendingConcession(concessionReferenceId, user);
+            var returnConcession = _lendingManager.GetLendingConcession(extendConcession.ConcessionReferenceId, user);
             returnConcession.Concession.ChildReferenceNumber = concession.ReferenceNumber;
 
             return returnConcession;
@@ -375,6 +376,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var user = _siteHelper.LoggedInUser(this);
 
+            //update original concession details.
+            await UpdateLendingConcessionDetail(lendingConcession, user);
+
             var returnConcession = await CreateChildConcession(lendingConcession, user, Constants.RelationshipType.Update);
 
             return Ok(returnConcession);
@@ -392,12 +396,14 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             //get the parent lending concession details
             var parentLendingConcession = _lendingManager.GetLendingConcession(lendingConcession.Concession.ReferenceNumber, user);
 
+
             var parentConcessionId = parentLendingConcession.Concession.Id;
 
             lendingConcession.Concession.ReferenceNumber = string.Empty;
             lendingConcession.Concession.ConcessionType = Constants.ConcessionType.Lending;
             lendingConcession.Concession.Type = Constants.ReferenceType.Existing;
             var concession = new Concession();
+
 
             concession = await _mediator.Send(new AddConcession(lendingConcession.Concession, user));
 
@@ -410,7 +416,7 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 else
                 {
 
-                    if (lendingConcessionDetail.ExpiryDate != null)
+                    if (lendingConcessionDetail.ExpiryDate != null && lendingConcessionDetail.ProductTypeId== (int?)Constants.Lending.ProductType.OverdraftId)
                     {
                         var dateExp = Convert.ToDateTime(lendingConcessionDetail.ExpiryDate);
                         lendingConcessionDetail.ExpiryDate = dateExp.AddMonths(_configurationData.MonthOfExpiry);
@@ -482,6 +488,32 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             return Ok(_lendingManager.GetLendingFinancialForRiskGroupNumber(riskGroupNumber));
         }
+
+        /// <summary>
+        /// Updates the lending concession.
+        /// </summary>
+        /// <param name="lendingConcession">The lending concession.</param>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
+        private async Task UpdateLendingConcessionDetail(LendingConcession lendingConcession, User user)
+        {
+            //get the parent lending concession details
+            var parentLendingConcession = _lendingManager.GetLendingConcession(lendingConcession.Concession.ReferenceNumber, user);
+            lendingConcession.Concession.Id = parentLendingConcession.Concession.Id;
+
+            int lendingDetailCount = 0;
+            var parentLendingConcessionDetails = parentLendingConcession.LendingConcessionDetails.ToList();
+
+            //update original concession before creating a child concession
+            foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
+            {
+                lendingConcessionDetail.LendingConcessionDetailId = parentLendingConcessionDetails[lendingDetailCount].ConcessionDetailId;
+                await _mediator.Send(new AddOrUpdateLendingConcessionDetail(lendingConcessionDetail, user, lendingConcession.Concession));
+                lendingDetailCount++;
+            }
+
+        }
+
     }
 }
 
