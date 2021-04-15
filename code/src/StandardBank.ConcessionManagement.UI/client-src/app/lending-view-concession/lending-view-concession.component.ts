@@ -88,6 +88,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     motivationEnabled = false;
     canEdit = false;
     selectedAccountNumbers: ClientAccountArray[];
+    isPrimeRateChanged = false;
 
     selectedRowIndex: number;
     selectedLineItemTieredRates: LendingConcessionTieredRate[] = [];
@@ -736,6 +737,12 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                 if (lendingConcessionDetail.lendingConcessionDetailTieredRates == null ||
                     lendingConcessionDetail.lendingConcessionDetailTieredRates.length == 0)
                     this.addValidationError("Tiered Rate cannot be empty for Product Type: Overdraft / Temporary Overdraft");
+
+                if (concessionFormItem.get('approvedMarginAgainstPrime').value)
+                    lendingConcessionDetail.approvedMap = concessionFormItem.get('approvedMarginAgainstPrime').value;
+
+                if (concessionFormItem.get('marginAgainstPrime').value)
+                    lendingConcessionDetail.marginAgainstPrime = concessionFormItem.get('marginAgainstPrime').value;
             }
             else {
                 if (concessionFormItem.get('limit').value == "") {
@@ -750,6 +757,9 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
                 if (concessionFormItem.get('marginAgainstPrime').value)
                     lendingConcessionDetail.marginAgainstPrime = concessionFormItem.get('marginAgainstPrime').value;
+
+                if (concessionFormItem.get('approvedMarginAgainstPrime').value)
+                    lendingConcessionDetail.approvedMap = concessionFormItem.get('approvedMarginAgainstPrime').value;
             }
 
             if (concessionFormItem.get('term').value) {
@@ -1187,6 +1197,12 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         let rowLendingTieredRates = this.getRowTieredRates(rowIndex);
         rowLendingTieredRates[0].marginToPrime = marginAgainstPrime;
 
+        //update lending marging
+        if (this.editType == 'UpdateApproved') {
+            rowLendingTieredRates[0].approvedMap = marginAgainstPrime;
+            concessions.controls[rowIndex].get('approvedMarginAgainstPrime').setValue(marginAgainstPrime);
+        }
+
         this.setThreeNumberDecimal($event);
     }
 
@@ -1370,7 +1386,8 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         lendingConcession.concession.type = "Existing";
         lendingConcession.concession.referenceNumber = this.concessionReferenceId;
 
-        if (!this.validationError) {
+
+       if (!this.validationError) {
             this.lendingService.postChildConcession(lendingConcession, this.editType).subscribe(entity => {
                 console.log("data saved");
                 this.isEditing = false;
@@ -1413,8 +1430,6 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
         var lendingConcession = this.getLendingConcession(false);
 
-        //update lending marging
-        lendingConcession = this.SetLendingMargin(lendingConcession);
 
         lendingConcession.concession.status = ConcessionStatus.Pending;
         lendingConcession.concession.subStatus = ConcessionSubStatus.BCMPending;

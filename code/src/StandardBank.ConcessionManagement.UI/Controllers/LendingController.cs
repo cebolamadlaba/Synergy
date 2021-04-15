@@ -376,6 +376,9 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             var user = _siteHelper.LoggedInUser(this);
 
+            //update original concession details.
+            await UpdateLendingConcessionDetail(lendingConcession, user);
+
             var returnConcession = await CreateChildConcession(lendingConcession, user, Constants.RelationshipType.Update);
 
             return Ok(returnConcession);
@@ -393,12 +396,14 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             //get the parent lending concession details
             var parentLendingConcession = _lendingManager.GetLendingConcession(lendingConcession.Concession.ReferenceNumber, user);
 
+
             var parentConcessionId = parentLendingConcession.Concession.Id;
 
             lendingConcession.Concession.ReferenceNumber = string.Empty;
             lendingConcession.Concession.ConcessionType = Constants.ConcessionType.Lending;
             lendingConcession.Concession.Type = Constants.ReferenceType.Existing;
             var concession = new Concession();
+
 
             concession = await _mediator.Send(new AddConcession(lendingConcession.Concession, user));
 
@@ -483,6 +488,32 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             return Ok(_lendingManager.GetLendingFinancialForRiskGroupNumber(riskGroupNumber));
         }
+
+        /// <summary>
+        /// Updates the lending concession.
+        /// </summary>
+        /// <param name="lendingConcession">The lending concession.</param>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
+        private async Task UpdateLendingConcessionDetail(LendingConcession lendingConcession, User user)
+        {
+            //get the parent lending concession details
+            var parentLendingConcession = _lendingManager.GetLendingConcession(lendingConcession.Concession.ReferenceNumber, user);
+            lendingConcession.Concession.Id = parentLendingConcession.Concession.Id;
+
+            int lendingDetailCount = 0;
+            var parentLendingConcessionDetails = parentLendingConcession.LendingConcessionDetails.ToList();
+
+            //update original concession before creating a child concession
+            foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
+            {
+                lendingConcessionDetail.LendingConcessionDetailId = parentLendingConcessionDetails[lendingDetailCount].ConcessionDetailId;
+                await _mediator.Send(new AddOrUpdateLendingConcessionDetail(lendingConcessionDetail, user, lendingConcession.Concession));
+                lendingDetailCount++;
+            }
+
+        }
+
     }
 }
 
