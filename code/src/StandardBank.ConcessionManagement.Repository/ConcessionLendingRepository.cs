@@ -255,7 +255,6 @@ namespace StandardBank.ConcessionManagement.Repository
         {
             using (var db = _dbConnectionFactory.Connection())
             {
-                try { 
                 db.Execute(
                     @"UPDATE [dbo].[tblConcessionLending]
                     SET [MarginToPrime] = @MarginToPrime,
@@ -268,12 +267,8 @@ namespace StandardBank.ConcessionManagement.Repository
                         ApprovedMarginToPrime = ApprovedMarginToPrime,
 
                     });
-            }catch(Exception ex)
-                {
-                    ex.ToString();
-                }
-            }
 
+            }
    
         }
 
