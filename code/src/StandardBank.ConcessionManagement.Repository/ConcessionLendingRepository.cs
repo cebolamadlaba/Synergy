@@ -2,6 +2,7 @@ using Dapper;
 using StandardBank.ConcessionManagement.Interface.Common;
 using StandardBank.ConcessionManagement.Interface.Repository;
 using StandardBank.ConcessionManagement.Model.Repository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -244,6 +245,36 @@ namespace StandardBank.ConcessionManagement.Repository
             }
 
             _concessionDetailRepository.Update(model);
+        }
+
+        /// <summary>
+        /// Updates the specified model.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        public void UpdateMarginToPrime(int Id, decimal MarginToPrime, decimal ApprovedMarginToPrime)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                try { 
+                db.Execute(
+                    @"UPDATE [dbo].[tblConcessionLending]
+                    SET [MarginToPrime] = @MarginToPrime,
+	                    [ApprovedMarginToPrime] = @ApprovedMarginToPrime
+                    WHERE [pkConcessionLendingId] = @Id",
+                    new
+                    {
+                        Id = Id,
+                        MarginToPrime = MarginToPrime,
+                        ApprovedMarginToPrime = ApprovedMarginToPrime,
+
+                    });
+            }catch(Exception ex)
+                {
+                    ex.ToString();
+                }
+            }
+
+   
         }
 
         /// <summary>

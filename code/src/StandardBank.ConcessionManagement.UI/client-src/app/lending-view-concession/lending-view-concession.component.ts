@@ -1401,7 +1401,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                 this.isLoading = false;
             });
         } else {
-            this.isLoading = false;
+           this.isLoading = false;
         }
     }
 
