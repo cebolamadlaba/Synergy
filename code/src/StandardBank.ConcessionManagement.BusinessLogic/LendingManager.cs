@@ -220,7 +220,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
 
                 var productType = _lookupTableManager.GetProductTypeName(concessionLending.ProductTypeId);
 
-                if (IsExtension(concessionLending.ConcessionId) &&  productType == Constants.Lending.ProductType.Overdraft)
+                if (IsExtension(concessionLending.ConcessionId) && productType == Constants.Lending.ProductType.Overdraft)
                 {
                     _ruleManager.UpdateBaseFieldsOnApproval(concessionLending);
                 }
@@ -235,7 +235,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     if (productType == Constants.Lending.ProductType.Overdraft)
                     {
                         concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
-                    }   
+                    }
                     else if (productType == Constants.Lending.ProductType.TempOverdraft)
                     {
                         concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
@@ -245,21 +245,21 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                         concessionLending.ExpiryDate = DateTime.Now.AddMonths(concessionLending.Term.Value);
                     }
                 }
-                }
-                else if (concession.Status == Constants.ConcessionStatus.Pending &&
-                         (concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges ||
-                         concession.SubStatus == Constants.ConcessionSubStatus.HoApprovedWithChanges))
+            }
+            else if (concession.Status == Constants.ConcessionStatus.Pending &&
+                     (concession.SubStatus == Constants.ConcessionSubStatus.PcmApprovedWithChanges ||
+                     concession.SubStatus == Constants.ConcessionSubStatus.HoApprovedWithChanges))
+            {
+                if (concessionLending.ProductTypeId == Constants.Lending.ProductType.OverdraftId ||
+                    concessionLending.ProductTypeId == Constants.Lending.ProductType.TempOverdraftId)
                 {
-                    if (concessionLending.ProductTypeId == Constants.Lending.ProductType.OverdraftId ||
-                        concessionLending.ProductTypeId == Constants.Lending.ProductType.TempOverdraftId)
-                    {
-                        this.UpdateApprovedPriceForTieredRate(concessionLending.ConcessionLendingTieredRates);
-                        this.UpdateApprovedPrice(concessionLending);
-                    }
-                    else
-                        this.UpdateApprovedPrice(concessionLending);
-
+                    this.UpdateApprovedPriceForTieredRate(concessionLending.ConcessionLendingTieredRates);
+                    this.UpdateApprovedPrice(concessionLending);
                 }
+                else
+                    this.UpdateApprovedPrice(concessionLending);
+
+            }
 
             _concessionLendingRepository.Update(concessionLending);
 
@@ -272,7 +272,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         /// Updates the approved price.
         /// </summary>
         /// <param name="concessionLending">The concession lending.</param>
-        private void UpdateApprovedPrice(ConcessionLending concessionLending)
+        public void UpdateApprovedPrice(ConcessionLending concessionLending)
         {
             var databaseLendingConcession =
                 _concessionLendingRepository.ReadById(concessionLending.Id);
@@ -707,6 +707,18 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             return _extensionFeeRepository.GetActiveExtensionFee();
         }
+
+        public void UpdateMarginToPrime(int Id, decimal MarginToPrime, decimal ApprovedMarginToPrime)
+        {
+            _concessionLendingRepository.UpdateMarginToPrime(Id, MarginToPrime, ApprovedMarginToPrime);
+        }
+
+        public IEnumerable<ConcessionLending> GetConcessionLendingByConcessionId(int concessionId)
+        {
+
+            return _concessionLendingRepository.ReadByConcessionId(concessionId);
+
+         }
         #endregion
     }
 }
