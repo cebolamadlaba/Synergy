@@ -375,11 +375,13 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         public async Task<IActionResult> UpdateApprovedLending([FromBody] LendingConcession lendingConcession)
         {
             var user = _siteHelper.LoggedInUser(this);
-
-            //update original concession details.
-            await UpdateLendingConcessionDetail(lendingConcession, user);
+            string originalConcessionRef = lendingConcession.Concession.ReferenceNumber;
 
             var returnConcession = await CreateChildConcession(lendingConcession, user, Constants.RelationshipType.Update);
+
+            //update original concession details.
+            var NewlendingConcession = lendingConcession;
+            UpdateLendingConcessionDetail(NewlendingConcession, user, originalConcessionRef);
 
             return Ok(returnConcession);
         }
@@ -495,20 +497,21 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         /// <param name="lendingConcession">The lending concession.</param>
         /// <param name="user">The user.</param>
         /// <returns></returns>
-        private async Task UpdateLendingConcessionDetail(LendingConcession lendingConcession, User user)
+        private void UpdateLendingConcessionDetail(LendingConcession lendingConcession, User user,string originalConcessionRef)
         {
             //get the parent lending concession details
-            var parentLendingConcession = _lendingManager.GetLendingConcession(lendingConcession.Concession.ReferenceNumber, user);
-            lendingConcession.Concession.Id = parentLendingConcession.Concession.Id;
+            var parentLendingConcession = _lendingManager.GetLendingConcession(originalConcessionRef, user);
+
+            //get concession lending
+            var concessionLending = _lendingManager.GetConcessionLendingByConcessionId(parentLendingConcession.Concession.Id).ToList();
 
             int lendingDetailCount = 0;
-            var parentLendingConcessionDetails = parentLendingConcession.LendingConcessionDetails.ToList();
 
-            //update original concession before creating a child concession
+            //update original concession after creating a child concession
             foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
             {
-                lendingConcessionDetail.LendingConcessionDetailId = parentLendingConcessionDetails[lendingDetailCount].ConcessionDetailId;
-                await _mediator.Send(new AddOrUpdateLendingConcessionDetail(lendingConcessionDetail, user, lendingConcession.Concession));
+                lendingConcessionDetail.LendingConcessionDetailId = concessionLending[lendingDetailCount].Id;
+                _lendingManager.UpdateMarginToPrime(lendingConcessionDetail.LendingConcessionDetailId,lendingConcessionDetail.MarginAgainstPrime, lendingConcessionDetail.MarginAgainstPrime);
                 lendingDetailCount++;
             }
 

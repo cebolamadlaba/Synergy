@@ -41,6 +41,8 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         /// <param name="model">The model.</param>
         void Update(ConcessionLending model);
 
+        void UpdateMarginToPrime(int Id, decimal MarginToPrime, decimal ApprovedMarginToPrime);
+
         /// <summary>
         /// Deletes the specified model.
         /// </summary>

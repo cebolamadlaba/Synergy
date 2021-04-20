@@ -67,6 +67,10 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
 
         Task ForwardLendingConcession(LendingConcession lendingConcession, User user);
 
+        void UpdateMarginToPrime(int Id, decimal MarginToPrime, decimal ApprovedMarginToPrime);
+
+        IEnumerable<Model.Repository.ConcessionLending> GetConcessionLendingByConcessionId(int concessionId);
+
         #region Concession Lending Tiered Rate
         void CreateConcessionLendingTieredRates(IEnumerable<LendingConcessionDetailTieredRate> lendingConcessionDetailTieredRates);
 
