@@ -406,9 +406,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
             lendingConcession.Concession.Type = Constants.ReferenceType.Existing;
             var concession = new Concession();
 
-
-            concession = await _mediator.Send(new AddConcession(lendingConcession.Concession, user));
-
+             concession = await _mediator.Send(new AddConcession(lendingConcession.Concession, user));
+          
             foreach (var lendingConcessionDetail in lendingConcession.LendingConcessionDetails)
             {
                 if (relationship != Constants.RelationshipType.Extension)
