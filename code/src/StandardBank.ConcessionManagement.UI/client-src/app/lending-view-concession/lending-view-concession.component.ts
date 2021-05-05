@@ -338,8 +338,8 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             }
 
             if (selectedProductType[0] != null &&
-                (selectedProductType[0].description != ProductTypeEnum.Overdraft &&
-                    this.lendingConcession.lendingConcessionDetails.length == 1)) {
+                selectedProductType[0].description != ProductTypeEnum.Overdraft &&
+                    this.lendingConcession.lendingConcessionDetails.length == 1) {
                 if (this.baseComponentService.isThreeMonthsExpiringConcession(this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd'))) {
                     this.isUpdateButtonVisible = true;
                 } else if (this.baseComponentService.isThreeMonthsAfterExpiringConcession(this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd'))) {
@@ -349,6 +349,17 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                 
             }
 
+            if (selectedProductType[0] != null &&
+                (selectedProductType[0].description != ProductTypeEnum.RCP) &&
+                    this.lendingConcession.lendingConcessionDetails.length == 1) {
+                if (this.baseComponentService.isThreeMonthsExpiringConcession(this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd'))) {
+                    this.isUpdateButtonVisible = true;
+                } else if (this.baseComponentService.isThreeMonthsAfterExpiringConcession(this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd'))) {
+                    this.isExtendButtonVisible = true;
+                    this.isRenewButtonVisible = true;
+                }
+
+            }
             currentConcession.get('term').setValue(lendingConcessionDetail.term);
 
             currentConcession.get('initiationFee').setValue(this.formatDecimal3(lendingConcessionDetail.initiationFee));
