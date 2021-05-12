@@ -187,6 +187,20 @@ export class BaseComponentService {
         }
     }
 
+    public isThreeMonthsExpiringConcession(expiryDate: string) {
+        var monthDifference = moment(new Date()).diff(moment(new Date(expiryDate)), 'months', true);
+        if (monthDifference == 3) {
+            return true;
+        } else { return false;}
+    }
+
+    public isThreeMonthsAfterExpiringConcession(expiryDate: string) {
+        var monthDifference = moment(new Date(expiryDate)).diff(moment(new Date()), 'months', true);
+        if (monthDifference == 3) {
+            return true;
+        } else { return false; }
+    }
+
     public getNumberInput(input) {
         let value = input.value;
         let numbers = this.removeLetters(value);

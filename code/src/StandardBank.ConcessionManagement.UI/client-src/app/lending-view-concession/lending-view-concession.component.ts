@@ -90,6 +90,10 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     selectedAccountNumbers: ClientAccountArray[];
     isPrimeRateChanged = false;
 
+    isExtendButtonVisible = false;
+    isRenewButtonVisible = false;
+    isUpdateButtonVisible = false;
+
     selectedRowIndex: number;
     selectedLineItemTieredRates: LendingConcessionTieredRate[] = [];
     tieredRateMessage: string = "";
@@ -268,11 +272,10 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             this.isApproved = true;
         }
 
+
         //if the concession is set to can extend and the user is a requestor, then they can extend or renew it
         this.canExtend = this.lendingConcession.concession.canExtend && this.lendingConcession.currentUser.canRequest;
         this.canRenew = this.lendingConcession.concession.canRenew && this.lendingConcession.currentUser.canRequest;
-
-
 
         //set the resubmit and update permissions
         //can only update when concession is not "due for expiry"
@@ -334,6 +337,35 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                 currentConcession.get('approvedMarginAgainstPrime').setValue(this.formatDecimal3(lendingConcessionDetail.approvedMap));
             }
 
+            if (selectedProductType[0] != null &&
+                selectedProductType[0].description != ProductTypeEnum.Overdraft &&
+                    this.lendingConcession.lendingConcessionDetails.length == 1) {
+                if (this.baseComponentService.isThreeMonthsExpiringConcession(this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd'))) {
+                    this.isUpdateButtonVisible = true;
+                } else if (this.baseComponentService.isThreeMonthsAfterExpiringConcession(this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd'))) {
+                    this.isExtendButtonVisible = true;
+                    this.isRenewButtonVisible = true;
+                }
+                
+            }
+
+            if (selectedProductType[0] != null &&
+                (selectedProductType[0].description != ProductTypeEnum.RCP) &&
+                    this.lendingConcession.lendingConcessionDetails.length == 1) {
+                if (this.baseComponentService.isThreeMonthsExpiringConcession(this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd'))) {
+                    this.isUpdateButtonVisible = true;
+                } else if (this.baseComponentService.isThreeMonthsAfterExpiringConcession(this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd'))) {
+                    this.isExtendButtonVisible = true;
+                    this.isRenewButtonVisible = true;
+                }
+
+            }
+
+            if (selectedProductType[0] != null &&
+                (selectedProductType[0].description != ProductTypeEnum.BTL && selectedProductType[0].description != ProductTypeEnum.MTL) &&
+                this.lendingConcession.lendingConcessionDetails.length == 1) {             
+                    this.isUpdateButtonVisible = true;              
+            }
 
             currentConcession.get('term').setValue(lendingConcessionDetail.term);
 

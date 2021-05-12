@@ -434,11 +434,11 @@
             <button type="button" class="btn btn-success" (click)="bcmApproveConcession()" *ngIf="canBcmApprove">Forward</button>
             <button type="button" class="btn btn-danger" (click)="pcmDeclineConcession()" *ngIf="canPcmApprove">Decline</button>
             <button type="button" class="btn btn-success" (click)="pcmApproveConcession()" *ngIf="canPcmApprove">Approve</button>
-            <button type="button" class="btn btn-success" (click)="extensionDisclamer()" *ngIf="canExtend">Extend</button>
+            <button type="button" class="btn btn-success" (click)="extensionDisclamer()" *ngIf="canExtend && isExtendButtonVisible">Extend</button>
 
-            <button type="button" class="btn btn-success" (click)="editConcession('Renew')" *ngIf="canRenew">Renew</button>
+            <button type="button" class="btn btn-success" (click)="editConcession('Renew')" *ngIf="canRenew && isRenewButtonVisible">Renew</button>
             <button type="button" class="btn btn-success" (click)="editConcession('Resubmit')" *ngIf="canResubmit">Resubmit</button>
-            <button type="button" class="btn btn-success" (click)="editConcession('UpdateApproved')" *ngIf="canUpdate">Update</button>
+            <button type="button" class="btn btn-success" (click)="editConcession('UpdateApproved')" *ngIf="canUpdate && isUpdateButtonVisible">Update</button>
             <button type="button" class="btn btn-warning" (click)="archiveConcession()" *ngIf="canArchive">Archive</button>
 
             <button type="button" class="btn btn-primary" (click)="saveConcession()" *ngIf="isEditing">Save</button>
