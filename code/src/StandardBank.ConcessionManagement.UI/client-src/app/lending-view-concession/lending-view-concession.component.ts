@@ -360,6 +360,13 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                 }
 
             }
+
+            if (selectedProductType[0] != null &&
+                (selectedProductType[0].description != ProductTypeEnum.BTL && selectedProductType[0].description != ProductTypeEnum.MTL) &&
+                this.lendingConcession.lendingConcessionDetails.length == 1) {             
+                    this.isUpdateButtonVisible = true;              
+            }
+
             currentConcession.get('term').setValue(lendingConcessionDetail.term);
 
             currentConcession.get('initiationFee').setValue(this.formatDecimal3(lendingConcessionDetail.initiationFee));
