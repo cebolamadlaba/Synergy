@@ -194,7 +194,7 @@ export class BaseComponentService {
         } else { return false;}
     }
 
-    public isThreeMonthsAfterExpiringConcession(expiryDate: string) {
+    public isMonthsAfterExpiringConcession(expiryDate: string) {
         var monthDifference = moment(new Date(expiryDate)).diff(moment(new Date()), 'months', true);
         if (monthDifference >= MOnthEnum.OneMonth) {
             return true;
