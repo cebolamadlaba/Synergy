@@ -365,7 +365,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                 (selectedProductType[0].description != ProductTypeEnum.BTL && selectedProductType[0].description != ProductTypeEnum.MTL) &&
                 this.lendingConcession.lendingConcessionDetails.length == 1) {             
                     this.isUpdateButtonVisible = true;              
-            }
+            } 
 
             currentConcession.get('term').setValue(lendingConcessionDetail.term);
 
