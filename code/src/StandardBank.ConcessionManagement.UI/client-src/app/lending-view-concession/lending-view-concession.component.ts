@@ -342,7 +342,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                     this.lendingConcession.lendingConcessionDetails.length == 1) {
                 if (this.baseComponentService.isThreeMonthsExpiringConcession(this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd'))) {
                     this.isUpdateButtonVisible = true;
-                } else if (this.baseComponentService.isThreeMonthsAfterExpiringConcession(this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd'))) {
+                } else if (this.baseComponentService.isMonthsAfterExpiringConcession(this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd'))) {
                     this.isExtendButtonVisible = true;
                     this.isRenewButtonVisible = true;
                 }
@@ -354,7 +354,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                     this.lendingConcession.lendingConcessionDetails.length == 1) {
                 if (this.baseComponentService.isThreeMonthsExpiringConcession(this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd'))) {
                     this.isUpdateButtonVisible = true;
-                } else if (this.baseComponentService.isThreeMonthsAfterExpiringConcession(this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd'))) {
+                } else if (this.baseComponentService.isMonthsAfterExpiringConcession(this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd'))) {
                     this.isExtendButtonVisible = true;
                     this.isRenewButtonVisible = true;
                 }
@@ -365,7 +365,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                 (selectedProductType[0].description != ProductTypeEnum.BTL && selectedProductType[0].description != ProductTypeEnum.MTL) &&
                 this.lendingConcession.lendingConcessionDetails.length == 1) {             
                     this.isUpdateButtonVisible = true;              
-            }
+            } 
 
             currentConcession.get('term').setValue(lendingConcessionDetail.term);
 
