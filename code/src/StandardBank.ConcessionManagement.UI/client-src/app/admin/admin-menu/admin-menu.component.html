@@ -12,7 +12,7 @@
         <li *ngIf="user?.isHO || user?.isBCM || user?.isRequestor"><a routerLink="/admin/bol-trade-ae-management">Bol / Trade AE Management</a></li>
         <li *ngIf="user?.isHO"><a routerLink="/admin/pcm-management">PCM Management</a></li>
     </ul>
-    
+
     <h3 *ngIf="user?.isHO">Product Management</h3>
     <ul *ngIf="user?.isHO">
 
@@ -21,5 +21,12 @@
         <li><a routerLink="/admin/channel-types">Cash Tariff tables</a></li>
 
     </ul>
-    
+
+    <h3 *ngIf="user?.isHO || user?.isPCM">Concession Letters</h3>
+    <ul *ngIf="user?.isHO || user?.isPCM">
+
+        <li><a routerLink="">Approved Concessions</a></li>
+        
+    </ul>
+
 </div>
