@@ -338,34 +338,47 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             }
 
             if (selectedProductType[0] != null &&
-                selectedProductType[0].description != ProductTypeEnum.Overdraft &&
+                selectedProductType[0].description == ProductTypeEnum.Overdraft &&
                     this.lendingConcession.lendingConcessionDetails.length == 1) {
                 if (this.baseComponentService.isThreeMonthsExpiringConcession(this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd'))) {
-                    this.isUpdateButtonVisible = true;
-                } else if (this.baseComponentService.isMonthsAfterExpiringConcession(this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd'))) {
                     this.isExtendButtonVisible = true;
-                    this.isRenewButtonVisible = true;
+                    this.isRenewButtonVisible = true; 
+                } else {
+                    this.isUpdateButtonVisible = true;
                 }
                 
             }
 
             if (selectedProductType[0] != null &&
-                (selectedProductType[0].description != ProductTypeEnum.RCP) &&
+                (selectedProductType[0].description == ProductTypeEnum.RCP) &&
                     this.lendingConcession.lendingConcessionDetails.length == 1) {
                 if (this.baseComponentService.isThreeMonthsExpiringConcession(this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd'))) {
-                    this.isUpdateButtonVisible = true;
-                } else if (this.baseComponentService.isMonthsAfterExpiringConcession(this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd'))) {
                     this.isExtendButtonVisible = true;
-                    this.isRenewButtonVisible = true;
+                    this.isRenewButtonVisible = true; 
+                } else {
+                    this.isUpdateButtonVisible = true;
                 }
 
             }
 
             if (selectedProductType[0] != null &&
-                (selectedProductType[0].description != ProductTypeEnum.BTL && selectedProductType[0].description != ProductTypeEnum.MTL) &&
+                (selectedProductType[0].description == ProductTypeEnum.BTL || selectedProductType[0].description == ProductTypeEnum.MTL) &&
                 this.lendingConcession.lendingConcessionDetails.length == 1) {             
                     this.isUpdateButtonVisible = true;              
             } 
+
+            if (selectedProductType[0] != null &&
+                (selectedProductType[0].description == ProductTypeEnum.TemporaryOverdraft) &&
+                this.lendingConcession.lendingConcessionDetails.length == 1) {
+                this.isUpdateButtonVisible = true;
+            }
+
+             if (selectedProductType[0] != null &&
+                    this.lendingConcession.lendingConcessionDetails.length > 1) {
+                 this.isUpdateButtonVisible = true;
+                 this.isExtendButtonVisible = true;
+                 this.isRenewButtonVisible = true;
+              }
 
             currentConcession.get('term').setValue(lendingConcessionDetail.term);
 

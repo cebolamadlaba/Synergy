@@ -22,7 +22,7 @@ namespace StandardBank.ConcessionManagement.UI.Test.UnitTest
         /// </summary>
         public PricingControllerTest()
         {
-            _pricingController = new PricingController(MockLookupTableManager.Object, MockConfigurationData.Object, null);
+            _pricingController = new PricingController(MockLookupTableManager.Object, MockConfigurationData.Object, null, null);
         }
 
         /// <summary>
