@@ -96,6 +96,7 @@ import { PcmManagementComponent } from './admin/pcm-management/pcm-management.co
 import { BcmManagementComponent } from './admin/bcm-management/bcm-management.component';
 import { AeManagementComponent } from './admin/ae-management/ae-management.component';
 import { AaManagementComponent } from './admin/aa-management/aa-management.component';
+import { ApprovedConcessionLetterViewComponent } from './admin/approved-concession-letter-view/approved-concession-letter-view.component';
 
 import { BOLCHManagementComponent } from './admin/bol-chargecodes/bol-chargecodes.component';
 import { TransactionTypesManagementComponent } from './admin/transaction-types/transaction-types.component';
@@ -107,6 +108,7 @@ import { PricingGlmsComponent } from './pricing-glms/pricing-glms.component';
 import { GlmsAddConcessionComponent } from './glms-add-concession/glms-add-concession.component';
 import { GlmsViewConcessionComponent } from './glms-view-concession/glms-view-concession.component';
 import { ConcessionConditionModalComponent } from './concession-condition-modal/concession-condition-modal.component';
+
 
 
 @NgModule({
@@ -171,7 +173,8 @@ import { ConcessionConditionModalComponent } from './concession-condition-modal/
         PricingGlmsComponent,
         GlmsAddConcessionComponent,
         GlmsViewConcessionComponent,
-        ConcessionConditionModalComponent
+        ConcessionConditionModalComponent,
+        ApprovedConcessionLetterViewComponent
 
     ],
     imports: [

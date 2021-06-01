@@ -24,9 +24,7 @@
 
     <h3 *ngIf="user?.isHO || user?.isPCM">Concession Letters</h3>
     <ul *ngIf="user?.isHO || user?.isPCM">
-
-        <li><a routerLink="">Approved Concessions</a></li>
-        
+        <li *ngIf="user?.isHO || user?.isPCM"><a routerLink="/admin/approved-concession-letter-view">Approved Concessions</a></li>
     </ul>
 
 </div>
