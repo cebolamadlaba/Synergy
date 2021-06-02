@@ -22,17 +22,12 @@ import saveAs from 'file-saver';
 })
 export class ApprovedConcessionLetterViewComponent implements OnInit {
 
-    @ViewChild('lgModal') modal;
-
     errorMessage: String;
-    saveMessage: String;
     isLoading = true;
 
     legalEntityId: number;
 
     legalEntityConcessionLetterModel: LegalEntityConcessionLetterModel;
-
-    public uploadProgress: number;
 
     observableApprovedConcessions: Observable<ApprovedConcession[]>;
     approvedConcessions: ApprovedConcession[];
@@ -51,7 +46,6 @@ export class ApprovedConcessionLetterViewComponent implements OnInit {
             this.isLoading = false;
         }, error => {
             this.errorMessage = <any>error;
-            this.isLoading = false;
             this.isLoading = false;
         });
     }
@@ -75,68 +69,6 @@ export class ApprovedConcessionLetterViewComponent implements OnInit {
             }, error => { alert('Failed to retrieve Legal Entity Address'); });
         }
 
-    }
-
-
-    printConcession() {
-        this.isLoading = true;
-        var selectedConcessions = this.approvedConcessions.filter(items => items.legalEntityId == this.legalEntityId);
-        var concessionIds = "";
-
-
-        //if there are selected concessions we need to get the concession detail id's and use those to
-        //generate the concession letter, otherwise it means the user is choosing to generate the
-        //concession letter for all the concessions for the legal entity so we use that instead
-        if (selectedConcessions != null && selectedConcessions.length > 0) {
-
-
-            for (var i = 0; i < selectedConcessions.length; i++) {
-
-                var selectedConcessionDetails = selectedConcessions[i].approvedConcessionDetails.filter(item => item.isSelected);
-
-                if (selectedConcessionDetails != null && selectedConcessionDetails.length > 0) {
-                    for (var j = 0; j < selectedConcessionDetails.length; j++) {
-
-                        if (selectedConcessionDetails[j].concessionType == ConcessionTypes.BOLDesc) {
-                            selectedConcessionDetails[j].concessionType = ConcessionTypes.BOL;
-                        }
-
-                        if (concessionIds.length == 0) {
-                            concessionIds = String(selectedConcessionDetails[j].concessionId);
-                        } else {
-                            concessionIds = concessionIds + "," + String(selectedConcessionDetails[j].concessionId);
-                        }
-                    }
-                }
-            }
-        }
-
-        let observable;
-        if (concessionIds != null && concessionIds.length > 0) {
-            this.legalEntityConcessionLetterModel.legalEntityId = this.legalEntityId;
-            observable = this.concessionLetterService.generateConcessionLetterForConcessionsByConcessionIds(concessionIds, this.legalEntityConcessionLetterModel);
-        } else {
-            this.legalEntityConcessionLetterModel.legalEntityId = this.legalEntityId;
-            observable = this.concessionLetterService.generateConcessionLetterForConcessionsByLegalEntityId(this.legalEntityConcessionLetterModel);
-        }
-
-        observable.subscribe(result => {
-            var byteCharacters = atob(result.bytes);
-            var byteNumbers = new Array(byteCharacters.length);
-            for (var i = 0; i < byteCharacters.length; i++) {
-                byteNumbers[i] = byteCharacters.charCodeAt(i);
-            }
-            var byteArray = new Uint8Array(byteNumbers);
-
-            var blob = new Blob([byteArray], { type: result.contentType });
-            saveAs(blob, result.filename);
-            this.isLoading = false;
-        }, error => {
-            this.errorMessage = "Could not generate Concession Letter for the selected item";
-            this.isLoading = false;
-        });
-
-        this.modal.hide();
     }
 
 }

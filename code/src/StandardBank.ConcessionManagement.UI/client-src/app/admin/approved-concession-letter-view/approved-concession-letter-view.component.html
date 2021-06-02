@@ -7,14 +7,6 @@
     </div>
 </div>
 
-<!-- Success message -->
-<div class="col-md-12" *ngIf="saveMessage && !isLoading">
-    <div class="form-feedback-container">
-        <div class="alert-success">
-            <p class="message-heading"><i class="fa fa-check-circle" aria-hidden="true"></i>Concession letter successfully generated: {{saveMessage}}</p>
-        </div>
-    </div>
-</div>
 
 <!-- Loading message -->
 <div class="col-md-12" *ngIf="isLoading" style="margin-top: 15px;">
@@ -79,7 +71,7 @@
 
                                 <div class="image-download">
 
-                                    <a href="/api/Concession/DownloadLetter/ {{approvedConcessionDetail.concessionId}}">
+                                    <a href="/api/Concession/DownloadLetter/{{approvedConcessionDetail.concessionId}}">
 
                                         <img src="../../content/img/download.png" />
 
