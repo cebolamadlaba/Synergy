@@ -342,7 +342,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                     this.lendingConcession.lendingConcessionDetails.length == 1) {
                 if (this.baseComponentService.isThreeMonthsExpiringConcession(this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd'))) {
                     this.isExtendButtonVisible = true;
-                    this.isRenewButtonVisible = true; 
+                    this.isRenewButtonVisible = true;
                 } else {
                     this.isUpdateButtonVisible = true;
                 }

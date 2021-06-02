@@ -690,7 +690,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     };
 
                     approvedConcessions.Add(approvedConcession);
-                }
+                }              
 
                 var approvedConcessionDetails = new List<ApprovedConcessionDetail>();
 

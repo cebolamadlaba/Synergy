@@ -163,6 +163,63 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
 
+        public IEnumerable<ConcessionInboxView> GetApprovedConcessionsView(
+ IEnumerable<int> statusIds, bool isActive)
+        {
+            using (var db = _dbConnectionFactory.Connection())
+            {
+                return db.Query<ConcessionInboxView>(
+                    @"SELECT distinct [ConcessionId],LegalEntityId,
+		                    [RiskGroupId],
+		                    [RiskGroupNumber],
+		                    [RiskGroupName],
+		                    [CustomerName],
+		                    [CustomerNumber],
+		                    [ConcessionTypeId],
+		                    [ConcessionType],
+		                    max([ConcessionDate]) ConcessionDate,
+		                    [StatusId],
+		                    [Status],
+		                    [SubStatus],
+		                    [ConcessionRef],
+		                    [MarketSegmentId],
+		                    [Segment],
+		                    max([DatesentForApproval]) DatesentForApproval,
+		                    min([ExpiryDate]) ExpiryDate,
+		                    max([DateApproved]) DateApproved,
+		                    [CentreId],
+		                    [CentreName],
+		                    [RegionId],
+		                    [Region],[Location] 'ConcessionLetterURL',
+		                    CurrentAeUserId
+                    FROM [dbo].[ConcessionInboxView]					
+                    left join tblConcessionLetter on [ConcessionInboxView].ConcessionId = tblConcessionLetter.fkConcessionDetailId  
+                    WHERE [StatusId] in @statusIds
+	                    AND [IsActive] = @isActive
+                        AND [Location] IS NOT NULL
+                    group by [ConcessionId],LegalEntityId,
+		                    [RiskGroupId],
+		                    [RiskGroupNumber],
+		                    [RiskGroupName],[CustomerName],
+		                    [CustomerNumber],
+		                    [ConcessionTypeId],
+		                    [ConcessionType],[StatusId],
+		                    [Status],[SubStatus],
+		                    [ConcessionRef],
+		                    [MarketSegmentId],
+		                    [Segment],
+		                    [CentreId],
+		                    [CentreName],
+		                    [RegionId],
+		                    [Region],
+		                    [Location],
+		                    CurrentAeUserId"
+
+                    ,
+                    new { statusIds, isActive });
+            }
+        }
+
         public IEnumerable<ConcessionInboxView> Search(int? regionId, int? centreId, DateTime? datesentForApproval, IEnumerable<int> statusIds)
         {
             using (var db = _dbConnectionFactory.Connection())

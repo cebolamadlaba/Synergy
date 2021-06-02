@@ -188,7 +188,7 @@ export class BaseComponentService {
     }
 
     public isThreeMonthsExpiringConcession(expiryDate: string) {
-        var monthDifference = moment(new Date()).diff(moment(new Date(expiryDate)), 'months', true);
+        var monthDifference = moment(new Date(expiryDate)).diff(moment(new Date()), 'months', true);
         if (monthDifference <= MOnthEnum.ThreeMonths) {
             return true;
         } else { return false;}
