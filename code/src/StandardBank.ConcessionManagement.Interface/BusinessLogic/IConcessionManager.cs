@@ -248,5 +248,7 @@ namespace StandardBank.ConcessionManagement.Interface.BusinessLogic
         ConcessionDetail DeactivateConcessionDetailed(int ConcessionDetailId, User user);
 
         int CheckPendingConcessionInRiskGroupOrSapbPid(int sapbpidOrRiskGroupNumber, int concessionTypeId);
+
+        IEnumerable<ApprovedConcession> GetApprovedConcessionsView(User currentUser);
     }
 }

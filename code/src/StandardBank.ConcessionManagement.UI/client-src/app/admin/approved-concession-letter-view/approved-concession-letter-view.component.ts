@@ -40,7 +40,7 @@ export class ApprovedConcessionLetterViewComponent implements OnInit {
 
     ngOnInit() {
         this.initLegalEntityConcessionLetter();
-        this.observableApprovedConcessions = this.userConcessionsService.getApprovedConcessions();
+        this.observableApprovedConcessions = this.userConcessionsService.getApprovedConcessionsView();
         this.observableApprovedConcessions.subscribe(approvedConcession => {
             this.approvedConcessions = approvedConcession;
             this.isLoading = false;

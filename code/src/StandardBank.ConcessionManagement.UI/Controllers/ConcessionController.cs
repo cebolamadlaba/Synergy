@@ -522,6 +522,17 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
         {
             return Ok(_glmsLookupTableManager.GetBaseRateCodes());
         }
-   
+
+        /// <summary>
+        /// Gets the approved concessions view
+        /// </summary>
+        /// <returns></returns>
+        [Route("ApprovedConcessionsView")]
+        public IActionResult ApprovedConcessionsView()
+        {
+            var currentUser = _siteHelper.LoggedInUser(this);
+
+            return Ok(_concessionManager.GetApprovedConcessionsView(currentUser));
+        }
     }
 }
