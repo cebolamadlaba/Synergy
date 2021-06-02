@@ -163,8 +163,7 @@ namespace StandardBank.ConcessionManagement.Repository
         }
 
 
-        public IEnumerable<ConcessionInboxView> GetApprovedConcessionsView(
- IEnumerable<int> statusIds, bool isActive)
+        public IEnumerable<ConcessionInboxView> GetApprovedConcessionsView(IEnumerable<int> statusIds, bool isActive)
         {
             using (var db = _dbConnectionFactory.Connection())
             {

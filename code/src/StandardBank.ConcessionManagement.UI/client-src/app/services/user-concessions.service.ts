@@ -60,6 +60,11 @@ export class UserConcessionsService {
         const url = "/api/inbox/CacheAEUser";
         return this.http.post(url, accountExecutiveUserId, options).map(this.extractData).catch(this.handleErrorObservable);
     }
+
+    getApprovedConcessionsView(): Observable<ApprovedConcession[]> {
+        const url = "/api/Concession/ApprovedConcessionsView";
+        return this.http.get(url).map(this.extractData).catch(this.handleErrorObservable);
+    }
 }
 
 @Injectable()
