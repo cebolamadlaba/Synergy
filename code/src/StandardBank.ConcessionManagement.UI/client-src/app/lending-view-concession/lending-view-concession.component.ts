@@ -356,7 +356,8 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                     this.isExtendButtonVisible = true;
                     this.isRenewButtonVisible = true; 
                 } else {
-                    this.isUpdateButtonVisible = true;
+                    
+                       this.isUpdateButtonVisible = true;
                 }
 
             }
