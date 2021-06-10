@@ -1374,6 +1374,8 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         this.canUpdate = false;
         this.canArchive = false;
 
+     
+
         if (editType == EditTypeEnum.Renew) { 
 
             let canUpdateExpiryDate: boolean = true;
