@@ -113,7 +113,7 @@ export class BaseComponentService {
         await this.getUserData();
         this.checkAEExistOnriskGroupNumber();
         await this.checkPendingConcessionInRiskGroupOrSapbPidDetails(riskGroupNumber, sapbpid, type);
-
+    
         // FOR TESTING: comment out the first part of the if-statement.
         if (!environment.isDebug && concessionListLength > 0) {
             if (sapbpid == 0) {

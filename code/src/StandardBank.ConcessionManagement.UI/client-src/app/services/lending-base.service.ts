@@ -83,6 +83,35 @@ export class LendingBaseService {
         }
     }
 
+
+    disableTempOverDraftField(
+        selectedProductTypeFieldLogic: ProductTypeFieldLogic,
+        fieldname: string,
+        canEdit: boolean,
+        canSaveMessage: boolean
+
+    ) {
+        switch (fieldname) {
+            case 'productType':
+            case 'accountNumber':
+                return (!canSaveMessage || canEdit) ? null : '';
+            case 'limit':             
+            case 'term':
+                return selectedProductTypeFieldLogic.termIsEnabled = false;
+            case 'marginAgainstPrime':
+            case 'initiationFee':
+            case 'mrsEri':
+            case 'reviewFeeType':              
+            case 'reviewFee':              
+            case 'uffFee':               
+            case 'frequency':               
+            case 'serviceFee':
+            case 'extensionFee':
+                return selectedProductTypeFieldLogic.fieldIsEnabled == false;
+        }
+    }
+
+
     addValidationError(validationDetail) {
         if (!this.validationError)
             this.validationError = [];
