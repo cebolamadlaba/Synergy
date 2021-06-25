@@ -93,6 +93,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     isExtendButtonVisible = false;
     isRenewButtonVisible = false;
     isUpdateButtonVisible = false;
+    isExtendingOverdraft = false;
 
     selectedRowIndex: number;
     selectedLineItemTieredRates: LendingConcessionTieredRate[] = [];
@@ -342,7 +343,8 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                     this.lendingConcession.lendingConcessionDetails.length == 1) {
                 if (this.baseComponentService.isThreeMonthsExpiringConcession(this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd'))) {
                     this.isExtendButtonVisible = true;
-                    this.isRenewButtonVisible = true; 
+                    this.isRenewButtonVisible = true;
+                    this.isExtendingOverdraft = true;
                 } else {
                     this.isUpdateButtonVisible = true;
                 }
@@ -354,7 +356,8 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                     this.lendingConcession.lendingConcessionDetails.length == 1) {
                 if (this.baseComponentService.isThreeMonthsExpiringConcession(this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd'))) {
                     this.isExtendButtonVisible = true;
-                    this.isRenewButtonVisible = true; 
+                    this.isRenewButtonVisible = true;
+                    this.isExtendingOverdraft = true;
                 } else {
                     
                        this.isUpdateButtonVisible = true;
@@ -385,7 +388,8 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                          || item.productType == ProductTypeEnum.RCP) {
                          if (this.baseComponentService.isThreeMonthsExpiringConcession(this.datepipe.transform(item.expiryDate, 'yyyy-MM-dd'))) {
                              this.isExtendButtonVisible = true;
-                             this.isRenewButtonVisible = true;                            
+                             this.isRenewButtonVisible = true;
+                             this.isExtendingOverdraft = true;
                          } else {
                              this.isUpdateButtonVisible = true;
                              this.isRenewButtonVisible = false;
@@ -1691,14 +1695,34 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     
         if (this.editType == EditTypeEnum.UpdateApproved &&
             this.lendingConcession.lendingConcessionDetails.length == 1
-            && this.lendingConcession.lendingConcessionDetails[0].productType === ProductTypeEnum.TemporaryOverdraft) {
+             && this.lendingConcession.lendingConcessionDetails[0].productType === ProductTypeEnum.TemporaryOverdraft) {
                     
                   return super.disableTempOverDraftField(
                         this.selectedProductTypeFieldLogics[index],
                         fieldname,
                         this.canEdit && canUpdateExpiryDate,
                         this.canEdit != null
-                     );
+            );
+
+        } else if (this.editType == EditTypeEnum.UpdateApproved && this.isExtendingOverdraft) {
+
+            if (this.lendingConcession.lendingConcessionDetails.some(x => x.productType == ProductTypeEnum.BTL))
+            {
+
+                this.lendingConcession.lendingConcessionDetails.forEach( item =>
+                {
+              
+                        if (item.productType == ProductTypeEnum.Overdraft)
+                        {
+                             return super.disableOverDraftField(
+                                this.selectedProductTypeFieldLogics[index],
+                                fieldname);
+
+                        }
+                });
+
+            }
+            
         } 
         else { 
 
@@ -1709,7 +1733,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                 fieldname,
                 this.canEdit && canUpdateExpiryDate,
                 this.canEdit != null
-                );
+            );
         }
     }
 

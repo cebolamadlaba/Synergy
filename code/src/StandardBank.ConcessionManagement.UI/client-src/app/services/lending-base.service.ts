@@ -112,6 +112,31 @@ export class LendingBaseService {
     }
 
 
+    disableOverDraftField(
+        selectedProductTypeFieldLogic: ProductTypeFieldLogic,
+        fieldname: string
+
+    ) {
+        switch (fieldname) {
+            case 'productType':
+            case 'accountNumber':
+            case 'limit':
+            case 'term':
+                return selectedProductTypeFieldLogic.termIsEnabled = false;
+            case 'marginAgainstPrime':
+            case 'initiationFee':
+            case 'mrsEri':
+            case 'reviewFeeType':
+            case 'reviewFee':
+            case 'uffFee':
+            case 'frequency':
+            case 'serviceFee':
+            case 'extensionFee':
+                return selectedProductTypeFieldLogic.fieldIsEnabled == false;
+        }
+    }
+
+
     addValidationError(validationDetail) {
         if (!this.validationError)
             this.validationError = [];
