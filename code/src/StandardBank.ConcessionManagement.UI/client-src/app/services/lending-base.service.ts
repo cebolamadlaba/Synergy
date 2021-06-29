@@ -114,25 +114,29 @@ export class LendingBaseService {
 
     disableOverDraftField(
         selectedProductTypeFieldLogic: ProductTypeFieldLogic,
-        fieldname: string
-
+        fieldname: string,
+        canEdit: boolean,
+        canSaveMessage: boolean
     ) {
         switch (fieldname) {
             case 'productType':
             case 'accountNumber':
             case 'limit':
             case 'term':
-                return selectedProductTypeFieldLogic.termIsEnabled = false;
             case 'marginAgainstPrime':
             case 'initiationFee':
             case 'mrsEri':
+                return (!canSaveMessage || canEdit) ? null : '';
             case 'reviewFeeType':
+                return (selectedProductTypeFieldLogic.reviewFeeTypeIsEnabled && canEdit) ? null : '';
             case 'reviewFee':
+                return (selectedProductTypeFieldLogic.reviewFeeIsEnabled && canEdit) ? null : '';
             case 'uffFee':
+                return (selectedProductTypeFieldLogic.uffFeeIsEnabled && canEdit) ? null : '';
             case 'frequency':
+                return (selectedProductTypeFieldLogic.frequencyIsEnabled && canEdit) ? null : '';
             case 'serviceFee':
-            case 'extensionFee':
-                return selectedProductTypeFieldLogic.fieldIsEnabled == false;
+                return (selectedProductTypeFieldLogic.serviceFeeIsEnabled && canEdit) ? null : '';         
         }
     }
 

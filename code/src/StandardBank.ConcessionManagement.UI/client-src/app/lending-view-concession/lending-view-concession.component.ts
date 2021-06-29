@@ -94,6 +94,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     isRenewButtonVisible = false;
     isUpdateButtonVisible = false;
     isExtendingOverdraft = false;
+    isMutliLineConcession = false;
 
     selectedRowIndex: number;
     selectedLineItemTieredRates: LendingConcessionTieredRate[] = [];
@@ -382,6 +383,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                  this.isUpdateButtonVisible = true;
                  this.isExtendButtonVisible = true;
                  this.isRenewButtonVisible = true;
+                 this.isMutliLineConcession = true;
 
                  this.lendingConcession.lendingConcessionDetails.forEach(item => {
                      if (item.productType == ProductTypeEnum.Overdraft
@@ -517,6 +519,8 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
     disableFieldOnRenew(itemRow: FormControl) {
 
+       
+
         if (this.editType == EditTypeEnum.Renew) {
             if (itemRow.value.productType.description == ProductTypeEnum.BTL
                 || itemRow.value.productType.description == ProductTypeEnum.TemporaryOverdraft
@@ -534,6 +538,28 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
                 itemRow.disable();
             }              
+        }
+
+        if (this.editType == EditTypeEnum.UpdateApproved && this.isExtendingOverdraft) {
+
+            if (itemRow.value.productType.description == ProductTypeEnum.Overdraft) {
+                itemRow.disable();
+            } else if (itemRow.value.productType.description == ProductTypeEnum.TemporaryOverdraft) {
+                itemRow.disable();
+                itemRow.get('productType').enable();
+                itemRow.get('accountNumber').enable();
+            }
+
+        }
+
+        if (this.editType == EditTypeEnum.UpdateApproved && this.isMutliLineConcession) {
+
+            if (itemRow.value.productType.description == ProductTypeEnum.TemporaryOverdraft) {
+                itemRow.disable();
+                itemRow.get('productType').enable();
+                itemRow.get('accountNumber').enable();
+            }
+
         }
     }
 
@@ -1704,26 +1730,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                         this.canEdit != null
             );
 
-        } else if (this.editType == EditTypeEnum.UpdateApproved && this.isExtendingOverdraft) {
-
-            if (this.lendingConcession.lendingConcessionDetails.some(x => x.productType == ProductTypeEnum.BTL))
-            {
-
-                this.lendingConcession.lendingConcessionDetails.forEach( item =>
-                {
-              
-                        if (item.productType == ProductTypeEnum.Overdraft)
-                        {
-                             return super.disableOverDraftField(
-                                this.selectedProductTypeFieldLogics[index],
-                                fieldname);
-
-                        }
-                });
-
-            }
-            
-        } 
+        }
         else { 
 
             return super.disableFieldBase(
