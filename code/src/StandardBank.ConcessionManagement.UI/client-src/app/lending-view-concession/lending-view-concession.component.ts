@@ -95,6 +95,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     isUpdateButtonVisible = false;
     isExtendingOverdraft = false;
     isMutliLineConcession = false;
+    isNewOverdraftConcession = false;
 
     selectedRowIndex: number;
     selectedLineItemTieredRates: LendingConcessionTieredRate[] = [];
@@ -495,6 +496,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             serviceFee: [{ value: '', disabled: true }],
             mrsEri: [''],
             extensionFee: [''],
+            newOverDraft: [''],
             lendingTieredRates: [[]]
         });
     }
@@ -520,7 +522,6 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     disableFieldOnRenew(itemRow: FormControl) {
 
        
-
         if (this.editType == EditTypeEnum.Renew) {
             if (itemRow.value.productType.description == ProductTypeEnum.BTL
                 || itemRow.value.productType.description == ProductTypeEnum.TemporaryOverdraft
@@ -542,12 +543,21 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
         if (this.editType == EditTypeEnum.UpdateApproved && this.isExtendingOverdraft) {
 
-            if (itemRow.value.productType.description == ProductTypeEnum.Overdraft) {
+            if (itemRow.value.productType.description == ProductTypeEnum.Overdraft
+                && itemRow.get('newOverDraft').value != true) {
                 itemRow.disable();
             } else if (itemRow.value.productType.description == ProductTypeEnum.TemporaryOverdraft) {
                 itemRow.disable();
                 itemRow.get('productType').enable();
                 itemRow.get('accountNumber').enable();
+            }
+
+            if (itemRow.value.productType.description == ProductTypeEnum.Overdraft
+                && itemRow.get('newOverDraft').value == true) {
+                itemRow.enable();
+                itemRow.get('term').enable();
+                itemRow.get('approvedMarginAgainstPrime').enable();
+                itemRow.get('dateApproved').enable();
             }
 
         }
@@ -730,8 +740,9 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
         this.selectedProductTypeFieldLogics[rowIndex] = super.setProductTypeFieldLogic(productType.description, this.selectedProductTypeFieldLogics[rowIndex]);
 
-        if (productType.description === "Overdraft") {
+        if (productType.description === ProductTypeEnum.Overdraft) {
             currentRow.get('term').setValue('12');
+            currentRow.get('newOverDraft').setValue(true);
         }
     }
 

@@ -32,4 +32,5 @@ export class LendingConcessionDetail extends BaseConcessionDetail {
     show_uffFee: boolean;
     show_frequency: boolean;
     show_serviceFee: boolean;
+    newOverDraft: boolean;
 }
