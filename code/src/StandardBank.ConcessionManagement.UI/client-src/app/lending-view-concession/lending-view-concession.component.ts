@@ -522,7 +522,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     disableFieldOnRenew(itemRow: FormControl) {
 
        
-        if (this.editType == EditTypeEnum.Renew) {
+        if (this.editType == EditTypeEnum.Renew && itemRow.get('newOverDraft').value != true) {
             if (itemRow.value.productType.description == ProductTypeEnum.BTL
                 || itemRow.value.productType.description == ProductTypeEnum.TemporaryOverdraft
                 || itemRow.value.productType.description == ProductTypeEnum.MTL) {
@@ -551,13 +551,16 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                 itemRow.get('productType').enable();
                 itemRow.get('accountNumber').enable();
             }
-
+            
             if (itemRow.value.productType.description == ProductTypeEnum.Overdraft
                 && itemRow.get('newOverDraft').value == true) {
                 itemRow.enable();
-                itemRow.get('term').enable();
-                itemRow.get('approvedMarginAgainstPrime').enable();
-                itemRow.get('dateApproved').enable();
+                itemRow.get('extensionFee').disable();
+                itemRow.get('approvedMarginAgainstPrime').disable();
+                itemRow.get('dateApproved').disable();
+                itemRow.get('expiryDate').disable();
+                itemRow.get('serviceFee').disable();
+                itemRow.get('frequency').disable();
             }
 
         }
@@ -744,6 +747,17 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             currentRow.get('term').setValue('12');
             currentRow.get('newOverDraft').setValue(true);
         }
+
+        if (this.editType == EditTypeEnum.Renew)
+        {
+            if (productType.description === ProductTypeEnum.MTL
+                || productType.description === ProductTypeEnum.BTL
+                || productType.description === ProductTypeEnum.TemporaryOverdraft) {
+                currentRow.get('newOverDraft').setValue(true);
+            }
+        }
+
+
     }
 
     goBack() {
