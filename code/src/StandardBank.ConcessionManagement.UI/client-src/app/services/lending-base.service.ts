@@ -83,6 +83,64 @@ export class LendingBaseService {
         }
     }
 
+
+    disableTempOverDraftField(
+        selectedProductTypeFieldLogic: ProductTypeFieldLogic,
+        fieldname: string,
+        canEdit: boolean,
+        canSaveMessage: boolean
+
+    ) {
+        switch (fieldname) {
+            case 'productType':
+            case 'accountNumber':
+                return (!canSaveMessage || canEdit) ? null : '';
+            case 'limit':             
+            case 'term':
+                return selectedProductTypeFieldLogic.termIsEnabled = false;
+            case 'marginAgainstPrime':
+            case 'initiationFee':
+            case 'mrsEri':
+            case 'reviewFeeType':              
+            case 'reviewFee':              
+            case 'uffFee':               
+            case 'frequency':               
+            case 'serviceFee':
+            case 'extensionFee':
+                return selectedProductTypeFieldLogic.fieldIsEnabled == false;
+        }
+    }
+
+
+    disableOverDraftField(
+        selectedProductTypeFieldLogic: ProductTypeFieldLogic,
+        fieldname: string,
+        canEdit: boolean,
+        canSaveMessage: boolean
+    ) {
+        switch (fieldname) {
+            case 'productType':
+            case 'accountNumber':
+            case 'limit':
+            case 'term':
+            case 'marginAgainstPrime':
+            case 'initiationFee':
+            case 'mrsEri':
+                return (!canSaveMessage || canEdit) ? null : '';
+            case 'reviewFeeType':
+                return (selectedProductTypeFieldLogic.reviewFeeTypeIsEnabled && canEdit) ? null : '';
+            case 'reviewFee':
+                return (selectedProductTypeFieldLogic.reviewFeeIsEnabled && canEdit) ? null : '';
+            case 'uffFee':
+                return (selectedProductTypeFieldLogic.uffFeeIsEnabled && canEdit) ? null : '';
+            case 'frequency':
+                return (selectedProductTypeFieldLogic.frequencyIsEnabled && canEdit) ? null : '';
+            case 'serviceFee':
+                return (selectedProductTypeFieldLogic.serviceFeeIsEnabled && canEdit) ? null : '';         
+        }
+    }
+
+
     addValidationError(validationDetail) {
         if (!this.validationError)
             this.validationError = [];

@@ -135,6 +135,7 @@
                 public const string Overdraft = "Overdraft";
                 public const string TempOverdraft = "Temporary Overdraft";
                 public const string VAF = "VAF";
+                public const string BusinessRCP = "Business RCP";
 
                 public const int OverdraftId = 1;
                 public const int TempOverdraftId = 15;

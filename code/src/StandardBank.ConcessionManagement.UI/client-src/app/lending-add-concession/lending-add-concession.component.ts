@@ -345,8 +345,13 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
 
         this.selectedProductTypeFieldLogics[rowIndex] = super.setProductTypeFieldLogic(productType.description, this.selectedProductTypeFieldLogics[rowIndex]);
 
-        if (productType.description === "Overdraft") {
+        if (productType.description === ProductTypeEnum.Overdraft) {
             currentRow.get('term').setValue('12');
+        }
+
+        if (productType.description === ProductTypeEnum.TemporaryOverdraft) {
+            currentRow.get('term').setValue('3');
+            currentRow.get('term').disable;
         }
     }
 
@@ -531,6 +536,13 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
                 hasProductType = true;
             }
 
+            if (concessions.controls.length == 1
+                && concessionFormItem.get('productType').value.description == ProductTypeEnum.TemporaryOverdraft) {
+                if (concessionFormItem.get('term').value != MOnthEnum.ThreeMonths) {
+                    this.addValidationError("Term captured for Temporary Overdraft should be 3 months");
+                }
+            }
+
             if (concessionFormItem.get('accountNumber').value) {
                 lendingConcessionDetail.legalEntityId = concessionFormItem.get('accountNumber').value.legalEntityId;
                 lendingConcessionDetail.legalEntityAccountId = concessionFormItem.get('accountNumber').value.legalEntityAccountId;
@@ -540,8 +552,8 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
                 this.addValidationError("Client account not selected");
             }
 
-            if (concessionFormItem.get('productType').value.description === "Overdraft" ||
-                concessionFormItem.get('productType').value.description === "Temporary Overdraft") {
+            if (concessionFormItem.get('productType').value.description === ProductTypeEnum.Overdraft ||
+                concessionFormItem.get('productType').value.description === ProductTypeEnum.TemporaryOverdraft) {
 
                 if (concessionFormItem.get('term').value == "") {
                     this.addValidationError("Term cannot be empty");
@@ -560,10 +572,10 @@ export class LendingAddConcessionComponent extends LendingBaseService implements
                 }
             }
             else if (
-                concessionFormItem.get('productType').value.description === "MTL (Medium Term Loan)" ||
+                concessionFormItem.get('productType').value.description === ProductTypeEnum.MTL ||
                 concessionFormItem.get('productType').value.description === "Agricultural Production Loan" ||
-                concessionFormItem.get('productType').value.description === "Business RCP" ||
-                concessionFormItem.get('productType').value.description === "BTL (Business Term Loan)") {
+                concessionFormItem.get('productType').value.description === ProductTypeEnum.RCP ||
+                concessionFormItem.get('productType').value.description === ProductTypeEnum.BTL) {
 
                 if (concessionFormItem.get('term').value == "") {
                     this.addValidationError("Term cannot be empty");

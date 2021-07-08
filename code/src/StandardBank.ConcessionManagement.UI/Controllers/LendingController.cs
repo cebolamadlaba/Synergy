@@ -417,7 +417,8 @@ namespace StandardBank.ConcessionManagement.UI.Controllers
                 else
                 {
 
-                    if (lendingConcessionDetail.ExpiryDate != null && lendingConcessionDetail.ProductTypeId== (int?)Constants.Lending.ProductType.OverdraftId)
+                    if (lendingConcessionDetail.ExpiryDate != null && lendingConcessionDetail.ProductTypeId== (int?)Constants.Lending.ProductType.OverdraftId
+                        && lendingConcessionDetail.ProductType == Constants.Lending.ProductType.BusinessRCP)
                     {
                         var dateExp = Convert.ToDateTime(lendingConcessionDetail.ExpiryDate);
                         lendingConcessionDetail.ExpiryDate = dateExp.AddMonths(_configurationData.MonthOfExpiry);

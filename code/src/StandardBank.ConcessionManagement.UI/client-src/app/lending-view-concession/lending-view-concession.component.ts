@@ -93,6 +93,9 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
     isExtendButtonVisible = false;
     isRenewButtonVisible = false;
     isUpdateButtonVisible = false;
+    isExtendingOverdraft = false;
+    isMutliLineConcession = false;
+    isNewOverdraftConcession = false;
 
     selectedRowIndex: number;
     selectedLineItemTieredRates: LendingConcessionTieredRate[] = [];
@@ -343,6 +346,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                 if (this.baseComponentService.isThreeMonthsExpiringConcession(this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd'))) {
                     this.isExtendButtonVisible = true;
                     this.isRenewButtonVisible = true;
+                    this.isExtendingOverdraft = true;
                 } else {
                     this.isUpdateButtonVisible = true;
                 }
@@ -354,9 +358,11 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                     this.lendingConcession.lendingConcessionDetails.length == 1) {
                 if (this.baseComponentService.isThreeMonthsExpiringConcession(this.datepipe.transform(lendingConcessionDetail.expiryDate, 'yyyy-MM-dd'))) {
                     this.isExtendButtonVisible = true;
-                    this.isRenewButtonVisible = true; 
+                    this.isRenewButtonVisible = true;
+                    this.isExtendingOverdraft = true;
                 } else {
-                    this.isUpdateButtonVisible = true;
+                    
+                       this.isUpdateButtonVisible = true;
                 }
 
             }
@@ -378,7 +384,24 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                  this.isUpdateButtonVisible = true;
                  this.isExtendButtonVisible = true;
                  this.isRenewButtonVisible = true;
-              }
+                 this.isMutliLineConcession = true;
+
+                 this.lendingConcession.lendingConcessionDetails.forEach(item => {
+                     if (item.productType == ProductTypeEnum.Overdraft
+                         || item.productType == ProductTypeEnum.RCP) {
+                         if (this.baseComponentService.isThreeMonthsExpiringConcession(this.datepipe.transform(item.expiryDate, 'yyyy-MM-dd'))) {
+                             this.isExtendButtonVisible = true;
+                             this.isRenewButtonVisible = true;
+                             this.isExtendingOverdraft = true;
+                         } else {
+                             this.isUpdateButtonVisible = true;
+                             this.isRenewButtonVisible = false;
+                             this.isExtendButtonVisible = false;
+                         }
+                     }
+                 });
+
+            }
 
             currentConcession.get('term').setValue(lendingConcessionDetail.term);
 
@@ -473,6 +496,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             serviceFee: [{ value: '', disabled: true }],
             mrsEri: [''],
             extensionFee: [''],
+            newOverDraft: [''],
             lendingTieredRates: [[]]
         });
     }
@@ -497,7 +521,8 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
     disableFieldOnRenew(itemRow: FormControl) {
 
-        if (this.editType == EditTypeEnum.Renew) {
+       
+        if (this.editType == EditTypeEnum.Renew && itemRow.get('newOverDraft').value != true) {
             if (itemRow.value.productType.description == ProductTypeEnum.BTL
                 || itemRow.value.productType.description == ProductTypeEnum.TemporaryOverdraft
                 || itemRow.value.productType.description == ProductTypeEnum.MTL) {
@@ -514,6 +539,40 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
                 itemRow.disable();
             }              
+        }
+
+        if (this.editType == EditTypeEnum.UpdateApproved && this.isExtendingOverdraft) {
+
+            if (itemRow.value.productType.description == ProductTypeEnum.Overdraft
+                && itemRow.get('newOverDraft').value != true) {
+                itemRow.disable();
+            } else if (itemRow.value.productType.description == ProductTypeEnum.TemporaryOverdraft) {
+                itemRow.disable();
+                itemRow.get('productType').enable();
+                itemRow.get('accountNumber').enable();
+            }
+            
+            if (itemRow.value.productType.description == ProductTypeEnum.Overdraft
+                && itemRow.get('newOverDraft').value == true) {
+                itemRow.enable();
+                itemRow.get('extensionFee').disable();
+                itemRow.get('approvedMarginAgainstPrime').disable();
+                itemRow.get('dateApproved').disable();
+                itemRow.get('expiryDate').disable();
+                itemRow.get('serviceFee').disable();
+                itemRow.get('frequency').disable();
+            }
+
+        }
+
+        if (this.editType == EditTypeEnum.UpdateApproved && this.isMutliLineConcession) {
+
+            if (itemRow.value.productType.description == ProductTypeEnum.TemporaryOverdraft) {
+                itemRow.disable();
+                itemRow.get('productType').enable();
+                itemRow.get('accountNumber').enable();
+            }
+
         }
     }
 
@@ -684,9 +743,21 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
         this.selectedProductTypeFieldLogics[rowIndex] = super.setProductTypeFieldLogic(productType.description, this.selectedProductTypeFieldLogics[rowIndex]);
 
-        if (productType.description === "Overdraft") {
+        if (productType.description === ProductTypeEnum.Overdraft) {
             currentRow.get('term').setValue('12');
+            currentRow.get('newOverDraft').setValue(true);
         }
+
+        if (this.editType == EditTypeEnum.Renew)
+        {
+            if (productType.description === ProductTypeEnum.MTL
+                || productType.description === ProductTypeEnum.BTL
+                || productType.description === ProductTypeEnum.TemporaryOverdraft) {
+                currentRow.get('newOverDraft').setValue(true);
+            }
+        }
+
+
     }
 
     goBack() {
@@ -835,9 +906,12 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             if (concessionFormItem.get('frequency').value)
                 lendingConcessionDetail.frequency = concessionFormItem.get('frequency').value;
 
-            if (concessionFormItem.get('expiryDate').value && !this.baseComponentService.isRenewing && !this.baseComponentService.isAppprovingOrDeclining)
-                this.onExpiryDateChanged(concessionFormItem);
-            lendingConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+            if (concessionFormItem.get('productType').value.description == ProductTypeEnum.Overdraft ||
+                concessionFormItem.get('productType').value.description == ProductTypeEnum.RCP)  {
+                if (concessionFormItem.get('expiryDate').value && !this.baseComponentService.isRenewing && !this.baseComponentService.isAppprovingOrDeclining)
+                    this.onExpiryDateChanged(concessionFormItem);
+                lendingConcessionDetail.expiryDate = new Date(concessionFormItem.get('expiryDate').value);
+            }
 
             if (concessionFormItem.get('mrsEri').value == "" ||
                 concessionFormItem.get('mrsEri').value.toString().indexOf(".") > -1) {
@@ -1130,7 +1204,8 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         this.editType = EditTypeEnum.Extend;
 
         var isOverdraft = this.lendingConcession.lendingConcessionDetails.find(item => {
-            if (item.productType === "Overdraft") {
+            if (item.productType === ProductTypeEnum.Overdraft
+                || item.productType === ProductTypeEnum.RCP) {
                 return true
             }
         });
@@ -1156,7 +1231,8 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
            const concessions = this.getLendingConcessionItemRows();
            for (let concessionFormItem of concessions.controls)
            {
-               if (concessionFormItem.get('productType').value.description == ProductTypeEnum.Overdraft) {
+               if (concessionFormItem.get('productType').value.description == ProductTypeEnum.Overdraft
+                   || concessionFormItem.get('productType').value.description == ProductTypeEnum.RCP) {
                    concessionFormItem.get('extensionFee').setValue(this.selectedExtensionFee);
                 }
             }
@@ -1387,11 +1463,13 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
         this.canUpdate = false;
         this.canArchive = false;
 
+     
+        const concessions = this.getLendingConcessionItemRows();
+
         if (editType == EditTypeEnum.Renew) { 
 
             let canUpdateExpiryDate: boolean = true;
-
-            const concessions = this.getLendingConcessionItemRows();
+        
             for (let concessionFormItem of concessions.controls) {
                 // Existing ExpiryDate: ExpiryDate must be set 12 months from the existing ExpiryDate.
                 if (concessionFormItem.get('expiryDate').value) {
@@ -1402,11 +1480,10 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
                 }
                 
                 //The term on Overdraft must default to 12 months. 
-                if (concessionFormItem.get('productType').value.description == ProductTypeEnum.Overdraft) {
+                if (concessionFormItem.get('productType').value.description == ProductTypeEnum.Overdraft
+                    || concessionFormItem.get('productType').value.description == ProductTypeEnum.RCP) {
                     concessionFormItem.get('term').setValue(12);
                     canUpdateExpiryDate = true;
-                   
-
                 }
 
             }
@@ -1416,6 +1493,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             this.baseComponentService.isRenewing = true;
         }
 
+       
         this.lendingConcessionForm.controls['motivation'].setValue('');
     }
 
@@ -1665,14 +1743,30 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             }
         }
 
-        return super.disableFieldBase(
-            this.selectedConditionTypes[index],
-            this.lendingConcession.lendingConcessionDetails[index],
-            this.selectedProductTypeFieldLogics[index],
-            fieldname,
-            this.canEdit && canUpdateExpiryDate,
-            this.canEdit != null
-        );
+    
+        if (this.editType == EditTypeEnum.UpdateApproved &&
+            this.lendingConcession.lendingConcessionDetails.length == 1
+             && this.lendingConcession.lendingConcessionDetails[0].productType === ProductTypeEnum.TemporaryOverdraft) {
+                    
+                  return super.disableTempOverDraftField(
+                        this.selectedProductTypeFieldLogics[index],
+                        fieldname,
+                        this.canEdit && canUpdateExpiryDate,
+                        this.canEdit != null
+            );
+
+        }
+        else { 
+
+            return super.disableFieldBase(
+                this.selectedConditionTypes[index],
+                this.lendingConcession.lendingConcessionDetails[index],
+                this.selectedProductTypeFieldLogics[index],
+                fieldname,
+                this.canEdit && canUpdateExpiryDate,
+                this.canEdit != null
+            );
+        }
     }
 
     getNgClassForField(rowIndex: number) {

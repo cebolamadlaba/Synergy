@@ -113,7 +113,7 @@ export class BaseComponentService {
         await this.getUserData();
         this.checkAEExistOnriskGroupNumber();
         await this.checkPendingConcessionInRiskGroupOrSapbPidDetails(riskGroupNumber, sapbpid, type);
-
+    
         // FOR TESTING: comment out the first part of the if-statement.
         if (!environment.isDebug && concessionListLength > 0) {
             if (sapbpid == 0) {
@@ -190,8 +190,12 @@ export class BaseComponentService {
     public isThreeMonthsExpiringConcession(expiryDate: string) {
         var monthDifference = moment(new Date(expiryDate)).diff(moment(new Date()), 'months', true);
         if (monthDifference <= MOnthEnum.ThreeMonths) {
-            return true;
-        } else { return false;}
+
+              return true;
+        } else
+        {
+            return false;
+        }
     }
 
     public isMonthsAfterExpiringConcession(expiryDate: string) {
