@@ -47,6 +47,7 @@ import { AeManagementComponent } from './admin/ae-management/ae-management.compo
 import { AaManagementComponent } from './admin/aa-management/aa-management.component';
 import { BolTradeManagementComponent } from './admin/bol-trade-management/bol-trade-management.component';
 import { BolTradeAeManagementComponent } from './admin/bol-trade-ae-management/bol-trade-ae-management.component';
+import { ApprovedConcessionLetterViewComponent } from './admin/approved-concession-letter-view/approved-concession-letter-view.component';
 
 import { BOLCHManagementComponent } from './admin/bol-chargecodes/bol-chargecodes.component';
 import { TransactionTypesManagementComponent } from './admin/transaction-types/transaction-types.component';
@@ -54,6 +55,7 @@ import { ChannelTypesManagementComponent } from './admin/channel-types/channel-t
 import { PricingGlmsComponent } from './pricing-glms/pricing-glms.component';
 import { GlmsAddConcessionComponent } from './glms-add-concession/glms-add-concession.component';
 import { GlmsViewConcessionComponent } from './glms-view-concession/glms-view-concession.component';
+
 
 
 
@@ -111,6 +113,7 @@ const routes: Routes = [
     { path: 'glms-view-concession/:riskGroupNumber/:concessionReferenceId', component: GlmsViewConcessionComponent },
     { path: 'glms-view-concession/:riskGroupNumber/:sapbpid/:concessionReferenceId', component: GlmsViewConcessionComponent },
 
+
     { path: 'cashman-add-concession', component: CashmanAddConcessionComponent },
     { path: 'admin', component: AdminMenuComponent },
     { path: 'admin/business-centre', component: BusinessCentreComponent },
@@ -123,6 +126,7 @@ const routes: Routes = [
     { path: 'admin/aa-management', component: AaManagementComponent },
     { path: 'admin/bol-trade-management', component: BolTradeManagementComponent },
     { path: 'admin/bol-trade-ae-management', component: BolTradeAeManagementComponent },
+    { path: 'admin/approved-concession-letter-view', component: ApprovedConcessionLetterViewComponent },
 
     { path: 'admin/bol-chargecodes', component: BOLCHManagementComponent },
     { path: 'admin/transaction-types', component: TransactionTypesManagementComponent },

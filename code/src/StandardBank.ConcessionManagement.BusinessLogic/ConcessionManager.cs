@@ -690,7 +690,7 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                     };
 
                     approvedConcessions.Add(approvedConcession);
-                }
+                }              
 
                 var approvedConcessionDetails = new List<ApprovedConcessionDetail>();
 
@@ -1579,6 +1579,94 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
         {
             return _concessionRepository.GetConcessionByRiskGroupOrSapbip(sapbpidOrRiskGroupNumber, concessionTypeId);
 
+        }
+
+        /// <summary>
+        /// Gets the approved concessions view
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <returns></returns>
+        public IEnumerable<ApprovedConcession> GetApprovedConcessionsView(User currentUser)
+        {
+
+            var approvedStatusId = _lookupTableManager.GetStatusId(Constants.ConcessionStatus.Approved);
+            var approvedWithChangesStatusId =
+                _lookupTableManager.GetStatusId(Constants.ConcessionStatus.ApprovedWithChanges);
+
+            var concessions =
+                _concessionInboxViewRepository.GetApprovedConcessionsView(new[] { approvedStatusId, approvedWithChangesStatusId }, true);
+
+            if (currentUser.SubRoleId != null)
+            {
+                if (currentUser.SubRoleId == (int)Constants.RoleSubRole.BolUser)
+                    concessions = concessions.Where(a => a.ConcessionType == Constants.ConcessionType.BusinessOnlineDesc);
+
+                if (currentUser.SubRoleId == (int)Constants.RoleSubRole.TradeUser)
+                    concessions = concessions.Where(a => a.ConcessionType == Constants.ConcessionType.Trade);
+            }
+
+            var approvedConcessions = new List<ApprovedConcession>();
+
+            foreach (var concession in concessions.OrderByDescending(_ => _.DateApproved ?? _.ConcessionDate))
+            {
+                var approvedConcession =
+                    approvedConcessions.FirstOrDefault(_ => _.LegalEntityId == concession.LegalEntityId);
+
+                if (approvedConcession == null)
+                {
+                    approvedConcession = new ApprovedConcession
+                    {
+                        RiskGroupNumber = concession.RiskGroupNumber,
+                        RiskGroupName = concession.RiskGroupName,
+                        LegalEntityId = concession.LegalEntityId,
+                        CustomerName = concession.CustomerName,
+                        CustomerNumber = concession.CustomerNumber,
+                        Segment = concession.Segment,
+                        ApprovedConcessionDetails = new List<ApprovedConcessionDetail>()
+                    };
+
+                    approvedConcessions.Add(approvedConcession);
+                }
+
+                var approvedConcessionDetails = new List<ApprovedConcessionDetail>();
+
+                approvedConcessionDetails.AddRange(approvedConcession.ApprovedConcessionDetails);
+
+                var newapproved = new ApprovedConcessionDetail
+                {
+                    Status = concession.Status,
+                    ConcessionType = concession.ConcessionType,
+                    ExpiryDate = concession.ExpiryDate,
+                    DateApproved = concession.DateApproved,
+                    DateOpened = concession.ConcessionDate,
+                    DateSentForApproval = concession.DatesentForApproval,
+                    ConcessionDetailId = concession.ConcessionDetailId,
+                    ConcessionId = concession.ConcessionId,
+                    ReferenceNumber = concession.ConcessionRef,
+                    ConcessionLetterURL = concession.ConcessionLetterURL
+                };
+
+
+                //remove doubles.
+                if (!approvedConcessionDetails.Contains(newapproved))
+                {
+                    approvedConcessionDetails.Add(newapproved);
+                }
+
+                  approvedConcession.ApprovedConcessionDetails = approvedConcessionDetails;
+
+            }
+
+            //remove concessions without concessions details..
+            approvedConcessions.ForEach(x =>
+            {
+                if (x.ApprovedConcessionDetails.Count() == 0)
+                {
+                    approvedConcessions.Remove(x);
+                }
+            });
+
+            return approvedConcessions;
         }
 
     }

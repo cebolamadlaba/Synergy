@@ -146,5 +146,13 @@ namespace StandardBank.ConcessionManagement.Interface.Repository
         IEnumerable<ConcessionInboxView> GetapporvedView(int requestorId, IEnumerable<int> statusIds, bool isActive);
 
         IEnumerable<ConcessionMismatchEscalationView> GetMisMatchedConcession();
+
+        /// <summary>
+        /// Get the approved concession view list 
+        /// </summary>
+        /// <param name="statusIds"></param>
+        /// <param name="isActive"></param>
+        /// <returns></returns>
+        IEnumerable<ConcessionInboxView> GetApprovedConcessionsView(IEnumerable<int> statusIds, bool isActive);
     }
 }

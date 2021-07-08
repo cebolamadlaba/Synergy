@@ -1,0 +1,96 @@
+<div class="col-md-12" *ngIf="errorMessage && !isLoading">
+    <div class="form-feedback-container">
+        <div class="alert-danger">
+            <p class="message-heading"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Error occurred. Please see error(s) below.</p>
+            <p>{{errorMessage}}</p>
+        </div>
+    </div>
+</div>
+
+
+<!-- Loading message -->
+<div class="col-md-12" *ngIf="isLoading" style="margin-top: 15px;">
+    <div class="form-feedback-container">
+        <div class="alert-info">
+            <p class="message-heading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i>Loading...</p>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12 search-and-results-container" *ngIf="!isLoading">
+    <!-- Search bar -->
+    <div class="input-group add-on">
+        <input class="form-control" placeholder="Search Customer Name or Risk Group Number" [(ngModel)]="concessionIdOrRiskGroupNumber" type="text">
+    </div>
+
+
+    <div class="section table-hover-highlight" *ngFor="let approvedConcession of approvedConcessions | approvedConcessionFilter : concessionIdOrRiskGroupNumber; trackBy: index;">
+        <div class="col-md-12 section-header">
+            <div class="concessionID-section">
+                <div class="col-md-3">
+                    <div class="col-md-10">
+                        <div class="concession-name">{{approvedConcession.riskGroupName}}</div>
+                        <div>{{approvedConcession.riskGroupNumber}}</div>
+                    </div>
+                </div>
+                
+                <div class="col-md-9 no-padding-left">
+                    <div class="col-md-6 no-padding-left">
+                        <strong>{{approvedConcession.customerName}}</strong> {{approvedConcession.segment}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section-body">
+            <div class="table-container">
+                <table class="table table-bordered table-hover header-fixed table-striped">
+                    <thead>
+                        <tr>                         
+                            <th>Concession ID</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Date Opened</th>
+                            <th>Date Sent For Approval</th>
+                            <th>Date Approved</th>
+                            <th>Download</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+
+                        <tr *ngFor="let approvedConcessionDetail of approvedConcession.approvedConcessionDetails; let i=index">
+
+
+                            <td> {{approvedConcessionDetail.referenceNumber}} </td>
+                            <td> {{approvedConcessionDetail.concessionType}} </td>
+                            <td> {{approvedConcessionDetail.status}} </td>
+                            <td> {{approvedConcessionDetail.dateOpened | date: 'yyyy/MM/dd'}} </td>
+                            <td> {{approvedConcessionDetail.dateSentForApproval | date: 'yyyy/MM/dd'}} </td>
+                            <td> {{approvedConcessionDetail.dateApproved | date: 'yyyy/MM/dd'}} </td>
+                            <td class="downloadtd">
+
+                                <div class="image-download">
+
+                                    <a href="/api/Concession/DownloadLetter/{{approvedConcessionDetail.concessionId}}">
+
+                                        <img src="../../content/img/download.png" />
+
+                                    </a>
+
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty state if no concessions found -->
+    <div class="searchEmptyState" *ngIf="(approvedConcessions | approvedConcessionFilter: concessionIdOrRiskGroupNumber)?.length === 0">
+        <i class="fa fa-inbox" aria-hidden="true"></i>
+        <p>No concessions found matching your search</p>
+    </div>
+
+
+</div>
