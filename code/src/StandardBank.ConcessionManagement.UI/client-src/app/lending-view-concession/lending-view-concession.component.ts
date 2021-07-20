@@ -748,6 +748,16 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             currentRow.get('newOverDraft').setValue(true);
         }
 
+
+        if (this.editType == EditTypeEnum.UpdateApproved) {
+            if (productType.description === ProductTypeEnum.MTL
+                || productType.description === ProductTypeEnum.BTL
+                || productType.description === ProductTypeEnum.Overdraft) {
+                currentRow.get('newOverDraft').setValue(true);
+            }
+        }
+
+
         if (this.editType == EditTypeEnum.Renew)
         {
             if (productType.description === ProductTypeEnum.MTL
@@ -1465,6 +1475,7 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
 
      
         const concessions = this.getLendingConcessionItemRows();
+      
 
         if (editType == EditTypeEnum.Renew) { 
 
@@ -1743,10 +1754,12 @@ export class LendingViewConcessionComponent extends LendingBaseService implement
             }
         }
 
+        let concessionFormIt = this.getLendingConcessionItemRows().controls;       
     
         if (this.editType == EditTypeEnum.UpdateApproved &&
             this.lendingConcession.lendingConcessionDetails.length == 1
-             && this.lendingConcession.lendingConcessionDetails[0].productType === ProductTypeEnum.TemporaryOverdraft) {
+            && this.lendingConcession.lendingConcessionDetails[0].productType === ProductTypeEnum.TemporaryOverdraft
+            && concessionFormIt[0].get('productType').value.description === ProductTypeEnum.TemporaryOverdraft ){
                     
                   return super.disableTempOverDraftField(
                         this.selectedProductTypeFieldLogics[index],
