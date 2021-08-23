@@ -155,7 +155,10 @@ namespace StandardBank.ConcessionManagement.BusinessLogic
                 riskGroup = _lookupTableManager.GetRiskGroupForRiskGroupNumber(riskGroupNumber);
                 concessions = _concessionManager.GetApprovedConcessionsForRiskGroup(riskGroup.Id, Constants.ConcessionType.BusinessOnline, currentUser);
                 bolFinancial = _mapper.Map<BolFinancial>(_financialBolRepository.ReadByRiskGroupId(riskGroup.Id).FirstOrDefault() ?? new FinancialBol());
-                bolProducts = GetBolProducts(riskGroup).OrderBy(o => o.BOLUserId);
+                bolProducts = GetBolProducts(riskGroup);
+
+                if (bolProducts != null)
+                    bolProducts.OrderBy(o => o.BOLUserId);
             }
             else
             {
